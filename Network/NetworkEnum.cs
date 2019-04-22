@@ -3,6 +3,7 @@ using LiteNetLib.Utils;
 
 namespace MirRemake {
     enum NetworkReceiveDataType : byte {
+        SET_SELF_NETWORK_ID,
         SET_OTHER_ACTOR_UNIT_IN_SIGHT,
         SET_OTHER_POSITION,
         SET_ALL_HP_AND_MP,
