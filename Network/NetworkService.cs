@@ -13,10 +13,17 @@ namespace MirRemake {
         private NetManager m_serverNetManager;
         private Dictionary<int, NetPeer> m_networkIdAndPeerDict = new Dictionary<int, NetPeer> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
+        private Dictionary<NetworkSendDataType, IClientCommand> m_clientCommand = new Dictionary<NetworkSendDataType, IClientCommand>();
         private NetDataWriter m_writer = new NetDataWriter();
         public void Init () {
+            // 初始化LiteNet
             m_serverNetManager = new NetManager (this);
             m_serverNetManager.Start (c_serverPort);
+
+            // 初始化命令模式
+            m_clientCommand.Add(NetworkSendDataType.SEND_POSITION, new CC_SendPosition());
+            m_clientCommand.Add(NetworkSendDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill());
+            m_clientCommand.Add(NetworkSendDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState());
         }
         public void Tick (float dT) {
             m_serverNetManager.PollEvents();
@@ -29,13 +36,9 @@ namespace MirRemake {
         }
         public void OnNetworkLatencyUpdate (NetPeer peer, int latency) { }
         public void OnNetworkReceive (NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod) {
-            NetworkSendDataType dataType = (NetworkSendDataType)reader.GetByte();
-            int peerId = peer.Id;
-            switch(dataType) {
-                case NetworkSendDataType.SEND_POSITION:
-                    
-                    break;
-            }
+            IClientCommand command = m_clientCommand[(NetworkSendDataType)reader.GetByte()];
+            command.SetData(reader);
+            command.Execute(m_networkIdAndActorUnitDict[peer.Id]);
         }
         public void OnNetworkReceiveUnconnected (IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) { }
         public void OnPeerConnected (NetPeer peer) {
@@ -48,6 +51,7 @@ namespace MirRemake {
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             m_networkIdAndPeerDict.Remove(peer.Id);
+            m_networkIdAndActorUnitDict.Remove(peer.Id);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线信息: " + disconnectInfo);
         }
 
