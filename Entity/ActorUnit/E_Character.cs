@@ -14,6 +14,7 @@
         protected E_AbstractRepository m_bag;
         protected long m_virtualMoney;
         protected long m_chargeMoney;
+        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
 
         public E_Character(int netId) {
             m_networkId = netId;

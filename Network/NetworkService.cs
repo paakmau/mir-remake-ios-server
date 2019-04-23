@@ -45,6 +45,7 @@ namespace MirRemake {
             if (m_networkIdAndPeerDict.Count >= c_maxClientNum)
                 return;
             m_networkIdAndPeerDict.Add (peer.Id, peer);
+            NetworkEntityManager.s_instance.AddCharacter(peer.Id);
             NetworkSetSelfNetworkId (peer);
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
@@ -59,22 +60,32 @@ namespace MirRemake {
             client.Send (m_writer, DeliveryMethod.ReliableOrdered);
             m_writer.Reset ();
         }
-        public void NetworkSetOtherPosition (int clientNetId, List<Tuple<int, Vector2>> unitIdAndPos) {
+        public void NetworkSetOtherActorUnitInSight (int clientNetId, List<int> otherIdList, List<ActorUnitType> typeList) {
             NetPeer client = m_networkIdAndPeerDict[clientNetId];
-            m_writer.Put ((byte) unitIdAndPos.Count);
-            foreach (var unit in unitIdAndPos) {
-                m_writer.Put (unit.Item1);
-                m_writer.PutVector2 (unit.Item2);
+            m_writer.Put ((byte) otherIdList.Count);
+            for(int i=0; i<otherIdList.Count; i++) {
+                m_writer.Put(otherIdList[i]);
+                m_writer.Put((byte)typeList[i]);
+            }
+            client.Send(m_writer, DeliveryMethod.Sequenced);
+            m_writer.Reset();
+        }
+        public void NetworkSetOtherPosition (int clientNetId, List<int> otherIdList, List<Vector2> posList) {
+            NetPeer client = m_networkIdAndPeerDict[clientNetId];
+            m_writer.Put ((byte) otherIdList.Count);
+            for (int i=0; i<otherIdList.Count; i++) {
+                m_writer.Put (otherIdList[i]);
+                m_writer.PutVector2 (posList[i]);
             }
             client.Send (m_writer, DeliveryMethod.Sequenced);
             m_writer.Reset ();
         }
-        public void NetworkSetAllHPAndMP (int clientNetId, List<Tuple<int, Dictionary<ActorUnitConcreteAttributeType, int>>> untIdAndAttr) {
+        public void NetworkSetAllHPAndMP (int clientNetId, List<int> otherIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
             NetPeer client = m_networkIdAndPeerDict[clientNetId];
-            m_writer.Put ((byte) untIdAndAttr.Count);
-            foreach (var item in untIdAndAttr) {
-                m_writer.Put (item.Item1);
-                m_writer.PutHPAndMP (item.Item2);
+            m_writer.Put ((byte) otherIdList.Count);
+            for(int i=0; i<otherIdList.Count; i++) {
+                m_writer.Put (otherIdList[i]);
+                m_writer.PutHPAndMP (attrList[i]);
             }
             client.Send (m_writer, DeliveryMethod.ReliableSequenced);
             m_writer.Reset ();

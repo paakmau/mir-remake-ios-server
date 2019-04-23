@@ -19,7 +19,7 @@ namespace MirRemake {
         // 阵营 (自己, 队友, 敌人)
         public CampType m_camp;
         // 单位种类 (玩家, 怪物, NPC随从)
-        public ActorUnitType m_actorUnitType;
+        public virtual ActorUnitType m_ActorUnitType { get; }
         // 具体属性
         public Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         public int m_MaxHP { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP]; } }
@@ -55,7 +55,7 @@ namespace MirRemake {
         private Vector2 m_position;
         public Vector2 m_Position { get { return m_position; } }
 
-        public void ApplyStatus (E_Status status) {
+        public void AttachStatus (E_Status status) {
             m_statusList.Add(status);
             foreach (var item in status.m_affectAttributeDict)
                 m_concreteAttributeDict[item.Key] += item.Value * status.m_value;
@@ -77,14 +77,11 @@ namespace MirRemake {
                 m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
             }
 
-            // 判断当前锁定的目标是否存在
-
             // 移除超时的状态
             for (int i = m_statusList.Count - 1; i >= 0; i--) {
-                m_statusList[i].Tick (dT);
-                if (m_statusList[i].m_leftTime <= 0.0f) {
-                    m_statusList.RemoveAt (i);
-                }
+                m_statusList[i].Tick(dT);
+                if (m_statusList[i].m_leftTime <= 0.0f)
+                    RemoveStatus(m_statusList[i]);
             }
         }
 
@@ -122,7 +119,7 @@ namespace MirRemake {
                 if (initEffect.m_statusAttachArray != null) {
                     m_statusList.AddRange (initEffect.m_statusAttachArray);
                     foreach (var status in initEffect.m_statusAttachArray)
-                        ApplyStatus (status);
+                        AttachStatus (status);
                 }
                 // 播放Effect特效
             } else {

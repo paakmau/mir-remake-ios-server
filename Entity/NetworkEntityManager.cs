@@ -28,18 +28,34 @@ namespace MirRemake {
                 // 每个单位的Tick
                 self.Tick(dT);
 
+                // 发送视野信息
+                List<int> netIdList = new List<int>();
+                List<ActorUnitType> typeList = new List<ActorUnitType>();
+                foreach(var otherPair in m_networkIdAndActorUnitDict)
+                    if(otherPair.Key != selfId) {
+                        netIdList.Add(otherPair.Key);
+                        typeList.Add(otherPair.Value.m_ActorUnitType);
+                    }
+                NetworkService.s_instance.NetworkSetOtherActorUnitInSight(selfId, netIdList, typeList);
+
                 // 发送其他单位的位置信息
-                List<Tuple<int, Vector2>> netIdAndPos = new List<Tuple<int, Vector2>>(m_networkIdAndActorUnitDict.Count-1);
+                netIdList.Clear();
+                List<Vector2> posList = new List<Vector2>();
                 foreach (var otherPair in m_networkIdAndActorUnitDict)
-                    if(otherPair.Key != selfId)
-                        netIdAndPos.Add(new Tuple<int, Vector2>(otherPair.Key, otherPair.Value.m_Position));
-                NetworkService.s_instance.NetworkSetOtherPosition(selfId, netIdAndPos);
+                    if(otherPair.Key != selfId) {
+                        netIdList.Add(otherPair.Key);
+                        posList.Add(otherPair.Value.m_Position);
+                    }
+                NetworkService.s_instance.NetworkSetOtherPosition(selfId, netIdList, posList);
 
                 // 发送所有单位的HP与MP
-                List<Tuple<int, Dictionary<ActorUnitConcreteAttributeType, int>>> netIdAndHPMP = new List<Tuple<int, Dictionary<ActorUnitConcreteAttributeType, int>>>(m_networkIdAndActorUnitDict.Count);
-                foreach (var allPair in m_networkIdAndActorUnitDict)
-                    netIdAndHPMP.Add(new Tuple<int, Dictionary<ActorUnitConcreteAttributeType, int>>(allPair.Key, allPair.Value.m_concreteAttributeDict));
-                NetworkService.s_instance.NetworkSetAllHPAndMP(selfId, netIdAndHPMP);
+                netIdList.Clear();
+                List<Dictionary<ActorUnitConcreteAttributeType, int>> HPMPList = new List<Dictionary<ActorUnitConcreteAttributeType, int>>();
+                foreach (var allPair in m_networkIdAndActorUnitDict) {
+                    netIdList.Add(allPair.Key);
+                    HPMPList.Add(allPair.Value.m_concreteAttributeDict);
+                }
+                NetworkService.s_instance.NetworkSetAllHPAndMP(selfId, netIdList, HPMPList);
             }
         }
         public void CommandSetPosition(int netId, Vector2 pos) {
