@@ -10,7 +10,7 @@
  using System.Collections.Generic;
  namespace MirRemake {
      class E_Character : E_ActorUnit {
-
+        public int m_playerId = -1;
         protected E_AbstractRepository m_bag;
         protected long m_virtualMoney;
         protected long m_chargeMoney;
@@ -18,6 +18,30 @@
 
         public E_Character(int netId) {
             m_networkId = netId;
+        }
+        public void SetPlayerInfo(int playerId) {
+            m_playerId = playerId;
+            // TODO: 从数据库获取玩家等级装备技能等级
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.MAX_HP, 1500);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.MAX_MP, 1500);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CURRENT_HP, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CURRENT_MP, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, 5);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, 5);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.ATTACK, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.MAGIC, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.DEFENCE, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.RESISTANCE, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.TENACITY, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.SPEED, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CRITICAL_RATE, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CRITICAL_BONUS, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.HIT_RATE, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.DODGE_RATE, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.FAINT, 0);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.SILENT, 0);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.IMMOBILE, 0);
+            // TODO: 并把等级装备等发送到客户端
         }
 
         /// <summary>

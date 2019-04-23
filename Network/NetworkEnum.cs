@@ -12,6 +12,7 @@ namespace MirRemake {
         APPLY_ALL_EFFECT
     }
     enum NetworkSendDataType : byte {
+        SEND_PLAYER_ID,
         SEND_POSITION,
         APPLY_ACTIVE_ENTER_FSM_STATE,
         APPLY_CAST_SKILL,

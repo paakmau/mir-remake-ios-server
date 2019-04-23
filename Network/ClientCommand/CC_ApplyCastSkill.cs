@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LiteNetLib.Utils;
 
@@ -5,6 +6,7 @@ using LiteNetLib.Utils;
 namespace MirRemake {
     class CC_ApplyCastSkill : IClientCommand {
         public void Execute(NetDataReader reader, int netId) {
+            Console.WriteLine("客户端请求释放技能");
             short skillId = reader.GetShort();
             byte targetCnt = reader.GetByte();
             int[] targetIdArr = new int[targetCnt];

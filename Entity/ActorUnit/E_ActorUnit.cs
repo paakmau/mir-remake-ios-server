@@ -12,12 +12,9 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 namespace MirRemake {
     abstract class E_ActorUnit {
-        protected int m_id;
         // 等级
         protected short m_level;
         public short m_Level { get { return this.m_level; } }
-        // 阵营 (自己, 队友, 敌人)
-        public CampType m_camp;
         // 单位种类 (玩家, 怪物, NPC随从)
         public virtual ActorUnitType m_ActorUnitType { get; }
         // 具体属性

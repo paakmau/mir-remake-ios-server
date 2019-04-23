@@ -21,6 +21,7 @@ namespace MirRemake {
             m_serverNetManager.Start (c_serverPort);
 
             // 初始化命令模式
+            m_clientCommand.Add (NetworkSendDataType.SEND_PLAYER_ID, new CC_SendPlayerId ());
             m_clientCommand.Add (NetworkSendDataType.SEND_POSITION, new CC_SendPosition ());
             m_clientCommand.Add (NetworkSendDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
             m_clientCommand.Add (NetworkSendDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
@@ -44,15 +45,15 @@ namespace MirRemake {
         public void OnPeerConnected (NetPeer peer) {
             if (m_networkIdAndPeerDict.Count >= c_maxClientNum)
                 return;
-            m_networkIdAndPeerDict.Add (peer.Id, peer);
+            m_networkIdAndPeerDict[peer.Id] = peer;
             NetworkEntityManager.s_instance.AddCharacter(peer.Id);
             NetworkSetSelfNetworkId (peer);
             Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             m_networkIdAndPeerDict.Remove (peer.Id);
-            // m_networkIdAndActorUnitDict.Remove(peer.Id);
-            Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线信息: " + disconnectInfo);
+            NetworkEntityManager.s_instance.RemoveCharacter(peer.Id);
+            Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
 
         private void NetworkSetSelfNetworkId (NetPeer client) {

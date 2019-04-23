@@ -16,7 +16,7 @@ namespace MirRemake {
             return res;
         }
         public void AddCharacter(int netId) {
-            m_networkIdAndActorUnitDict.Add(netId, new E_Character(netId));
+            m_networkIdAndActorUnitDict[netId] = new E_Character(netId);
         }
         public void RemoveCharacter(int netId) {
             m_networkIdAndActorUnitDict.Remove(netId);
@@ -25,6 +25,9 @@ namespace MirRemake {
             foreach (var selfPair in m_networkIdAndActorUnitDict) {
                 var selfId = selfPair.Key;
                 var self = selfPair.Value;
+                if(self.m_ActorUnitType == ActorUnitType.Player)
+                    if(((E_Character)self).m_playerId == -1)
+                        continue;
                 // 每个单位的Tick
                 self.Tick(dT);
 
@@ -52,11 +55,17 @@ namespace MirRemake {
                 netIdList.Clear();
                 List<Dictionary<ActorUnitConcreteAttributeType, int>> HPMPList = new List<Dictionary<ActorUnitConcreteAttributeType, int>>();
                 foreach (var allPair in m_networkIdAndActorUnitDict) {
+                    var allUnit = allPair.Value;
+                    if(allUnit.m_ActorUnitType == ActorUnitType.Player && ((E_Character)allUnit).m_playerId == -1)
+                        continue;
                     netIdList.Add(allPair.Key);
-                    HPMPList.Add(allPair.Value.m_concreteAttributeDict);
+                    HPMPList.Add(allUnit.m_concreteAttributeDict);
                 }
                 NetworkService.s_instance.NetworkSetAllHPAndMP(selfId, netIdList, HPMPList);
             }
+        }
+        public void CommandSetPlayerId(int netId, int playerId) {
+            ((E_Character)m_networkIdAndActorUnitDict[netId]).SetPlayerInfo(playerId);
         }
         public void CommandSetPosition(int netId, Vector2 pos) {
             m_networkIdAndActorUnitDict[netId].SetPosition(pos);
