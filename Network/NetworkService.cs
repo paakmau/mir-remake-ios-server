@@ -59,10 +59,11 @@ namespace MirRemake {
         private void NetworkSetSelfNetworkId (NetPeer client) {
             m_writer.Put ((byte) NetworkReceiveDataType.SET_SELF_NETWORK_ID);
             m_writer.Put (client.Id);
-            client.Send (m_writer, DeliveryMethod.ReliableOrdered);
+            client.Send (m_writer, DeliveryMethod.ReliableUnordered);
             m_writer.Reset ();
         }
         public void NetworkSetOtherActorUnitInSight (int clientNetId, List<int> otherIdList, List<ActorUnitType> typeList) {
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
             NetPeer client = m_networkIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) otherIdList.Count);
             for(int i=0; i<otherIdList.Count; i++) {
@@ -73,6 +74,7 @@ namespace MirRemake {
             m_writer.Reset();
         }
         public void NetworkSetOtherPosition (int clientNetId, List<int> otherIdList, List<Vector2> posList) {
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_POSITION);
             NetPeer client = m_networkIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) otherIdList.Count);
             for (int i=0; i<otherIdList.Count; i++) {
@@ -83,6 +85,7 @@ namespace MirRemake {
             m_writer.Reset ();
         }
         public void NetworkSetAllHPAndMP (int clientNetId, List<int> otherIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_HP_AND_MP);
             NetPeer client = m_networkIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) otherIdList.Count);
             for(int i=0; i<otherIdList.Count; i++) {
@@ -93,6 +96,7 @@ namespace MirRemake {
             m_writer.Reset ();
         }
         public void NetworkSetAllFSMState (int allNetId, FSMActiveEnterState aEState) {
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_FSM_STATE);
             m_writer.Put (allNetId);
             m_writer.PutFSMAEState (aEState);
             foreach (var clientPair in m_networkIdAndPeerDict)

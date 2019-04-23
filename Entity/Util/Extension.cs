@@ -39,6 +39,7 @@ namespace MirRemake {
         public static FSMActiveEnterState GetFSMAEState (this NetDataReader reader) {
             FSMActiveEnterState res = new FSMActiveEnterState ();
             res.m_type = (FSMStateType) reader.GetByte ();
+            res.m_data = new byte[30];
             switch (res.m_type) {
                 case FSMStateType.CAST_BEGIN:
                     reader.GetBytes (res.m_data, 18);

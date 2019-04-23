@@ -19,7 +19,7 @@ namespace MirRemake {
                 NetworkService.s_instance.Tick(dT);
                 NetworkEntityManager.s_instance.Tick(dT);
 
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
         }
     }
