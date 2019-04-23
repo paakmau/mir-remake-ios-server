@@ -47,6 +47,7 @@ namespace MirRemake {
             m_networkIdAndPeerDict.Add (peer.Id, peer);
             NetworkEntityManager.s_instance.AddCharacter(peer.Id);
             NetworkSetSelfNetworkId (peer);
+            Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             m_networkIdAndPeerDict.Remove (peer.Id);
