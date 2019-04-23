@@ -15,6 +15,10 @@
         protected long m_virtualMoney;
         protected long m_chargeMoney;
 
+        public E_Character(int netId) {
+            m_networkId = netId;
+        }
+
         /// <summary>
         /// 虚拟金币，若虚拟金币为非负数，则为我的角色；若为-1，则为联网玩家，需要调用网络接口
         /// </summary>
@@ -61,16 +65,6 @@
                         break;
                 }
             }
-        }
-
-
-        /// <summary>
-        /// 获取角色某种类型全部技能
-        /// </summary>
-        /// <param name="type">枚举，技能类型</param>
-        /// <returns>技能实体列表，该类型的所有技能</returns>
-        public List<E_Skill> GetAllMyRoleSkillByType(byte type) {
-            return this.m_skillList;
         }
 
         /// <summary>

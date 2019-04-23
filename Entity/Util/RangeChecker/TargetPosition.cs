@@ -36,7 +36,7 @@ namespace MirRemake {
         public Vector2 m_Position {
             get {
                 if (m_target != null)
-                    return m_target.m_position;
+                    return m_target.m_Position;
                 return m_position;
             }
         }

@@ -1,12 +1,11 @@
+using UnityEngine;
 using LiteNetLib.Utils;
 
 namespace MirRemake {
     class CC_SendPosition : IClientCommand {
-        public void SetData(NetDataReader reader) {
-            
-        }
-        public void Execute(E_ActorUnit unit) {
-            
+        public void Execute(NetDataReader reader, int netId) {
+            var position = reader.GetVector2();
+            NetworkEntityManager.s_instance.CommandSetPosition(netId, position);
         }
     }
 }

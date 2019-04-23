@@ -26,21 +26,38 @@ namespace MirRemake {
             res[3] = new KeyValuePair<ActorUnitConcreteAttributeType, int> (ActorUnitConcreteAttributeType.CURRENT_MP, reader.GetInt ());
             return res;
         }
-        public static TargetPosition GetTargetPosition(this NetDataReader reader) {
-            int networkId = reader.GetInt();
-            Vector2 pos = reader.GetVector2();
-            return new TargetPosition(NetworkService.s_instance.GetActorUnitByNetworkId(networkId), pos);
+        public static void PutFSMAEState (this NetDataWriter writer, FSMActiveEnterState state) {
+            writer.Put ((byte) state.m_type);
+            switch (state.m_type) {
+                case FSMStateType.CAST_BEGIN:
+                    writer.Put (state.m_data, 0, 18);
+                    break;
+                case FSMStateType.CAST_SING_CANCEL:
+                    break;
+            }
+        }
+        public static FSMActiveEnterState GetFSMAEState (this NetDataReader reader) {
+            FSMActiveEnterState res = new FSMActiveEnterState ();
+            res.m_type = (FSMStateType) reader.GetByte ();
+            switch (res.m_type) {
+                case FSMStateType.CAST_BEGIN:
+                    reader.GetBytes (res.m_data, 18);
+                    break;
+                case FSMStateType.CAST_SING_CANCEL:
+                    break;
+            }
+            return res;
         }
         public static void PutE_Status (this NetDataWriter writer, E_Status status) {
-            writer.Put(status.m_id);
-            writer.Put(status.m_value);
-            writer.Put(status.m_leftTime);
+            writer.Put (status.m_id);
+            writer.Put (status.m_value);
+            writer.Put (status.m_leftTime);
         }
         public static E_Status GetE_Status (this NetDataReader reader) {
-            short statusId = reader.GetShort();
-            int value = reader.GetInt();
-            float leftTime = reader.GetFloat();
-            return new E_Status(statusId, value, leftTime);
+            short statusId = reader.GetShort ();
+            int value = reader.GetInt ();
+            float leftTime = reader.GetFloat ();
+            return new E_Status (statusId, value, leftTime);
         }
     }
 }

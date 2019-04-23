@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 namespace MirRemake {
-    class E_ActorUnit {
+    abstract class E_ActorUnit {
         protected int m_id;
         // 等级
         protected short m_level;
@@ -21,7 +21,7 @@ namespace MirRemake {
         // 单位种类 (玩家, 怪物, NPC随从)
         public ActorUnitType m_actorUnitType;
         // 具体属性
-        protected Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
+        public Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         public int m_MaxHP { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP]; } }
         public int m_MaxMP { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_MP]; } }
         public int m_CurHP {
@@ -47,47 +47,24 @@ namespace MirRemake {
         public bool m_IsFaint { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.FAINT] > 0; } }
         public bool m_IsSilent { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.SILENT] > 0; } }
         public bool m_IsImmobile { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.IMMOBILE] > 0; } }
-        // 技能列表
-        protected List<E_Skill> m_skillList = new List<E_Skill> ();
         // 自身状态列表
         protected List<E_Status> m_statusList = new List<E_Status> ();
-        // 目前锁定的目标
-        protected E_ActorUnit m_aimedTarget;
         /// <summary>
         /// 当前位置
         /// </summary>
-        public Vector2 m_position;
-        /// <summary>
-        /// 目标移动方向, 供fsm使用
-        /// </summary>
-        public Vector2 m_fSMMoveDir;
-        /// <summary>
-        /// 目标移动位置, 供fsm使用
-        /// </summary>
-        public Vector2 m_fSMSyncPosition;
-        // Unit的占地半径
-        public float m_CoverRadius {
-            get { return 5.0f; }
-        }
+        private Vector2 m_position;
+        public Vector2 m_Position { get { return m_position; } }
 
-        // public void ApplyStatus (E_Status status) {
-        //     m_statusList.Add(status);
-        //     m_entityView.PlayApplyStatus(status);
-        //     foreach (var item in status.m_affectAttributeDict)
-        //         m_concreteAttributeDict[item.Key] += item.Value * status.m_value;
-        //     // 眩晕
-        //     if (m_concreteAttributeDict[ActorUnitConcreteAttributeType.FAINT] >= 1)
-        //         m_fSM.Transit (new FSMS_Faint (this));
-        // }
-        // public void RemoveStatus (E_Status status) {
-        //     m_statusList.Remove(status);
-        //     m_entityView.PlayRemoveStatus(status);
-        //     foreach (var item in status.m_affectAttributeDict)
-        //         m_concreteAttributeDict[item.Key] -= item.Value * status.m_value;
-        //     // 眩晕
-        //     if (m_concreteAttributeDict[ActorUnitConcreteAttributeType.FAINT] == 0)
-        //         m_fSM.Transit (new FSMS_Free (this));
-        // }
+        public void ApplyStatus (E_Status status) {
+            m_statusList.Add(status);
+            foreach (var item in status.m_affectAttributeDict)
+                m_concreteAttributeDict[item.Key] += item.Value * status.m_value;
+        }
+        public void RemoveStatus (E_Status status) {
+            m_statusList.Remove(status);
+            foreach (var item in status.m_affectAttributeDict)
+                m_concreteAttributeDict[item.Key] -= item.Value * status.m_value;
+        }
         protected float deltaTimeAfterLastSecond = 0f;
         public void Tick (float dT) {
             // 处理具体属性的每秒变化
@@ -111,21 +88,23 @@ namespace MirRemake {
             }
         }
 
+        public void SetPosition (Vector2 pos) {
+            m_position = pos;
+        }
         /// <summary>
-        /// 在前摇结束时发送释放技能的网络请求
-        /// 不考虑射程与Cost
+        /// 计算技能效果
         /// </summary>
         /// <param name="skill"></param>
-        /// <param name="castTar"></param>
-        /// <param name="parm"></param>
-        public virtual void RequestCastSkill (E_Skill skill, TargetPosition castTar, Vector2 parm) {
+        /// <param name="targets"></param>
+        public void ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets) {
             // 计算初始Effect
-            // E_Effect initEffect = skill.m_skillEffect.GetClone ();
-            // CalculateCastEffect (initEffect);
-            // // 获得作用目标列表并施加Effect
-            // List<E_ActorUnit> targets = skill.GetEffectTargets (this, castTar, parm);
-            // foreach (var tar in targets)
-            //     tar.CalculateAndApplyEffect (initEffect);
+            E_Effect initEffect = skill.m_skillEffect.GetClone ();
+            CalculateCastEffect (initEffect);
+            foreach (var tar in targets)
+                tar.CalculateAndApplyEffect (initEffect);
+        }
+        public void ApplyActiveEnterFSMState(FSMActiveEnterState state) {
+            // TODO:
         }
         /// <summary>
         /// 被施加Effect后, 计算出最终伤害与状态变化, 施加到自身
@@ -133,114 +112,104 @@ namespace MirRemake {
         /// </summary>
         /// <param name="initEffect">被施加到自身的Effect, 会被修改</param>
         /// <returns>把Effect返回(同一个对象)</returns>
-        // public void CalculateAndApplyEffect (E_Effect initEffect) {
-        //     // 根据自身属性计算最终Effect
-        //     bool hit = CalculateApplyEffect (initEffect);
-        //     if (hit) {
-        //         // 应用到自身属性上
-        //         ApplyEffectToAttributes (initEffect);
-        //         // 附加状态并应用到具体属性与FSM中
-        //         if (initEffect.m_statusAttachArray != null) {
-        //             m_statusList.AddRange (initEffect.m_statusAttachArray);
-        //             foreach (var status in initEffect.m_statusAttachArray)
-        //                 ApplyStatus (status);
-        //         }
-        //         // 播放Effect特效
-        //         m_entityView.PlayApplyEffect (initEffect);
-        //     } else {
-        //         // 播放Miss动画
-        //         m_entityView.PlayMiss ();
-        //     }
-        // }
+        public void CalculateAndApplyEffect (E_Effect initEffect) {
+            // 根据自身属性计算最终Effect
+            bool hit = CalculateApplyEffect (initEffect);
+            if (hit) {
+                // 应用到自身属性上
+                ApplyEffectToAttributes (initEffect);
+                // 附加状态并应用到具体属性与FSM中
+                if (initEffect.m_statusAttachArray != null) {
+                    m_statusList.AddRange (initEffect.m_statusAttachArray);
+                    foreach (var status in initEffect.m_statusAttachArray)
+                        ApplyStatus (status);
+                }
+                // 播放Effect特效
+            } else {
+                // 播放Miss动画
+            }
+        }
         /// <summary>
         /// 传入的Effect会被修改
         /// </summary>
         /// <param name="effect">技能或道具的原始Effect</param>
-        // public void CalculateCastEffect (E_Effect effect) {
-        //     // 处理初始命中与暴击
-        //     effect.m_hitRate *= m_HitRate;
-        //     effect.m_criticalRate *= m_CriticalRate;
-        //     // 处理初始伤害(或能量剥夺)
-        //     switch (effect.m_deltaHPType) {
-        //         case EffectDeltaHPType.PHYSICS:
-        //             effect.m_deltaHP *= m_Attack;
-        //             break;
-        //         case EffectDeltaHPType.MAGIC:
-        //             effect.m_deltaHP *= m_Magic;
-        //             break;
-        //     }
-        //     switch (effect.m_deltaMPType) {
-        //         case EffectDeltaMPType.MAGIC:
-        //             effect.m_deltaMP *= m_Magic;
-        //             break;
-        //     }
-        //     CalculateByHPStrategy (effect, effect.m_selfHPStrategy);
-        // }
+        public void CalculateCastEffect (E_Effect effect) {
+            // 处理初始命中与暴击
+            effect.m_hitRate *= m_HitRate;
+            effect.m_criticalRate *= m_CriticalRate;
+            // 处理初始伤害(或能量剥夺)
+            switch (effect.m_deltaHPType) {
+                case EffectDeltaHPType.PHYSICS:
+                    effect.m_deltaHP *= m_Attack;
+                    break;
+                case EffectDeltaHPType.MAGIC:
+                    effect.m_deltaHP *= m_Magic;
+                    break;
+            }
+            switch (effect.m_deltaMPType) {
+                case EffectDeltaMPType.MAGIC:
+                    effect.m_deltaMP *= m_Magic;
+                    break;
+            }
+            CalculateByHPStrategy (effect, effect.m_selfHPStrategy);
+        }
         /// <summary>
         /// 传入的Effect会被修改, 不会被应用到自己身上
         /// </summary>
         /// <param name="effect">由释放者计算后的Effect</param>
         /// <returns>命中则返回true, 否则返回false</returns>
-        // public bool CalculateApplyEffect (E_Effect effect) {
-        //     effect.m_hitRate /= m_DodgeRate;
-        //     if (Random.Range (1, 101) >= effect.m_hitRate)
-        //         // 未命中
-        //         return false;
-        //     effect.m_criticalRate /= m_DodgeRate;
-        //     // 是否暴击
-        //     bool isCritical = (Random.Range (1, 101) <= effect.m_criticalRate);
+        public bool CalculateApplyEffect (E_Effect effect) {
+            effect.m_hitRate /= m_DodgeRate;
+            if (Random.Range (1, 101) >= effect.m_hitRate)
+                // 未命中
+                return false;
+            effect.m_criticalRate /= m_DodgeRate;
+            // 是否暴击
+            bool isCritical = (Random.Range (1, 101) <= effect.m_criticalRate);
 
-        //     switch (effect.m_deltaHPType) {
-        //         case EffectDeltaHPType.PHYSICS:
-        //             effect.m_deltaHP /= m_Defence;
-        //             break;
-        //         case EffectDeltaHPType.MAGIC:
-        //             effect.m_deltaHP /= m_Resistance;
-        //             break;
-        //     }
-        //     switch (effect.m_deltaMPType) {
-        //         case EffectDeltaMPType.MAGIC:
-        //             effect.m_deltaMP /= m_Resistance;
-        //             break;
-        //     }
-        //     CalculateByHPStrategy (effect, effect.m_targetHPStrategy);
+            switch (effect.m_deltaHPType) {
+                case EffectDeltaHPType.PHYSICS:
+                    effect.m_deltaHP /= m_Defence;
+                    break;
+                case EffectDeltaHPType.MAGIC:
+                    effect.m_deltaHP /= m_Resistance;
+                    break;
+            }
+            switch (effect.m_deltaMPType) {
+                case EffectDeltaMPType.MAGIC:
+                    effect.m_deltaMP /= m_Resistance;
+                    break;
+            }
+            CalculateByHPStrategy (effect, effect.m_targetHPStrategy);
 
-        //     // 计算异常状态持续时间(根据韧性)
-        //     if (effect.m_statusAttachArray != null)
-        //         foreach (var status in effect.m_statusAttachArray)
-        //             if (status.m_type == StatusType.DEBUFF)
-        //                 status.m_leftTime -= (100 - m_Tenacity) * 0.01f;
+            // 计算异常状态持续时间(根据韧性)
+            if (effect.m_statusAttachArray != null)
+                for (int i=0; i<effect.m_statusAttachArray.Length; i++)
+                    if (effect.m_statusAttachArray[i].m_type == StatusType.DEBUFF)
+                        effect.m_statusAttachArray[i].m_leftTime -= (100 - m_Tenacity) * 0.01f;
 
-        //     // 处理暴击
-        //     if (isCritical)
-        //         effect.m_deltaHP = (int) (effect.m_deltaHP * 1.5f);
-        //     return true;
-        // }
+            // 处理暴击
+            if (isCritical)
+                effect.m_deltaHP = (int) (effect.m_deltaHP * 1.5f);
+            return true;
+        }
         /// <summary>
         /// 把计算好的effect应用到自己身上
         /// </summary>
         /// <param name="effect"></param>
-        // public void ApplyEffectToAttributes (E_Effect effect) {
-        //     int newHP = m_CurHP + effect.m_deltaHP;
-        //     int newMP = m_CurMP + effect.m_deltaMP;
-        //     m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
-        //     m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
-        // }
+        public void ApplyEffectToAttributes (E_Effect effect) {
+            int newHP = m_CurHP + effect.m_deltaHP;
+            int newMP = m_CurMP + effect.m_deltaMP;
+            m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
+            m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
+        }
 
-        // protected void CalculateByHPStrategy (E_Effect effect, HPStrategy hPStrategy) {
-        //     if (hPStrategy == null) return;
-        //     float value = 0;
-        //     foreach (var item in hPStrategy.strategyFactorDict)
-        //         value += m_concreteAttributeDict[item.Key] * item.Value;
-        //     effect.m_deltaHP += (int) value;
-        // }
-
-        /// <summary>
-        /// 要求锁定一个目标
-        /// </summary>
-        /// <param name="target">被锁定的目标</param>
-        public void CommandAimTarget (E_ActorUnit target) {
-            m_aimedTarget = target;
+        protected void CalculateByHPStrategy (E_Effect effect, HPStrategy hPStrategy) {
+            if (hPStrategy == null) return;
+            float value = 0;
+            foreach (var item in hPStrategy.strategyFactorDict)
+                value += m_concreteAttributeDict[item.Key] * item.Value;
+            effect.m_deltaHP += (int) value;
         }
 
         /// <summary>
@@ -251,20 +220,6 @@ namespace MirRemake {
             return null;
         }
 
-        public int m_NetworkId { get; set; }
-        // public void NetworkSetPosition (Vector2 pos) {
-        //     m_fSMSyncPosition = pos;
-        // }
-        // public void NetworkSetConcreteAttribute (KeyValuePair<ActorUnitConcreteAttributeType, int>[] attr) {
-        //     foreach (var item in attr)
-        //         m_concreteAttributeDict[item.Key] = item.Value;
-        // }
-        // public void NetworkSetFSMState (IFSMState fSMState) {
-        // }
-        // public void NetworkApplyStatus (E_Status status) {
-        //     m_statusList.Add (status);
-        // }
-        // public void NetworkApplyEffect (short effectId) {
-        // }
+        public int m_networkId;
     }
 }

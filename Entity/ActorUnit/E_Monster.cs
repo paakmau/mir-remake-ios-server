@@ -12,7 +12,7 @@ using System.Collections.Generic;
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
         public E_Monster(int networkId) {
-            m_NetworkId = networkId;
+            m_networkId = networkId;
         }
         public override List<E_Item> DropLegacy() {
             return null;
