@@ -6,7 +6,7 @@ namespace MirRemake {
         public void Execute(NetDataReader reader, int netId) {
             Console.WriteLine("客户端发送玩家ID");
             int playerId = reader.GetInt();
-            SM_Character.s_instance.CommandSetPlayerId(netId, playerId);
+            SM_ActorUnit.s_instance.CommandSetPlayerId(netId, playerId);
         }
     }
 }

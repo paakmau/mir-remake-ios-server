@@ -17,7 +17,7 @@ namespace MirRemake {
                 time = newTime;
 
                 NetworkService.s_instance.Tick(dT);
-                SM_Character.s_instance.Tick(dT);
+                SM_ActorUnit.s_instance.Tick(dT);
 
                 Thread.Sleep(20);
             }

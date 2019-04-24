@@ -15,7 +15,6 @@ namespace MirRemake {
         private Dictionary<int, NetPeer> m_peerIdAndPeerDict = new Dictionary<int, NetPeer> ();
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
-        private int m_networkIdCnt = 0;
         private Dictionary<NetworkSendDataType, IClientCommand> m_clientCommand = new Dictionary<NetworkSendDataType, IClientCommand> ();
         private NetDataWriter m_writer = new NetDataWriter ();
         public void Init () {
@@ -53,18 +52,13 @@ namespace MirRemake {
             // 保存peer
             m_peerIdAndPeerDict[peer.Id] = peer;
 
-            // 分配NetworkId
-            while(true) {
-                ++m_networkIdCnt;
-                if(!m_networkIdAndPeerIdDict.ContainsKey(m_networkIdCnt))
-                    break;
-            }
-            m_peerIdAndNetworkIdDict[peer.Id] = m_networkIdCnt;
-            m_networkIdAndPeerIdDict[m_networkIdCnt] = peer.Id;
+            // 实例化玩家角色并分配NetId
+            int netId = SM_ActorUnit.s_instance.AddCharacter();
+            m_peerIdAndNetworkIdDict[peer.Id] = netId;
+            m_networkIdAndPeerIdDict[netId] = peer.Id;
 
-            // 实例化玩家角色
-            SM_Character.s_instance.AddCharacter (m_networkIdCnt);
-            NetworkSetSelfNetworkId (peer, m_networkIdCnt);
+            // 发送NetId
+            NetworkSetSelfNetworkId (peer, netId);
             Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
@@ -72,7 +66,7 @@ namespace MirRemake {
             m_peerIdAndPeerDict.Remove (peer.Id);
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
-            SM_Character.s_instance.RemoveCharacter (netId);
+            SM_ActorUnit.s_instance.RemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
         private void NetworkSetSelfNetworkId (NetPeer client, int netId) {
