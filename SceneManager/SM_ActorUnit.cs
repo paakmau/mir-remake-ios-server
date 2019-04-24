@@ -94,8 +94,8 @@ namespace MirRemake {
                 monster.Tick(dT);
             }
         }
-        public void CommandSetPlayerId(int netId, int playerId) {
-            ((E_Character)m_networkIdAndCharacterDict[netId]).SetPlayerInfo(playerId);
+        public void CommandSetCharacterPlayerId(int netId, int playerId) {
+            m_networkIdAndCharacterDict[netId].SetPlayerInfo(playerId);
         }
         public void CommandSetPosition(int netId, Vector2 pos) {
             m_networkIdAndCharacterDict[netId].SetPosition(pos);
