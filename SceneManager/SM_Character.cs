@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MirRemake {
-    class NetworkEntityManager {
-        public static NetworkEntityManager s_instance = new NetworkEntityManager();
-        private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
+    class SM_Character {
+        public static SM_Character s_instance = new SM_Character();
+        private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private E_ActorUnit GetActorUnitByNetworkId(int networkId) {
-            return m_networkIdAndActorUnitDict[networkId];
+            return m_networkIdAndCharacterDict[networkId];
         }
         private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr(int[] networkIdArr) {
             List<E_ActorUnit> res = new List<E_ActorUnit>(networkIdArr.Length);
             foreach (var netId in networkIdArr)
-                res.Add(m_networkIdAndActorUnitDict[netId]);
+                res.Add(m_networkIdAndCharacterDict[netId]);
             return res;
         }
         public void AddCharacter(int netId) {
-            m_networkIdAndActorUnitDict[netId] = new E_Character(netId);
+            m_networkIdAndCharacterDict[netId] = new E_Character(netId);
         }
         public void RemoveCharacter(int netId) {
-            m_networkIdAndActorUnitDict.Remove(netId);
+            m_networkIdAndCharacterDict.Remove(netId);
         }
         public void Tick(float dT) {
-            foreach (var selfPair in m_networkIdAndActorUnitDict) {
+            foreach (var selfPair in m_networkIdAndCharacterDict) {
                 var selfId = selfPair.Key;
                 var self = selfPair.Value;
                 if(self.m_ActorUnitType == ActorUnitType.Player)
@@ -34,7 +34,7 @@ namespace MirRemake {
                 // 发送视野信息
                 List<int> netIdList = new List<int>();
                 List<ActorUnitType> typeList = new List<ActorUnitType>();
-                foreach(var otherPair in m_networkIdAndActorUnitDict) {
+                foreach(var otherPair in m_networkIdAndCharacterDict) {
                     var other = otherPair.Value;
                     if(other.m_ActorUnitType == ActorUnitType.Player)
                         if(((E_Character)other).m_playerId == -1)
@@ -48,7 +48,7 @@ namespace MirRemake {
                 // 发送其他单位的位置信息
                 netIdList.Clear();
                 List<Vector2> posList = new List<Vector2>();
-                foreach (var otherPair in m_networkIdAndActorUnitDict)
+                foreach (var otherPair in m_networkIdAndCharacterDict)
                     if(otherPair.Key != selfId) {
                         netIdList.Add(otherPair.Key);
                         posList.Add(otherPair.Value.m_Position);
@@ -58,7 +58,7 @@ namespace MirRemake {
                 // 发送所有单位的HP与MP
                 netIdList.Clear();
                 List<Dictionary<ActorUnitConcreteAttributeType, int>> HPMPList = new List<Dictionary<ActorUnitConcreteAttributeType, int>>();
-                foreach (var allPair in m_networkIdAndActorUnitDict) {
+                foreach (var allPair in m_networkIdAndCharacterDict) {
                     var allUnit = allPair.Value;
                     if(allUnit.m_ActorUnitType == ActorUnitType.Player && ((E_Character)allUnit).m_playerId == -1)
                         continue;
@@ -69,16 +69,16 @@ namespace MirRemake {
             }
         }
         public void CommandSetPlayerId(int netId, int playerId) {
-            ((E_Character)m_networkIdAndActorUnitDict[netId]).SetPlayerInfo(playerId);
+            ((E_Character)m_networkIdAndCharacterDict[netId]).SetPlayerInfo(playerId);
         }
         public void CommandSetPosition(int netId, Vector2 pos) {
-            m_networkIdAndActorUnitDict[netId].SetPosition(pos);
+            m_networkIdAndCharacterDict[netId].SetPosition(pos);
         }
         public void CommandApplyCastSkill(int netId, short skillId, int[] tarIdArr) {
-            m_networkIdAndActorUnitDict[netId].ApplyCastSkill(new E_Skill(skillId), GetActorUnitArrByNetworkIdArr(tarIdArr));
+            m_networkIdAndCharacterDict[netId].ApplyCastSkill(new E_Skill(skillId), GetActorUnitArrByNetworkIdArr(tarIdArr));
         }
         public void CommandApplyActiveEnterFSMState(int netId, FSMActiveEnterState state) {
-            m_networkIdAndActorUnitDict[netId].ApplyActiveEnterFSMState(state);
+            m_networkIdAndCharacterDict[netId].ApplyActiveEnterFSMState(state);
         }
     }
 }

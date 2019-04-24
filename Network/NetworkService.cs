@@ -46,13 +46,13 @@ namespace MirRemake {
             if (m_networkIdAndPeerDict.Count >= c_maxClientNum)
                 return;
             m_networkIdAndPeerDict[peer.Id] = peer;
-            NetworkEntityManager.s_instance.AddCharacter(peer.Id);
+            SM_Character.s_instance.AddCharacter(peer.Id);
             NetworkSetSelfNetworkId (peer);
             Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             m_networkIdAndPeerDict.Remove (peer.Id);
-            NetworkEntityManager.s_instance.RemoveCharacter(peer.Id);
+            SM_Character.s_instance.RemoveCharacter(peer.Id);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
 

@@ -12,7 +12,7 @@ namespace MirRemake {
             int[] targetIdArr = new int[targetCnt];
             for(int i=0; i<targetCnt; i++)
                 targetIdArr[i] = reader.GetInt();
-            NetworkEntityManager.s_instance.CommandApplyCastSkill(netId, skillId, targetIdArr);
+            SM_Character.s_instance.CommandApplyCastSkill(netId, skillId, targetIdArr);
         }
     }
 }
