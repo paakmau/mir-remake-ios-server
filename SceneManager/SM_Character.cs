@@ -23,7 +23,7 @@ namespace MirRemake {
         }
         public void Tick(float dT) {
             foreach (var selfPair in m_networkIdAndCharacterDict) {
-                var selfId = selfPair.Key;
+                var selfNetId = selfPair.Key;
                 var self = selfPair.Value;
                 if(self.m_ActorUnitType == ActorUnitType.Player)
                     if(((E_Character)self).m_playerId == -1)
@@ -39,20 +39,20 @@ namespace MirRemake {
                     if(other.m_ActorUnitType == ActorUnitType.Player)
                         if(((E_Character)other).m_playerId == -1)
                             continue;
-                    if(otherPair.Key == selfId) continue;
+                    if(otherPair.Key == selfNetId) continue;
                     netIdList.Add(otherPair.Key);
                 }
-                NetworkService.s_instance.NetworkSetOtherActorUnitInSight(selfId, actorUnitType, netIdList);
+                NetworkService.s_instance.NetworkSetOtherActorUnitInSight(selfNetId, actorUnitType, netIdList);
 
                 // 发送其他单位的位置信息
                 netIdList.Clear();
                 List<Vector2> posList = new List<Vector2>();
                 foreach (var otherPair in m_networkIdAndCharacterDict)
-                    if(otherPair.Key != selfId) {
+                    if(otherPair.Key != selfNetId) {
                         netIdList.Add(otherPair.Key);
                         posList.Add(otherPair.Value.m_Position);
                     }
-                NetworkService.s_instance.NetworkSetOtherPosition(selfId, netIdList, posList);
+                NetworkService.s_instance.NetworkSetOtherPosition(selfNetId, netIdList, posList);
 
                 // 发送所有单位的HP与MP
                 netIdList.Clear();
@@ -64,7 +64,7 @@ namespace MirRemake {
                     netIdList.Add(allPair.Key);
                     HPMPList.Add(allUnit.m_concreteAttributeDict);
                 }
-                NetworkService.s_instance.NetworkSetAllHPAndMP(selfId, netIdList, HPMPList);
+                NetworkService.s_instance.NetworkSetAllHPAndMP(selfNetId, netIdList, HPMPList);
             }
         }
         public void CommandSetPlayerId(int netId, int playerId) {

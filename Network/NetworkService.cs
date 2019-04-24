@@ -14,7 +14,7 @@ namespace MirRemake {
         private NetManager m_serverNetManager;
         private Dictionary<int, NetPeer> m_peerIdAndPeerDict = new Dictionary<int, NetPeer> ();
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
-        private HashSet<int> m_networkIdSet = new HashSet<int> ();
+        private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
         private int m_networkIdCnt = 0;
         private Dictionary<NetworkSendDataType, IClientCommand> m_clientCommand = new Dictionary<NetworkSendDataType, IClientCommand> ();
         private NetDataWriter m_writer = new NetDataWriter ();
@@ -41,7 +41,7 @@ namespace MirRemake {
         public void OnNetworkLatencyUpdate (NetPeer peer, int latency) { }
         public void OnNetworkReceive (NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod) {
             IClientCommand command = m_clientCommand[(NetworkSendDataType) reader.GetByte ()];
-            command.Execute (reader, peer.Id);
+            command.Execute (reader, m_peerIdAndNetworkIdDict[peer.Id]);
             reader.Recycle ();
         }
         public void OnNetworkReceiveUnconnected (IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) { }
@@ -56,11 +56,11 @@ namespace MirRemake {
             // 分配NetworkId
             while(true) {
                 ++m_networkIdCnt;
-                if(!m_networkIdSet.Contains(m_networkIdCnt))
+                if(!m_networkIdAndPeerIdDict.ContainsKey(m_networkIdCnt))
                     break;
             }
             m_peerIdAndNetworkIdDict[peer.Id] = m_networkIdCnt;
-            m_networkIdSet.Add(m_networkIdCnt);
+            m_networkIdAndPeerIdDict[m_networkIdCnt] = peer.Id;
 
             // 实例化玩家角色
             SM_Character.s_instance.AddCharacter (m_networkIdCnt);
@@ -71,7 +71,7 @@ namespace MirRemake {
             var netId = m_peerIdAndNetworkIdDict[peer.Id];
             m_peerIdAndPeerDict.Remove (peer.Id);
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
-            m_networkIdSet.Remove (netId);
+            m_networkIdAndPeerIdDict.Remove (netId);
             SM_Character.s_instance.RemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
@@ -82,8 +82,9 @@ namespace MirRemake {
             m_writer.Reset ();
         }
         public void NetworkSetOtherActorUnitInSight (int clientNetId, ActorUnitType actorUnitType, List<int> otherIdList) {
+            int peerId = m_networkIdAndPeerIdDict[clientNetId];
             m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
-            NetPeer client = m_peerIdAndPeerDict[clientNetId];
+            NetPeer client = m_peerIdAndPeerDict[peerId];
             m_writer.Put ((byte) actorUnitType);
             m_writer.Put ((byte) otherIdList.Count);
             for (int i = 0; i < otherIdList.Count; i++) {
@@ -93,8 +94,9 @@ namespace MirRemake {
             m_writer.Reset ();
         }
         public void NetworkSetOtherPosition (int clientNetId, List<int> otherIdList, List<Vector2> posList) {
+            int peerId = m_networkIdAndPeerIdDict[clientNetId];
             m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_POSITION);
-            NetPeer client = m_peerIdAndPeerDict[clientNetId];
+            NetPeer client = m_peerIdAndPeerDict[peerId];
             m_writer.Put ((byte) otherIdList.Count);
             for (int i = 0; i < otherIdList.Count; i++) {
                 m_writer.Put (otherIdList[i]);
@@ -104,8 +106,9 @@ namespace MirRemake {
             m_writer.Reset ();
         }
         public void NetworkSetAllHPAndMP (int clientNetId, List<int> otherIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
+            int peerId = m_networkIdAndPeerIdDict[clientNetId];
             m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_HP_AND_MP);
-            NetPeer client = m_peerIdAndPeerDict[clientNetId];
+            NetPeer client = m_peerIdAndPeerDict[peerId];
             m_writer.Put ((byte) otherIdList.Count);
             for (int i = 0; i < otherIdList.Count; i++) {
                 m_writer.Put (otherIdList[i]);
@@ -118,9 +121,10 @@ namespace MirRemake {
             m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_FSM_STATE);
             m_writer.Put (allNetId);
             m_writer.PutFSMAEState (aEState);
-            foreach (var clientPair in m_peerIdAndPeerDict)
-                if (clientPair.Key != allNetId)
+            foreach (var clientPair in m_peerIdAndPeerDict) {
+                if (m_peerIdAndNetworkIdDict[clientPair.Key] != allNetId)
                     clientPair.Value.Send (m_writer, DeliveryMethod.ReliableSequenced);
+            }
             m_writer.Reset ();
         }
     }
