@@ -34,11 +34,15 @@ namespace MirRemake {
                 // 发送视野信息
                 List<int> netIdList = new List<int>();
                 List<ActorUnitType> typeList = new List<ActorUnitType>();
-                foreach(var otherPair in m_networkIdAndActorUnitDict)
-                    if(otherPair.Key != selfId) {
-                        netIdList.Add(otherPair.Key);
-                        typeList.Add(otherPair.Value.m_ActorUnitType);
-                    }
+                foreach(var otherPair in m_networkIdAndActorUnitDict) {
+                    var other = otherPair.Value;
+                    if(other.m_ActorUnitType == ActorUnitType.Player)
+                        if(((E_Character)other).m_playerId == -1)
+                            continue;
+                    if(otherPair.Key == selfId) continue;
+                    netIdList.Add(otherPair.Key);
+                    typeList.Add(otherPair.Value.m_ActorUnitType);
+                }
                 NetworkService.s_instance.NetworkSetOtherActorUnitInSight(selfId, netIdList, typeList);
 
                 // 发送其他单位的位置信息
