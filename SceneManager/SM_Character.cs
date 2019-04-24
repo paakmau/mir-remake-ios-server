@@ -32,8 +32,8 @@ namespace MirRemake {
                 self.Tick(dT);
 
                 // 发送视野信息
+                var actorUnitType = ActorUnitType.Player;
                 List<int> netIdList = new List<int>();
-                List<ActorUnitType> typeList = new List<ActorUnitType>();
                 foreach(var otherPair in m_networkIdAndCharacterDict) {
                     var other = otherPair.Value;
                     if(other.m_ActorUnitType == ActorUnitType.Player)
@@ -41,9 +41,8 @@ namespace MirRemake {
                             continue;
                     if(otherPair.Key == selfId) continue;
                     netIdList.Add(otherPair.Key);
-                    typeList.Add(otherPair.Value.m_ActorUnitType);
                 }
-                NetworkService.s_instance.NetworkSetOtherActorUnitInSight(selfId, netIdList, typeList);
+                NetworkService.s_instance.NetworkSetOtherActorUnitInSight(selfId, actorUnitType, netIdList);
 
                 // 发送其他单位的位置信息
                 netIdList.Clear();
