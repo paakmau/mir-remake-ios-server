@@ -9,8 +9,8 @@ namespace MirRemake {
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster>();
         public SM_ActorUnit() {
             // TODO: 用于测试
-            AddMonster(0, new Vector2(0, 0));
-            AddMonster(0, new Vector2(0, 1));
+            AddMonster(NetworkIdManager.GetNewActorUnitNetworkId(), 0, new Vector2(0, 0));
+            AddMonster(NetworkIdManager.GetNewActorUnitNetworkId(), 0, new Vector2(0, 1));
         }
         private E_ActorUnit GetActorUnitByNetworkId(int networkId) {
             return m_networkIdAndCharacterDict[networkId];
@@ -21,23 +21,19 @@ namespace MirRemake {
                 res.Add(m_networkIdAndCharacterDict[netId]);
             return res;
         }
-        public int AddCharacter() {
-            int netId = NetworkIdManager.GetNewActorUnitNetworkId();
-            m_networkIdAndCharacterDict[netId] = new E_Character(netId);
-            return netId;
+        private void AddCharacter(int netId, int playerId) {
+            m_networkIdAndCharacterDict[netId] = new E_Character(netId, playerId);
         }
-        public void RemoveCharacter(int netId) {
-            NetworkIdManager.RemoveActorUnitNetworkId(netId);
-            m_networkIdAndCharacterDict.Remove(netId);
+        private void RemoveCharacter(int netId) {
+            if(m_networkIdAndCharacterDict.ContainsKey(netId))
+                m_networkIdAndCharacterDict.Remove(netId);
         }
-        private int AddMonster(int monsterId, Vector2 pos) {
-            int netId = NetworkIdManager.GetNewActorUnitNetworkId();
+        private void AddMonster(int netId, int monsterId, Vector2 pos) {
             m_networkIdAndMonsterDict[netId] = new E_Monster(netId, monsterId, pos);
-            return netId;
         }
         private void RemoveMonster(int netId) {
-            NetworkIdManager.RemoveActorUnitNetworkId(netId);
-            m_networkIdAndMonsterDict.Remove(netId);
+            if(m_networkIdAndMonsterDict.ContainsKey(netId))
+                m_networkIdAndMonsterDict.Remove(netId);
         }
         public void Tick(float dT) {
             foreach (var selfPair in m_networkIdAndCharacterDict) {
@@ -94,8 +90,20 @@ namespace MirRemake {
                 monster.Tick(dT);
             }
         }
+        /// <summary>
+        /// 在新的玩家连接到服务器后调用
+        /// 为它分配并返回一个NetworkId
+        /// </summary>
+        /// <returns></returns>
+        public int CommandAssignNetworkId() {
+            return NetworkIdManager.GetNewActorUnitNetworkId();
+        }
+        public void CommandRemoveCharacter(int netId) {
+            NetworkIdManager.RemoveActorUnitNetworkId(netId);
+            RemoveCharacter(netId);
+        }
         public void CommandSetCharacterPlayerId(int netId, int playerId) {
-            m_networkIdAndCharacterDict[netId].SetPlayerInfo(playerId);
+            AddCharacter(netId, playerId);
         }
         public void CommandSetPosition(int netId, Vector2 pos) {
             m_networkIdAndCharacterDict[netId].SetPosition(pos);

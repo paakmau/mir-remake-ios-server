@@ -49,8 +49,8 @@ namespace MirRemake {
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
 
-            // 实例化玩家角色并分配NetId
-            int netId = SM_ActorUnit.s_instance.AddCharacter();
+            // 分配NetId
+            int netId = SM_ActorUnit.s_instance.CommandAssignNetworkId();
             m_peerIdAndNetworkIdDict[peer.Id] = netId;
             m_networkIdAndPeerIdDict[netId] = peer.Id;
 
@@ -66,7 +66,7 @@ namespace MirRemake {
             m_netIdAndPeerDict.Remove (netId);
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
-            SM_ActorUnit.s_instance.RemoveCharacter (netId);
+            SM_ActorUnit.s_instance.CommandRemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
         /// <summary>

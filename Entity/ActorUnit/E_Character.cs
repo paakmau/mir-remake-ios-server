@@ -17,10 +17,8 @@ namespace MirRemake {
         private long m_chargeMoney;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
 
-        public E_Character (int netId) {
+        public E_Character (int netId, int playerId) {
             m_networkId = netId;
-        }
-        public void SetPlayerInfo (int playerId) {
             m_playerId = playerId;
             // TODO: 从数据库获取玩家等级装备技能等级, 并自动计算具体属性
             m_level = 15;
