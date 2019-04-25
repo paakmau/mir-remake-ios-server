@@ -12,10 +12,10 @@ namespace MirRemake {
         private const int c_serverPort = 23333;
         private const int c_maxClientNum = 3000;
         private NetManager m_serverNetManager;
-        private Dictionary<int, NetPeer> m_peerIdAndPeerDict = new Dictionary<int, NetPeer> ();
+        private Dictionary<int, NetPeer> m_netIdAndPeerDict = new Dictionary<int, NetPeer> ();
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
-        private Dictionary<NetworkSendDataType, IClientCommand> m_clientCommand = new Dictionary<NetworkSendDataType, IClientCommand> ();
+        private Dictionary<NetworkSendDataType, IClientCommand> m_clientCommandDict = new Dictionary<NetworkSendDataType, IClientCommand> ();
         private NetDataWriter m_writer = new NetDataWriter ();
         public void Init () {
             // 初始化LiteNet
@@ -23,10 +23,10 @@ namespace MirRemake {
             m_serverNetManager.Start (c_serverPort);
 
             // 初始化命令模式
-            m_clientCommand.Add (NetworkSendDataType.SEND_PLAYER_ID, new CC_SendPlayerId ());
-            m_clientCommand.Add (NetworkSendDataType.SEND_POSITION, new CC_SendPosition ());
-            m_clientCommand.Add (NetworkSendDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
-            m_clientCommand.Add (NetworkSendDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
+            m_clientCommandDict.Add (NetworkSendDataType.SEND_PLAYER_ID, new CC_SendPlayerId ());
+            m_clientCommandDict.Add (NetworkSendDataType.SEND_POSITION, new CC_SendPosition ());
+            m_clientCommandDict.Add (NetworkSendDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
+            m_clientCommandDict.Add (NetworkSendDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
         }
         public void Tick (float dT) {
             m_serverNetManager.PollEvents ();
@@ -39,23 +39,23 @@ namespace MirRemake {
         }
         public void OnNetworkLatencyUpdate (NetPeer peer, int latency) { }
         public void OnNetworkReceive (NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod) {
-            IClientCommand command = m_clientCommand[(NetworkSendDataType) reader.GetByte ()];
+            IClientCommand command = m_clientCommandDict[(NetworkSendDataType) reader.GetByte ()];
             command.Execute (reader, m_peerIdAndNetworkIdDict[peer.Id]);
             reader.Recycle ();
         }
         public void OnNetworkReceiveUnconnected (IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) { }
         public void OnPeerConnected (NetPeer peer) {
             // 超过连接上限
-            if (m_peerIdAndPeerDict.Count >= c_maxClientNum)
+            if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
-            
-            // 保存peer
-            m_peerIdAndPeerDict[peer.Id] = peer;
 
             // 实例化玩家角色并分配NetId
             int netId = SM_ActorUnit.s_instance.AddCharacter();
             m_peerIdAndNetworkIdDict[peer.Id] = netId;
             m_networkIdAndPeerIdDict[netId] = peer.Id;
+
+            // 保存peer
+            m_netIdAndPeerDict[netId] = peer;
 
             // 发送NetId
             NetworkSetSelfNetworkId (peer, netId);
@@ -63,34 +63,76 @@ namespace MirRemake {
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             var netId = m_peerIdAndNetworkIdDict[peer.Id];
-            m_peerIdAndPeerDict.Remove (peer.Id);
+            m_netIdAndPeerDict.Remove (netId);
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
             SM_ActorUnit.s_instance.RemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
+        /// <summary>
+        /// 向Client发送为它分配的NetId
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="netId"></param>
         private void NetworkSetSelfNetworkId (NetPeer client, int netId) {
             m_writer.Put ((byte) NetworkReceiveDataType.SET_SELF_NETWORK_ID);
             m_writer.Put (netId);
             client.Send (m_writer, DeliveryMethod.ReliableUnordered);
             m_writer.Reset ();
         }
-        public void NetworkSetOtherActorUnitInSight (int clientNetId, ActorUnitType actorUnitType, List<int> otherIdList) {
-            int peerId = m_networkIdAndPeerIdDict[clientNetId];
+        /// <summary>
+        /// 玩家进入游戏发送自身PlayerId后, 根据PlayerId从数据库获取玩家信息之后, 发送给玩家的Client
+        /// 包括等级, 经验, 已学技能列表
+        /// TODO: 装备, 物品, 加点
+        /// 分几个包发
+        /// </summary>
+        /// <param name="clientNetId">新接入的Client</param>
+        /// <param name="level">等级</param>
+        /// <param name="exp">经验值</param>
+        /// <param name="skillIds">已学技能Id列表</param>
+        /// <param name="skillLevels">已学技能等级列表</param>
+        /// <param name="skillMasterlys">已学技能熟练度列表</param>
+        public void NetworkSetSelfInfo (int clientNetId, short level, int exp, short[] skillIds, short[] skillLevels, int[] skillMasterlys) {
+            NetPeer client = m_netIdAndPeerDict[clientNetId];
+
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_SELF_INIT_INFO);
+            m_writer.Put (level);
+            m_writer.Put (exp);
+            m_writer.Put ((short) skillIds.Length);
+            for (int i=0; i<skillIds.Length; i++) {
+                m_writer.Put (skillIds[i]);
+                m_writer.Put (skillLevels[i]);
+                m_writer.Put (skillMasterlys[i]);
+            }
+            client.Send(m_writer, DeliveryMethod.ReliableOrdered);
+            m_writer.Reset();
+        }
+        /// <summary>
+        /// 向一个Client发送它的视野中的某一类单位
+        /// </summary>
+        /// <param name="clientNetId">Client</param>
+        /// <param name="actorUnitType">单位种类</param>
+        /// <param name="otherNetIdList">其他单位NetId列表</param>
+        public void NetworkSetOtherActorUnitInSight (int clientNetId, ActorUnitType actorUnitType, List<int> otherNetIdList) {
+            NetPeer client = m_netIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
-            NetPeer client = m_peerIdAndPeerDict[peerId];
             m_writer.Put ((byte) actorUnitType);
-            m_writer.Put ((byte) otherIdList.Count);
-            for (int i = 0; i < otherIdList.Count; i++) {
-                m_writer.Put (otherIdList[i]);
+            m_writer.Put ((byte) otherNetIdList.Count);
+            for (int i = 0; i < otherNetIdList.Count; i++) {
+                m_writer.Put (otherNetIdList[i]);
             }
             client.Send (m_writer, DeliveryMethod.Sequenced);
             m_writer.Reset ();
         }
+        /// <summary>
+        /// 向一个Client发送它的视野中其他单位的位置
+        /// </summary>
+        /// <param name="clientNetId"></param>
+        /// <param name="otherIdList"></param>
+        /// <param name="posList"></param>
         public void NetworkSetOtherPosition (int clientNetId, List<int> otherIdList, List<Vector2> posList) {
-            int peerId = m_networkIdAndPeerIdDict[clientNetId];
+            NetPeer client = m_netIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_POSITION);
-            NetPeer client = m_peerIdAndPeerDict[peerId];
             m_writer.Put ((byte) otherIdList.Count);
             for (int i = 0; i < otherIdList.Count; i++) {
                 m_writer.Put (otherIdList[i]);
@@ -99,10 +141,15 @@ namespace MirRemake {
             client.Send (m_writer, DeliveryMethod.Sequenced);
             m_writer.Reset ();
         }
+        /// <summary>
+        /// 向一个Client发送所有Unit的HP与MP
+        /// </summary>
+        /// <param name="clientNetId"></param>
+        /// <param name="otherIdList"></param>
+        /// <param name="attrList"></param>
         public void NetworkSetAllHPAndMP (int clientNetId, List<int> otherIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
-            int peerId = m_networkIdAndPeerIdDict[clientNetId];
+            NetPeer client = m_netIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_HP_AND_MP);
-            NetPeer client = m_peerIdAndPeerDict[peerId];
             m_writer.Put ((byte) otherIdList.Count);
             for (int i = 0; i < otherIdList.Count; i++) {
                 m_writer.Put (otherIdList[i]);
@@ -111,12 +158,17 @@ namespace MirRemake {
             client.Send (m_writer, DeliveryMethod.ReliableSequenced);
             m_writer.Reset ();
         }
-        public void NetworkSetAllFSMState (int allNetId, FSMActiveEnterState aEState) {
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_FSM_STATE);
-            m_writer.Put (allNetId);
+        /// <summary>
+        /// 向其他所有视野内的Client发送Unit的FSMState
+        /// </summary>
+        /// <param name="otherNetId"></param>
+        /// <param name="aEState"></param>
+        public void NetworkSetSelfFSMStateToOther (int selfNetId, FSMActiveEnterState aEState) {
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_FSM_STATE);
+            m_writer.Put (selfNetId);
             m_writer.PutFSMAEState (aEState);
-            foreach (var clientPair in m_peerIdAndPeerDict) {
-                if (m_peerIdAndNetworkIdDict[clientPair.Key] != allNetId)
+            foreach (var clientPair in m_netIdAndPeerDict) {
+                if (clientPair.Key != selfNetId)
                     clientPair.Value.Send (m_writer, DeliveryMethod.ReliableSequenced);
             }
             m_writer.Reset ();
