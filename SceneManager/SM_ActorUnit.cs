@@ -114,6 +114,7 @@ namespace MirRemake {
         }
         public void CommandApplyActiveEnterFSMState (int netId, FSMActiveEnterState state) {
             m_networkIdAndCharacterDict[netId].ApplyActiveEnterFSMState (state);
+            NetworkService.s_instance.NetworkSetSelfFSMStateToOther(netId, state);
         }
     }
 }

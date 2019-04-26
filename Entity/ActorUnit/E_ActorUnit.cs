@@ -98,7 +98,6 @@ namespace MirRemake {
                 tar.CalculateAndApplyEffect (initEffect);
         }
         public void ApplyActiveEnterFSMState(FSMActiveEnterState state) {
-            NetworkService.s_instance.NetworkSetSelfFSMStateToOther(m_networkId, state);
         }
         /// <summary>
         /// 被施加Effect后, 计算出最终伤害与状态变化, 施加到自身
