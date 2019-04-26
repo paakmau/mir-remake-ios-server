@@ -17,8 +17,12 @@ namespace MirRemake {
         }
         private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr (int[] networkIdArr) {
             List<E_ActorUnit> res = new List<E_ActorUnit> (networkIdArr.Length);
-            foreach (var netId in networkIdArr)
-                res.Add (m_networkIdAndCharacterDict[netId]);
+            foreach (var netId in networkIdArr) {
+                if(m_networkIdAndCharacterDict.ContainsKey(netId))
+                    res.Add (m_networkIdAndCharacterDict[netId]);
+                if(m_networkIdAndMonsterDict.ContainsKey(netId))
+                    res.Add (m_networkIdAndMonsterDict[netId]);
+            }
             return res;
         }
         private void AddMonster (int netId, int monsterId, Vector2 pos) {

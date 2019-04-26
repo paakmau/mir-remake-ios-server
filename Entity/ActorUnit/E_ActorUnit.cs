@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 namespace MirRemake {
     abstract class E_ActorUnit {
         // 等级
@@ -153,12 +153,13 @@ namespace MirRemake {
         /// <returns>命中则返回true, 否则返回false</returns>
         public bool CalculateApplyEffect (E_Effect effect) {
             effect.m_hitRate /= m_DodgeRate;
-            if (Random.Range (1, 101) >= effect.m_hitRate)
+            Random randObj = new Random(DateTime.Now.Millisecond);
+            if (randObj.Next (1, 101) >= effect.m_hitRate)
                 // 未命中
                 return false;
             effect.m_criticalRate /= m_DodgeRate;
             // 是否暴击
-            bool isCritical = (Random.Range (1, 101) <= effect.m_criticalRate);
+            bool isCritical = (randObj.Next (1, 101) <= effect.m_criticalRate);
 
             switch (effect.m_deltaHPType) {
                 case EffectDeltaHPType.PHYSICS:
