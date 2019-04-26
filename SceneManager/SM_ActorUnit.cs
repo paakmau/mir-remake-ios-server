@@ -44,6 +44,19 @@ namespace MirRemake {
                     continue;
                 // 每个单位的Tick
                 self.Tick (dT);
+            }
+            foreach (var monsterPair in m_networkIdAndMonsterDict) {
+                var monsterNetId = monsterPair.Key;
+                var monster = monsterPair.Value;
+                monster.Tick (dT);
+            }
+        }
+        public void NetworkTick() {
+            foreach (var selfPair in m_networkIdAndCharacterDict) {
+                var selfNetId = selfPair.Key;
+                var self = selfPair.Value;
+                if (self.m_playerId == -1)
+                    continue;
 
                 // 发送其他玩家视野信息
                 var actorUnitType = ActorUnitType.Player;
@@ -86,9 +99,6 @@ namespace MirRemake {
                 NetworkService.s_instance.NetworkSetAllHPAndMP (selfNetId, netIdList, HPMPList);
             }
             foreach (var monsterPair in m_networkIdAndMonsterDict) {
-                var monsterNetId = monsterPair.Key;
-                var monster = monsterPair.Value;
-                monster.Tick (dT);
             }
         }
         /// <summary>

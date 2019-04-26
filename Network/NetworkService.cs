@@ -28,7 +28,7 @@ namespace MirRemake {
             m_clientCommandDict.Add (NetworkSendDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
             m_clientCommandDict.Add (NetworkSendDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
         }
-        public void Tick (float dT) {
+        public void Tick () {
             m_serverNetManager.PollEvents ();
         }
         public void OnConnectionRequest (ConnectionRequest request) {
