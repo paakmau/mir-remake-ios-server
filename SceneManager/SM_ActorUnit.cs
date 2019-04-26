@@ -13,7 +13,11 @@ namespace MirRemake {
             AddMonster (NetworkIdManager.GetNewActorUnitNetworkId (), 0, new Vector2 (0, 1));
         }
         private E_ActorUnit GetActorUnitByNetworkId (int networkId) {
-            return m_networkIdAndCharacterDict[networkId];
+            if(m_networkIdAndCharacterDict.ContainsKey(networkId))
+                return m_networkIdAndCharacterDict[networkId];
+            if(m_networkIdAndMonsterDict.ContainsKey(networkId))
+                return m_networkIdAndMonsterDict[networkId];
+            return null;
         }
         private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr (int[] networkIdArr) {
             List<E_ActorUnit> res = new List<E_ActorUnit> (networkIdArr.Length);
