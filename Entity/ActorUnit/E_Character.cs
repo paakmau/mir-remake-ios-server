@@ -12,6 +12,7 @@ namespace MirRemake {
     class E_Character : E_ActorUnit {
         public int m_playerId = -1;
         private int m_experience;
+        public int m_Experience { get { return m_experience; } }
         private E_AbstractRepository m_bag;
         private long m_virtualMoney;
         private long m_chargeMoney;
@@ -23,9 +24,6 @@ namespace MirRemake {
             // TODO: 从数据库获取玩家等级装备技能等级, 并自动计算具体属性
             m_level = 15;
             m_experience = 15053;
-            short[] skillIdArr = new short[3] { 0, 1, 2};
-            short[] skillLevelArr = new short[3] { 2, 1, 5};
-            int[] skillMasterlyArr = new int[3] { 1252, 233, 15};
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_HP, 1500);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_MP, 1500);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_HP, 150);
@@ -45,8 +43,13 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.FAINT, 0);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SILENT, 0);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.IMMOBILE, 0);
+        }
 
-            NetworkService.s_instance.NetworkSetSelfInfo (m_networkId, m_level, m_experience, skillIdArr, skillLevelArr, skillMasterlyArr);
+        // TODO: 技能相关需要访问数据库
+        public void GetAllLearnedSkill (out short[] skillIdArr, out short[] skillLvArr, out int[] skillMasterlyArr) {
+            skillIdArr = new short[3] { 0, 1, 2};
+            skillLvArr = new short[3] { 2, 1, 4};
+            skillMasterlyArr = new int[3] { 10053, 233, 15};
         }
 
         /// <summary>

@@ -81,10 +81,9 @@ namespace MirRemake {
             m_writer.Reset ();
         }
         /// <summary>
-        /// 玩家进入游戏发送自身PlayerId后, 根据PlayerId从数据库获取玩家信息之后, 发送给玩家的Client
-        /// 包括等级, 经验, 已学技能列表
-        /// TODO: 装备, 物品, 加点
-        /// 分几个包发
+        /// 玩家进入游戏发送自身PlayerId后, 根据PlayerId从数据库获取玩家信息之后, 发送给玩家的Client  
+        /// 包括等级, 经验, 已学技能列表  
+        /// TODO: 装备, 物品, 加点  
         /// </summary>
         /// <param name="clientNetId">新接入的Client</param>
         /// <param name="level">等级</param>
