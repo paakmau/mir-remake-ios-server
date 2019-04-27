@@ -207,7 +207,14 @@ namespace MirRemake {
             foreach (var pair in allNetIdAndStatusArrPairArr)
                 if (pair.Value == null)
                     m_writer.Put(pair.Key);
+            foreach (var clientPeer in m_netIdAndPeerDict.Values)
+                clientPeer.Send(m_writer, DeliveryMethod.ReliableOrdered);
+            m_writer.Reset ();
+        }
 
+        public void NetworkSetAllDeadToAll (int deadUnitNetId) {
+            m_writer.Put ((byte) NetworkReceiveDataType.APPLY_ALL_DEAD);
+            m_writer.Put (deadUnitNetId);
             m_writer.Reset ();
         }
     }

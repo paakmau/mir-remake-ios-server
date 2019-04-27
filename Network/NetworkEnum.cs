@@ -9,7 +9,8 @@ namespace MirRemake {
         SET_OTHER_POSITION,
         SET_ALL_HP_AND_MP,
         APPLY_OTHER_FSM_STATE,
-        APPLY_ALL_EFFECT
+        APPLY_ALL_EFFECT,
+        APPLY_ALL_DEAD
     }
     enum NetworkSendDataType : byte {
         SEND_PLAYER_ID,
