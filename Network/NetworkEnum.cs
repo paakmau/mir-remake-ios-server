@@ -8,7 +8,7 @@ namespace MirRemake {
         SET_OTHER_ACTOR_UNIT_IN_SIGHT,
         SET_OTHER_POSITION,
         SET_ALL_HP_AND_MP,
-        SET_OTHER_FSM_STATE,
+        APPLY_OTHER_FSM_STATE,
         APPLY_ALL_EFFECT
     }
     enum NetworkSendDataType : byte {

@@ -164,7 +164,7 @@ namespace MirRemake {
         /// <param name="otherNetId"></param>
         /// <param name="aEState"></param>
         public void NetworkSetSelfFSMStateToOther (int selfNetId, FSMActiveEnterState aEState) {
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_FSM_STATE);
+            m_writer.Put ((byte) NetworkReceiveDataType.APPLY_OTHER_FSM_STATE);
             m_writer.Put (selfNetId);
             m_writer.PutFSMAEState (aEState);
             foreach (var clientPair in m_netIdAndPeerDict) {
