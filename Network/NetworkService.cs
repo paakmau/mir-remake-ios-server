@@ -50,7 +50,7 @@ namespace MirRemake {
                 return;
 
             // 分配NetId
-            int netId = SM_ActorUnit.s_instance.CommandAssignNetworkId();
+            int netId = SM_ActorUnit.s_instance.CommandAssignNetworkId ();
             m_peerIdAndNetworkIdDict[peer.Id] = netId;
             m_networkIdAndPeerIdDict[netId] = peer.Id;
 
@@ -98,13 +98,13 @@ namespace MirRemake {
             m_writer.Put (level);
             m_writer.Put (exp);
             m_writer.Put ((short) skillIds.Length);
-            for (int i=0; i<skillIds.Length; i++) {
+            for (int i = 0; i < skillIds.Length; i++) {
                 m_writer.Put (skillIds[i]);
                 m_writer.Put (skillLevels[i]);
                 m_writer.Put (skillMasterlys[i]);
             }
-            client.Send(m_writer, DeliveryMethod.ReliableOrdered);
-            m_writer.Reset();
+            client.Send (m_writer, DeliveryMethod.ReliableOrdered);
+            m_writer.Reset ();
         }
         /// <summary>
         /// 向一个Client发送它的视野中的某一类单位
@@ -157,6 +157,7 @@ namespace MirRemake {
             client.Send (m_writer, DeliveryMethod.ReliableSequenced);
             m_writer.Reset ();
         }
+
         /// <summary>
         /// 向其他所有视野内的Client发送Unit的FSMState
         /// </summary>
@@ -170,6 +171,43 @@ namespace MirRemake {
                 if (clientPair.Key != selfNetId)
                     clientPair.Value.Send (m_writer, DeliveryMethod.ReliableSequenced);
             }
+            m_writer.Reset ();
+        }
+
+        /// <summary>
+        /// 对所有玩家发送视野内的施加effect事件  
+        /// 数据包格式:  
+        /// effectAnimId, byte  
+        /// statusNum, byte  
+        /// unitHitNum, byte 命中的目标数量  
+        /// hitNetIdAndstatusArrPairArr, (int, E_Status[])*unitHitNum 命中的目标(unitHitNum个)的NetId及其被附加的状态  
+        /// unitNotHitNum, byte 未命中的目标数量
+        /// notHitNetIdArr, (int)*unitNotHitNum 未被命中的目标NetId
+        /// </summary>
+        /// <param name="effectAnimId">effect动画Id</param>
+        /// <param name="statusNum">effect造成的新增状态数量</param>
+        /// <param name="allNetIdAndStatusArrPairArr">所有受到effect的Unit的NetId, 状态数组键值对数组</param>
+        public void NetworkSetAllEffectToAll (short effectAnimId, byte statusNum, KeyValuePair<int, E_Status[]>[] allNetIdAndStatusArrPairArr) {
+            m_writer.Put ((byte) NetworkReceiveDataType.APPLY_ALL_EFFECT);
+            m_writer.Put (effectAnimId);
+            m_writer.Put (statusNum);
+            int unitHitNum = 0;
+            if (statusNum != 0)
+                foreach (var pair in allNetIdAndStatusArrPairArr)
+                    if (pair.Value != null)
+                        unitHitNum++;
+            m_writer.Put ((byte)unitHitNum);
+            foreach (var pair in allNetIdAndStatusArrPairArr)
+                if (pair.Value != null) {
+                    m_writer.Put(pair.Key);
+                    foreach (var status in pair.Value)
+                        m_writer.PutE_Status(status);
+                }
+            m_writer.Put ((byte)(allNetIdAndStatusArrPairArr.Length - unitHitNum));
+            foreach (var pair in allNetIdAndStatusArrPairArr)
+                if (pair.Value == null)
+                    m_writer.Put(pair.Key);
+
             m_writer.Reset ();
         }
     }

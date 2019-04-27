@@ -152,7 +152,9 @@ namespace MirRemake {
             m_networkIdAndCharacterDict[netId].SetPosition (pos);
         }
         public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
-            m_networkIdAndCharacterDict[netId].ApplyCastSkill (new E_Skill (skillId), GetActorUnitArrByNetworkIdArr (tarIdArr));
+            E_Skill skill = new E_Skill (skillId);
+            KeyValuePair<int, E_Status[]>[] statusPairArr = m_networkIdAndCharacterDict[netId].ApplyCastSkill (new E_Skill (skillId), GetActorUnitArrByNetworkIdArr (tarIdArr));
+            NetworkService.s_instance.NetworkSetAllEffectToAll(skill.m_skillEffect.m_animId, (byte)skill.m_skillEffect.m_StatusAttachNum, statusPairArr);
         }
         public void CommandApplyActiveEnterFSMState (int netId, FSMActiveEnterState state) {
             m_networkIdAndCharacterDict[netId].ApplyActiveEnterFSMState (state);

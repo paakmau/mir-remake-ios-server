@@ -52,16 +52,6 @@ namespace MirRemake {
         private Vector2 m_position;
         public Vector2 m_Position { get { return m_position; } }
 
-        public void AttachStatus (E_Status status) {
-            m_statusList.Add(status);
-            foreach (var item in status.m_affectAttributeDict)
-                m_concreteAttributeDict[item.Key] += item.Value * status.m_value;
-        }
-        public void RemoveStatus (E_Status status) {
-            m_statusList.Remove(status);
-            foreach (var item in status.m_affectAttributeDict)
-                m_concreteAttributeDict[item.Key] -= item.Value * status.m_value;
-        }
         protected float deltaTimeAfterLastSecond = 0f;
         public void Tick (float dT) {
             // 处理具体属性的每秒变化
@@ -76,9 +66,13 @@ namespace MirRemake {
 
             // 移除超时的状态
             for (int i = m_statusList.Count - 1; i >= 0; i--) {
-                m_statusList[i].Tick(dT);
-                if (m_statusList[i].m_leftTime <= 0.0f)
-                    RemoveStatus(m_statusList[i]);
+                m_statusList[i].Tick (dT);
+                if (m_statusList[i].m_leftTime <= 0.0f) {
+                    var statusEn = m_statusList[i].m_affectAttributeDict.GetEnumerator();
+                    while(statusEn.MoveNext ())
+                        m_concreteAttributeDict[statusEn.Current.Key] -= statusEn.Current.Value * m_statusList[i].m_value;
+                    m_statusList.RemoveAt (i);
+                }
             }
         }
 
@@ -90,37 +84,45 @@ namespace MirRemake {
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="targets"></param>
-        public void ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets) {
+        /// <returns>返回NetId与E_Status的键值对数组</returns>
+        public KeyValuePair<int, E_Status[]>[] ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets) {
+            KeyValuePair<int, E_Status[]>[] res = new KeyValuePair<int, E_Status[]>[targets.Count];
             // 计算初始Effect
             E_Effect initEffect = skill.m_skillEffect.GetClone ();
             CalculateCastEffect (initEffect);
-            foreach (var tar in targets)
-                tar.CalculateAndApplyEffect (initEffect);
+            for (int i = 0; i < targets.Count; i++)
+                res[i] = new KeyValuePair<int, E_Status[]>(targets[i].m_networkId, targets[i].CalculateAndApplyEffect (initEffect));
+            return res;
         }
-        public void ApplyActiveEnterFSMState(FSMActiveEnterState state) {
-        }
+        public void ApplyActiveEnterFSMState (FSMActiveEnterState state) { }
         /// <summary>
         /// 被施加Effect后, 计算出最终伤害与状态变化, 施加到自身
         /// 会修改传入的Effect
         /// </summary>
         /// <param name="initEffect">被施加到自身的Effect, 会被修改</param>
-        /// <returns>把Effect返回(同一个对象)</returns>
-        public void CalculateAndApplyEffect (E_Effect initEffect) {
+        /// <returns>把所有新增的Status返回, 若未命中返回null</returns>
+        public E_Status[] CalculateAndApplyEffect (E_Effect initEffect) {
             // 根据自身属性计算最终Effect
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {
+                E_Status[] res = new E_Status[initEffect.m_statusAttachArray.Length];
                 // 应用到自身属性上
                 ApplyEffectToAttributes (initEffect);
-                // 附加状态并应用到具体属性与FSM中
+                // 附加状态并应用到具体属性
                 if (initEffect.m_statusAttachArray != null) {
-                    m_statusList.AddRange (initEffect.m_statusAttachArray);
-                    foreach (var status in initEffect.m_statusAttachArray)
-                        AttachStatus (status);
+                    int i = 0;
+                    foreach (var status in initEffect.m_statusAttachArray) {
+                        res[i] = status;
+                        m_statusList.Add (status);
+                        var affectAttrEn = status.m_affectAttributeDict.GetEnumerator ();
+                        while (affectAttrEn.MoveNext ())
+                            m_concreteAttributeDict[affectAttrEn.Current.Key] += affectAttrEn.Current.Value * status.m_value;
+                        i ++;
+                    }
                 }
-                // 播放Effect特效
-            } else {
-                // 播放Miss动画
-            }
+                return res;
+            } else
+                return null;
         }
         /// <summary>
         /// 传入的Effect会被修改
@@ -153,7 +155,7 @@ namespace MirRemake {
         /// <returns>命中则返回true, 否则返回false</returns>
         public bool CalculateApplyEffect (E_Effect effect) {
             effect.m_hitRate /= m_DodgeRate;
-            Random randObj = new Random(DateTime.Now.Millisecond);
+            Random randObj = new Random (DateTime.Now.Millisecond);
             if (randObj.Next (1, 101) >= effect.m_hitRate)
                 // 未命中
                 return false;
@@ -178,7 +180,7 @@ namespace MirRemake {
 
             // 计算异常状态持续时间(根据韧性)
             if (effect.m_statusAttachArray != null)
-                for (int i=0; i<effect.m_statusAttachArray.Length; i++)
+                for (int i = 0; i < effect.m_statusAttachArray.Length; i++)
                     if (effect.m_statusAttachArray[i].m_type == StatusType.DEBUFF)
                         effect.m_statusAttachArray[i].m_leftTime -= (100 - m_Tenacity) * 0.01f;
 
