@@ -215,6 +215,17 @@ namespace MirRemake {
             NetPeer client = m_netIdAndPeerDict[netId];
             m_writer.Put((byte)NetworkSendDataType.ACCEPT_MISSION);
             m_writer.Put(missionId);
+            client.Send(m_writer, DeliveryMethod.Unreliable);
+            m_writer.Reset();
+        }
+
+        public void NetworkConfirmDeliveringMission(int netId, short missionId, bool isCompleted) {
+            NetPeer client = m_netIdAndPeerDict[netId];
+            m_writer.Put((byte)NetworkSendDataType.DELIVERING_MISSION);
+            m_writer.Put(isCompleted);
+            m_writer.Put(missionId);
+            client.Send(m_writer, DeliveryMethod.Unreliable);
+            m_writer.Reset();
         }
     }
 }

@@ -161,15 +161,26 @@ namespace MirRemake {
             NetworkService.s_instance.NetworkSetSelfFSMStateToOther (netId, state);
         }
         public void CommandAcceptingMission(int netId, short missionId) {
-            E_ActorUnit actorUnit = GetActorUnitByNetworkId(netId);
-            E_Character character = null;
-            if(actorUnit.m_ActorUnitType == ActorUnitType.Player) {
-                character = (E_Character)actorUnit;
-            }
+            E_Character character = GetPlayerByNetId(netId);
             E_Mission mission = new E_Mission();
             // TODO:根据任务id从数据库获取任务
             character.AcceptingMission(mission);
             
+
+            NetworkService.s_instance.NetworkConfirmAcceptingMission(netId, missionId);
+        }
+
+        public void CommandDeliveringMission(int netId, short missionId) {
+            E_Character character = GetPlayerByNetId(netId);
+            NetworkService.s_instance.NetworkConfirmDeliveringMission(netId, missionId, character.DeliveringMission(missionId));
+        }
+
+        public E_Character GetPlayerByNetId(int netId) {
+            E_ActorUnit actorUnit = GetActorUnitByNetworkId(netId);
+            if(actorUnit.m_ActorUnitType == ActorUnitType.Player) {
+                return (E_Character)actorUnit;
+            }
+            return null;
         }
     }
 }
