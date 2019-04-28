@@ -182,5 +182,11 @@ namespace MirRemake {
             }
             return null;
         }
+
+        public void CommandCancelMission(int netId, short missionId) {
+            E_Character character = GetPlayerByNetId(netId);
+            character.CancelMission(missionId);
+            NetworkService.s_instance.NetworkConfirmMissionFailed(netId, missionId);
+        }
     }
 }

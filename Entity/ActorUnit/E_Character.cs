@@ -292,5 +292,11 @@ namespace MirRemake {
             }
             return false;
         }
+
+        public void CancelMission(short missionId) {
+            E_Mission mission = GetMissionById(missionId);
+            mission.Failed();
+            m_missionList.Remove(mission);
+        }
     }
 }

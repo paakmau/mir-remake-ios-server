@@ -92,5 +92,9 @@ namespace MirRemake {
 
             return true;
         }
+
+        public void Failed() {
+            // TODO:destroy
+        }
     }
 }

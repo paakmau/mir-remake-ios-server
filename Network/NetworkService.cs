@@ -227,5 +227,13 @@ namespace MirRemake {
             client.Send(m_writer, DeliveryMethod.Unreliable);
             m_writer.Reset();
         }
+
+        public void NetworkConfirmMissionFailed(int netId, short missionId) {
+            NetPeer client = m_netIdAndPeerDict[netId];
+            m_writer.Put((byte)NetworkSendDataType.CANCEL_MISSION);
+            m_writer.Put(missionId);
+            client.Send(m_writer, DeliveryMethod.Unreliable);
+            m_writer.Reset();
+        }
     }
 }
