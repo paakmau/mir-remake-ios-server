@@ -13,9 +13,12 @@ namespace MirRemake {
         public int m_playerId = -1;
         private int m_experience;
         public int m_Experience { get { return m_experience; } }
-        private E_AbstractRepository m_bag;
+        private E_Repository m_bag;
+        private E_Repository m_storehouse;
+        private E_Repository m_equipmentList;
         private long m_virtualMoney;
         private long m_chargeMoney;
+        private List<E_Mission> m_missionList;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
 
         public E_Character (int netId, int playerId) {
@@ -224,6 +227,19 @@ namespace MirRemake {
                 default:
                     break;
             }
+        }
+
+        public E_Mission GetMissionById(short missionId) {
+            foreach(E_Mission mission in m_missionList) {
+                if(mission.m_Id == missionId) {
+                    return mission;
+                }
+            }
+            return null;
+        }
+
+        public void AcceptingMission(E_Mission mission) {
+            m_missionList.Add(mission);
         }
     }
 }
