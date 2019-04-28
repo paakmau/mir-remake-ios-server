@@ -210,5 +210,11 @@ namespace MirRemake {
 
             m_writer.Reset ();
         }
+
+        public void NetworkConfirmAcceptingMission(int netId, short missionId) {
+            NetPeer client = m_netIdAndPeerDict[netId];
+            m_writer.Put((byte)NetworkSendDataType.ACCEPT_MISSION);
+            m_writer.Put(missionId);
+        }
     }
 }

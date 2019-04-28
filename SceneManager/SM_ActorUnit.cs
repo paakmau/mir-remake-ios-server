@@ -160,5 +160,16 @@ namespace MirRemake {
             m_networkIdAndCharacterDict[netId].ApplyActiveEnterFSMState (state);
             NetworkService.s_instance.NetworkSetSelfFSMStateToOther (netId, state);
         }
+        public void CommandAcceptingMission(int netId, short missionId) {
+            E_ActorUnit actorUnit = GetActorUnitByNetworkId(netId);
+            E_Character character = null;
+            if(actorUnit.m_ActorUnitType == ActorUnitType.Player) {
+                character = (E_Character)actorUnit;
+            }
+            E_Mission mission = new E_Mission();
+            // TODO:根据任务id从数据库获取任务
+            character.AcceptingMission(mission);
+            
+        }
     }
 }
