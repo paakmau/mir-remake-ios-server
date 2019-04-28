@@ -26,8 +26,8 @@ namespace MirRemake {
             m_experience = 15053;
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_HP, 1500);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_MP, 1500);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_HP, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_MP, 150);
+            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_HP, 1500);
+            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_MP, 1500);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, 5);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, 5);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.ATTACK, 150);

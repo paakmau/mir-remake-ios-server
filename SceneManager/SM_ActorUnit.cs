@@ -122,6 +122,11 @@ namespace MirRemake {
                     netIdList.Add (allPair.Key);
                     HPMPList.Add (allUnit.m_concreteAttributeDict);
                 }
+                foreach (var monsterPair in m_networkIdAndMonsterDict) {
+                    var monsterUnit = monsterPair.Value;
+                    netIdList.Add (monsterPair.Key);
+                    HPMPList.Add (monsterUnit.m_concreteAttributeDict);
+                }
                 NetworkService.s_instance.NetworkSetAllHPAndMP (selfNetId, netIdList, HPMPList);
             }
         }

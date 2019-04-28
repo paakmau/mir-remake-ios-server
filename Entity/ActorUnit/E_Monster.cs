@@ -11,8 +11,8 @@ namespace MirRemake {
             // TODO: 从数据库获取怪物等级技能属性等
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.MAX_HP, 1500);
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.MAX_MP, 1500);
-            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CURRENT_HP, 150);
-            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CURRENT_MP, 150);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CURRENT_HP, 1500);
+            m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.CURRENT_MP, 1500);
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, 5);
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, 5);
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.ATTACK, 150);

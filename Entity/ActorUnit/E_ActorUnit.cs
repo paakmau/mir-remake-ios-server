@@ -105,7 +105,7 @@ namespace MirRemake {
             // 根据自身属性计算最终Effect
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {
-                E_Status[] res = new E_Status[initEffect.m_statusAttachArray.Length];
+                E_Status[] res = new E_Status[initEffect.m_StatusAttachNum];
                 // 应用到自身属性上
                 ApplyEffectToAttributes (initEffect);
                 // 附加状态并应用到具体属性
