@@ -13,10 +13,15 @@ namespace MirRemake {
         public int m_playerId = -1;
         private int m_experience;
         public int m_Experience { get { return m_experience; } }
-        private E_AbstractRepository m_bag;
+        private E_Repository m_bag;
+        private E_Repository m_storehouse;
+        private E_Repository m_equipmentList;
         private long m_virtualMoney;
         private long m_chargeMoney;
+        private List<E_Mission> m_missionList;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
+        // TODO:从数据库获取升级所需经验
+        public int m_UpgradeExperienceInNeed { get; }
 
         public E_Character (int netId, int playerId) {
             m_networkId = netId;
@@ -209,6 +214,42 @@ namespace MirRemake {
                     return 0;
             }
         }
+        
+        /// <summary>
+        /// 获得某种类型的货币
+        /// </summary>
+        /// <param name="type">货币类型</param>
+        /// <param name="money">数量</param>
+        public void GainMoneyByType(CurrencyType type, int money) {
+            if(type == CurrencyType.CHARGE) {
+                m_chargeMoney += money;
+                return;
+            }
+            if(type == CurrencyType.VIRTUAL) {
+                m_virtualMoney += money;
+                return;
+            }
+        }
+
+        /// <summary>
+        /// 获得经验值，满足升级条件即升级
+        /// </summary>
+        /// <param name="experience">获得的经验</param>
+        public void GainExperience(int experience) {
+            while((experience + m_experience) >= m_UpgradeExperienceInNeed) {
+                experience += (m_experience - m_UpgradeExperienceInNeed);
+                Upgrade();
+                m_experience = 0;
+            }
+            m_experience += experience;
+        }
+
+        /// <summary>
+        /// 触发升级
+        /// </summary>
+        private void Upgrade() {
+            // TODO:
+        }
 
         protected void SetMoneyByCurrencyType (long money, CurrencyType type) {
             if (money < 0) {
@@ -224,6 +265,38 @@ namespace MirRemake {
                 default:
                     break;
             }
+        }
+
+        public E_Mission GetMissionById(short missionId) {
+            foreach(E_Mission mission in m_missionList) {
+                if(mission.m_Id == missionId) {
+                    return mission;
+                }
+            }
+            return null;
+        }
+
+        public void AcceptingMission(E_Mission mission) {
+            m_missionList.Add(mission);
+        }
+
+        public bool DeliveringMission(short missionId) {
+            E_Mission mission = GetMissionById(missionId);
+            if(mission.isCompleted()) {
+                // TODO:根据id和数量初始化物品
+                List<E_Item> bonusItems = new List<E_Item>();
+                GainItems(bonusItems);
+                GainExperience(mission.m_BonusExperiences);
+                GainMoneyByType(CurrencyType.VIRTUAL, mission.m_BonusMoney);
+                return true;
+            }
+            return false;
+        }
+
+        public void CancelMission(short missionId) {
+            E_Mission mission = GetMissionById(missionId);
+            mission.Failed();
+            m_missionList.Remove(mission);
         }
     }
 }
