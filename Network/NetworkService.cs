@@ -146,18 +146,31 @@ namespace MirRemake {
         /// <param name="clientNetId"></param>
         /// <param name="otherIdList"></param>
         /// <param name="attrList"></param>
-        public void NetworkSetAllHPAndMP (int clientNetId, List<int> allIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
-            NetPeer client = m_netIdAndPeerDict[clientNetId];
+        public void NetworkSetAllHPAndMP (int clientNetId, List<int> allNetIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
             m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_HP_AND_MP);
-            m_writer.Put ((byte) allIdList.Count);
-            for (int i = 0; i < allIdList.Count; i++) {
-                m_writer.Put (allIdList[i]);
+            m_writer.Put ((byte) allNetIdList.Count);
+            for (int i = 0; i < allNetIdList.Count; i++) {
+                m_writer.Put (allNetIdList[i]);
                 m_writer.Put (attrList[i][ActorUnitConcreteAttributeType.CURRENT_HP]);
                 m_writer.Put (attrList[i][ActorUnitConcreteAttributeType.MAX_HP]);
                 m_writer.Put (attrList[i][ActorUnitConcreteAttributeType.CURRENT_MP]);
                 m_writer.Put (attrList[i][ActorUnitConcreteAttributeType.MAX_MP]);
             }
+            NetPeer client = m_netIdAndPeerDict[clientNetId];
             client.Send (m_writer, DeliveryMethod.ReliableSequenced);
+            m_writer.Reset ();
+        }
+        public void NetworkSetAllHPAndMPToAll (int netId, Dictionary<ActorUnitConcreteAttributeType, int> attr) {
+            m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_HP_AND_MP);
+            m_writer.Put ((byte) 1);
+            m_writer.Put (netId);
+            m_writer.Put (attr[ActorUnitConcreteAttributeType.CURRENT_HP]);
+            m_writer.Put (attr[ActorUnitConcreteAttributeType.MAX_HP]);
+            m_writer.Put (attr[ActorUnitConcreteAttributeType.CURRENT_MP]);
+            m_writer.Put (attr[ActorUnitConcreteAttributeType.MAX_MP]);
+            var clientEn = m_netIdAndPeerDict.GetEnumerator();
+            while (clientEn.MoveNext ())
+                clientEn.Current.Value.Send (m_writer, DeliveryMethod.ReliableUnordered);
             m_writer.Reset ();
         }
 
