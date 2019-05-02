@@ -1,3 +1,11 @@
+/**
+ *Enity，状态实体
+ *创建者 yuk
+ *时间 2019/4/3
+ *最后修改者 yuk
+ *时间 2019/4/3
+ */
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +22,8 @@ namespace MirRemake {
             m_leftTime -= dT;
         }
         public E_Status (short id, int value, float leftTime) {
-            m_type = StatusType.DEBUFF; // TODO: 等yzj完成E_Status
+            // TODO: 测试用
+            m_type = StatusType.DEBUFF;
             m_name = "龙之吐息";
             m_details = "gfy深深吸了一口气，并对你缓缓吐出";
             m_affectAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> () {

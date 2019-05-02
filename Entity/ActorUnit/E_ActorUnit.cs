@@ -57,15 +57,7 @@ namespace MirRemake {
                 m_concreteAttributeDict[statusAttrEn.Current.Key] -= statusAttrEn.Current.Value * status.m_value;
         }
         protected float deltaTimeAfterLastSecond = 0f;
-        public void Tick (float dT) {
-            // 若死亡
-            if (m_IsDead) {
-                // 移除所有状态
-                for (int i = 0; i < m_statusList.Count; i++)
-                    RemoveStatusToAttr (m_statusList[i]);
-                m_statusList.Clear ();
-                return;
-            }
+        public virtual void Tick (float dT) {
             // 处理具体属性的每秒变化
             deltaTimeAfterLastSecond += dT;
             while (deltaTimeAfterLastSecond >= 1.0f) {
@@ -104,7 +96,7 @@ namespace MirRemake {
             CalculateCastEffect (initEffect);
             for (int i = 0; i < targets.Count; i++) {
                 E_Status[] newStatusArr;
-                targets[i].CalculateAndApplyEffect (m_networkId, initEffect, out newStatusArr);
+                targets[i].CalculateAndApplyEffect (this, initEffect, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead) {
                     deadNetIdList.Add (targets[i].m_networkId);
@@ -120,7 +112,8 @@ namespace MirRemake {
         /// <param name="attackerNetId"></param>
         /// <param name="initEffect">被施加到自身的Effect, 会被修改</param>
         /// <param name="newStatusArr">所有新增的Status, 若未命中则为null</param>
-        protected virtual void CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
+        /// <return>命中为true, 否则false</return>
+        protected virtual bool CalculateAndApplyEffect (E_ActorUnit attacker, E_Effect initEffect, out E_Status[] newStatusArr) {
             // 根据自身属性计算最终Effect
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {
@@ -141,6 +134,7 @@ namespace MirRemake {
                 }
             } else
                 newStatusArr = null;
+            return hit;
         }
         /// <summary>
         /// 传入的Effect会被修改
