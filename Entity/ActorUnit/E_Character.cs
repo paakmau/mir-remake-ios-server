@@ -1,10 +1,3 @@
-/// <summary>
-/// Enity，角色类
-/// 创建者 fn
-/// 时间 2019/4/3
-/// 最后修改者 fn
-/// 时间 2019/4/3
-/// </summary>
 
 using System.Collections.Generic;
 using UnityEngine;

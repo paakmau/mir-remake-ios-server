@@ -4,6 +4,8 @@ using UnityEngine;
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
+        // 怪物仇恨度哈希表
+        private Dictionary<int, float> m_networkIdAndHatredDict = new Dictionary<int, float> ();
         public E_Monster(int networkId, int monsterId, Vector2 pos) {
             m_networkId = networkId;
             SetPosition (pos);
@@ -29,6 +31,15 @@ namespace MirRemake {
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.SILENT, 0);
             m_concreteAttributeDict.Add(ActorUnitConcreteAttributeType.IMMOBILE, 0);
             // TODO: 并把等级等发送到客户端
+        }
+        protected override void CalculateAndApplyEffect(int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
+            base.CalculateAndApplyEffect(attackerNetId, initEffect, out newStatusArr);
+
+            // 计算仇恨
+            float hatred = 0f;
+            m_networkIdAndHatredDict.TryGetValue(attackerNetId, out hatred);
+            hatred += initEffect.m_deltaHP + initEffect.m_deltaMP * 0.5f + newStatusArr.Length * 0.1f;
+            m_networkIdAndHatredDict[attackerNetId] = hatred;
         }
         public override List<E_Item> DropLegacy() {
             return null;

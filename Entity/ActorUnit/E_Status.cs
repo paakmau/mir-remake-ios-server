@@ -1,11 +1,3 @@
-/**
- *Enity，状态实体
- *创建者 yuk
- *时间 2019/4/3
- *最后修改者 yuk
- *时间 2019/4/3
- */
-
 using System.Collections.Generic;
 using UnityEngine;
 

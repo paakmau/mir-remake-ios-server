@@ -1,17 +1,10 @@
-/**
- * Enity，战斗单元实体
- * 创建者 fn
- * 时间 2019/4/1
- * 最后修改者 yuk
- * 时间 2019/4/3
- */
-
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 namespace MirRemake {
     abstract class E_ActorUnit {
+        public int m_networkId;
         // 等级
         protected short m_level;
         public short m_Level { get { return this.m_level; } }
@@ -70,7 +63,7 @@ namespace MirRemake {
                 // 移除所有状态
                 for (int i = 0; i < m_statusList.Count; i++)
                     RemoveStatusToAttr (m_statusList[i]);
-                m_statusList.Clear();
+                m_statusList.Clear ();
                 return;
             }
             // 处理具体属性的每秒变化
@@ -110,7 +103,9 @@ namespace MirRemake {
             E_Effect initEffect = skill.m_skillEffect.GetClone ();
             CalculateCastEffect (initEffect);
             for (int i = 0; i < targets.Count; i++) {
-                netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, targets[i].CalculateAndApplyEffect (initEffect));
+                E_Status[] newStatusArr;
+                targets[i].CalculateAndApplyEffect (m_networkId, initEffect, out newStatusArr);
+                netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead) {
                     deadNetIdList.Add (targets[i].m_networkId);
                     SM_ActorUnit.s_instance.UnitDead (targets[i].m_networkId);
@@ -122,20 +117,21 @@ namespace MirRemake {
         /// 被施加Effect后, 计算出最终伤害与状态变化, 施加到自身
         /// 会修改传入的Effect
         /// </summary>
+        /// <param name="attackerNetId"></param>
         /// <param name="initEffect">被施加到自身的Effect, 会被修改</param>
-        /// <returns>把所有新增的Status返回, 若未命中返回null</returns>
-        public E_Status[] CalculateAndApplyEffect (E_Effect initEffect) {
+        /// <param name="newStatusArr">所有新增的Status, 若未命中则为null</param>
+        protected virtual void CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
             // 根据自身属性计算最终Effect
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {
-                E_Status[] res = new E_Status[initEffect.m_StatusAttachNum];
+                newStatusArr = new E_Status[initEffect.m_StatusAttachNum];
                 // 应用到自身属性上
                 ApplyEffectToAttributes (initEffect);
                 // 附加状态并应用到具体属性
                 if (initEffect.m_statusAttachArray != null) {
                     int i = 0;
                     foreach (var status in initEffect.m_statusAttachArray) {
-                        res[i] = status;
+                        newStatusArr[i] = status;
                         m_statusList.Add (status);
                         var affectAttrEn = status.m_affectAttributeDict.GetEnumerator ();
                         while (affectAttrEn.MoveNext ())
@@ -143,15 +139,14 @@ namespace MirRemake {
                         i++;
                     }
                 }
-                return res;
             } else
-                return null;
+                newStatusArr = null;
         }
         /// <summary>
         /// 传入的Effect会被修改
         /// </summary>
         /// <param name="effect">技能或道具的原始Effect</param>
-        public void CalculateCastEffect (E_Effect effect) {
+        private void CalculateCastEffect (E_Effect effect) {
             // 处理初始命中与暴击
             effect.m_hitRate *= m_HitRate;
             effect.m_criticalRate *= m_CriticalRate;
@@ -176,7 +171,7 @@ namespace MirRemake {
         /// </summary>
         /// <param name="effect">由释放者计算后的Effect</param>
         /// <returns>命中则返回true, 否则返回false</returns>
-        public bool CalculateApplyEffect (E_Effect effect) {
+        private bool CalculateApplyEffect (E_Effect effect) {
             effect.m_hitRate /= m_DodgeRate;
             Random randObj = new Random (DateTime.Now.Millisecond);
             if (randObj.Next (1, 101) >= effect.m_hitRate)
@@ -216,14 +211,14 @@ namespace MirRemake {
         /// 把计算好的effect应用到自己身上
         /// </summary>
         /// <param name="effect"></param>
-        public void ApplyEffectToAttributes (E_Effect effect) {
+        private void ApplyEffectToAttributes (E_Effect effect) {
             int newHP = m_CurHP + effect.m_deltaHP;
             int newMP = m_CurMP + effect.m_deltaMP;
             m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
             m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
         }
 
-        protected void CalculateByHPStrategy (E_Effect effect, HPStrategy hPStrategy) {
+        private void CalculateByHPStrategy (E_Effect effect, HPStrategy hPStrategy) {
             if (hPStrategy == null) return;
             float value = 0;
             foreach (var item in hPStrategy.strategyFactorDict)
@@ -239,6 +234,5 @@ namespace MirRemake {
             return null;
         }
 
-        public int m_networkId;
     }
 }
