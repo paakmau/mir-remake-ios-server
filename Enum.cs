@@ -54,17 +54,6 @@ namespace MirRemake {
         SILENT,
         IMMOBILE
     }
-    /// <summary>
-    /// 据说可以减少GC
-    /// </summary>
-    struct ActorUnitConcreteAttributeTypeComparer : IEqualityComparer<ActorUnitConcreteAttributeType> {
-        public bool Equals(ActorUnitConcreteAttributeType a, ActorUnitConcreteAttributeType b) {
-            return (byte)a == (byte)b;
-        }
-        public int GetHashCode(ActorUnitConcreteAttributeType obj) {
-            return (int)obj;
-        }
-    }
     enum ActorUnitType {
         Player,
         Monster,
@@ -78,6 +67,11 @@ namespace MirRemake {
         CAST_FRONT,
         CAST_BACK,
         FAINT
+    }
+    enum AIFSMStateType : byte {
+        FREE,
+        MOVE,
+        BATTLE
     }
     enum RepositoryType : byte {
         BAG,
