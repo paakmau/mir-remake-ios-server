@@ -68,11 +68,6 @@ namespace MirRemake {
         CAST_BACK,
         FAINT
     }
-    enum AIFSMStateType : byte {
-        FREE,
-        MOVE,
-        BATTLE
-    }
     enum RepositoryType : byte {
         BAG,
         STOREHOUSE,

@@ -4,10 +4,12 @@ using UnityEngine;
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
-        private AIFSM m_aIFSM = new AIFSM (new AIFSMS_Free());
+        private FSM m_fSM;
         // 怪物仇恨度哈希表
         private Dictionary<int, float> m_networkIdAndHatredDict = new Dictionary<int, float> ();
         public E_Monster (int networkId, int monsterId, Vector2 pos) {
+            m_fSM = new FSM (new FSMS_Free (this));
+
             m_networkId = networkId;
             SetPosition (pos);
 
@@ -45,7 +47,7 @@ namespace MirRemake {
                 float newHatred = m_networkIdAndHatredDict[hatredEn.Current.Key] - dT * 0.15f;
                 m_networkIdAndHatredDict[hatredEn.Current.Key] = newHatred;
                 if (newHatred <= 0f)
-                    enemyNetIdToRemoveList.Add(hatredEn.Current.Key);
+                    enemyNetIdToRemoveList.Add (hatredEn.Current.Key);
                 else if (hatredEn.Current.Value > maxHatred) {
                     // 寻找最高仇恨目标
                     maxHatred = hatredEn.Current.Value;
@@ -53,12 +55,12 @@ namespace MirRemake {
                 }
             }
             // 移除仇恨度降至0或以下的目标
-            for (int i=0; i<enemyNetIdToRemoveList.Count; i++)
+            for (int i = 0; i < enemyNetIdToRemoveList.Count; i++)
                 m_networkIdAndHatredDict.Remove (enemyNetIdToRemoveList[i]);
 
             // 有仇恨目标
             if (maxHatred != float.MinValue) {
-                
+
             }
         }
         protected override bool CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {

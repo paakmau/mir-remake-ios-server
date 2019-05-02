@@ -34,11 +34,14 @@ namespace MirRemake {
         public float m_castBackTime;
         // 冷却时间
         public float m_coolDownTime;
+        private SkillTargetChooser m_targetChooser;
+        public IRangeChecker m_RangeChecker { get { return m_targetChooser; } }
         public E_Effect m_skillEffect;
         // TODO:是否能升级，（等级与熟练度是否都足够）
         public bool m_IsUpgradable {
             get { return false; }
         }
+        public SkillAimType m_AimType { get { return m_targetChooser.m_targetAimType; } }
         public short m_FatherId {
             get { return 0; }
         }
@@ -53,6 +56,7 @@ namespace MirRemake {
             m_singTime = 0.0f;
             m_castFrontTime = 0.2f;
             m_castBackTime = 0.3f;
+            m_targetChooser = new SkillTargetChooser ();
             m_skillEffect = new E_Effect ();
         }
         // TODO:技能升级
@@ -65,6 +69,24 @@ namespace MirRemake {
         // TODO:遗忘技能
         public bool Forget () {
             return true;
+        }
+        // public E_ActorUnit GetCastTargetIfAim (E_ActorUnit self, E_ActorUnit aimedTarget) {
+        //     return m_targetChooser.GetCastTargetIfAim (self, aimedTarget);
+        // }
+        public TargetPosition GetCastTargetPosition (E_ActorUnit self, E_ActorUnit aimedTarget, Vector2 parm) {
+            return m_targetChooser.GetCastTargetPosition (self, aimedTarget, parm);
+        }
+        public bool CheckInRange (E_ActorUnit self, TargetPosition tarPos) {
+            return m_targetChooser.CheckInRange (self, tarPos);
+        }
+        public bool CheckCostEnough (E_ActorUnit self) {
+            return self.m_CurHP > m_costHP && self.m_CurMP >= m_costMP;
+        }
+        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, TargetPosition tarPos, Vector2 parm) {
+            return m_targetChooser.GetEffectTargets (self, tarPos, parm);
+        }
+        public Vector2 GetCastDirection (E_ActorUnit self, TargetPosition tarPos, Vector2 parm) {
+            return m_targetChooser.GetCastDirection (self, tarPos, parm);
         }
     }
 }
