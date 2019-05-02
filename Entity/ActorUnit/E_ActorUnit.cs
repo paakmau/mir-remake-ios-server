@@ -96,7 +96,7 @@ namespace MirRemake {
             CalculateCastEffect (initEffect);
             for (int i = 0; i < targets.Count; i++) {
                 E_Status[] newStatusArr;
-                targets[i].CalculateAndApplyEffect (this, initEffect, out newStatusArr);
+                targets[i].CalculateAndApplyEffect (m_networkId, initEffect, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead) {
                     deadNetIdList.Add (targets[i].m_networkId);
@@ -113,7 +113,7 @@ namespace MirRemake {
         /// <param name="initEffect">被施加到自身的Effect, 会被修改</param>
         /// <param name="newStatusArr">所有新增的Status, 若未命中则为null</param>
         /// <return>命中为true, 否则false</return>
-        protected virtual bool CalculateAndApplyEffect (E_ActorUnit attacker, E_Effect initEffect, out E_Status[] newStatusArr) {
+        protected virtual bool CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
             // 根据自身属性计算最终Effect
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {

@@ -4,8 +4,9 @@ using UnityEngine;
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
+        private AIFSM m_aIFSM = new AIFSM (new AIFSMS_Free());
         // 怪物仇恨度哈希表
-        private Dictionary<E_ActorUnit, float> m_networkIdAndHatredDict = new Dictionary<E_ActorUnit, float> ();
+        private Dictionary<int, float> m_networkIdAndHatredDict = new Dictionary<int, float> ();
         public E_Monster (int networkId, int monsterId, Vector2 pos) {
             m_networkId = networkId;
             SetPosition (pos);
@@ -35,16 +36,40 @@ namespace MirRemake {
         public override void Tick (float dT) {
             base.Tick (dT);
 
+            var hatredEn = m_networkIdAndHatredDict.GetEnumerator ();
+            float maxHatred = float.MinValue;
+            int attackerNetId = 0;
+            List<int> enemyNetIdToRemoveList = new List<int> ();
+            while (hatredEn.MoveNext ()) {
+                // 更新仇恨度及其移除列表
+                float newHatred = m_networkIdAndHatredDict[hatredEn.Current.Key] - dT * 0.15f;
+                m_networkIdAndHatredDict[hatredEn.Current.Key] = newHatred;
+                if (newHatred <= 0f)
+                    enemyNetIdToRemoveList.Add(hatredEn.Current.Key);
+                else if (hatredEn.Current.Value > maxHatred) {
+                    // 寻找最高仇恨目标
+                    maxHatred = hatredEn.Current.Value;
+                    attackerNetId = hatredEn.Current.Key;
+                }
+            }
+            // 移除仇恨度降至0或以下的目标
+            for (int i=0; i<enemyNetIdToRemoveList.Count; i++)
+                m_networkIdAndHatredDict.Remove (enemyNetIdToRemoveList[i]);
+
+            // 有仇恨目标
+            if (maxHatred != float.MinValue) {
+                
+            }
         }
-        protected override bool CalculateAndApplyEffect (E_ActorUnit attacker, E_Effect initEffect, out E_Status[] newStatusArr) {
-            bool hit = base.CalculateAndApplyEffect (attacker, initEffect, out newStatusArr);
+        protected override bool CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
+            bool hit = base.CalculateAndApplyEffect (attackerNetId, initEffect, out newStatusArr);
             // 若命中
             if (hit) {
                 // 计算仇恨
                 float hatred = 0f;
-                m_networkIdAndHatredDict.TryGetValue (attacker, out hatred);
-                hatred += initEffect.m_deltaHP + initEffect.m_deltaMP * 0.5f + newStatusArr.Length * 0.1f;
-                m_networkIdAndHatredDict[attacker] = hatred;
+                m_networkIdAndHatredDict.TryGetValue (attackerNetId, out hatred);
+                hatred += initEffect.m_deltaHP / m_MaxHP + initEffect.m_deltaMP * 0.5f / m_MaxMP + newStatusArr.Length * 0.1f;
+                m_networkIdAndHatredDict[attackerNetId] = hatred;
             }
             return hit;
         }
