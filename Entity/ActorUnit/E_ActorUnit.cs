@@ -53,8 +53,26 @@ namespace MirRemake {
         private Vector2 m_position;
         public Vector2 m_Position { get { return m_position; } }
 
+        private void AttachStatusToAttr (E_Status status) {
+            var statusAttrEn = status.m_affectAttributeDict.GetEnumerator ();
+            while (statusAttrEn.MoveNext ())
+                m_concreteAttributeDict[statusAttrEn.Current.Key] -= statusAttrEn.Current.Value * status.m_value;
+        }
+        private void RemoveStatusToAttr (E_Status status) {
+            var statusAttrEn = status.m_affectAttributeDict.GetEnumerator ();
+            while (statusAttrEn.MoveNext ())
+                m_concreteAttributeDict[statusAttrEn.Current.Key] -= statusAttrEn.Current.Value * status.m_value;
+        }
         protected float deltaTimeAfterLastSecond = 0f;
         public void Tick (float dT) {
+            // 若死亡
+            if (m_IsDead) {
+                // 移除所有状态
+                for (int i = 0; i < m_statusList.Count; i++)
+                    RemoveStatusToAttr (m_statusList[i]);
+                m_statusList.Clear();
+                return;
+            }
             // 处理具体属性的每秒变化
             deltaTimeAfterLastSecond += dT;
             while (deltaTimeAfterLastSecond >= 1.0f) {
@@ -69,9 +87,7 @@ namespace MirRemake {
             for (int i = m_statusList.Count - 1; i >= 0; i--) {
                 m_statusList[i].Tick (dT);
                 if (m_statusList[i].m_leftTime <= 0.0f) {
-                    var statusEn = m_statusList[i].m_affectAttributeDict.GetEnumerator();
-                    while(statusEn.MoveNext ())
-                        m_concreteAttributeDict[statusEn.Current.Key] -= statusEn.Current.Value * m_statusList[i].m_value;
+                    RemoveStatusToAttr (m_statusList[i]);
                     m_statusList.RemoveAt (i);
                 }
             }
@@ -94,9 +110,11 @@ namespace MirRemake {
             E_Effect initEffect = skill.m_skillEffect.GetClone ();
             CalculateCastEffect (initEffect);
             for (int i = 0; i < targets.Count; i++) {
-                netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]>(targets[i].m_networkId, targets[i].CalculateAndApplyEffect (initEffect));
-                if(targets[i].m_IsDead)
-                    deadNetIdList.Add(targets[i].m_networkId);
+                netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, targets[i].CalculateAndApplyEffect (initEffect));
+                if (targets[i].m_IsDead) {
+                    deadNetIdList.Add (targets[i].m_networkId);
+                    SM_ActorUnit.s_instance.UnitDead (targets[i].m_networkId);
+                }
             }
         }
         public void ApplyActiveEnterFSMState (FSMActiveEnterState state) { }
@@ -122,7 +140,7 @@ namespace MirRemake {
                         var affectAttrEn = status.m_affectAttributeDict.GetEnumerator ();
                         while (affectAttrEn.MoveNext ())
                             m_concreteAttributeDict[affectAttrEn.Current.Key] += affectAttrEn.Current.Value * status.m_value;
-                        i ++;
+                        i++;
                     }
                 }
                 return res;

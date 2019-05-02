@@ -50,9 +50,9 @@ namespace MirRemake {
             m_id = id;
             m_costHP = 0;
             m_costMP = 30;
-            m_singTime = 5.0f;
-            m_castFrontTime = 0.5f;
-            m_castBackTime = 1.2f;
+            m_singTime = 0.0f;
+            m_castFrontTime = 0.2f;
+            m_castBackTime = 0.3f;
             m_skillEffect = new E_Effect ();
         }
         // TODO:技能升级

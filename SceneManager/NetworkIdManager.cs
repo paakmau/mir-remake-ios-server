@@ -18,8 +18,7 @@ namespace MirRemake {
             return m_actorUnitCnt;
         }
         public static void RemoveActorUnitNetworkId(int netId) {
-            if(m_actorUnitNetIdSet.Contains(netId))
-                m_actorUnitNetIdSet.Remove(netId);
+            m_actorUnitNetIdSet.Remove(netId);
         }
     }
 }
