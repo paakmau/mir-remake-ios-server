@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
-        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
+        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
         public E_Monster(int networkId, int monsterId, Vector2 pos) {
             m_networkId = networkId;
             SetPosition (pos);

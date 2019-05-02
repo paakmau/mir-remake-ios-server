@@ -131,6 +131,7 @@ namespace MirRemake {
         public void CommandRemoveCharacter (int netId) {
             NetworkIdManager.RemoveActorUnitNetworkId (netId);
             m_networkIdAndActorUnitDict.Remove (netId);
+            m_playerNetIdSet.Remove (netId);
         }
         public void CommandSetCharacterPlayerId (int netId, int playerId) {
             E_Character newChar = new E_Character (netId, playerId);
