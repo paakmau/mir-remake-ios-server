@@ -215,9 +215,12 @@ namespace MirRemake {
             m_writer.Reset ();
         }
 
-        public void NetworkSetAllDeadToAll (int deadUnitNetId) {
+        public void NetworkSetAllDeadToAll (int killerNetId, List<int> deadNetIdList) {
             m_writer.Put ((byte) NetworkReceiveDataType.APPLY_ALL_DEAD);
-            m_writer.Put (deadUnitNetId);
+            m_writer.Put (killerNetId);
+            m_writer.Put ((byte) deadNetIdList.Count);
+            for(int i=0; i<deadNetIdList.Count; i++)
+                m_writer.Put (deadNetIdList[i]);
             m_writer.Reset ();
         }
 

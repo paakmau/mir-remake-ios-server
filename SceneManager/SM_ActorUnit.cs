@@ -158,8 +158,11 @@ namespace MirRemake {
         }
         public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
             E_Skill skill = new E_Skill (skillId);
-            KeyValuePair<int, E_Status[]>[] statusPairArr = m_networkIdAndCharacterDict[netId].ApplyCastSkill (new E_Skill (skillId), GetActorUnitArrByNetworkIdArr (tarIdArr));
-            NetworkService.s_instance.NetworkSetAllEffectToAll(skill.m_skillEffect.m_animId, (byte)skill.m_skillEffect.m_StatusAttachNum, statusPairArr);
+            KeyValuePair<int, E_Status[]>[] statusPairArr;
+            List<int> deadNetIdList;
+            m_networkIdAndCharacterDict[netId].ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr, out deadNetIdList);
+            NetworkService.s_instance.NetworkSetAllEffectToAll (skill.m_skillEffect.m_animId, (byte)skill.m_skillEffect.m_StatusAttachNum, statusPairArr);
+            NetworkService.s_instance.NetworkSetAllDeadToAll (netId, deadNetIdList);
         }
         public void CommandApplyActiveEnterFSMState (int netId, FSMActiveEnterState state) {
             m_networkIdAndCharacterDict[netId].ApplyActiveEnterFSMState (state);

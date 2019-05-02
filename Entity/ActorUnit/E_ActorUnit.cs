@@ -44,6 +44,7 @@ namespace MirRemake {
         public bool m_IsFaint { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.FAINT] > 0; } }
         public bool m_IsSilent { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.SILENT] > 0; } }
         public bool m_IsImmobile { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.IMMOBILE] > 0; } }
+        public bool m_IsDead { get { return m_CurHP <= 0; } }
         // 自身状态列表
         protected List<E_Status> m_statusList = new List<E_Status> ();
         /// <summary>
@@ -84,15 +85,19 @@ namespace MirRemake {
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="targets"></param>
-        /// <returns>返回NetId与E_Status的键值对数组</returns>
-        public KeyValuePair<int, E_Status[]>[] ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets) {
-            KeyValuePair<int, E_Status[]>[] res = new KeyValuePair<int, E_Status[]>[targets.Count];
+        /// <param name="netIdAndStatusArr">对于每个target的新增状态列表</param>
+        /// <param name="deadNetIdArr">因为本次释放死亡的target单位</param>
+        public void ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets, out KeyValuePair<int, E_Status[]>[] netIdAndStatusArr, out List<int> deadNetIdList) {
+            netIdAndStatusArr = new KeyValuePair<int, E_Status[]>[targets.Count];
+            deadNetIdList = new List<int> ();
             // 计算初始Effect
             E_Effect initEffect = skill.m_skillEffect.GetClone ();
             CalculateCastEffect (initEffect);
-            for (int i = 0; i < targets.Count; i++)
-                res[i] = new KeyValuePair<int, E_Status[]>(targets[i].m_networkId, targets[i].CalculateAndApplyEffect (initEffect));
-            return res;
+            for (int i = 0; i < targets.Count; i++) {
+                netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]>(targets[i].m_networkId, targets[i].CalculateAndApplyEffect (initEffect));
+                if(targets[i].m_IsDead)
+                    deadNetIdList.Add(targets[i].m_networkId);
+            }
         }
         public void ApplyActiveEnterFSMState (FSMActiveEnterState state) { }
         /// <summary>
