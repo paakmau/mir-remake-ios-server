@@ -5,7 +5,7 @@ using UnityEngine;
 namespace MirRemake {
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
-        private HashSet<int> m_characterNetIdSet = new HashSet<int> ();
+        private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 20f;
         private const float c_monsterRefreshTimerCycleTime = 10000f;
@@ -72,7 +72,7 @@ namespace MirRemake {
             }
         }
         public void NetworkTick () {
-            var selfKeyEn = m_characterNetIdSet.GetEnumerator ();
+            var selfKeyEn = m_playerNetIdSet.GetEnumerator ();
 
             while (selfKeyEn.MoveNext ()) {
                 var selfNetId = selfKeyEn.Current;
@@ -101,7 +101,7 @@ namespace MirRemake {
                 List<int> unitNetIdList = new List<int> ();
                 List<Vector2> posList = new List<Vector2> ();
                 var allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
-                while (allUnitEn.MoveNext())
+                while (allUnitEn.MoveNext ())
                     if (allUnitEn.Current.Key != selfNetId) {
                         unitNetIdList.Add (allUnitEn.Current.Key);
                         posList.Add (allUnitEn.Current.Value.m_Position);
@@ -112,7 +112,7 @@ namespace MirRemake {
                 unitNetIdList.Clear ();
                 List<Dictionary<ActorUnitConcreteAttributeType, int>> HPMPList = new List<Dictionary<ActorUnitConcreteAttributeType, int>> ();
                 allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
-                while (allUnitEn.MoveNext()) {
+                while (allUnitEn.MoveNext ()) {
                     var allUnit = allUnitEn.Current.Value;
                     unitNetIdList.Add (allUnitEn.Current.Key);
                     HPMPList.Add (allUnit.m_concreteAttributeDict);
@@ -135,6 +135,7 @@ namespace MirRemake {
         public void CommandSetCharacterPlayerId (int netId, int playerId) {
             E_Character newChar = new E_Character (netId, playerId);
             m_networkIdAndActorUnitDict[netId] = newChar;
+            m_playerNetIdSet.Add (netId);
             short[] skillIdArr;
             short[] skillLvArr;
             int[] skillMasterlyArr;
