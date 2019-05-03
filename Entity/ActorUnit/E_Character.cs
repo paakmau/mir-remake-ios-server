@@ -107,6 +107,10 @@ namespace MirRemake {
             return m_bag.StoreItems (items);
         }
 
+        public void LossItems (List<E_Item> items) {
+            m_bag.RemoveItems(items);
+        }
+
         /// <summary>
         /// 使用物品
         /// </summary>
@@ -220,6 +224,17 @@ namespace MirRemake {
             }
             if(type == CurrencyType.VIRTUAL) {
                 m_virtualMoney += money;
+                return;
+            }
+        }
+
+        public void LossMoneyByType(CurrencyType type, int money) {
+            if(type == CurrencyType.CHARGE) {
+                m_chargeMoney -= money;
+                return;
+            }
+            if(type == CurrencyType.VIRTUAL) {
+                m_virtualMoney -= money;
                 return;
             }
         }

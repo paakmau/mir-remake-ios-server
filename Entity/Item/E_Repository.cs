@@ -73,22 +73,22 @@ namespace MirRemake {
             short totalWeight = 0;
             short i = 0;
             foreach(E_Item item in this.items) {
-                if(item.BindCharacterId != -1){
+                if(item.m_BindCharacterId != -1){
                     continue;
                 }
-                switch(item.Type) {
+                switch(item.m_Type) {
                     case ItemType.EQUIPMENT:
-                        weight[i] = (byte)(6-item.Quality);
+                        weight[i] = (byte)(6-item.m_Quality);
                         totalWeight += weight[i];
                         i++;
                         break;
                     case ItemType.MATERIAL:
-                        weight[i] = (byte)((6-item.Quality) * 2);
+                        weight[i] = (byte)((6-item.m_Quality) * 2);
                         totalWeight += weight[i];
                         i++;
                         break;
                     case ItemType.CONSUMABLE:
-                        weight[i] = (byte)((6-item.Quality) * 3);
+                        weight[i] = (byte)((6-item.m_Quality) * 3);
                         totalWeight += weight[i];
                         i++;
                         break;
@@ -101,7 +101,7 @@ namespace MirRemake {
                     luckyNum = (short)(luckyNum - weight[count]);
                     if(luckyNum < 0) {
                         E_Item newItem = dropableList[count].Clone();
-                        newItem.Num = 1;
+                        newItem.m_Num = 1;
                         result.Add(newItem);
                         this.RemoveItem(newItem, 1);
                         break;
@@ -120,9 +120,9 @@ namespace MirRemake {
         public override List<E_Item> StoreItems(List<E_Item> items) {
             List<E_Item> restItems = new List<E_Item>();
             foreach(E_Item item in items) {
-                short restNum = this.StoreItem(item, item.Num);
+                short restNum = this.StoreItem(item, item.m_Num);
                 if(restNum > 0) {
-                    item.Num = restNum;
+                    item.m_Num = restNum;
                     restItems.Add(item);
                 }
             }
@@ -136,7 +136,7 @@ namespace MirRemake {
         /// <returns>是否成功</returns>
         public override bool RemoveItems(List<E_Item> items) {
             foreach(E_Item item in items) {
-                bool isSuccess = this.RemoveItem(item, item.Num);
+                bool isSuccess = this.RemoveItem(item, item.m_Num);
                 if(!isSuccess) {
                     return false;
                 }
@@ -151,21 +151,21 @@ namespace MirRemake {
         /// <param name="num">放入的物品数量</param>
         /// <returns>未放入的数量，repository已满</returns>
         public override short StoreItem(E_Item item, short num) {
-            List<E_Item> sameItemsInThisRepository = this.searchItemById(item.Id);
+            List<E_Item> sameItemsInThisRepository = this.searchItemById(item.m_Id);
             //自动堆叠
             foreach (E_Item sameItemEntityInThisRepository in sameItemsInThisRepository) {
                 //repository中此格同类物品的数量
-                short sameItemEntityInThisRepositoryNum = sameItemEntityInThisRepository.Num;
+                short sameItemEntityInThisRepositoryNum = sameItemEntityInThisRepository.m_Num;
                 //最大堆叠
-                short maxNum = sameItemEntityInThisRepository.MaxNum;
+                short maxNum = sameItemEntityInThisRepository.m_MaxNum;
                 if(num == 0) {
                     break;
                 }
                 if(sameItemEntityInThisRepositoryNum < maxNum) {
                     if(num <= (maxNum - sameItemEntityInThisRepositoryNum)) {
-                        sameItemEntityInThisRepository.Num = (short)(sameItemEntityInThisRepositoryNum + num);
+                        sameItemEntityInThisRepository.m_Num = (short)(sameItemEntityInThisRepositoryNum + num);
                     }else {
-                        sameItemEntityInThisRepository.Num = maxNum;
+                        sameItemEntityInThisRepository.m_Num = maxNum;
                         num = (short)(num - (maxNum - sameItemEntityInThisRepositoryNum));
                     }
                 }
@@ -173,7 +173,7 @@ namespace MirRemake {
             //占用新格子
             if (num != 0) {
                 if(this.items.Count < this.size) {
-                    item.Num = num;
+                    item.m_Num = num;
                     this.items.Add(item);
                     return 0;
                 }
@@ -188,14 +188,14 @@ namespace MirRemake {
         /// <param name="num">移除的物品数量</param>
         /// <returns>是否成功</returns>
         public override bool RemoveItem(E_Item item, short num) {
-            List<E_Item> deletingItem = this.searchItemById(item.Id);
+            List<E_Item> deletingItem = this.searchItemById(item.m_Id);
             foreach(E_Item d_item in deletingItem) {
                 if(num == 0) {
                     return true;
                 }
-                short d_num = d_item.Num;
+                short d_num = d_item.m_Num;
                 if(d_num > num) {
-                    d_item.Num = (short)(d_num - num);
+                    d_item.m_Num = (short)(d_num - num);
                     return true;
                 }else {
                     this.items.Remove(d_item);
@@ -212,7 +212,7 @@ namespace MirRemake {
         /// <returns>消耗品效果</returns>
         public E_Effect UseConsumable(E_Item consumable) {
             if(this.RemoveItem(consumable, 1)) {
-                return consumable.E_Effect;
+                return consumable.m_Effect;
             }
             return null;
         }
@@ -233,7 +233,7 @@ namespace MirRemake {
         public override List<E_Item> GetItemsByType(ItemType type) {
             List<E_Item> result = new List<E_Item>();
             foreach(E_Item item in this.items) {
-                if(item.Type == type) {
+                if(item.m_Type == type) {
                     result.Add(item);
                 }
             }
@@ -248,7 +248,7 @@ namespace MirRemake {
         public List<E_Item> searchItemById(short itemId) {
             List<E_Item> result = new List<E_Item>();
             foreach(E_Item item in this.items) {
-                if (item.Id == itemId) {
+                if (item.m_Id == itemId) {
                     result.Add(item);
                 }
             }

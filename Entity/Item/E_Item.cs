@@ -12,24 +12,24 @@ using System.Collections.Generic;
 using System;
 namespace MirRemake {
     class E_Item {
-        private short id;
-        private string name;
-        private ItemType type;
-        private string details;
-        private short maxNum;
-        private short num;
-        private byte quality;
-        private long price;
-        private short bindCharacterId = -1;
-        private E_Effect effect;
+        protected short m_id;
+        protected string m_name;
+        protected ItemType m_type;
+        protected string m_details;
+        protected short m_maxNum;
+        protected short m_num;
+        protected byte m_quality;
+        protected long m_price;
+        protected short m_bindCharacterId = -1;
+        protected E_Effect m_effect;
 
         /// <summary>
         /// 物品id   
         /// </summary>
         /// <value></value>
-        public short Id {
+        public short m_Id {
             get {
-                return id;
+                return m_id;
             }
         }
 
@@ -37,9 +37,9 @@ namespace MirRemake {
         /// 物品名称
         /// </summary>
         /// <value></value>
-        public string Name {
+        public string m_Name {
             get {
-                return name;
+                return m_name;
             }
         }
 
@@ -47,9 +47,9 @@ namespace MirRemake {
         /// 物品描述
         /// </summary>
         /// <value></value>
-        public string Details {
+        public string m_Details {
             get {
-                return details;
+                return m_details;
             }
         }
 
@@ -58,9 +58,9 @@ namespace MirRemake {
         /// 在repository中单物品格最大堆叠
         /// </summary>
         /// <value></value>
-        public short MaxNum {
+        public short m_MaxNum {
             get {
-                return maxNum;
+                return m_maxNum;
             }
         }
 
@@ -68,12 +68,12 @@ namespace MirRemake {
         /// 在repository中的数量
         /// </summary>
         /// <value></value>
-        public short Num {
+        public short m_Num {
             set {
-                num = value;
+                m_num = value;
             }
             get {
-                return num;
+                return m_num;
             }
         }
 
@@ -81,9 +81,9 @@ namespace MirRemake {
         /// 物品种类
         /// </summary>
         /// <value></value>
-        public ItemType Type {
+        public ItemType m_Type {
             get {
-                return type;
+                return m_type;
             }
         }
 
@@ -91,12 +91,12 @@ namespace MirRemake {
         /// 物品品质
         /// </summary>
         /// <value></value>
-        public byte Quality {
+        public byte m_Quality {
             set {
-                quality = value;
+                m_quality = value;
             }
             get {
-                return quality;
+                return m_quality;
             }
         }
 
@@ -104,12 +104,12 @@ namespace MirRemake {
         /// 物品系统售价
         /// </summary>
         /// <value></value>
-        public long Price {
+        public long m_Price {
             set {
-                price = value;
+                m_price = value;
             }
             get {
-                return price;
+                return m_price;
             }
         }
 
@@ -117,12 +117,12 @@ namespace MirRemake {
         /// 绑定的角色id，非绑定物品为-1
         /// </summary>
         /// <value></value>
-        public short BindCharacterId { 
+        public short m_BindCharacterId { 
             set {
-                this.bindCharacterId = value;
+                this.m_bindCharacterId = value;
             }
             get {
-                return this.BindCharacterId;
+                return this.m_BindCharacterId;
             }
         }
 
@@ -130,9 +130,9 @@ namespace MirRemake {
         /// 消耗品的使用效果，其他类型物品为null
         /// </summary>
         /// <value></value>
-        public E_Effect E_Effect {
+        public E_Effect m_Effect {
             get {
-                return effect;
+                return m_effect;
             }
         }
 
@@ -149,14 +149,14 @@ namespace MirRemake {
         /// <returns>新的E_Item实体</returns>
         public E_Item Clone() {
             E_Item newItem = new E_Item();
-            newItem.id = this.id;
-            newItem.name = this.name;
-            newItem.details = this.details;
-            newItem.maxNum = this.maxNum;
-            newItem.num = this.num;
-            newItem.quality = this.quality;
-            newItem.price = this.price;
-            newItem.bindCharacterId = this.bindCharacterId;
+            newItem.m_id = this.m_id;
+            newItem.m_name = this.m_name;
+            newItem.m_details = this.m_details;
+            newItem.m_maxNum = this.m_maxNum;
+            newItem.m_num = this.m_num;
+            newItem.m_quality = this.m_quality;
+            newItem.m_price = this.m_price;
+            newItem.m_bindCharacterId = this.m_bindCharacterId;
             return newItem;
         }
     }

@@ -55,7 +55,7 @@ namespace MirRemake {
             E_ActorUnit attacker = null;
             List<int> enemyNetIdToRemoveList = new List<int> ();
             while (hatredEn.MoveNext ()) {
-                var target = SM_ActorUnit.s_instance.GetActorUnitByNetId(hatredEn.Current.Key);
+                var target = SM_ActorUnit.s_instance.GetActorUnitByNetworkId(hatredEn.Current.Key);
                 // 更新掉线移除列表
                 if (target == null) {
                     enemyNetIdToRemoveList.Add (hatredEn.Current.Key);
