@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace MirRemake {
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
@@ -234,6 +235,29 @@ namespace MirRemake {
             E_Character character = GetPlayerByNetId (netId);
             character.CancelMission (missionId);
             NetworkService.s_instance.NetworkConfirmMissionFailed (netId, missionId);
+        }
+
+        public void CommandBlacksmithBuilding(int netId, Dictionary<short, short> materials, short NPCId) {
+            E_BlacksmithNPC blacksmith = new E_BlacksmithNPC();
+            // TODO:计数
+            BuildingEquipmentFortune face = blacksmith.LookIntoTheMirror(materials);
+            E_Equipment equipment = new E_Equipment(face);
+            List<E_Item> production = new List<E_Item>();
+            production.Add(equipment);
+            
+            List<E_Item> e_materials = new List<E_Item>();
+            foreach(KeyValuePair<short, short> material in materials) {
+                E_Material e_material = new E_Material(material.Key);
+                e_material.m_Num = material.Value;
+                e_materials.Add(e_material);
+            }
+
+            E_Character character = GetPlayerByNetId(netId);
+            character.LossItems(e_materials);
+            character.LossMoneyByType(CurrencyType.VIRTUAL, 10000); // TODO:打造花费
+            character.GainItems(production);
+
+            NetworkService.s_instance.NetworkApplyBlacksmithBuilding(netId, NPCId, equipment.m_Id, equipment.m_RealityId, face);
         }
     }
 }

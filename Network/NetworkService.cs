@@ -252,5 +252,16 @@ namespace MirRemake {
             client.Send(m_writer, DeliveryMethod.Unreliable);
             m_writer.Reset();
         }
+
+        public void  NetworkApplyBlacksmithBuilding(int netId, short NPCId, short equipmentId, int equipmentRealityId, BuildingEquipmentFortune face) {
+            NetPeer client = m_netIdAndPeerDict[netId];
+            m_writer.Put((byte)1);// TODO:
+            m_writer.Put(NPCId);
+            m_writer.Put(equipmentId);
+            m_writer.Put(equipmentRealityId);
+            m_writer.Put((byte)face);
+            client.Send(m_writer, DeliveryMethod.Unreliable);
+            m_writer.Reset();
+        }
     }
 }
