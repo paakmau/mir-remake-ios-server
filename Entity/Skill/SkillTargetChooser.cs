@@ -74,12 +74,12 @@ namespace MirRemake {
                     return new TargetPosition (self);
                 case SkillAimType.OTHER:
                     // 若释放目标为其他Unit
-                    if (aimedTarget != null && aimedTarget.m_camp == m_targetCamp)
+                    if (aimedTarget != null && SM_ActorUnit.s_instance.CheckCampMatch(self, aimedTarget, m_targetCamp))
                         // 已有释放目标且阵营匹配
                         return new TargetPosition (aimedTarget);
                     else {
                         // 寻找释放目标
-                        List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self.m_Position, 5, m_targetCamp, 1);
+                        List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, 5, m_targetCamp, 1);
                         if (targetList.Count == 1)
                             return new TargetPosition (targetList[0]);
                         return new TargetPosition(null);
@@ -120,13 +120,13 @@ namespace MirRemake {
                     case SkillRangeType.SECTOR:
                         if (m_damageRadian == 360)
                             // 自己的圆周范围内
-                            return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
+                            return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
                         else
                             // 自己出发的扇形
-                            return SM_ActorUnit.s_instance.GetActorUnitsInSectorRange (self.m_Position, parm, m_damageRange, m_damageRadian, m_targetCamp, m_targetNumber);
+                            return SM_ActorUnit.s_instance.GetActorUnitsInSectorRange (self, self.m_Position, parm, m_damageRange, m_damageRadian, m_targetCamp, m_targetNumber);
                     case SkillRangeType.LINE:
                         // 自己出发的直线
-                        return SM_ActorUnit.s_instance.GetActorUnitsInLineRange (self.m_Position, parm, m_damageRange, m_damageWidth, m_targetCamp, m_targetNumber);
+                        return SM_ActorUnit.s_instance.GetActorUnitsInLineRange (self, self.m_Position, parm, m_damageRange, m_damageWidth, m_targetCamp, m_targetNumber);
                 }
             } else if (m_targetAimType == SkillAimType.OTHER)  {
                 if (m_targetNumber == 1)
@@ -135,12 +135,12 @@ namespace MirRemake {
                 else {
                     if(m_rangeType == SkillRangeType.SECTOR && m_damageRadian == 360)
                         // 有释放目标的多体(溅射)技能, 且为圆形
-                        return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange(tarPos.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
+                        return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange(self, tarPos.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
                 }
             } else if (m_targetAimType == SkillAimType.NOT_AIM) {
                 if(m_rangeType == SkillRangeType.SECTOR && m_damageRadian == 360)
                     // 非指向的圆形
-                    return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange(tarPos.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
+                    return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange(self, tarPos.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
             }
             return null;
         }

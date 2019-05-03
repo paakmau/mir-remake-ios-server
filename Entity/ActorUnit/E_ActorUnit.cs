@@ -45,6 +45,10 @@ namespace MirRemake {
         /// </summary>
         private Vector2 m_position;
         public Vector2 m_Position { get { return m_position; } }
+        // Unit的占地半径
+        public float m_CoverRadius {
+            get { return 5.0f; }
+        }
 
         private void AttachStatusToAttr (E_Status status) {
             var statusAttrEn = status.m_affectAttributeDict.GetEnumerator ();

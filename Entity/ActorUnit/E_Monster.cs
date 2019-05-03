@@ -4,11 +4,11 @@ using UnityEngine;
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
-        private FSM m_fSM;
+        // private FSM m_fSM;
         // 怪物仇恨度哈希表
         private Dictionary<int, float> m_networkIdAndHatredDict = new Dictionary<int, float> ();
         public E_Monster (int networkId, int monsterId, Vector2 pos) {
-            m_fSM = new FSM (new FSMS_Free (this));
+            // m_fSM = new FSM (new FSMS_Free (this));
 
             m_networkId = networkId;
             SetPosition (pos);
