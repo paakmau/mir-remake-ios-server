@@ -2,7 +2,7 @@
 using LiteNetLib.Utils;
 
 namespace MirRemake {
-    enum NetworkReceiveDataType : byte {
+    enum NetworkToClientDataType : byte {
         SET_SELF_NETWORK_ID,
         SET_SELF_INIT_INFO,
         SET_OTHER_ACTOR_UNIT_IN_SIGHT,
@@ -12,7 +12,7 @@ namespace MirRemake {
         APPLY_ALL_EFFECT,
         APPLY_ALL_DEAD
     }
-    enum NetworkSendDataType : byte {
+    enum NetworkToServerDataType : byte {
         SEND_PLAYER_ID,
         SEND_POSITION,
         APPLY_ACTIVE_ENTER_FSM_STATE,

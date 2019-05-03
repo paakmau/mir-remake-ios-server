@@ -15,7 +15,7 @@ namespace MirRemake {
         private Dictionary<int, NetPeer> m_netIdAndPeerDict = new Dictionary<int, NetPeer> ();
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
-        private Dictionary<NetworkSendDataType, IClientCommand> m_clientCommandDict = new Dictionary<NetworkSendDataType, IClientCommand> ();
+        private Dictionary<NetworkToServerDataType, IClientCommand> m_clientCommandDict = new Dictionary<NetworkToServerDataType, IClientCommand> ();
         private NetDataWriter m_writer = new NetDataWriter ();
         public void Init () {
             // 初始化LiteNet
@@ -23,10 +23,10 @@ namespace MirRemake {
             m_serverNetManager.Start (c_serverPort);
 
             // 初始化命令模式
-            m_clientCommandDict.Add (NetworkSendDataType.SEND_PLAYER_ID, new CC_SendPlayerId ());
-            m_clientCommandDict.Add (NetworkSendDataType.SEND_POSITION, new CC_SendPosition ());
-            m_clientCommandDict.Add (NetworkSendDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
-            m_clientCommandDict.Add (NetworkSendDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
+            m_clientCommandDict.Add (NetworkToServerDataType.SEND_PLAYER_ID, new CC_SendPlayerId ());
+            m_clientCommandDict.Add (NetworkToServerDataType.SEND_POSITION, new CC_SendPosition ());
+            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
+            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
         }
         public void Tick () {
             m_serverNetManager.PollEvents ();
@@ -39,7 +39,7 @@ namespace MirRemake {
         }
         public void OnNetworkLatencyUpdate (NetPeer peer, int latency) { }
         public void OnNetworkReceive (NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod) {
-            IClientCommand command = m_clientCommandDict[(NetworkSendDataType) reader.GetByte ()];
+            IClientCommand command = m_clientCommandDict[(NetworkToServerDataType) reader.GetByte ()];
             command.Execute (reader, m_peerIdAndNetworkIdDict[peer.Id]);
             reader.Recycle ();
         }
@@ -75,7 +75,7 @@ namespace MirRemake {
         /// <param name="client"></param>
         /// <param name="netId"></param>
         private void NetworkSetSelfNetworkId (NetPeer client, int netId) {
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_SELF_NETWORK_ID);
+            m_writer.Put ((byte) NetworkToClientDataType.SET_SELF_NETWORK_ID);
             m_writer.Put (netId);
             client.Send (m_writer, DeliveryMethod.ReliableUnordered);
             m_writer.Reset ();
@@ -94,7 +94,7 @@ namespace MirRemake {
         public void NetworkSetSelfInfo (int clientNetId, short level, int exp, short[] skillIds, short[] skillLevels, int[] skillMasterlys) {
             NetPeer client = m_netIdAndPeerDict[clientNetId];
 
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_SELF_INIT_INFO);
+            m_writer.Put ((byte) NetworkToClientDataType.SET_SELF_INIT_INFO);
             m_writer.Put (level);
             m_writer.Put (exp);
             m_writer.Put ((short) skillIds.Length);
@@ -114,7 +114,7 @@ namespace MirRemake {
         /// <param name="otherNetIdList">其他单位NetId列表</param>
         public void NetworkSetOtherActorUnitInSight (int clientNetId, ActorUnitType actorUnitType, List<int> otherNetIdList) {
             NetPeer client = m_netIdAndPeerDict[clientNetId];
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
+            m_writer.Put ((byte) NetworkToClientDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
             m_writer.Put ((byte) actorUnitType);
             m_writer.Put ((byte) otherNetIdList.Count);
             for (int i = 0; i < otherNetIdList.Count; i++) {
@@ -131,7 +131,7 @@ namespace MirRemake {
         /// <param name="posList"></param>
         public void NetworkSetOtherPosition (int clientNetId, List<int> otherIdList, List<Vector2> posList) {
             NetPeer client = m_netIdAndPeerDict[clientNetId];
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_OTHER_POSITION);
+            m_writer.Put ((byte) NetworkToClientDataType.SET_OTHER_POSITION);
             m_writer.Put ((byte) otherIdList.Count);
             for (int i = 0; i < otherIdList.Count; i++) {
                 m_writer.Put (otherIdList[i]);
@@ -147,7 +147,7 @@ namespace MirRemake {
         /// <param name="otherIdList"></param>
         /// <param name="attrList"></param>
         public void NetworkSetAllHPAndMP (int clientNetId, List<int> allNetIdList, List<Dictionary<ActorUnitConcreteAttributeType, int>> attrList) {
-            m_writer.Put ((byte) NetworkReceiveDataType.SET_ALL_HP_AND_MP);
+            m_writer.Put ((byte) NetworkToClientDataType.SET_ALL_HP_AND_MP);
             m_writer.Put ((byte) allNetIdList.Count);
             for (int i = 0; i < allNetIdList.Count; i++) {
                 m_writer.Put (allNetIdList[i]);
@@ -167,7 +167,7 @@ namespace MirRemake {
         /// <param name="otherNetId"></param>
         /// <param name="aEState"></param>
         public void NetworkSetSelfFSMStateToOther (int selfNetId, FSMActiveEnterState aEState) {
-            m_writer.Put ((byte) NetworkReceiveDataType.APPLY_OTHER_FSM_STATE);
+            m_writer.Put ((byte) NetworkToClientDataType.APPLY_OTHER_FSM_STATE);
             m_writer.Put (selfNetId);
             m_writer.PutFSMAEState (aEState);
             foreach (var clientPair in m_netIdAndPeerDict) {
@@ -191,7 +191,7 @@ namespace MirRemake {
         /// <param name="statusNum">effect造成的新增状态数量</param>
         /// <param name="allNetIdAndStatusArrPairArr">所有受到effect的Unit的NetId, 状态数组键值对数组</param>
         public void NetworkSetAllEffectToAll (short effectAnimId, byte statusNum, KeyValuePair<int, E_Status[]>[] allNetIdAndStatusArrPairArr) {
-            m_writer.Put ((byte) NetworkReceiveDataType.APPLY_ALL_EFFECT);
+            m_writer.Put ((byte) NetworkToClientDataType.APPLY_ALL_EFFECT);
             m_writer.Put (effectAnimId);
             m_writer.Put (statusNum);
             int unitHitNum = 0;
@@ -217,7 +217,7 @@ namespace MirRemake {
 
         public void NetworkSetAllDeadToAll (int killerNetId, List<int> deadNetIdList) {
             if (deadNetIdList.Count == 0) return;
-            m_writer.Put ((byte) NetworkReceiveDataType.APPLY_ALL_DEAD);
+            m_writer.Put ((byte) NetworkToClientDataType.APPLY_ALL_DEAD);
             m_writer.Put (killerNetId);
             m_writer.Put ((byte) deadNetIdList.Count);
             for(int i=0; i<deadNetIdList.Count; i++)
@@ -230,7 +230,7 @@ namespace MirRemake {
 
         public void NetworkConfirmAcceptingMission(int netId, short missionId) {
             NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)NetworkSendDataType.ACCEPT_MISSION);
+            m_writer.Put((byte)NetworkToServerDataType.ACCEPT_MISSION);
             m_writer.Put(missionId);
             client.Send(m_writer, DeliveryMethod.Unreliable);
             m_writer.Reset();
@@ -238,7 +238,7 @@ namespace MirRemake {
 
         public void NetworkConfirmDeliveringMission(int netId, short missionId, bool isCompleted) {
             NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)NetworkSendDataType.DELIVERING_MISSION);
+            m_writer.Put((byte)NetworkToServerDataType.DELIVERING_MISSION);
             m_writer.Put(isCompleted);
             m_writer.Put(missionId);
             client.Send(m_writer, DeliveryMethod.Unreliable);
@@ -247,7 +247,7 @@ namespace MirRemake {
 
         public void NetworkConfirmMissionFailed(int netId, short missionId) {
             NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)NetworkSendDataType.CANCEL_MISSION);
+            m_writer.Put((byte)NetworkToServerDataType.CANCEL_MISSION);
             m_writer.Put(missionId);
             client.Send(m_writer, DeliveryMethod.Unreliable);
             m_writer.Reset();
