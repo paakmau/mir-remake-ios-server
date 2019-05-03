@@ -79,7 +79,7 @@ namespace MirRemake {
                         return new TargetPosition (aimedTarget);
                     else {
                         // 寻找释放目标
-                        List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, 5, m_targetCamp, 1);
+                        List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_position, 5, m_targetCamp, 1);
                         if (targetList.Count == 1)
                             return new TargetPosition (targetList[0]);
                         return new TargetPosition(null);
@@ -107,7 +107,7 @@ namespace MirRemake {
         /// <returns></returns>
         public bool CheckInRange (E_ActorUnit self, TargetPosition tarPos) {
             if(m_targetAimType == SkillAimType.SELF) return true;
-            if ((tarPos.m_Position - self.m_Position).magnitude <= m_castRange)
+            if ((tarPos.m_Position - self.m_position).magnitude <= m_castRange)
                 return true;
             else return false;
         }
@@ -120,13 +120,13 @@ namespace MirRemake {
                     case SkillRangeType.SECTOR:
                         if (m_damageRadian == 360)
                             // 自己的圆周范围内
-                            return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
+                            return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_position, m_damageRange, m_targetCamp, m_targetNumber);
                         else
                             // 自己出发的扇形
-                            return SM_ActorUnit.s_instance.GetActorUnitsInSectorRange (self, self.m_Position, parm, m_damageRange, m_damageRadian, m_targetCamp, m_targetNumber);
+                            return SM_ActorUnit.s_instance.GetActorUnitsInSectorRange (self, self.m_position, parm, m_damageRange, m_damageRadian, m_targetCamp, m_targetNumber);
                     case SkillRangeType.LINE:
                         // 自己出发的直线
-                        return SM_ActorUnit.s_instance.GetActorUnitsInLineRange (self, self.m_Position, parm, m_damageRange, m_damageWidth, m_targetCamp, m_targetNumber);
+                        return SM_ActorUnit.s_instance.GetActorUnitsInLineRange (self, self.m_position, parm, m_damageRange, m_damageWidth, m_targetCamp, m_targetNumber);
                 }
             } else if (m_targetAimType == SkillAimType.OTHER)  {
                 if (m_targetNumber == 1)
@@ -167,10 +167,10 @@ namespace MirRemake {
                 }
             }else if(m_targetAimType == SkillAimType.OTHER) {
                 // 锁定其他人
-                return tarPos.m_Position-self.m_Position;
+                return tarPos.m_Position-self.m_position;
             }else if(m_targetAimType == SkillAimType.NOT_AIM) {
                 // 非指向性技能
-                return tarPos.m_Position-self.m_Position;
+                return tarPos.m_Position-self.m_position;
             }
             return Vector2.zero;
         }

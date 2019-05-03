@@ -46,7 +46,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
+                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -55,7 +55,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
+                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -150,7 +150,7 @@ namespace MirRemake {
                 while (allUnitEn.MoveNext ())
                     if (allUnitEn.Current.Key != selfNetId) {
                         unitNetIdList.Add (allUnitEn.Current.Key);
-                        posList.Add (allUnitEn.Current.Value.m_Position);
+                        posList.Add (allUnitEn.Current.Value.m_position);
                     }
                 NetworkService.s_instance.NetworkSetOtherPosition (selfNetId, unitNetIdList, posList);
 
@@ -191,7 +191,7 @@ namespace MirRemake {
             NetworkService.s_instance.NetworkSetSelfInfo (netId, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr);
         }
         public void CommandSetPosition (int netId, Vector2 pos) {
-            m_networkIdAndActorUnitDict[netId].SetPosition (pos);
+            m_networkIdAndActorUnitDict[netId].m_position = pos;
         }
         public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
             E_Skill skill = new E_Skill (skillId);
@@ -209,7 +209,7 @@ namespace MirRemake {
             NetworkService.s_instance.NetworkSetSelfFSMStateToOther (netId, state);
         }
         public void CommandAcceptingMission (int netId, short missionId) {
-            E_Character character = GetPlayerByNetId (netId);
+            E_Character character = GetActorUnitByNetId (netId);
             E_Mission mission = new E_Mission ();
             // TODO:根据任务id从数据库获取任务
             character.AcceptingMission (mission);
@@ -218,11 +218,11 @@ namespace MirRemake {
         }
 
         public void CommandDeliveringMission (int netId, short missionId) {
-            E_Character character = GetPlayerByNetId (netId);
+            E_Character character = GetActorUnitByNetId (netId);
             NetworkService.s_instance.NetworkConfirmDeliveringMission (netId, missionId, character.DeliveringMission (missionId));
         }
 
-        public E_Character GetPlayerByNetId (int netId) {
+        public E_Character GetActorUnitByNetId (int netId) {
             E_ActorUnit actorUnit = GetActorUnitByNetworkId (netId);
             if (actorUnit.m_ActorUnitType == ActorUnitType.Player) {
                 return (E_Character) actorUnit;
@@ -231,7 +231,7 @@ namespace MirRemake {
         }
 
         public void CommandCancelMission (int netId, short missionId) {
-            E_Character character = GetPlayerByNetId (netId);
+            E_Character character = GetActorUnitByNetId (netId);
             character.CancelMission (missionId);
             NetworkService.s_instance.NetworkConfirmMissionFailed (netId, missionId);
         }

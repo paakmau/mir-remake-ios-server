@@ -43,8 +43,8 @@ namespace MirRemake {
         /// <summary>
         /// 当前位置
         /// </summary>
-        private Vector2 m_position;
-        public Vector2 m_Position { get { return m_position; } }
+        public Vector2 m_position;
+        public Vector2 m_oriPosition;
         // Unit的占地半径
         public float m_CoverRadius {
             get { return 5.0f; }
@@ -80,10 +80,6 @@ namespace MirRemake {
                     m_statusList.RemoveAt (i);
                 }
             }
-        }
-
-        public void SetPosition (Vector2 pos) {
-            m_position = pos;
         }
         /// <summary>
         /// 计算技能效果
