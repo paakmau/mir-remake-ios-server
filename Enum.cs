@@ -98,4 +98,28 @@ namespace MirRemake {
         LOSE_ITEM,
         KILL_MONSTER
     }
+    enum BuildingEquipmentFortune : byte {
+        // 欧皇
+        EUROPE_THE_EMPEROR,
+        // 欧洲贵族
+        EUROPE_ARISTOCRATS,
+        // 欧洲人
+        EUROPEAN,
+        // 亚洲皇帝
+        WINNIE_THE_EMPEROR,
+        // 资深元老
+        FROG,
+        // 阿联酋皇室
+        THE_UNITED_ARAB_EMIRATES_ROYAL,
+        // 山西煤老板
+        SHANXI_COAL_BOSS,
+        // 土豪
+        LOCAL_TYRANT,
+        // 亚洲人
+        ASIAN,
+        // 非洲人
+        AFRICAN,
+        // 非酋
+        TIGGER
+    }
 }
