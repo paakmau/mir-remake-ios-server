@@ -84,7 +84,7 @@ namespace MirRemake {
                 case CampType.FRIEND:
                     return false;
                 case CampType.ENEMY:
-                    return true;
+                    return self != target;
             }
             return false;
         }
