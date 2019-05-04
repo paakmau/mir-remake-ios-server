@@ -37,14 +37,14 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.IMMOBILE, 0);
             // TODO: 并把等级等发送到客户端
 
-            m_skillArr = new E_Skill[2] { new E_Skill(0), new E_Skill(1) };
+            m_skillArr = new E_Skill[2] { new E_Skill (0), new E_Skill (1) };
         }
         /// <summary>
         /// 获得自身的随机一个技能
         /// </summary>
         /// <returns></returns>
         public E_Skill GetRandomSkill () {
-            int i = MyRandom.NextInt(0, m_skillArr.Length);
+            int i = MyRandom.NextInt (0, m_skillArr.Length);
             return m_skillArr[i];
         }
         public override void Tick (float dT) {
@@ -55,7 +55,7 @@ namespace MirRemake {
             E_ActorUnit attacker = null;
             List<int> enemyNetIdToRemoveList = new List<int> ();
             while (hatredEn.MoveNext ()) {
-                var target = SM_ActorUnit.s_instance.GetActorUnitByNetworkId(hatredEn.Current.Key);
+                var target = SM_ActorUnit.s_instance.GetActorUnitByNetworkId (hatredEn.Current.Key);
                 // 更新掉线单位 与 仇恨结束
                 if (target == null || MyTimer.CheckTimeUp (hatredEn.Current.Value)) {
                     enemyNetIdToRemoveList.Add (hatredEn.Current.Key);
@@ -82,9 +82,10 @@ namespace MirRemake {
             // 若命中
             if (hit) {
                 // 计算仇恨
-                MyTimer.Time hatred = MyTimer.s_CurTime;
-                m_networkIdAndHatredRefreshDict.TryGetValue (attackerNetId, out hatred);
-                hatred.Tick (initEffect.m_deltaHP / m_MaxHP + initEffect.m_deltaMP * 0.5f / m_MaxMP + newStatusArr.Length * 0.1f);
+                MyTimer.Time hatred;
+                if (!m_networkIdAndHatredRefreshDict.TryGetValue (attackerNetId, out hatred))
+                    hatred = MyTimer.s_CurTime;
+                hatred.Tick (-(float) initEffect.m_deltaHP / (float) m_MaxHP - (float) initEffect.m_deltaMP * 0.5f / (float) m_MaxMP + (float) newStatusArr.Length * 0.1f);
                 m_networkIdAndHatredRefreshDict[attackerNetId] = hatred;
             }
             return hit;
