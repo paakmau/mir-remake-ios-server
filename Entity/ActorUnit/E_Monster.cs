@@ -7,7 +7,7 @@ namespace MirRemake {
         private MFSM m_mFSM;
         private E_Skill[] m_skillArr;
         // 怪物仇恨度哈希表
-        private Dictionary<int, float> m_networkIdAndHatredDict = new Dictionary<int, float> ();
+        private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
         public E_Monster (int networkId, int monsterId, Vector2 pos) {
             m_mFSM = new MFSM (new MFSMS_Free (this));
@@ -50,34 +50,29 @@ namespace MirRemake {
         public override void Tick (float dT) {
             base.Tick (dT);
 
-            // var hatredEn = m_networkIdAndHatredDict.GetEnumerator ();
-            // float maxHatred = float.MinValue;
-            // E_ActorUnit attacker = null;
-            // List<int> enemyNetIdToRemoveList = new List<int> ();
-            // while (hatredEn.MoveNext ()) {
-            //     var target = SM_ActorUnit.s_instance.GetActorUnitByNetworkId(hatredEn.Current.Key);
-            //     // 更新掉线移除列表
-            //     if (target == null) {
-            //         enemyNetIdToRemoveList.Add (hatredEn.Current.Key);
-            //         continue;
-            //     }
-            //     // 更新仇恨度及其移除列表
-            //     float newHatred = m_networkIdAndHatredDict[hatredEn.Current.Key] - dT * 0.15f;
-            //     m_networkIdAndHatredDict[hatredEn.Current.Key] = newHatred;
-            //     if (newHatred <= 0f)
-            //         enemyNetIdToRemoveList.Add (hatredEn.Current.Key);
-            //     else if (hatredEn.Current.Value > maxHatred) {
-            //         // 寻找最高仇恨目标
-            //         maxHatred = hatredEn.Current.Value;
-            //         attacker = target;
-            //     }
-            // }
-            // // 移除仇恨度降至0或以下的或掉线的目标
-            // for (int i = 0; i < enemyNetIdToRemoveList.Count; i++)
-            //     m_networkIdAndHatredDict.Remove (enemyNetIdToRemoveList[i]);
+            var hatredEn = m_networkIdAndHatredRefreshDict.GetEnumerator ();
+            MyTimer.Time maxHatredTime = MyTimer.s_CurTime;
+            E_ActorUnit attacker = null;
+            List<int> enemyNetIdToRemoveList = new List<int> ();
+            while (hatredEn.MoveNext ()) {
+                var target = SM_ActorUnit.s_instance.GetActorUnitByNetworkId(hatredEn.Current.Key);
+                // 更新掉线单位 与 仇恨结束
+                if (target == null || MyTimer.CheckTimeUp (hatredEn.Current.Value)) {
+                    enemyNetIdToRemoveList.Add (hatredEn.Current.Key);
+                    continue;
+                }
+                if (hatredEn.Current.Value >= maxHatredTime) {
+                    // 寻找最高仇恨目标
+                    maxHatredTime = hatredEn.Current.Value;
+                    attacker = target;
+                }
+            }
+            // 移除仇恨度降至0或以下的或掉线的目标
+            for (int i = 0; i < enemyNetIdToRemoveList.Count; i++)
+                m_networkIdAndHatredRefreshDict.Remove (enemyNetIdToRemoveList[i]);
 
             // 更新仇恨目标
-            // m_highestHatredTarget = attacker;
+            m_highestHatredTarget = attacker;
 
             // MonsterFSM的Tick
             m_mFSM.Tick (dT);
@@ -87,10 +82,10 @@ namespace MirRemake {
             // 若命中
             if (hit) {
                 // 计算仇恨
-                float hatred = 0f;
-                m_networkIdAndHatredDict.TryGetValue (attackerNetId, out hatred);
-                hatred += initEffect.m_deltaHP / m_MaxHP + initEffect.m_deltaMP * 0.5f / m_MaxMP + newStatusArr.Length * 0.1f;
-                m_networkIdAndHatredDict[attackerNetId] = hatred;
+                MyTimer.Time hatred = MyTimer.s_CurTime;
+                m_networkIdAndHatredRefreshDict.TryGetValue (attackerNetId, out hatred);
+                hatred.Tick (initEffect.m_deltaHP / m_MaxHP + initEffect.m_deltaMP * 0.5f / m_MaxMP + newStatusArr.Length * 0.1f);
+                m_networkIdAndHatredRefreshDict[attackerNetId] = hatred;
             }
             return hit;
         }

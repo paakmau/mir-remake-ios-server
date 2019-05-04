@@ -8,24 +8,21 @@ namespace MirRemake {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
-        private const float c_monsterRefreshTime = 20f;
-        private const float c_monsterRefreshTimerCycleTime = 10000f;
-        private bool m_monsterRefreshTimerCycle = false;
-        private float m_monsterRefreshTimer = 0f;
+        private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
-        private Dictionary<int, KeyValuePair<bool, float>> m_networkIdAndMonsterDeathTimeDict = new Dictionary<int, KeyValuePair<bool, float>> ();
+        private Dictionary<int, MyTimer.Time> m_networkIdAndMonsterRefreshTimeDict = new Dictionary<int, MyTimer.Time> ();
         public SM_ActorUnit () {
             // TODO: 用于测试
             int monsterNetId;
             monsterNetId = NetworkIdManager.GetNewActorUnitNetworkId ();
             m_networkIdAndMonsterIdDict[monsterNetId] = 0;
             m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-1, 0);
-            m_networkIdAndMonsterDeathTimeDict[monsterNetId] = new KeyValuePair<bool, float> (false, 1f);
+            m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 1f);
             monsterNetId = NetworkIdManager.GetNewActorUnitNetworkId ();
             m_networkIdAndMonsterIdDict[monsterNetId] = 1;
             m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-3, 1);
-            m_networkIdAndMonsterDeathTimeDict[monsterNetId] = new KeyValuePair<bool, float> (false, 10f);
+            m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 10f);
         }
         public E_ActorUnit GetActorUnitByNetworkId (int networkId) {
             E_ActorUnit res = null;
@@ -92,7 +89,9 @@ namespace MirRemake {
             var unit = GetActorUnitByNetworkId (netId);
             if (unit != null && unit.m_ActorUnitType == ActorUnitType.Monster) {
                 m_networkIdAndActorUnitDict.Remove (netId);
-                m_networkIdAndMonsterDeathTimeDict.Add (netId, new KeyValuePair<bool, float> (m_monsterRefreshTimerCycle, m_monsterRefreshTimer + c_monsterRefreshTime));
+                MyTimer.Time refreshTime = MyTimer.s_CurTime;
+                refreshTime.Tick (c_monsterRefreshTime);
+                m_networkIdAndMonsterRefreshTimeDict.Add (netId, refreshTime);
             }
         }
         public void Tick (float dT) {
@@ -102,19 +101,14 @@ namespace MirRemake {
                 unitEn.Current.Value.Tick (dT);
 
             // 处理怪物刷新
-            m_monsterRefreshTimer += dT;
-            while (m_monsterRefreshTimer >= c_monsterRefreshTimerCycleTime) {
-                m_monsterRefreshTimer -= c_monsterRefreshTimerCycleTime;
-                m_monsterRefreshTimerCycle = !m_monsterRefreshTimerCycle;
-            }
             List<int> monsterIdToRefreshList = new List<int> ();
-            var monsterDeathTimeEn = m_networkIdAndMonsterDeathTimeDict.GetEnumerator ();
+            var monsterDeathTimeEn = m_networkIdAndMonsterRefreshTimeDict.GetEnumerator ();
             while (monsterDeathTimeEn.MoveNext ())
-                if (monsterDeathTimeEn.Current.Value.Key == m_monsterRefreshTimerCycle && monsterDeathTimeEn.Current.Value.Value <= m_monsterRefreshTimer)
+                if (MyTimer.CheckTimeUp(monsterDeathTimeEn.Current.Value))
                     monsterIdToRefreshList.Add (monsterDeathTimeEn.Current.Key);
             for (int i = 0; i < monsterIdToRefreshList.Count; i++) {
                 int monsterIdToRefresh = monsterIdToRefreshList[i];
-                m_networkIdAndMonsterDeathTimeDict.Remove (monsterIdToRefresh);
+                m_networkIdAndMonsterRefreshTimeDict.Remove (monsterIdToRefresh);
                 m_networkIdAndActorUnitDict.Add (monsterIdToRefresh, new E_Monster (monsterIdToRefresh, m_networkIdAndMonsterIdDict[monsterIdToRefresh], m_networkIdAndMonsterPosDict[monsterIdToRefresh]));
             }
         }

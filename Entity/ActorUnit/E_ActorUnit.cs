@@ -96,7 +96,8 @@ namespace MirRemake {
             CalculateCastEffect (initEffect);
             for (int i = 0; i < targets.Count; i++) {
                 E_Status[] newStatusArr;
-                targets[i].CalculateAndApplyEffect (m_networkId, initEffect, out newStatusArr);
+                E_Effect initEffectClone = initEffect.GetClone ();
+                targets[i].CalculateAndApplyEffect (m_networkId, initEffectClone, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead) {
                     deadNetIdList.Add (targets[i].m_networkId);
