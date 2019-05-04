@@ -34,7 +34,7 @@ namespace MirRemake {
             m_targetAimType = SkillAimType.OTHER;
             m_rangeType = SkillRangeType.SECTOR;
             m_targetNumber = 3;
-            m_castRange = 3.0f;
+            m_castRange = 0.1f;
             m_damageRange = 1.0f;
             m_damageRadian = 360;
         }

@@ -26,7 +26,7 @@ namespace MirRemake {
                 m_moveTimeLeft -= dT;
             else {
                 var dir = m_targetPos - m_Self.m_position;
-                var deltaP = dir.normalized * m_Self.m_Speed * dT;
+                var deltaP = dir.normalized * m_Self.m_Speed * dT / 100f;
                 if (deltaP.magnitude >= dir.magnitude)
                     deltaP = dir;
                 m_Self.m_position = m_Self.m_position + deltaP;

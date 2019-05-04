@@ -24,14 +24,14 @@ namespace MirRemake {
         public IMFSMState GetNextState () {
             // 咏唱结束
             if (m_timer <= 0f)
-                return new MFSMS_Free (m_Self);
+                return new MFSMS_CastBack (m_Self, m_skill.m_castBackTime);
             // 被沉默
             if (m_Self.m_IsSilent)
                 return new MFSMS_Free (m_Self);
             return null;
         }
         public void OnExit (MFSMStateType nextType) {
-            if (m_timer <= 0f) {
+            if (nextType == MFSMStateType.CAST_BACK) {
                 List<E_ActorUnit> unitList = m_skill.GetEffectTargets(m_Self, m_tarPos, Vector2.zero);
                 int[] unitNetIdArr = new int[unitList.Count];
                 for (int i=0; i<unitList.Count; i++)

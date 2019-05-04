@@ -8,6 +8,8 @@ namespace MirRemake {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
+        private Stack<int> m_deadUnitToRemoveNetworkIdStack = new Stack<int> ();
+        private Dictionary<int, E_ActorUnit> m_networkIdAndDeadPlayerDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
@@ -85,13 +87,21 @@ namespace MirRemake {
             }
             return false;
         }
-        public void UnitDead (int netId) {
+        public void PrepareUnitDead (int netId) {
+            m_deadUnitToRemoveNetworkIdStack.Push (netId);
+        }
+        private void UnitDead (int netId) {
             var unit = GetActorUnitByNetworkId (netId);
-            if (unit != null && unit.m_ActorUnitType == ActorUnitType.Monster) {
-                m_networkIdAndActorUnitDict.Remove (netId);
-                MyTimer.Time refreshTime = MyTimer.s_CurTime;
-                refreshTime.Tick (c_monsterRefreshTime);
-                m_networkIdAndMonsterRefreshTimeDict.Add (netId, refreshTime);
+            if (unit != null) {
+                if (unit.m_ActorUnitType == ActorUnitType.Monster) {
+                    m_networkIdAndActorUnitDict.Remove (netId);
+                    MyTimer.Time refreshTime = MyTimer.s_CurTime;
+                    refreshTime.Tick (c_monsterRefreshTime);
+                    m_networkIdAndMonsterRefreshTimeDict.Add (netId, refreshTime);
+                } else if (unit.m_ActorUnitType == ActorUnitType.Player) {
+                    m_networkIdAndActorUnitDict.Remove (netId);
+                    m_networkIdAndDeadPlayerDict.Add (netId, unit);
+                }
             }
         }
         public void Tick (float dT) {
@@ -99,6 +109,11 @@ namespace MirRemake {
             var unitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
             while (unitEn.MoveNext ())
                 unitEn.Current.Value.Tick (dT);
+
+            // 处理死亡单位的移除
+            int deadUnitNetId;
+            while (m_deadUnitToRemoveNetworkIdStack.TryPop(out deadUnitNetId))
+                UnitDead (deadUnitNetId);
 
             // 处理怪物刷新
             List<int> monsterIdToRefreshList = new List<int> ();

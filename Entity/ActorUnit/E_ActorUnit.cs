@@ -101,7 +101,7 @@ namespace MirRemake {
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead) {
                     deadNetIdList.Add (targets[i].m_networkId);
-                    SM_ActorUnit.s_instance.UnitDead (targets[i].m_networkId);
+                    SM_ActorUnit.s_instance.PrepareUnitDead (targets[i].m_networkId);
                 }
             }
         }

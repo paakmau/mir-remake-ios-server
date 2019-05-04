@@ -27,7 +27,7 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DEFENCE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.RESISTANCE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.TENACITY, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SPEED, 150);
+            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SPEED, 700);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_RATE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_BONUS, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.HIT_RATE, 150);
@@ -85,7 +85,7 @@ namespace MirRemake {
                 MyTimer.Time hatred;
                 if (!m_networkIdAndHatredRefreshDict.TryGetValue (attackerNetId, out hatred))
                     hatred = MyTimer.s_CurTime;
-                hatred.Tick (-(float) initEffect.m_deltaHP / (float) m_MaxHP - (float) initEffect.m_deltaMP * 0.5f / (float) m_MaxMP + (float) newStatusArr.Length * 0.1f);
+                hatred.Tick (10f * (-(float) initEffect.m_deltaHP / (float) m_MaxHP - (float) initEffect.m_deltaMP * 0.5f / (float) m_MaxMP + (float) newStatusArr.Length * 0.1f));
                 m_networkIdAndHatredRefreshDict[attackerNetId] = hatred;
             }
             return hit;
