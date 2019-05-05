@@ -32,11 +32,7 @@ namespace MirRemake {
         }
         public void OnExit (MFSMStateType nextType) {
             if (nextType == MFSMStateType.CAST_BACK) {
-                List<E_ActorUnit> unitList = m_skill.GetEffectTargets(m_Self, m_tarPos, Vector2.zero);
-                int[] unitNetIdArr = new int[unitList.Count];
-                for (int i=0; i<unitList.Count; i++)
-                    unitNetIdArr[i] = unitList[i].m_networkId;
-                SM_ActorUnit.s_instance.CommandApplyCastSkill (m_Self.m_networkId, m_skill.m_id, unitNetIdArr);
+                m_Self.RequestCastSkill (m_skill, m_tarPos);
             }
         }
     }

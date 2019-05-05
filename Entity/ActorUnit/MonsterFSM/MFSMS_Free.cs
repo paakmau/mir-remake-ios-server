@@ -42,10 +42,12 @@ namespace MirRemake {
         public IMFSMState GetNextState () {
             if (m_Self.m_highestHatredTarget != null) {
                 if (m_targetSkill == null)
-                    m_targetSkill = m_Self.GetRandomSkill();
-                var tarPos = new TargetPosition (m_Self.m_highestHatredTarget);
-                if (m_targetSkill.CheckInRange (m_Self, tarPos))
-                    return new MFSMS_CastSingAndFront (m_Self, m_Self.GetRandomSkill(), new TargetPosition(m_Self.m_highestHatredTarget));
+                    m_targetSkill = m_Self.GetRandomValidSkill();
+                if (m_targetSkill != null) {
+                    var tarPos = new TargetPosition (m_Self.m_highestHatredTarget);
+                    if (m_targetSkill.CheckInRange (m_Self, tarPos))
+                        return new MFSMS_CastSingAndFront (m_Self, m_targetSkill, new TargetPosition(m_Self.m_highestHatredTarget));
+                }
             }
             return null;
         }

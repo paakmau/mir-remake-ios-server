@@ -55,7 +55,8 @@ namespace MirRemake {
             m_costMP = 30;
             m_singTime = 0.0f;
             m_castFrontTime = 0.2f;
-            m_castBackTime = 2f;
+            m_castBackTime = 0.3f;
+            m_coolDownTime = 2f;
             m_targetChooser = new SkillTargetChooser ();
             m_skillEffect = new E_Effect ();
         }

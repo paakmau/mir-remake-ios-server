@@ -6,6 +6,7 @@ namespace MirRemake {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
         private MFSM m_mFSM;
         private E_Skill[] m_skillArr;
+        private MyTimer.Time[] m_skillCoolDownArr;
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
@@ -38,14 +39,27 @@ namespace MirRemake {
             // TODO: 并把等级等发送到客户端
 
             m_skillArr = new E_Skill[2] { new E_Skill (0), new E_Skill (1) };
+            m_skillCoolDownArr = new MyTimer.Time[2];
+            for (int i = 0; i < m_skillCoolDownArr.Length; i++)
+                m_skillCoolDownArr[i] = MyTimer.s_CurTime;
         }
         /// <summary>
         /// 获得自身的随机一个技能
         /// </summary>
         /// <returns></returns>
-        public E_Skill GetRandomSkill () {
+        public E_Skill GetRandomValidSkill () {
             int i = MyRandom.NextInt (0, m_skillArr.Length);
-            return m_skillArr[i];
+            if (MyTimer.CheckTimeUp(m_skillCoolDownArr[i]))
+                return m_skillArr[i];
+            else
+                return null;
+        }
+        public void RequestCastSkill (E_Skill skill, TargetPosition tarPos) {
+            List<E_ActorUnit> unitList = skill.GetEffectTargets(this, tarPos, Vector2.zero);
+            int[] unitNetIdArr = new int[unitList.Count];
+            for (int i=0; i<unitList.Count; i++)
+                unitNetIdArr[i] = unitList[i].m_networkId;
+            SM_ActorUnit.s_instance.CommandApplyCastSkill (m_networkId, skill.m_id, unitNetIdArr);
         }
         public override void Tick (float dT) {
             base.Tick (dT);
