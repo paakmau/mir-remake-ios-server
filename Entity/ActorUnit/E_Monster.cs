@@ -6,7 +6,7 @@ namespace MirRemake {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
         private MFSM m_mFSM;
         private E_Skill[] m_skillArr;
-        private MyTimer.Time[] m_skillCoolDownArr;
+        private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
@@ -38,23 +38,23 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.IMMOBILE, 0);
             // TODO: 并把等级等发送到客户端
 
-            m_skillArr = new E_Skill[2] { new E_Skill (0), new E_Skill (1) };
-            m_skillCoolDownArr = new MyTimer.Time[2];
-            for (int i = 0; i < m_skillCoolDownArr.Length; i++)
-                m_skillCoolDownArr[i] = MyTimer.s_CurTime;
+            m_skillArr = new E_Skill[1] { new E_Skill (0)};
         }
         /// <summary>
-        /// 获得自身的随机一个技能
+        /// 获得自身的随机一个不在冷却的技能
         /// </summary>
         /// <returns></returns>
         public E_Skill GetRandomValidSkill () {
-            int i = MyRandom.NextInt (0, m_skillArr.Length);
-            if (MyTimer.CheckTimeUp(m_skillCoolDownArr[i]))
-                return m_skillArr[i];
-            else
-                return null;
+            int num = MyRandom.NextInt (0, m_skillArr.Length);
+            E_Skill skill = m_skillArr[num];
+            // 若技能正在冷却
+            for (int i = 0; i<m_skillIdAndCoolDownList.Count; i++)
+                if (m_skillIdAndCoolDownList[i].Key == skill.m_id)
+                    return null;
+            return skill;
         }
         public void RequestCastSkill (E_Skill skill, TargetPosition tarPos) {
+            m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
             List<E_ActorUnit> unitList = skill.GetEffectTargets(this, tarPos, Vector2.zero);
             int[] unitNetIdArr = new int[unitList.Count];
             for (int i=0; i<unitList.Count; i++)
@@ -64,6 +64,12 @@ namespace MirRemake {
         public override void Tick (float dT) {
             base.Tick (dT);
 
+            // 关于技能冷却
+            for (int i = m_skillIdAndCoolDownList.Count - 1; i >= 0; i--)
+                if (MyTimer.CheckTimeUp (m_skillIdAndCoolDownList[i].Value))
+                    m_skillIdAndCoolDownList.RemoveAt (i);
+
+            // 关于仇恨
             var hatredEn = m_networkIdAndHatredRefreshDict.GetEnumerator ();
             MyTimer.Time maxHatredTime = MyTimer.s_CurTime;
             E_ActorUnit attacker = null;
@@ -84,11 +90,10 @@ namespace MirRemake {
             // 移除仇恨度降至0或以下的或掉线的目标
             for (int i = 0; i < enemyNetIdToRemoveList.Count; i++)
                 m_networkIdAndHatredRefreshDict.Remove (enemyNetIdToRemoveList[i]);
-
             // 更新仇恨目标
             m_highestHatredTarget = attacker;
 
-            // MonsterFSM的Tick
+            // 关于MonsterFSM
             m_mFSM.Tick (dT);
         }
         protected override bool CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {

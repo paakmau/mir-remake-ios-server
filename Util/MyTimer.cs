@@ -34,6 +34,11 @@ namespace MirRemake {
                     m_cycle ++;
                 }
             }
+
+            public Time Ticked (float dT) {
+                Tick (dT);
+                return this;
+            }
         }
         private static Time s_timer = new Time (0 , 0f);
         public static Time s_CurTime { get { return s_timer; } }
