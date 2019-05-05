@@ -32,7 +32,7 @@ namespace MirRemake {
             m_deltaHPType = EffectDeltaHPType.MAGIC;
             m_deltaMP = 0;
             m_deltaMPType = EffectDeltaMPType.MAGIC;
-            m_statusAttachArray = null;
+            m_statusAttachArray = new E_Status[1] { new E_Status(1, 100, 5f) };
             m_selfHPStrategy = null;
             m_targetHPStrategy = null;
         }

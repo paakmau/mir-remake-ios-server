@@ -62,7 +62,26 @@ namespace MirRemake {
         }
         protected float deltaTimeAfterLastSecond = 0f;
         public virtual void Tick (float dT) {
-            // 处理具体属性的每秒变化
+            if (m_IsDead) return;
+
+            int maxDeltaHP = 0;
+            int killerNetId = 0;
+            // 移除超时的状态 与 得到状态伤害最高的攻击者
+            for (int i = m_statusList.Count - 1; i >= 0; i--) {
+                m_statusList[i].Tick (dT);
+                if (m_statusList[i].m_leftTime <= 0.0f) {
+                    RemoveStatusToAttr (m_statusList[i]);
+                    m_statusList.RemoveAt (i);
+                } else {
+                    int dHP = m_statusList[i].m_DeltaHP;
+                    if (dHP > maxDeltaHP) {
+                        maxDeltaHP = dHP;
+                        killerNetId = m_statusList[i].m_attackerNetId;
+                    }
+                }
+            }
+
+            // 根据状态处理具体属性的每秒变化
             deltaTimeAfterLastSecond += dT;
             while (deltaTimeAfterLastSecond >= 1.0f) {
                 deltaTimeAfterLastSecond -= 1.0f;
@@ -72,14 +91,8 @@ namespace MirRemake {
                 m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
             }
 
-            // 移除超时的状态
-            for (int i = m_statusList.Count - 1; i >= 0; i--) {
-                m_statusList[i].Tick (dT);
-                if (m_statusList[i].m_leftTime <= 0.0f) {
-                    RemoveStatusToAttr (m_statusList[i]);
-                    m_statusList.RemoveAt (i);
-                }
-            }
+            if (m_IsDead)
+                SM_ActorUnit.s_instance.PrepareUnitDead (killerNetId, m_networkId);
         }
         /// <summary>
         /// 计算技能效果
@@ -88,9 +101,8 @@ namespace MirRemake {
         /// <param name="targets"></param>
         /// <param name="netIdAndStatusArr">对于每个target的新增状态列表</param>
         /// <param name="deadNetIdArr">因为本次释放死亡的target单位</param>
-        public void ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets, out KeyValuePair<int, E_Status[]>[] netIdAndStatusArr, out List<int> deadNetIdList) {
+        public void ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets, out KeyValuePair<int, E_Status[]>[] netIdAndStatusArr) {
             netIdAndStatusArr = new KeyValuePair<int, E_Status[]>[targets.Count];
-            deadNetIdList = new List<int> ();
             // 计算初始Effect
             E_Effect initEffect = skill.m_skillEffect.GetClone ();
             CalculateCastEffect (initEffect);
@@ -99,10 +111,8 @@ namespace MirRemake {
                 E_Effect initEffectClone = initEffect.GetClone ();
                 targets[i].CalculateAndApplyEffect (m_networkId, initEffectClone, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
-                if (targets[i].m_IsDead) {
-                    deadNetIdList.Add (targets[i].m_networkId);
-                    SM_ActorUnit.s_instance.PrepareUnitDead (targets[i].m_networkId);
-                }
+                if (targets[i].m_IsDead)
+                    SM_ActorUnit.s_instance.PrepareUnitDead (m_networkId, targets[i].m_networkId);
             }
         }
         public void ApplyActiveEnterFSMState (FSMActiveEnterState state) { }

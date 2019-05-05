@@ -87,8 +87,9 @@ namespace MirRemake {
             }
             return false;
         }
-        public void PrepareUnitDead (int netId) {
+        public void PrepareUnitDead (int killerNetId, int netId) {
             m_deadUnitToRemoveNetworkIdStack.Push (netId);
+            NetworkService.s_instance.NetworkSetAllDeadToAll (killerNetId, netId);
         }
         private void UnitDead (int netId) {
             var unit = GetActorUnitByNetworkId (netId);
@@ -111,9 +112,9 @@ namespace MirRemake {
                 unitEn.Current.Value.Tick (dT);
 
             // 处理死亡单位的移除
-            int deadUnitNetId;
-            while (m_deadUnitToRemoveNetworkIdStack.TryPop(out deadUnitNetId))
-                UnitDead (deadUnitNetId);
+            int deadNetId;
+            while (m_deadUnitToRemoveNetworkIdStack.TryPop(out deadNetId))
+                UnitDead (deadNetId);
 
             // 处理怪物刷新
             List<int> monsterIdToRefreshList = new List<int> ();
@@ -206,13 +207,10 @@ namespace MirRemake {
         public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
             E_Skill skill = new E_Skill (skillId);
             KeyValuePair<int, E_Status[]>[] statusPairArr;
-            List<int> deadNetIdList;
             E_ActorUnit unit = GetActorUnitByNetworkId(netId);
             if(unit == null) return;
-            unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr, out deadNetIdList);
+            unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
             NetworkService.s_instance.NetworkSetAllEffectToAll (skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr);
-            if (deadNetIdList.Count != 0)
-                NetworkService.s_instance.NetworkSetAllDeadToAll (netId, deadNetIdList);
         }
         public void CommandApplyActiveEnterFSMState (int netId, FSMActiveEnterState state) {
             m_networkIdAndActorUnitDict[netId].ApplyActiveEnterFSMState (state);

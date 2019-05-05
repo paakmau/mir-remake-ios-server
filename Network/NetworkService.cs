@@ -180,7 +180,7 @@ namespace MirRemake {
         /// <summary>
         /// 对所有玩家发送视野内的施加effect事件  
         /// 数据包格式:  
-        /// effectAnimId, byte  
+        /// effectAnimId, short  
         /// statusNum, byte  
         /// unitHitNum, byte 命中的目标数量  
         /// hitNetIdAndstatusArrPairArr, (int, E_Status[])*unitHitNum 命中的目标(unitHitNum个)的NetId及其被附加的状态  
@@ -215,13 +215,10 @@ namespace MirRemake {
             m_writer.Reset ();
         }
 
-        public void NetworkSetAllDeadToAll (int killerNetId, List<int> deadNetIdList) {
-            if (deadNetIdList.Count == 0) return;
+        public void NetworkSetAllDeadToAll (int killerNetId, int deadNetId) {
             m_writer.Put ((byte) NetworkToClientDataType.APPLY_ALL_DEAD);
             m_writer.Put (killerNetId);
-            m_writer.Put ((byte) deadNetIdList.Count);
-            for(int i=0; i<deadNetIdList.Count; i++)
-                m_writer.Put (deadNetIdList[i]);
+            m_writer.Put (deadNetId);
             var peerEn = m_netIdAndPeerDict.Values.GetEnumerator();
             while(peerEn.MoveNext())
                 peerEn.Current.Send (m_writer, DeliveryMethod.ReliableUnordered);

@@ -12,10 +12,18 @@ using UnityEngine;
 namespace MirRemake {
     struct E_Status {
         public short m_id;
+        public int m_attackerNetId;
         public StatusType m_type;
         public string m_name;
         public string m_details;
         public Dictionary<ActorUnitConcreteAttributeType, int> m_affectAttributeDict;
+        public int m_DeltaHP {
+            get {
+                int res = 0;
+                m_affectAttributeDict.TryGetValue(ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, out res);
+                return res;
+            }
+        }
         public int m_value;
         public float m_leftTime;
         public void Tick(float dT) {
@@ -27,10 +35,11 @@ namespace MirRemake {
             m_name = "龙之吐息";
             m_details = "gfy深深吸了一口气，并对你缓缓吐出";
             m_affectAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> () {
-                { ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, -100 }
+                { ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, -10 }
             };
 
             m_id = id;
+            m_attackerNetId = 0;
             m_value = value;
             m_leftTime = leftTime;
         }

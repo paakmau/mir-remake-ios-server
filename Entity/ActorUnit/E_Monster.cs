@@ -27,7 +27,7 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAGIC, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DEFENCE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.RESISTANCE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.TENACITY, 150);
+            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.TENACITY, 1);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SPEED, 700);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_RATE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_BONUS, 150);
