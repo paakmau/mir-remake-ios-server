@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 
 
 namespace MirRemake {
-    class CC_ApplyCastSkill : IClientCommand {
+    class CC_ApplyCastSkillBegin : IClientCommand {
         public void Execute(NetDataReader reader, int netId) {
             Console.WriteLine("客户端请求释放技能");
             short skillId = reader.GetShort();

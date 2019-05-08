@@ -23,10 +23,11 @@ namespace MirRemake {
             m_serverNetManager.Start (c_serverPort);
 
             // 初始化命令模式
-            m_clientCommandDict.Add (NetworkToServerDataType.SEND_PLAYER_ID, new CC_SendPlayerId ());
-            m_clientCommandDict.Add (NetworkToServerDataType.SEND_POSITION, new CC_SendPosition ());
-            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_CAST_SKILL, new CC_ApplyCastSkill ());
-            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_ACTIVE_ENTER_FSM_STATE, new CC_ApplyActiveEnterFSMState ());
+            m_clientCommandDict.Add (NetworkToServerDataType.INIT_PLAYER_ID, new CC_InitPlayerId ());
+            m_clientCommandDict.Add (NetworkToServerDataType.SET_POSITION, new CC_SetPosition ());
+            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_CAST_SKILL_BEGIN, new CC_ApplyCastSkillBegin ());
+            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_CAST_SKILL_SETTLE, new CC_ApplyCastSkillSettle ());
+            m_clientCommandDict.Add (NetworkToServerDataType.APPLY_CAST_SKILL_SING_CANCEL, new CC_ApplyCastSkillSingCancel ());
         }
         public void Tick () {
             m_serverNetManager.PollEvents ();
@@ -75,7 +76,7 @@ namespace MirRemake {
         /// <param name="client"></param>
         /// <param name="netId"></param>
         private void NetworkSetSelfNetworkId (NetPeer client, int netId) {
-            m_writer.Put ((byte) NetworkToClientDataType.SET_SELF_NETWORK_ID);
+            m_writer.Put ((byte) NetworkToClientDataType.INIT_SELF_NETWORK_ID);
             m_writer.Put (netId);
             client.Send (m_writer, DeliveryMethod.ReliableUnordered);
             m_writer.Reset ();
@@ -94,7 +95,7 @@ namespace MirRemake {
         public void NetworkSetSelfInfo (int clientNetId, short level, int exp, short[] skillIds, short[] skillLevels, int[] skillMasterlys) {
             NetPeer client = m_netIdAndPeerDict[clientNetId];
 
-            m_writer.Put ((byte) NetworkToClientDataType.SET_SELF_INIT_INFO);
+            m_writer.Put ((byte) NetworkToClientDataType.INIT_SELF_INFO);
             m_writer.Put (level);
             m_writer.Put (exp);
             m_writer.Put ((short) skillIds.Length);
@@ -117,7 +118,7 @@ namespace MirRemake {
             // TODO: 区分玩家与怪物的接口(因为玩家需要得到装备)
             // TODO: 视野需要有上限
             NetPeer client = m_netIdAndPeerDict[clientNetId];
-            m_writer.Put ((byte) NetworkToClientDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
+            m_writer.Put ((byte) NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_IN_SIGHT);
             m_writer.Put ((byte) actorUnitType);
             m_writer.Put ((byte) otherNetIdList.Count);
             for (int i = 0; i < otherNetIdList.Count; i++) {
@@ -169,16 +170,16 @@ namespace MirRemake {
         /// </summary>
         /// <param name="otherNetId"></param>
         /// <param name="aEState"></param>
-        public void NetworkSetSelfFSMStateToOther (int selfNetId, FSMActiveEnterState aEState) {
-            m_writer.Put ((byte) NetworkToClientDataType.APPLY_OTHER_FSM_STATE);
-            m_writer.Put (selfNetId);
-            m_writer.PutFSMAEState (aEState);
-            foreach (var clientPair in m_netIdAndPeerDict) {
-                if (clientPair.Key != selfNetId)
-                    clientPair.Value.Send (m_writer, DeliveryMethod.ReliableSequenced);
-            }
-            m_writer.Reset ();
-        }
+        // public void NetworkSetSelfFSMStateToOther (int selfNetId, FSMActiveEnterState aEState) {
+        //     m_writer.Put ((byte) NetworkToClientDataType.APPLY_OTHER_FSM_STATE);
+        //     m_writer.Put (selfNetId);
+        //     m_writer.PutFSMAEState (aEState);
+        //     foreach (var clientPair in m_netIdAndPeerDict) {
+        //         if (clientPair.Key != selfNetId)
+        //             clientPair.Value.Send (m_writer, DeliveryMethod.ReliableSequenced);
+        //     }
+        //     m_writer.Reset ();
+        // }
 
         /// <summary>
         /// 对所有玩家发送视野内的施加effect事件  
@@ -226,42 +227,6 @@ namespace MirRemake {
             while(peerEn.MoveNext())
                 peerEn.Current.Send (m_writer, DeliveryMethod.ReliableUnordered);
             m_writer.Reset ();
-        }
-
-        public void NetworkConfirmAcceptingMission(int netId, short missionId) {
-            NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)NetworkToServerDataType.ACCEPT_MISSION);
-            m_writer.Put(missionId);
-            client.Send(m_writer, DeliveryMethod.Unreliable);
-            m_writer.Reset();
-        }
-
-        public void NetworkConfirmDeliveringMission(int netId, short missionId, bool isCompleted) {
-            NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)NetworkToServerDataType.DELIVERING_MISSION);
-            m_writer.Put(isCompleted);
-            m_writer.Put(missionId);
-            client.Send(m_writer, DeliveryMethod.Unreliable);
-            m_writer.Reset();
-        }
-
-        public void NetworkConfirmMissionFailed(int netId, short missionId) {
-            NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)NetworkToServerDataType.CANCEL_MISSION);
-            m_writer.Put(missionId);
-            client.Send(m_writer, DeliveryMethod.Unreliable);
-            m_writer.Reset();
-        }
-
-        public void  NetworkApplyBlacksmithBuilding(int netId, short NPCId, short equipmentId, int equipmentRealityId, BuildingEquipmentFortune face) {
-            NetPeer client = m_netIdAndPeerDict[netId];
-            m_writer.Put((byte)1);// TODO:
-            m_writer.Put(NPCId);
-            m_writer.Put(equipmentId);
-            m_writer.Put(equipmentRealityId);
-            m_writer.Put((byte)face);
-            client.Send(m_writer, DeliveryMethod.Unreliable);
-            m_writer.Reset();
         }
     }
 }
