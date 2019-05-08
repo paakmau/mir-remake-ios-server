@@ -14,7 +14,7 @@ namespace MirRemake {
             m_mFSM = new MFSM (new MFSMS_Free (this));
 
             m_networkId = networkId;
-            m_position = pos;
+            m_Position = pos;
 
             // TODO: 从数据库获取怪物等级技能属性等
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_HP, 1500);
@@ -55,7 +55,7 @@ namespace MirRemake {
         }
         public void RequestCastSkill (E_Skill skill, TargetPosition tarPos) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
-            List<E_ActorUnit> unitList = skill.GetEffectTargets(this, tarPos, Vector2.zero);
+            List<E_ActorUnit> unitList = skill.GetEffectTargets(this, tarPos, new SkillParam(Vector2.zero));
             int[] unitNetIdArr = new int[unitList.Count];
             for (int i=0; i<unitList.Count; i++)
                 unitNetIdArr[i] = unitList[i].m_networkId;

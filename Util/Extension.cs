@@ -11,6 +11,12 @@ namespace MirRemake {
         public static Vector2 GetVector2 (this NetDataReader reader) {
             return new Vector2 (reader.GetFloat (), reader.GetFloat ());
         }
+        public static void PutSkillParam (this NetDataWriter writer, SkillParam value) {
+            writer.PutVector2 (value.m_param);
+        }
+        public static SkillParam GetSkillParam (this NetDataReader reader) {
+            return new SkillParam (reader.GetVector2());
+        }
         public static void PutFSMAEState (this NetDataWriter writer, FSMActiveEnterState state) {
             writer.Put ((byte) state.m_type);
             switch (state.m_type) {

@@ -56,7 +56,7 @@ namespace MirRemake {
             m_singTime = 0.0f;
             m_castFrontTime = 0.2f;
             m_castBackTime = 0.3f;
-            m_coolDownTime = 2f;
+            m_coolDownTime = 3f;
             m_targetChooser = new SkillTargetChooser ();
             m_skillEffect = new E_Effect ();
         }
@@ -74,7 +74,7 @@ namespace MirRemake {
         // public E_ActorUnit GetCastTargetIfAim (E_ActorUnit self, E_ActorUnit aimedTarget) {
         //     return m_targetChooser.GetCastTargetIfAim (self, aimedTarget);
         // }
-        public TargetPosition GetCastTargetPosition (E_ActorUnit self, E_ActorUnit aimedTarget, Vector2 parm) {
+        public TargetPosition GetCastTargetPosition (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
             return m_targetChooser.GetCastTargetPosition (self, aimedTarget, parm);
         }
         public bool CheckInRange (E_ActorUnit self, TargetPosition tarPos) {
@@ -83,10 +83,10 @@ namespace MirRemake {
         public bool CheckCostEnough (E_ActorUnit self) {
             return self.m_CurHP > m_costHP && self.m_CurMP >= m_costMP;
         }
-        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, TargetPosition tarPos, Vector2 parm) {
+        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, TargetPosition tarPos, SkillParam parm) {
             return m_targetChooser.GetEffectTargets (self, tarPos, parm);
         }
-        public Vector2 GetCastDirection (E_ActorUnit self, TargetPosition tarPos, Vector2 parm) {
+        public Vector2 GetCastDirection (E_ActorUnit self, TargetPosition tarPos, SkillParam parm) {
             return m_targetChooser.GetCastDirection (self, tarPos, parm);
         }
     }

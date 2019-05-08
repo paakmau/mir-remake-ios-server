@@ -10,7 +10,7 @@ namespace MirRemake {
         private E_Skill m_targetSkill;
         public MFSMS_Free (E_Monster self) {
             m_Self = self;
-            m_targetPos = self.m_position;
+            m_targetPos = self.m_Position;
             m_moveTimeLeft = 0f;
             m_targetSkill = null;
         }
@@ -18,19 +18,19 @@ namespace MirRemake {
         public void OnTick (float dT) {
             // 如果受到攻击
             if (m_Self.m_highestHatredTarget != null) {
-                m_targetPos = m_Self.m_highestHatredTarget.m_position;
+                m_targetPos = m_Self.m_highestHatredTarget.m_Position;
                 m_moveTimeLeft = 0f;
             }
 
             if (m_moveTimeLeft > 0f)
                 m_moveTimeLeft -= dT;
             else {
-                var dir = m_targetPos - m_Self.m_position;
+                var dir = m_targetPos - m_Self.m_Position;
                 var deltaP = dir.normalized * m_Self.m_Speed * dT / 100f;
                 if (deltaP.magnitude >= dir.magnitude)
                     deltaP = dir;
-                m_Self.m_position = m_Self.m_position + deltaP;
-                if ((m_Self.m_position - m_targetPos).sqrMagnitude <= 0.01f) {
+                m_Self.m_Position = m_Self.m_Position + deltaP;
+                if ((m_Self.m_Position - m_targetPos).sqrMagnitude <= 0.01f) {
                     m_moveTimeLeft = MyRandom.NextFloat (3f, 6f);
                     m_targetPos = m_Self.m_oriPosition + new Vector2 (MyRandom.NextFloat (0f, 2.5f), MyRandom.NextFloat(0f, 2.5f));
                 }

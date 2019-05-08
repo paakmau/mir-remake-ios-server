@@ -34,7 +34,7 @@ namespace MirRemake {
             m_targetAimType = SkillAimType.OTHER;
             m_rangeType = SkillRangeType.SECTOR;
             m_targetNumber = 3;
-            m_castRange = 0.1f;
+            m_castRange = 3.0f;
             m_damageRange = 1.0f;
             m_damageRadian = 360;
         }
@@ -67,7 +67,7 @@ namespace MirRemake {
         /// 返回目标(点), 主角需要向目标点移动直到可以释放技能(若在射程之外)  
         /// 若找不到目标点, 返回TargetPosition.s_noTarget
         /// </returns>
-        public TargetPosition GetCastTargetPosition (E_ActorUnit self, E_ActorUnit aimedTarget, Vector2 parm) {
+        public TargetPosition GetCastTargetPosition (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
             switch (m_targetAimType) {
                 case SkillAimType.SELF:
                     // 释放目标为自身
@@ -79,7 +79,7 @@ namespace MirRemake {
                         return new TargetPosition (aimedTarget);
                     else {
                         // 寻找释放目标
-                        List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_position, 5, m_targetCamp, 1);
+                        List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, 5, m_targetCamp, 1);
                         if (targetList.Count == 1)
                             return new TargetPosition (targetList[0]);
                         return new TargetPosition(null);
@@ -88,7 +88,7 @@ namespace MirRemake {
                     if (m_rangeType == SkillRangeType.SECTOR) {
                         if (m_damageRadian == 360)
                             // 不锁定释放目标的圆形范围技能
-                            return new TargetPosition (parm);
+                            return new TargetPosition (parm.m_Position);
                         else
                             // 目前非圆扇形技能只能以自身为释放目标(作用目标一般不为自身)
                             return new TargetPosition (self);
@@ -107,11 +107,11 @@ namespace MirRemake {
         /// <returns></returns>
         public bool CheckInRange (E_ActorUnit self, TargetPosition tarPos) {
             if(m_targetAimType == SkillAimType.SELF) return true;
-            if ((tarPos.m_Position - self.m_position).magnitude <= m_castRange)
+            if ((tarPos.m_Position - self.m_Position).magnitude <= m_castRange)
                 return true;
             else return false;
         }
-        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, TargetPosition tarPos, Vector2 parm) {
+        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, TargetPosition tarPos, SkillParam parm) {
             if (m_targetAimType == SkillAimType.SELF) {
                 if (m_targetCamp == CampType.SELF)
                     // 仅对自己的技能
@@ -120,13 +120,13 @@ namespace MirRemake {
                     case SkillRangeType.SECTOR:
                         if (m_damageRadian == 360)
                             // 自己的圆周范围内
-                            return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_position, m_damageRange, m_targetCamp, m_targetNumber);
+                            return SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, m_damageRange, m_targetCamp, m_targetNumber);
                         else
                             // 自己出发的扇形
-                            return SM_ActorUnit.s_instance.GetActorUnitsInSectorRange (self, self.m_position, parm, m_damageRange, m_damageRadian, m_targetCamp, m_targetNumber);
+                            return SM_ActorUnit.s_instance.GetActorUnitsInSectorRange (self, self.m_Position, parm.m_Direction, m_damageRange, m_damageRadian, m_targetCamp, m_targetNumber);
                     case SkillRangeType.LINE:
                         // 自己出发的直线
-                        return SM_ActorUnit.s_instance.GetActorUnitsInLineRange (self, self.m_position, parm, m_damageRange, m_damageWidth, m_targetCamp, m_targetNumber);
+                        return SM_ActorUnit.s_instance.GetActorUnitsInLineRange (self, self.m_Position, parm.m_Direction, m_damageRange, m_damageWidth, m_targetCamp, m_targetNumber);
                 }
             } else if (m_targetAimType == SkillAimType.OTHER)  {
                 if (m_targetNumber == 1)
@@ -154,23 +154,23 @@ namespace MirRemake {
         /// 返回技能释放的方向
         /// 若为自身发出的圆形技能或无方向技能, 返回Vector2.zero
         /// </returns>
-        public Vector2 GetCastDirection(E_ActorUnit self, TargetPosition tarPos, Vector2 parm) {
+        public Vector2 GetCastDirection(E_ActorUnit self, TargetPosition tarPos, SkillParam parm) {
             if(m_targetAimType == SkillAimType.SELF) {
                 // 自身出发的技能
                 if(m_rangeType == SkillRangeType.LINE)
-                    return parm;
+                    return parm.m_Direction;
                 else if(m_rangeType == SkillRangeType.SECTOR) {
                     if(m_damageRadian == 360)
                         return Vector2.zero;
                     else
-                        return parm;
+                        return parm.m_Direction;
                 }
             }else if(m_targetAimType == SkillAimType.OTHER) {
                 // 锁定其他人
-                return tarPos.m_Position-self.m_position;
+                return tarPos.m_Position-self.m_Position;
             }else if(m_targetAimType == SkillAimType.NOT_AIM) {
                 // 非指向性技能
-                return tarPos.m_Position-self.m_position;
+                return tarPos.m_Position-self.m_Position;
             }
             return Vector2.zero;
         }

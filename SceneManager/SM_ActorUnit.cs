@@ -46,7 +46,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_position).magnitude < range + unitEn.Current.m_CoverRadius)
+                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -55,7 +55,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_position).magnitude < range + unitEn.Current.m_CoverRadius)
+                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -161,7 +161,7 @@ namespace MirRemake {
                 while (allUnitEn.MoveNext ())
                     if (allUnitEn.Current.Key != selfNetId) {
                         unitNetIdList.Add (allUnitEn.Current.Key);
-                        posList.Add (allUnitEn.Current.Value.m_position);
+                        posList.Add (allUnitEn.Current.Value.m_Position);
                     }
                 NetworkService.s_instance.NetworkSetOtherPosition (selfNetId, unitNetIdList, posList);
 
@@ -202,7 +202,7 @@ namespace MirRemake {
             NetworkService.s_instance.NetworkSetSelfInfo (netId, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr);
         }
         public void CommandSetPosition (int netId, Vector2 pos) {
-            m_networkIdAndActorUnitDict[netId].m_position = pos;
+            m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
         public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
             E_Skill skill = new E_Skill (skillId);
