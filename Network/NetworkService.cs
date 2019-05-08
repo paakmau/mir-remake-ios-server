@@ -113,6 +113,9 @@ namespace MirRemake {
         /// <param name="actorUnitType">单位种类</param>
         /// <param name="otherNetIdList">其他单位NetId列表</param>
         public void NetworkSetOtherActorUnitInSight (int clientNetId, ActorUnitType actorUnitType, List<int> otherNetIdList) {
+            // TODO: 修改为, 当视野变化的时候才会发送, 且只发送新增与离开的单位, 并发送新增单位的初始信息(FSM, HP, MP, Level, Status)
+            // TODO: 区分玩家与怪物的接口(因为玩家需要得到装备)
+            // TODO: 视野需要有上限
             NetPeer client = m_netIdAndPeerDict[clientNetId];
             m_writer.Put ((byte) NetworkToClientDataType.SET_OTHER_ACTOR_UNIT_IN_SIGHT);
             m_writer.Put ((byte) actorUnitType);

@@ -5,6 +5,8 @@ namespace MirRemake {
         public void OnEnter (MFSMStateType prevType) { }
         public void OnTick (float dT) { }
         public IMFSMState GetNextState () {
+            if (m_Self.m_IsDead)
+                return new MFSMS_Dead(m_Self);
             return null;
         }
         public void OnExit (MFSMStateType nextType) { }

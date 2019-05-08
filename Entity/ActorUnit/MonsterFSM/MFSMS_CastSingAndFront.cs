@@ -22,6 +22,8 @@ namespace MirRemake {
             m_timer -= dT;
         }
         public IMFSMState GetNextState () {
+            if (m_Self.m_IsDead)
+                return new MFSMS_Dead(m_Self);
             // 咏唱结束
             if (m_timer <= 0f)
                 return new MFSMS_CastBack (m_Self, m_skill.m_castBackTime);

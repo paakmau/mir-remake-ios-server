@@ -92,7 +92,7 @@ namespace MirRemake {
             }
 
             if (m_IsDead)
-                SM_ActorUnit.s_instance.PrepareUnitDead (killerNetId, m_networkId);
+                SM_ActorUnit.s_instance.NotifyUnitDead (killerNetId, this);
         }
         /// <summary>
         /// 计算技能效果
@@ -112,7 +112,7 @@ namespace MirRemake {
                 targets[i].CalculateAndApplyEffect (m_networkId, initEffectClone, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead)
-                    SM_ActorUnit.s_instance.PrepareUnitDead (m_networkId, targets[i].m_networkId);
+                    SM_ActorUnit.s_instance.NotifyUnitDead (m_networkId, targets[i]);
             }
         }
         public void ApplyActiveEnterFSMState (FSMActiveEnterState state) { }

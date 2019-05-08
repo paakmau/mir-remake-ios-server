@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace MirRemake {
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
-        private Stack<int> m_deadUnitToRemoveNetworkIdStack = new Stack<int> ();
-        private Dictionary<int, E_ActorUnit> m_networkIdAndDeadPlayerDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
@@ -46,7 +43,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
+                if (CheckCampMatch (self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -55,7 +52,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
+                if (CheckCampMatch (self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -64,7 +61,7 @@ namespace MirRemake {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
             var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
             while (unitEn.MoveNext ()) {
-                if (CheckCampMatch(self, unitEn.Current, targetCamp) && false) // TODO: 解决直线的作用目标判定
+                if (CheckCampMatch (self, unitEn.Current, targetCamp) && false) // TODO: 解决直线的作用目标判定
                     res.Add (unitEn.Current);
             }
             return GetNearestUnits (center, res, num);
@@ -87,22 +84,16 @@ namespace MirRemake {
             }
             return false;
         }
-        public void PrepareUnitDead (int killerNetId, int netId) {
-            m_deadUnitToRemoveNetworkIdStack.Push (netId);
-            NetworkService.s_instance.NetworkSetAllDeadToAll (killerNetId, netId);
+        public void NotifyUnitDead (int killerNetId, E_ActorUnit deadUnit) {
+            NetworkService.s_instance.NetworkSetAllDeadToAll (killerNetId, deadUnit.m_networkId);
         }
-        private void UnitDead (int netId) {
-            var unit = GetActorUnitByNetworkId (netId);
-            if (unit != null) {
-                if (unit.m_ActorUnitType == ActorUnitType.Monster) {
-                    m_networkIdAndActorUnitDict.Remove (netId);
-                    MyTimer.Time refreshTime = MyTimer.s_CurTime;
-                    refreshTime.Tick (c_monsterRefreshTime);
-                    m_networkIdAndMonsterRefreshTimeDict.Add (netId, refreshTime);
-                } else if (unit.m_ActorUnitType == ActorUnitType.Player) {
-                    m_networkIdAndActorUnitDict.Remove (netId);
-                    m_networkIdAndDeadPlayerDict.Add (netId, unit);
-                }
+        public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
+            m_networkIdAndActorUnitDict.Remove (deadUnit.m_networkId);
+            // 处理死亡单位的移除
+            if (deadUnit.m_ActorUnitType == ActorUnitType.Monster) {
+                MyTimer.Time refreshTime = MyTimer.s_CurTime;
+                refreshTime.Tick (c_monsterRefreshTime);
+                m_networkIdAndMonsterRefreshTimeDict.Add (deadUnit.m_networkId, refreshTime);
             }
         }
         public void Tick (float dT) {
@@ -111,16 +102,11 @@ namespace MirRemake {
             while (unitEn.MoveNext ())
                 unitEn.Current.Value.Tick (dT);
 
-            // 处理死亡单位的移除
-            int deadNetId;
-            while (m_deadUnitToRemoveNetworkIdStack.TryPop(out deadNetId))
-                UnitDead (deadNetId);
-
             // 处理怪物刷新
             List<int> monsterIdToRefreshList = new List<int> ();
             var monsterDeathTimeEn = m_networkIdAndMonsterRefreshTimeDict.GetEnumerator ();
             while (monsterDeathTimeEn.MoveNext ())
-                if (MyTimer.CheckTimeUp(monsterDeathTimeEn.Current.Value))
+                if (MyTimer.CheckTimeUp (monsterDeathTimeEn.Current.Value))
                     monsterIdToRefreshList.Add (monsterDeathTimeEn.Current.Key);
             for (int i = 0; i < monsterIdToRefreshList.Count; i++) {
                 int monsterIdToRefresh = monsterIdToRefreshList[i];
@@ -141,7 +127,6 @@ namespace MirRemake {
                 var otherUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
                 while (otherUnitEn.MoveNext ()) {
                     if (otherUnitEn.Current.Key == selfNetId) continue;
-                    if (otherUnitEn.Current.Value.m_IsDead) continue;
                     switch (otherUnitEn.Current.Value.m_ActorUnitType) {
                         case ActorUnitType.Monster:
                             monsterNetIdList.Add (otherUnitEn.Current.Key);
@@ -207,8 +192,8 @@ namespace MirRemake {
         public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
             E_Skill skill = new E_Skill (skillId);
             KeyValuePair<int, E_Status[]>[] statusPairArr;
-            E_ActorUnit unit = GetActorUnitByNetworkId(netId);
-            if(unit == null) return;
+            E_ActorUnit unit = GetActorUnitByNetworkId (netId);
+            if (unit == null) return;
             unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
             NetworkService.s_instance.NetworkSetAllEffectToAll (skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr);
         }
@@ -244,27 +229,27 @@ namespace MirRemake {
             NetworkService.s_instance.NetworkConfirmMissionFailed (netId, missionId);
         }
 
-        public void CommandBlacksmithBuilding(int netId, Dictionary<short, short> materials, short NPCId) {
-            E_BlacksmithNPC blacksmith = new E_BlacksmithNPC();
+        public void CommandBlacksmithBuilding (int netId, Dictionary<short, short> materials, short NPCId) {
+            E_BlacksmithNPC blacksmith = new E_BlacksmithNPC ();
             // TODO:计数
-            BuildingEquipmentFortune face = blacksmith.LookIntoTheMirror(materials);
-            E_Equipment equipment = new E_Equipment(face);
-            List<E_Item> production = new List<E_Item>();
-            production.Add(equipment);
-            
-            List<E_Item> e_materials = new List<E_Item>();
-            foreach(KeyValuePair<short, short> material in materials) {
-                E_Material e_material = new E_Material(material.Key);
+            BuildingEquipmentFortune face = blacksmith.LookIntoTheMirror (materials);
+            E_Equipment equipment = new E_Equipment (face);
+            List<E_Item> production = new List<E_Item> ();
+            production.Add (equipment);
+
+            List<E_Item> e_materials = new List<E_Item> ();
+            foreach (KeyValuePair<short, short> material in materials) {
+                E_Material e_material = new E_Material (material.Key);
                 e_material.m_Num = material.Value;
-                e_materials.Add(e_material);
+                e_materials.Add (e_material);
             }
 
-            E_Character character = GetPlayerByNetworkId(netId);
-            character.LossItems(e_materials);
-            character.LossMoneyByType(CurrencyType.VIRTUAL, 10000); // TODO:打造花费
-            character.GainItems(production);
+            E_Character character = GetPlayerByNetworkId (netId);
+            character.LossItems (e_materials);
+            character.LossMoneyByType (CurrencyType.VIRTUAL, 10000); // TODO:打造花费
+            character.GainItems (production);
 
-            NetworkService.s_instance.NetworkApplyBlacksmithBuilding(netId, NPCId, equipment.m_Id, equipment.m_RealityId, face);
+            NetworkService.s_instance.NetworkApplyBlacksmithBuilding (netId, NPCId, equipment.m_Id, equipment.m_RealityId, face);
         }
     }
 }

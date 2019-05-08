@@ -36,10 +36,9 @@ namespace MirRemake {
                 }
             }
         }
-        public void SetSelf (E_Monster self) {
-            m_Self = self;
-        }
         public IMFSMState GetNextState () {
+            if (m_Self.m_IsDead)
+                return new MFSMS_Dead(m_Self);
             if (m_Self.m_highestHatredTarget != null) {
                 if (m_targetSkill == null)
                     m_targetSkill = m_Self.GetRandomValidSkill();
