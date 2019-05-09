@@ -7,6 +7,7 @@ namespace MirRemake {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
         private INetworkService m_networkService;
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
+        private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
@@ -77,7 +78,13 @@ namespace MirRemake {
             return units;
         }
         private List<int> GetPlayerInSightIdList (E_ActorUnit self, bool includeSelf) {
-            return new List<int> ();
+            // TODO: 处理视野问题
+            List<int> res = new List<int> ();
+            foreach (var netId in m_playerNetIdSet) {
+                if (includeSelf || netId != self.m_networkId)
+                    res.Add (netId);
+            }
+            return res;
         }
         public bool CheckCampMatch (E_ActorUnit self, E_ActorUnit target, CampType camp) {
             // TODO: 解决组队问题
@@ -92,22 +99,28 @@ namespace MirRemake {
             return false;
         }
         public void NotifyUnitDead (int killerNetId, E_ActorUnit deadUnit) {
-            m_networkService.SendServerCommand (new SC_ApplyAllDead(GetPlayerInSightIdList(deadUnit, true), killerNetId, deadUnit.m_networkId));
+            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetPlayerInSightIdList (deadUnit, true), killerNetId, deadUnit.m_networkId));
         }
         public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
-            m_networkIdAndActorUnitDict.Remove (deadUnit.m_networkId);
-            // 处理死亡单位的移除
-            if (deadUnit.m_ActorUnitType == ActorUnitType.Monster) {
-                MyTimer.Time refreshTime = MyTimer.s_CurTime;
-                refreshTime.Tick (c_monsterRefreshTime);
-                m_networkIdAndMonsterRefreshTimeDict.Add (deadUnit.m_networkId, refreshTime);
-            }
+            // 死亡单位移除准备
+            m_networkIdBodyToDisappearStack.Push (deadUnit);
         }
         public void Tick (float dT) {
             // 每个单位的Tick
             var unitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
             while (unitEn.MoveNext ())
                 unitEn.Current.Value.Tick (dT);
+
+            // 移除消失的尸体
+            E_ActorUnit bodyToDisappear;
+            while (m_networkIdBodyToDisappearStack.TryPop(out bodyToDisappear)) {
+                m_networkIdAndActorUnitDict.Remove (bodyToDisappear.m_networkId);
+                if (bodyToDisappear.m_ActorUnitType == ActorUnitType.Monster) {
+                    MyTimer.Time refreshTime = MyTimer.s_CurTime;
+                    refreshTime.Tick (c_monsterRefreshTime);
+                    m_networkIdAndMonsterRefreshTimeDict.Add (bodyToDisappear.m_networkId, refreshTime);
+                }
+            }
 
             // 处理怪物刷新
             List<int> monsterIdToRefreshList = new List<int> ();
@@ -143,10 +156,10 @@ namespace MirRemake {
                             break;
                     }
                 }
-                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight(GetPlayerInSightIdList(self, false), ActorUnitType.Player, playerNetIdList));
-                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight(GetPlayerInSightIdList(self, false), ActorUnitType.Monster, monsterNetIdList));
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.Player, playerNetIdList));
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.Monster, monsterNetIdList));
 
-                // 发送所有单位的位置信息
+                // 发送视野内所有单位的位置信息
                 List<int> unitNetIdList = new List<int> ();
                 List<Vector2> posList = new List<Vector2> ();
                 var allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
@@ -155,9 +168,9 @@ namespace MirRemake {
                         unitNetIdList.Add (allUnitEn.Current.Key);
                         posList.Add (allUnitEn.Current.Value.m_Position);
                     }
-                m_networkService.SendServerCommand (new SC_SetOtherPosition (GetPlayerInSightIdList(self, false), unitNetIdList, posList));
+                m_networkService.SendServerCommand (new SC_SetOtherPosition (new List<int> { selfNetId }, unitNetIdList, posList));
 
-                // 发送所有单位的HP与MP
+                // 发送视野内所有单位的HP与MP
                 unitNetIdList.Clear ();
                 List<Dictionary<ActorUnitConcreteAttributeType, int>> HPMPList = new List<Dictionary<ActorUnitConcreteAttributeType, int>> ();
                 allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
@@ -166,7 +179,7 @@ namespace MirRemake {
                     unitNetIdList.Add (allUnitEn.Current.Key);
                     HPMPList.Add (allUnit.m_concreteAttributeDict);
                 }
-                m_networkService.SendServerCommand (new SC_SetAllHPAndMP(GetPlayerInSightIdList (self, false), unitNetIdList, HPMPList));
+                m_networkService.SendServerCommand (new SC_SetAllHPAndMP (new List<int> { selfNetId }, unitNetIdList, HPMPList));
             }
         }
         /// <summary>
@@ -191,13 +204,12 @@ namespace MirRemake {
             int[] skillMasterlyArr;
             newChar.GetAllLearnedSkill (out skillIdArr, out skillLvArr, out skillMasterlyArr);
 
-            m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> {netId}, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr));
+            m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> { netId }, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr));
         }
         public void CommandSetPosition (int netId, Vector2 pos) {
             m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
-        public void CommandApplyCastSkillBegin (int netId, short skillId, Vector2 tarPos, SkillParam parm) {
-        }
+        public void CommandApplyCastSkillBegin (int netId, short skillId, Vector2 tarPos, SkillParam parm) { }
         public void CommandApplyCastSkillSingCancel (int netId) {
 
         }

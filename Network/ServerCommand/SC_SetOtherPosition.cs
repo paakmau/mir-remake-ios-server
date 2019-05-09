@@ -21,7 +21,6 @@ namespace MirRemake {
                 writer.Put (m_otherIdList[i]);
                 writer.PutVector2 (m_posList[i]);
             }
-            writer.Reset ();
         }
     }
 }
