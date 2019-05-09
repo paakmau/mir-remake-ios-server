@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
+using UnityEngine;
 using LiteNetLib.Utils;
-
 
 namespace MirRemake {
     class CC_ApplyCastSkillBegin : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CAST_SKILL_BEGIN; } }
         public void Execute(NetDataReader reader, int netId) {
-            Console.WriteLine("客户端请求释放技能");
-            short skillId = reader.GetShort();
-            byte targetCnt = reader.GetByte();
-            int[] targetIdArr = new int[targetCnt];
-            for(int i=0; i<targetCnt; i++)
-                targetIdArr[i] = reader.GetInt();
-            SM_ActorUnit.s_instance.CommandApplyCastSkill(netId, skillId, targetIdArr);
+            short skillId = reader.GetShort ();
+            Vector2 tarPos = reader.GetVector2 ();
+            SkillParam skillParm = reader.GetSkillParam ();
+            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (netId, skillId, tarPos, skillParm);
         }
     }
 }

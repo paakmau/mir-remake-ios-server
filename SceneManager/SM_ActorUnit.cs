@@ -5,6 +5,7 @@ using UnityEngine;
 namespace MirRemake {
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance = new SM_ActorUnit ();
+        private INetworkService m_networkService;
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 15f;
@@ -22,6 +23,9 @@ namespace MirRemake {
             m_networkIdAndMonsterIdDict[monsterNetId] = 1;
             m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-3, 1);
             m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 10f);
+        }
+        public void Init (INetworkService netService) {
+            m_networkService = netService;
         }
         public E_ActorUnit GetActorUnitByNetworkId (int networkId) {
             E_ActorUnit res = null;
@@ -72,6 +76,9 @@ namespace MirRemake {
             // units.Sort();
             return units;
         }
+        private List<int> GetPlayerInSightIdList (E_ActorUnit self, bool includeSelf) {
+            return new List<int> ();
+        }
         public bool CheckCampMatch (E_ActorUnit self, E_ActorUnit target, CampType camp) {
             // TODO: 解决组队问题
             switch (camp) {
@@ -85,7 +92,7 @@ namespace MirRemake {
             return false;
         }
         public void NotifyUnitDead (int killerNetId, E_ActorUnit deadUnit) {
-            NetworkService.s_instance.NetworkSetAllDeadToAll (killerNetId, deadUnit.m_networkId);
+            m_networkService.SendServerCommand (new SC_ApplyAllDead(GetPlayerInSightIdList(deadUnit, true), killerNetId, deadUnit.m_networkId));
         }
         public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
             m_networkIdAndActorUnitDict.Remove (deadUnit.m_networkId);
@@ -136,8 +143,8 @@ namespace MirRemake {
                             break;
                     }
                 }
-                NetworkService.s_instance.NetworkSetOtherActorUnitInSight (selfNetId, ActorUnitType.Player, playerNetIdList);
-                NetworkService.s_instance.NetworkSetOtherActorUnitInSight (selfNetId, ActorUnitType.Monster, monsterNetIdList);
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight(GetPlayerInSightIdList(self, false), ActorUnitType.Player, playerNetIdList));
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight(GetPlayerInSightIdList(self, false), ActorUnitType.Monster, monsterNetIdList));
 
                 // 发送所有单位的位置信息
                 List<int> unitNetIdList = new List<int> ();
@@ -148,7 +155,7 @@ namespace MirRemake {
                         unitNetIdList.Add (allUnitEn.Current.Key);
                         posList.Add (allUnitEn.Current.Value.m_Position);
                     }
-                NetworkService.s_instance.NetworkSetOtherPosition (selfNetId, unitNetIdList, posList);
+                m_networkService.SendServerCommand (new SC_SetOtherPosition (GetPlayerInSightIdList(self, false), unitNetIdList, posList));
 
                 // 发送所有单位的HP与MP
                 unitNetIdList.Clear ();
@@ -159,7 +166,7 @@ namespace MirRemake {
                     unitNetIdList.Add (allUnitEn.Current.Key);
                     HPMPList.Add (allUnit.m_concreteAttributeDict);
                 }
-                NetworkService.s_instance.NetworkSetAllHPAndMP (selfNetId, unitNetIdList, HPMPList);
+                m_networkService.SendServerCommand (new SC_SetAllHPAndMP(GetPlayerInSightIdList (self, false), unitNetIdList, HPMPList));
             }
         }
         /// <summary>
@@ -175,7 +182,7 @@ namespace MirRemake {
             m_networkIdAndActorUnitDict.Remove (netId);
             m_playerNetIdSet.Remove (netId);
         }
-        public void CommandSetCharacterPlayerId (int netId, int playerId) {
+        public void CommandInitCharacterPlayerId (int netId, int playerId) {
             E_Character newChar = new E_Character (netId, playerId);
             m_networkIdAndActorUnitDict[netId] = newChar;
             m_playerNetIdSet.Add (netId);
@@ -184,29 +191,27 @@ namespace MirRemake {
             int[] skillMasterlyArr;
             newChar.GetAllLearnedSkill (out skillIdArr, out skillLvArr, out skillMasterlyArr);
 
-            NetworkService.s_instance.NetworkSetSelfInfo (netId, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr);
+            m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> {netId}, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr));
         }
         public void CommandSetPosition (int netId, Vector2 pos) {
             m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
-        public void CommandApplyCastSkill (int netId, short skillId, int[] tarIdArr) {
+        public void CommandApplyCastSkillBegin (int netId, short skillId, Vector2 tarPos, SkillParam parm) {
+        }
+        public void CommandApplyCastSkillSingCancel (int netId) {
+
+        }
+        public void CommandApplyCastSkillSettle (int netId, short skillId, int[] tarIdArr) {
             E_Skill skill = new E_Skill (skillId);
             KeyValuePair<int, E_Status[]>[] statusPairArr;
             E_ActorUnit unit = GetActorUnitByNetworkId (netId);
             if (unit == null) return;
             unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
-            NetworkService.s_instance.NetworkSetAllEffectToAll (skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr);
+            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (m_networkIdAndActorUnitDict[netId], true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
         }
         // public void CommandApplyActiveEnterFSMState (int netId, FSMActiveEnterState state) {
         //     m_networkIdAndActorUnitDict[netId].ApplyActiveEnterFSMState (state);
         //     NetworkService.s_instance.NetworkSetSelfFSMStateToOther (netId, state);
         // }
-        public E_Character GetPlayerByNetworkId (int netId) {
-            E_ActorUnit actorUnit = GetActorUnitByNetworkId (netId);
-            if (actorUnit.m_ActorUnitType == ActorUnitType.Player) {
-                return (E_Character) actorUnit;
-            }
-            return null;
-        }
     }
 }
