@@ -49,7 +49,9 @@ namespace MirRemake {
         CRITICAL_RATE,
         CRITICAL_BONUS,
         HIT_RATE,
-        DODGE_RATE,
+        DODGE_RATE
+    }
+    enum ActorUnitSpecialAttributeType : byte {
         FAINT,
         SILENT,
         IMMOBILE
@@ -117,7 +119,7 @@ namespace MirRemake {
         RING,//戒指
         WEAPON
     }
-    enum MissionOccupation : byte {
+    enum MissionOccupation : byte{
         WARRIOR,
         ROGUE,
         MAGE,
@@ -147,5 +149,14 @@ namespace MirRemake {
         AFRICAN,
         // 非酋
         TIGGER
+    }
+    enum ItemQuality : byte {
+        POOR, // 粗糙
+        COMMON, // 普通
+        UNCOMMON, // 非凡
+        RARE, // 稀有
+        EPIC, // 史诗
+        LEGENDARY, // 传说
+        HEIRLOOM // 传家宝
     }
 }

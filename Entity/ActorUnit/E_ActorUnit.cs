@@ -12,6 +12,7 @@ namespace MirRemake {
         public virtual ActorUnitType m_ActorUnitType { get; }
         // 具体属性
         public Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
+        public Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
         public int m_MaxHP { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP]; } }
         public int m_MaxMP { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_MP]; } }
         public int m_CurHP {
@@ -34,9 +35,9 @@ namespace MirRemake {
         public int m_CriticalBonus { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CRITICAL_BONUS]; } }
         public int m_HitRate { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE]; } }
         public int m_DodgeRate { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.DODGE_RATE]; } }
-        public bool m_IsFaint { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.FAINT] > 0; } }
-        public bool m_IsSilent { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.SILENT] > 0; } }
-        public bool m_IsImmobile { get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.IMMOBILE] > 0; } }
+        public bool m_IsFaint { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] > 0; } }
+        public bool m_IsSilent { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] > 0; } }
+        public bool m_IsImmobile { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] > 0; } }
         public bool m_IsDead { get { return m_CurHP <= 0; } }
         // 自身状态列表
         protected List<E_Status> m_statusList = new List<E_Status> ();
@@ -51,14 +52,20 @@ namespace MirRemake {
         }
 
         private void AttachStatusToAttr (E_Status status) {
-            var statusAttrEn = status.m_affectAttributeDict.GetEnumerator ();
-            while (statusAttrEn.MoveNext ())
-                m_concreteAttributeDict[statusAttrEn.Current.Key] -= statusAttrEn.Current.Value * status.m_value;
+            var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
+            while (statusConcreteAttrEn.MoveNext ())
+                m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] += statusConcreteAttrEn.Current.Value * status.m_value;
+            var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
+            while (statusSpecialAttrEn.MoveNext ())
+                m_specialAttributeDict[statusSpecialAttrEn.Current.Key] += statusSpecialAttrEn.Current.Value;
         }
         private void RemoveStatusToAttr (E_Status status) {
-            var statusAttrEn = status.m_affectAttributeDict.GetEnumerator ();
-            while (statusAttrEn.MoveNext ())
-                m_concreteAttributeDict[statusAttrEn.Current.Key] -= statusAttrEn.Current.Value * status.m_value;
+            var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
+            while (statusConcreteAttrEn.MoveNext ())
+                m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] -= statusConcreteAttrEn.Current.Value * status.m_value;
+            var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
+            while (statusSpecialAttrEn.MoveNext ())
+                m_specialAttributeDict[statusSpecialAttrEn.Current.Key] -= statusSpecialAttrEn.Current.Value;
         }
         protected float deltaTimeAfterLastSecond = 0f;
         public virtual void Tick (float dT) {
@@ -68,8 +75,7 @@ namespace MirRemake {
             int killerNetId = 0;
             // 移除超时的状态 与 得到状态伤害最高的攻击者
             for (int i = m_statusList.Count - 1; i >= 0; i--) {
-                m_statusList[i].Tick (dT);
-                if (m_statusList[i].m_leftTime <= 0.0f) {
+                if (MyTimer.CheckTimeUp (m_statusList[i].m_endTime)) {
                     RemoveStatusToAttr (m_statusList[i]);
                     m_statusList.RemoveAt (i);
                 } else {
@@ -137,7 +143,7 @@ namespace MirRemake {
                     foreach (var status in initEffect.m_statusAttachArray) {
                         newStatusArr[i] = status;
                         m_statusList.Add (status);
-                        var affectAttrEn = status.m_affectAttributeDict.GetEnumerator ();
+                        var affectAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
                         while (affectAttrEn.MoveNext ())
                             m_concreteAttributeDict[affectAttrEn.Current.Key] += affectAttrEn.Current.Value * status.m_value;
                         i++;
@@ -203,9 +209,12 @@ namespace MirRemake {
 
             // 计算异常状态持续时间(根据韧性)
             if (effect.m_statusAttachArray != null)
-                for (int i = 0; i < effect.m_statusAttachArray.Length; i++)
-                    if (effect.m_statusAttachArray[i].m_type == StatusType.DEBUFF)
-                        effect.m_statusAttachArray[i].m_leftTime -= (100 - m_Tenacity) * 0.01f;
+                for (int i = 0; i < effect.m_statusAttachArray.Length; i++) {
+                    var status = effect.m_statusAttachArray[i];
+                    if (status.m_type == StatusType.DEBUFF)
+                        status.m_DurationTime *= 1f - m_Tenacity * 0.01f;
+                    effect.m_statusAttachArray[i] = status;
+                }
 
             // 处理暴击
             if (isCritical)

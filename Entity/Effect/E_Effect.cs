@@ -28,11 +28,11 @@ namespace MirRemake {
             // TODO: 仅用于测试, 日后应当删除
             m_hitRate = 10000.0f;
             m_criticalRate = 0.0f;
-            m_deltaHP = -1000;
+            m_deltaHP = -500;
             m_deltaHPType = EffectDeltaHPType.MAGIC;
             m_deltaMP = 0;
             m_deltaMPType = EffectDeltaMPType.MAGIC;
-            m_statusAttachArray = new E_Status[1] { new E_Status(1, 100, 5f) };
+            m_statusAttachArray = new E_Status[1] { new E_Status(1, 10, 2f) };
             m_selfHPStrategy = null;
             m_targetHPStrategy = null;
         }

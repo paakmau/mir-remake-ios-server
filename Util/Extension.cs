@@ -43,7 +43,7 @@ namespace MirRemake {
         public static void PutE_Status (this NetDataWriter writer, E_Status status) {
             writer.Put (status.m_id);
             writer.Put (status.m_value);
-            writer.Put (status.m_leftTime);
+            writer.Put (status.m_DurationTime);
         }
         public static E_Status GetE_Status (this NetDataReader reader) {
             short statusId = reader.GetShort ();

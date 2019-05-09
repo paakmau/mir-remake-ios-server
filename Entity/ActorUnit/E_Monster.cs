@@ -33,9 +33,10 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_BONUS, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.HIT_RATE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DODGE_RATE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.FAINT, 0);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SILENT, 0);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.IMMOBILE, 0);
+
+            m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.FAINT, 0);
+            m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.SILENT, 0);
+            m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.IMMOBILE, 0);
             // TODO: 并把等级等发送到客户端
 
             m_skillArr = new E_Skill[1] { new E_Skill (0)};

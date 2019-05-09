@@ -34,7 +34,6 @@ namespace MirRemake {
                     m_cycle ++;
                 }
             }
-
             public Time Ticked (float dT) {
                 Tick (dT);
                 return this;
