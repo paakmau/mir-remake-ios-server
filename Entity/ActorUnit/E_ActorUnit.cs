@@ -52,20 +52,28 @@ namespace MirRemake {
         }
 
         private void AttachStatusToAttr (E_Status status) {
-            var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
-            while (statusConcreteAttrEn.MoveNext ())
-                m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] += statusConcreteAttrEn.Current.Value * status.m_value;
-            var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
-            while (statusSpecialAttrEn.MoveNext ())
-                m_specialAttributeDict[statusSpecialAttrEn.Current.Key] += statusSpecialAttrEn.Current.Value;
+            if (status.m_affectConcreteAttributeDict != null) {
+                var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
+                while (statusConcreteAttrEn.MoveNext ())
+                    m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] += statusConcreteAttrEn.Current.Value * status.m_value;
+            }
+            if (status.m_affectSpecialAttributeDict != null) {
+                var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
+                while (statusSpecialAttrEn.MoveNext ())
+                    m_specialAttributeDict[statusSpecialAttrEn.Current.Key] += statusSpecialAttrEn.Current.Value;
+            }
         }
         private void RemoveStatusToAttr (E_Status status) {
-            var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
-            while (statusConcreteAttrEn.MoveNext ())
-                m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] -= statusConcreteAttrEn.Current.Value * status.m_value;
-            var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
-            while (statusSpecialAttrEn.MoveNext ())
-                m_specialAttributeDict[statusSpecialAttrEn.Current.Key] -= statusSpecialAttrEn.Current.Value;
+            if (status.m_affectConcreteAttributeDict != null) {
+                var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
+                while (statusConcreteAttrEn.MoveNext ())
+                    m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] -= statusConcreteAttrEn.Current.Value * status.m_value;
+            }
+            if (status.m_affectSpecialAttributeDict != null) {
+                var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
+                while (statusSpecialAttrEn.MoveNext ())
+                    m_specialAttributeDict[statusSpecialAttrEn.Current.Key] -= statusSpecialAttrEn.Current.Value;
+            }
         }
         protected float deltaTimeAfterLastSecond = 0f;
         public virtual void Tick (float dT) {
