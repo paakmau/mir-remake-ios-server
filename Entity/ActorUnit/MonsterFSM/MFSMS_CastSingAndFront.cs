@@ -16,7 +16,7 @@ namespace MirRemake {
         }
         public void OnEnter (MFSMStateType prevType) {
             m_timer = m_skill.m_singTime + m_skill.m_castFrontTime;
-            // TODO: 发送普通FSM状态机
+            m_Self.RequestCastSkillBegin (m_skill, m_tarPos, new SkillParam ());
         }
         public void OnTick (float dT) {
             m_timer -= dT;
@@ -34,7 +34,7 @@ namespace MirRemake {
         }
         public void OnExit (MFSMStateType nextType) {
             if (nextType == MFSMStateType.CAST_BACK) {
-                m_Self.RequestCastSkill (m_skill, m_tarPos);
+                m_Self.RequestCastSkillSettle (m_skill, m_tarPos);
             }
         }
     }

@@ -53,13 +53,16 @@ namespace MirRemake {
                     return null;
             return skill;
         }
-        public void RequestCastSkill (E_Skill skill, TargetPosition tarPos) {
+        public void RequestCastSkillBegin (E_Skill skill, TargetPosition tarPos, SkillParam parm) {
+            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (m_networkId, skill.m_id, tarPos.m_Position, parm);
+        }
+        public void RequestCastSkillSettle (E_Skill skill, TargetPosition tarPos) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
             List<E_ActorUnit> unitList = skill.GetEffectTargets(this, tarPos, new SkillParam(Vector2.zero));
             int[] unitNetIdArr = new int[unitList.Count];
             for (int i=0; i<unitList.Count; i++)
                 unitNetIdArr[i] = unitList[i].m_networkId;
-            SM_ActorUnit.s_instance.CommandApplyCastSkill (m_networkId, skill.m_id, unitNetIdArr);
+            SM_ActorUnit.s_instance.CommandApplyCastSkillSettle (m_networkId, skill.m_id, unitNetIdArr);
         }
         public override void Tick (float dT) {
             base.Tick (dT);

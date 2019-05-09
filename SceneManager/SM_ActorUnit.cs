@@ -209,9 +209,5 @@ namespace MirRemake {
             unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
             m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (m_networkIdAndActorUnitDict[netId], true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
         }
-        // public void CommandApplyActiveEnterFSMState (int netId, FSMActiveEnterState state) {
-        //     m_networkIdAndActorUnitDict[netId].ApplyActiveEnterFSMState (state);
-        //     NetworkService.s_instance.NetworkSetSelfFSMStateToOther (netId, state);
-        // }
     }
 }

@@ -7,8 +7,10 @@ using LiteNetLib.Utils;
 namespace MirRemake {
     class Program {
         private const float c_networkFrameTime = 0.1f;
+        private static NetworkService s_networkService;
         static void Main (string[] args) {
-            NetworkService.s_instance.Init ();
+            s_networkService = new NetworkService ();
+            SM_ActorUnit.s_instance.Init (s_networkService);
             DateTime time = DateTime.Now;
             float netFrameTimer = 0f;
             while (true) {
@@ -17,7 +19,7 @@ namespace MirRemake {
                 time = newTime;
 
                 MyTimer.Tick (dT);
-                NetworkService.s_instance.Tick ();
+                s_networkService.Tick ();
                 SM_ActorUnit.s_instance.Tick (dT);
 
                 netFrameTimer += dT;

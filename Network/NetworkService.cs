@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace MirRemake {
     class NetworkService : INetEventListener, INetworkService {
-        public static NetworkService s_instance = new NetworkService ();
         private const int c_serverPort = 23333;
         private const int c_maxClientNum = 3000;
         private NetManager m_serverNetManager;
@@ -17,7 +16,7 @@ namespace MirRemake {
         private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
         private Dictionary<NetworkToServerDataType, IClientCommand> m_clientCommandDict = new Dictionary<NetworkToServerDataType, IClientCommand> ();
         private NetDataWriter m_writer = new NetDataWriter ();
-        public void Init () {
+        public NetworkService () {
             // 初始化LiteNet
             m_serverNetManager = new NetManager (this);
             m_serverNetManager.Start (c_serverPort);
