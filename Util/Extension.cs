@@ -17,29 +17,6 @@ namespace MirRemake {
         public static SkillParam GetSkillParam (this NetDataReader reader) {
             return new SkillParam (reader.GetVector2());
         }
-        public static void PutFSMAEState (this NetDataWriter writer, FSMActiveEnterState state) {
-            writer.Put ((byte) state.m_type);
-            switch (state.m_type) {
-                case FSMStateType.CAST_BEGIN:
-                    writer.Put (state.m_data, 0, 18);
-                    break;
-                case FSMStateType.CAST_SING_CANCEL:
-                    break;
-            }
-        }
-        public static FSMActiveEnterState GetFSMAEState (this NetDataReader reader) {
-            FSMActiveEnterState res = new FSMActiveEnterState ();
-            res.m_type = (FSMStateType) reader.GetByte ();
-            res.m_data = new byte[30];
-            switch (res.m_type) {
-                case FSMStateType.CAST_BEGIN:
-                    reader.GetBytes (res.m_data, 18);
-                    break;
-                case FSMStateType.CAST_SING_CANCEL:
-                    break;
-            }
-            return res;
-        }
         public static void PutE_Status (this NetDataWriter writer, E_Status status) {
             writer.Put (status.m_id);
             writer.Put (status.m_value);

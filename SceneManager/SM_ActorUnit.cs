@@ -209,7 +209,8 @@ namespace MirRemake {
         public void CommandSetPosition (int netId, Vector2 pos) {
             m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
-        public void CommandApplyCastSkillBegin (int netId, short skillId, Vector2 tarPos, SkillParam parm) { }
+        public void CommandApplyCastSkillBegin (int netId, short skillId, Vector2 tarPos, SkillParam parm) {
+        }
         public void CommandApplyCastSkillSingCancel (int netId) {
 
         }

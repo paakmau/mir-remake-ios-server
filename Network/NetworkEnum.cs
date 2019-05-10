@@ -6,6 +6,7 @@ namespace MirRemake {
         APPLY_OTHER_ACTOR_UNIT_IN_SIGHT,
         SET_OTHER_POSITION,
         SET_ALL_HP_AND_MP,
+        APPLY_OTHER_CAST_SKILL_BEGIN,
         APPLY_ALL_EFFECT,
         APPLY_ALL_DEAD
     }
