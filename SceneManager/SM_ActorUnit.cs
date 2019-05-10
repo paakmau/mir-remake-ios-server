@@ -77,11 +77,11 @@ namespace MirRemake {
             // units.Sort();
             return units;
         }
-        private List<int> GetPlayerInSightIdList (E_ActorUnit self, bool includeSelf) {
+        private List<int> GetPlayerInSightIdList (int selfNetId, bool includeSelf) {
             // TODO: 处理视野问题
             List<int> res = new List<int> ();
             foreach (var netId in m_playerNetIdSet) {
-                if (includeSelf || netId != self.m_networkId)
+                if (includeSelf || netId != selfNetId)
                     res.Add (netId);
             }
             return res;
@@ -99,7 +99,7 @@ namespace MirRemake {
             return false;
         }
         public void NotifyUnitDead (int killerNetId, E_ActorUnit deadUnit) {
-            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetPlayerInSightIdList (deadUnit, true), killerNetId, deadUnit.m_networkId));
+            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetPlayerInSightIdList (deadUnit.m_networkId, true), killerNetId, deadUnit.m_networkId));
         }
         public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
             // 死亡单位移除准备
@@ -176,6 +176,7 @@ namespace MirRemake {
                 allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
                 while (allUnitEn.MoveNext ()) {
                     var allUnit = allUnitEn.Current.Value;
+                    if (allUnit.m_IsDead) continue;
                     unitNetIdList.Add (allUnitEn.Current.Key);
                     HPMPList.Add (allUnit.m_concreteAttributeDict);
                 }
@@ -210,18 +211,18 @@ namespace MirRemake {
             m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
         public void CommandApplyCastSkillBegin (int netId, short skillId, Vector2 tarPos, SkillParam parm) {
-            // TODO: 
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, tarPos, parm));
         }
         public void CommandApplyCastSkillSingCancel (int netId) {
-            // TODO: 
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetPlayerInSightIdList (netId, false), netId));
         }
         public void CommandApplyCastSkillSettle (int netId, short skillId, int[] tarIdArr) {
-            E_Skill skill = new E_Skill (skillId);
-            KeyValuePair<int, E_Status[]>[] statusPairArr;
             E_ActorUnit unit = GetActorUnitByNetworkId (netId);
             if (unit == null) return;
+            E_Skill skill = new E_Skill (skillId);
+            KeyValuePair<int, E_Status[]>[] statusPairArr;
             unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
-            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (m_networkIdAndActorUnitDict[netId], true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
+            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (netId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
         }
     }
 }

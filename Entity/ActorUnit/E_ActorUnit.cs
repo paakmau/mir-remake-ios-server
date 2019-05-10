@@ -143,17 +143,27 @@ namespace MirRemake {
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {
                 newStatusArr = new E_Status[initEffect.m_StatusAttachNum];
-                // 应用到自身属性上
-                ApplyEffectToAttributes (initEffect);
-                // 附加状态并应用到具体属性
+                // 应用到HP与MP上
+                int newHP = m_CurHP + initEffect.m_deltaHP;
+                int newMP = m_CurMP + initEffect.m_deltaMP;
+                m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
+                m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
+                // 附加状态并应用到自身属性
                 if (initEffect.m_statusAttachArray != null) {
                     int i = 0;
                     foreach (var status in initEffect.m_statusAttachArray) {
                         newStatusArr[i] = status;
                         m_statusList.Add (status);
-                        var affectAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
-                        while (affectAttrEn.MoveNext ())
-                            m_concreteAttributeDict[affectAttrEn.Current.Key] += affectAttrEn.Current.Value * status.m_value;
+                        if (status.m_affectConcreteAttributeDict != null) {
+                            var affectConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
+                            while (affectConcreteAttrEn.MoveNext ())
+                                m_concreteAttributeDict[affectConcreteAttrEn.Current.Key] += affectConcreteAttrEn.Current.Value * status.m_value;
+                        }
+                        if (status.m_affectSpecialAttributeDict != null) {
+                            var affectSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
+                            while (affectSpecialAttrEn.MoveNext ())
+                                m_specialAttributeDict[affectSpecialAttrEn.Current.Key] += affectSpecialAttrEn.Current.Value;
+                        }
                         i++;
                     }
                 }
@@ -192,13 +202,12 @@ namespace MirRemake {
         /// <returns>命中则返回true, 否则返回false</returns>
         private bool CalculateApplyEffect (E_Effect effect) {
             effect.m_hitRate /= m_DodgeRate;
-            Random randObj = new Random (DateTime.Now.Millisecond);
-            if (randObj.Next (1, 101) >= effect.m_hitRate)
+            if (MyRandom.NextInt (1, 101) >= effect.m_hitRate)
                 // 未命中
                 return false;
             effect.m_criticalRate /= m_DodgeRate;
             // 是否暴击
-            bool isCritical = (randObj.Next (1, 101) <= effect.m_criticalRate);
+            bool isCritical = (MyRandom.NextInt (1, 101) <= effect.m_criticalRate);
 
             switch (effect.m_deltaHPType) {
                 case EffectDeltaHPType.PHYSICS:
@@ -229,17 +238,6 @@ namespace MirRemake {
                 effect.m_deltaHP = (int) (effect.m_deltaHP * 1.5f);
             return true;
         }
-        /// <summary>
-        /// 把计算好的effect应用到自己身上
-        /// </summary>
-        /// <param name="effect"></param>
-        private void ApplyEffectToAttributes (E_Effect effect) {
-            int newHP = m_CurHP + effect.m_deltaHP;
-            int newMP = m_CurMP + effect.m_deltaMP;
-            m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
-            m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
-        }
-
         private void CalculateByHPStrategy (E_Effect effect, HPStrategy hPStrategy) {
             if (hPStrategy == null) return;
             float value = 0;

@@ -16,7 +16,7 @@ namespace MirRemake {
             m_networkId = networkId;
             m_Position = pos;
 
-            // TODO: 从数据库获取怪物等级技能属性等
+            // TODO: 从数据库获取怪物等级技能属性等, 并把等级等发送到客户端
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_HP, 1500);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_MP, 1500);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_HP, 1500);
@@ -27,17 +27,15 @@ namespace MirRemake {
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAGIC, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DEFENCE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.RESISTANCE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.TENACITY, 1);
+            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.TENACITY, 15);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SPEED, 700);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_RATE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_BONUS, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.HIT_RATE, 150);
             m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DODGE_RATE, 150);
-
             m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.FAINT, 0);
             m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.SILENT, 0);
             m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.IMMOBILE, 0);
-            // TODO: 并把等级等发送到客户端
 
             m_skillArr = new E_Skill[1] { new E_Skill (0)};
         }
