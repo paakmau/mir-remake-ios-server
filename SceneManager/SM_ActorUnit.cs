@@ -224,5 +224,17 @@ namespace MirRemake {
             unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
             m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (netId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
         }
+        public void CommandUseConsumableItem (int netId, short itemId) {
+            // TODO: 
+        }
+        public void CommandAcceptMission (int netId, short missionId) {
+            // TODO: 
+        }
+        public void CommandFinishMission (int netId, short missionId) {
+            // TODO: 
+        }
+        public void CommandCancelMission (int netId, short missionId) {
+            // TODO: 
+        }
     }
 }
