@@ -239,7 +239,7 @@ namespace MirRemake {
         public void CommandCancelMission (int netId, short missionId) {
             // TODO: 
         }
-        public void CommandTalkToMissionNpc (int netId, short npcId) {
+        public void CommandTalkToMissionNpc (int netId, short npcId, short missionId) {
             // TODO: 
         }
     }

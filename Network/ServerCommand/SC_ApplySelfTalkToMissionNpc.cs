@@ -8,12 +8,15 @@ namespace MirRemake {
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public List<int> m_ToClientList { get; }
         private short m_npcId;
-        public SC_ApplySelfTalkToMissionNpc (List<int> toClientList, short npcId) {
+        private short m_missionId;
+        public SC_ApplySelfTalkToMissionNpc (List<int> toClientList, short npcId, short missionId) {
             m_ToClientList = toClientList;
             m_npcId = npcId;
+            m_missionId = missionId;
         }
         public void PutData (NetDataWriter writer) {
             writer.Put (m_npcId);
+            writer.Put (m_missionId);
         }
     }
 }
