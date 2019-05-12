@@ -56,26 +56,10 @@ namespace MirRemake {
         SILENT,
         IMMOBILE
     }
-    /// <summary>
-    /// 据说可以减少GC
-    /// </summary>
-    struct ActorUnitConcreteAttributeTypeComparer : IEqualityComparer<ActorUnitConcreteAttributeType> {
-        public bool Equals(ActorUnitConcreteAttributeType a, ActorUnitConcreteAttributeType b) {
-            return (byte)a == (byte)b;
-        }
-        public int GetHashCode(ActorUnitConcreteAttributeType obj) {
-            return (int)obj;
-        }
-    }
     enum ActorUnitType {
         Player,
         Monster,
         NPC
-    }
-    enum RepositoryType : byte {
-        BAG,
-        STOREHOUSE,
-        EQUIPMENT_LIST
     }
     enum ItemType : byte {
         CONSUMABLE,
@@ -97,15 +81,20 @@ namespace MirRemake {
         LOSE_ITEM,
         KILL_MONSTER
     }
-    enum NPCType : byte {
-        NORMAL,
-        SHOP
+    enum NpcActionType : byte {
+        MISSION_ACCEPT,
+        MISSION_DELIVERY,
+        MISSION_TALK,
+        SHOP,
+        FORGE,
+        STRENGTHEN,
+        ENCHANT
     }
-    enum MissionTarget : byte {
-        MONSTER_KILLS,
-        ITEMS,
+    enum MissionTargetType : byte {
+        KILL_MONSTER,
+        GAIN_ITEM,
         SKILL_LEVEL,
-        NPC_INTERACTION
+        TALK_TO_NPC
     }
     enum EquipmentPosition : byte{
         HELMET,//头
