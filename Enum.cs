@@ -75,11 +75,6 @@ namespace MirRemake {
         ROGUE,
         MAGE,
         TAOIST
-    }    
-    enum MassageType : byte {
-        GET_ITEM,
-        LOSE_ITEM,
-        KILL_MONSTER
     }
     enum NpcActionType : byte {
         MISSION_ACCEPT,
@@ -93,7 +88,7 @@ namespace MirRemake {
     enum MissionTargetType : byte {
         KILL_MONSTER,
         GAIN_ITEM,
-        SKILL_LEVEL,
+        LEVEL_UP_SKILL,
         TALK_TO_NPC
     }
     enum EquipmentPosition : byte{
