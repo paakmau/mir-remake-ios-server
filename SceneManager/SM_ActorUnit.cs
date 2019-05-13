@@ -244,5 +244,38 @@ namespace MirRemake {
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetSkillLevel) {
             // TODO: 
         }
+
+        // public void NetworkKillMonster (short monsterId) {
+        //     var acceptedMissionEn = m_accecptedMissionDict.Values.GetEnumerator ();
+        //     while (acceptedMissionEn.MoveNext ()) {
+        //         if (acceptedMissionEn.Current.IsProgressChangedAfterNetworkKillMonster (monsterId)) {
+        //             // TODO: 通知UI层
+        //         }
+        //     }
+        // }
+        // public void NetworkGainOrLoseItem (short itemId) {
+        //     var acceptedMissionEn = m_accecptedMissionDict.Values.GetEnumerator ();
+        //     while (acceptedMissionEn.MoveNext ()) {
+        //         if (acceptedMissionEn.Current.IsProgressChangedAfterNetworkGainOrLoseItem (itemId)) {
+        //             // TODO: 通知UI层
+        //         }
+        //     }
+        // }
+        // public void NetworkTalkToMissionNpc (short npcId, short missionId) {
+        //     E_Mission mission = null;
+        //     m_accecptedMissionDict.TryGetValue (missionId, out mission);
+        //     if (mission == null) return;
+        //     if (mission.IsProgressChangedAfterNetworkTalkToMissionNpc (npcId)) {
+        //         // TODO: 通知UI层
+        //     }
+        // }
+        // public void NetworkSkillLevelUp (short skillId) {
+        //     var acceptedMissionEn = m_accecptedMissionDict.Values.GetEnumerator ();
+        //     while (acceptedMissionEn.MoveNext ()) {
+        //         if (acceptedMissionEn.Current.IsProgressChangedAfterNetworkGainOrLoseItem (skillId)) {
+        //             // TODO: 通知UI层
+        //         }
+        //     }
+        // }
     }
 }
