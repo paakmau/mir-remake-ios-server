@@ -3,7 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace MirRemake {
-    struct SC_ApplySelfCancelMission : IServerCommand {
+    class SC_ApplySelfCancelMission : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CANCEL_MISSION; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public List<int> m_ToClientList { get; }

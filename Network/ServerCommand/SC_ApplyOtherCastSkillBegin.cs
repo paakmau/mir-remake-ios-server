@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 using UnityEngine;
 
 namespace MirRemake {
-    struct SC_ApplyOtherCastSkillBegin : IServerCommand {
+    class SC_ApplyOtherCastSkillBegin : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_BEGIN; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public List<int> m_ToClientList { get; }

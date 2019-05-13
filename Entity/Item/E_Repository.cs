@@ -11,21 +11,9 @@ using UnityEngine;
 using System.Collections.Generic;
 namespace MirRemake {
     class E_Repository : E_AbstractRepository {
-
         //该repository中的所有物品
         private List<E_Item>  items;
-        private RepositoryType type;
         private short size;
-        
-        /// <summary>
-        /// 类型
-        /// </summary>
-        /// <value></value>
-        public RepositoryType Type {
-            get {
-                return type;
-            }
-        }
 
         /// <summary>
         /// 该repository中的所有物品
@@ -56,8 +44,7 @@ namespace MirRemake {
         /// <param name="type">类型</param>
         /// <param name="items">包含的所有物品</param>
         /// <param name="size">容量</param>
-        public E_Repository(RepositoryType type, List<E_Item> items, short size) {
-            this.type = type;
+        public E_Repository(List<E_Item> items, short size) {
             this.items = items;
             this.size = size;
         }

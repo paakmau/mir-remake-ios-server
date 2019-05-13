@@ -10,7 +10,7 @@ namespace MirRemake {
         private static NetworkService s_networkService;
         static void Main (string[] args) {
             s_networkService = new NetworkService ();
-            SM_ActorUnit.s_instance.Init (s_networkService);
+            SM_ActorUnit.s_instance = new SM_ActorUnit (s_networkService);
             DateTime time = DateTime.Now;
             float netFrameTimer = 0f;
             while (true) {

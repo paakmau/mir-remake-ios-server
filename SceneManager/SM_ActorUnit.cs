@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MirRemake {
     class SM_ActorUnit {
-        public static SM_ActorUnit s_instance = new SM_ActorUnit ();
+        public static SM_ActorUnit s_instance;
         private INetworkService m_networkService;
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
         private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
@@ -13,7 +13,9 @@ namespace MirRemake {
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
         private Dictionary<int, MyTimer.Time> m_networkIdAndMonsterRefreshTimeDict = new Dictionary<int, MyTimer.Time> ();
-        public SM_ActorUnit () {
+        public SM_ActorUnit (INetworkService netService) {
+            m_networkService = netService;
+
             // TODO: 用于测试
             int monsterNetId;
             monsterNetId = NetworkIdManager.GetNewActorUnitNetworkId ();
@@ -24,9 +26,6 @@ namespace MirRemake {
             m_networkIdAndMonsterIdDict[monsterNetId] = 1;
             m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-3, 1);
             m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 10f);
-        }
-        public void Init (INetworkService netService) {
-            m_networkService = netService;
         }
         public E_ActorUnit GetActorUnitByNetworkId (int networkId) {
             E_ActorUnit res = null;
@@ -240,6 +239,9 @@ namespace MirRemake {
             // TODO: 
         }
         public void CommandTalkToMissionNpc (int netId, short npcId, short missionId) {
+            // TODO: 
+        }
+        public void CommandUpdateSkillLevel (int netId, short skillId, short targetSkillLevel) {
             // TODO: 
         }
     }

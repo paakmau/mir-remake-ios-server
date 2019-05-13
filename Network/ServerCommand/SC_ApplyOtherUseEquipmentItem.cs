@@ -3,7 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace MirRemake {
-    struct SC_ApplyOtherUseEquipmentItem : IServerCommand {
+    class SC_ApplyOtherUseEquipmentItem : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_USE_EQUIPMENT_ITEM; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public List<int> m_ToClientList { get; }

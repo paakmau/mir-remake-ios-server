@@ -3,7 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace MirRemake {
-    struct SC_ApplyAllDead : IServerCommand {
+    class SC_ApplyAllDead : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_DEAD; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public List<int> m_ToClientList { get; }

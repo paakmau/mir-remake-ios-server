@@ -4,7 +4,7 @@ using LiteNetLib.Utils;
 using UnityEngine;
 
 namespace MirRemake {
-    struct SC_SetOtherPosition : IServerCommand {
+    class SC_SetOtherPosition : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         public List<int> m_ToClientList { get; }
