@@ -11,7 +11,6 @@ namespace MirRemake {
         private E_Repository m_equipmentList;
         private long m_virtualMoney;
         private long m_chargeMoney;
-        private List<E_Mission> m_missionList;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
         // TODO:从数据库获取升级所需经验
         public int m_UpgradeExperienceInNeed { get; }
@@ -273,38 +272,6 @@ namespace MirRemake {
                 default:
                     break;
             }
-        }
-
-        public E_Mission GetMissionById(short missionId) {
-            foreach(E_Mission mission in m_missionList) {
-                if(mission.m_Id == missionId) {
-                    return mission;
-                }
-            }
-            return null;
-        }
-
-        public void AcceptingMission(E_Mission mission) {
-            m_missionList.Add(mission);
-        }
-
-        public bool DeliveringMission(short missionId) {
-            E_Mission mission = GetMissionById(missionId);
-            if(mission.isCompleted()) {
-                // TODO:根据id和数量初始化物品
-                List<E_Item> bonusItems = new List<E_Item>();
-                GainItems(bonusItems);
-                GainExperience(mission.m_BonusExperiences);
-                GainMoneyByType(CurrencyType.VIRTUAL, mission.m_BonusMoney);
-                return true;
-            }
-            return false;
-        }
-
-        public void CancelMission(short missionId) {
-            E_Mission mission = GetMissionById(missionId);
-            mission.Failed();
-            m_missionList.Remove(mission);
         }
     }
 }

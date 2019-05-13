@@ -13,7 +13,7 @@ using System;
 
 namespace MirRemake {
     class E_Mission {
-        public short m_id;
+        private short m_id;
         private byte m_type;// TODO:
         private string m_title;
         public string m_Title { get { return m_title; } }
