@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MirRemake {
     class E_Monster : E_ActorUnit {
-        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Monster; } }
+        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
         private MFSM m_mFSM;
         private E_Skill[] m_skillArr;
         private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();

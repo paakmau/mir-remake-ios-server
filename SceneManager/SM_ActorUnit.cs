@@ -114,7 +114,7 @@ namespace MirRemake {
             E_ActorUnit bodyToDisappear;
             while (m_networkIdBodyToDisappearStack.TryPop(out bodyToDisappear)) {
                 m_networkIdAndActorUnitDict.Remove (bodyToDisappear.m_networkId);
-                if (bodyToDisappear.m_ActorUnitType == ActorUnitType.Monster) {
+                if (bodyToDisappear.m_ActorUnitType == ActorUnitType.MONSTER) {
                     MyTimer.Time refreshTime = MyTimer.s_CurTime;
                     refreshTime.Tick (c_monsterRefreshTime);
                     m_networkIdAndMonsterRefreshTimeDict.Add (bodyToDisappear.m_networkId, refreshTime);
@@ -147,16 +147,16 @@ namespace MirRemake {
                 while (otherUnitEn.MoveNext ()) {
                     if (otherUnitEn.Current.Key == selfNetId) continue;
                     switch (otherUnitEn.Current.Value.m_ActorUnitType) {
-                        case ActorUnitType.Monster:
+                        case ActorUnitType.MONSTER:
                             monsterNetIdList.Add (otherUnitEn.Current.Key);
                             break;
-                        case ActorUnitType.Player:
+                        case ActorUnitType.PLAYER:
                             playerNetIdList.Add (otherUnitEn.Current.Key);
                             break;
                     }
                 }
-                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.Player, playerNetIdList));
-                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.Monster, monsterNetIdList));
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.PLAYER, playerNetIdList));
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.MONSTER, monsterNetIdList));
 
                 // 发送视野内所有单位的位置信息
                 List<int> unitNetIdList = new List<int> ();

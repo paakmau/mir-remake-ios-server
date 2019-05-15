@@ -11,7 +11,7 @@ namespace MirRemake {
         private E_Repository m_equipmentList;
         private long m_virtualMoney;
         private long m_chargeMoney;
-        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.Player; } }
+        public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.PLAYER; } }
         // TODO:从数据库获取升级所需经验
         public int m_UpgradeExperienceInNeed { get; }
 

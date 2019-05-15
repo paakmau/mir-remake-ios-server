@@ -57,11 +57,12 @@ namespace MirRemake {
         IMMOBILE
     }
     enum ActorUnitType {
-        Player,
-        Monster,
+        PLAYER,
+        MONSTER,
         NPC
     }
     enum ItemType : byte {
+        EMPTY,
         CONSUMABLE,
         MATERIAL,
         EQUIPMENT
@@ -143,4 +144,5 @@ namespace MirRemake {
         LEGENDARY, // 传说
         HEIRLOOM // 传家宝
     }
+    
 }
