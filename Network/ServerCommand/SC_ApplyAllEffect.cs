@@ -29,7 +29,7 @@ namespace MirRemake {
                 if (pair.Value != null) {
                     writer.Put(pair.Key);
                     foreach (var status in pair.Value)
-                        writer.PutE_Status(status);
+                        writer.Put(status.GetNo ());
                 }
             writer.Put ((byte)(m_allNetIdAndStatusArrPairArr.Length - unitHitNum));
             foreach (var pair in m_allNetIdAndStatusArrPairArr)

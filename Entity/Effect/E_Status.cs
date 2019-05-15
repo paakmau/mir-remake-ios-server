@@ -51,5 +51,8 @@ namespace MirRemake {
             m_durationTime = durationTime;
             m_endTime = MyTimer.s_CurTime.Ticked (durationTime);
         }
+        public NO_Status GetNo () {
+            return new NO_Status (m_id, m_value, m_durationTime);
+        }
     }
 }

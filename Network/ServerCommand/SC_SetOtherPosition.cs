@@ -19,7 +19,7 @@ namespace MirRemake {
             writer.Put ((byte) m_otherIdList.Count);
             for (int i = 0; i < m_otherIdList.Count; i++) {
                 writer.Put (m_otherIdList[i]);
-                writer.PutVector2 (m_posList[i]);
+                writer.Put (m_posList[i]);
             }
         }
     }

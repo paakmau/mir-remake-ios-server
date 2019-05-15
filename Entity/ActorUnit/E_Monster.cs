@@ -53,7 +53,7 @@ namespace MirRemake {
             return skill;
         }
         public void RequestCastSkillBegin (E_Skill skill, TargetPosition tarPos, SkillParam parm) {
-            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (m_networkId, skill.m_id, tarPos.m_Position, parm);
+            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (m_networkId, skill.m_id, tarPos, parm);
         }
         public void RequestCastSkillSettle (E_Skill skill, TargetPosition tarPos) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
