@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
-namespace MirRemake {
+namespace MirRemakeBackend {
     abstract class E_ActorUnit {
         public int m_networkId;
         // 等级
@@ -129,7 +129,6 @@ namespace MirRemake {
                     SM_ActorUnit.s_instance.NotifyUnitDead (m_networkId, targets[i]);
             }
         }
-        public void ApplyActiveEnterFSMState (FSMActiveEnterState state) { }
         /// <summary>
         /// 被施加Effect后, 计算出最终伤害与状态变化, 施加到自身
         /// 会修改传入的Effect

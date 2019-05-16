@@ -1,5 +1,5 @@
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     static class MyTimer {
         /// <summary>
         /// 循环计时器  

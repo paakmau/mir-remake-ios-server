@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MFSMS_CastBack : IMFSMState {
         public MFSMStateType m_Type { get { return MFSMStateType.CAST_BACK; } }
         public E_Monster m_Self { get; set; }

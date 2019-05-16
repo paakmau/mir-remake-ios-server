@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance;
         private INetworkService m_networkService;
@@ -209,8 +209,9 @@ namespace MirRemake {
         public void CommandSetPosition (int netId, Vector2 pos) {
             m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
-        public void CommandApplyCastSkillBegin (int netId, short skillId, TargetPosition tarPos, SkillParam parm) {
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, tarPos, parm));
+        public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parm) {
+            SkillParam spObj = new SkillParam ();
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, parm));
         }
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetPlayerInSightIdList (netId, false), netId));

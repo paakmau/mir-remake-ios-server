@@ -1,5 +1,5 @@
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     interface IMissionTarget {
         MissionTargetType m_TargetType { get; }
         short m_MissionId { get; }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class SC_ApplySelfUseEquipmentItem : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_USE_EQUIPMENT_ITEM; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }

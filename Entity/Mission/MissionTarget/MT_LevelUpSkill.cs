@@ -1,4 +1,4 @@
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MT_LevelUpSkill : IMissionTarget {
         public MissionTargetType m_TargetType { get { return MissionTargetType.LEVEL_UP_SKILL; } }
         public short m_MissionId { get; }

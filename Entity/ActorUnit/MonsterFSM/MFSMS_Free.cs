@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MFSMS_Free : IMFSMState {
         public MFSMStateType m_Type { get { return MFSMStateType.FREE; } }
         public E_Monster m_Self { get; set; }
@@ -43,9 +43,10 @@ namespace MirRemake {
                 if (m_targetSkill == null)
                     m_targetSkill = m_Self.GetRandomValidSkill();
                 if (m_targetSkill != null) {
-                    var tarPos = new TargetPosition (m_Self.m_highestHatredTarget);
-                    if (m_targetSkill.CheckInRange (m_Self, tarPos))
-                        return new MFSMS_CastSingAndFront (m_Self, m_targetSkill, new TargetPosition(m_Self.m_highestHatredTarget));
+                    // TODO: 为SkillParam添加根据仇恨目标生成的接口
+                    // var sp = new SkillParam (, m_Self.m_highestHatredTarget);
+                    // if (m_targetSkill.CheckInRange (m_Self.m_Position, tarPos))
+                    //     return new MFSMS_CastSingAndFront (m_Self, m_targetSkill, new SkillParam ());
                 }
             }
             return null;

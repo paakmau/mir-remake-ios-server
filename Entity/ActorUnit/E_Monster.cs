@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
         private MFSM m_mFSM;
@@ -52,12 +52,12 @@ namespace MirRemake {
                     return null;
             return skill;
         }
-        public void RequestCastSkillBegin (E_Skill skill, TargetPosition tarPos, SkillParam parm) {
-            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (m_networkId, skill.m_id, tarPos, parm);
+        public void RequestCastSkillBegin (E_Skill skill, SkillParam parm) {
+            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (m_networkId, skill.m_id, parm.GetNo ());
         }
-        public void RequestCastSkillSettle (E_Skill skill, TargetPosition tarPos) {
+        public void RequestCastSkillSettle (E_Skill skill, SkillParam parm) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
-            List<E_ActorUnit> unitList = skill.GetEffectTargets(this, tarPos, new SkillParam(Vector2.zero));
+            List<E_ActorUnit> unitList = skill.GetEffectTargets(this, parm);
             int[] unitNetIdArr = new int[unitList.Count];
             for (int i=0; i<unitList.Count; i++)
                 unitNetIdArr[i] = unitList[i].m_networkId;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using LiteNetLib.Utils;
 
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class CC_ApplyCastSkillSettle : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CAST_SKILL_SETTLE; } }
         public void Execute(NetDataReader reader, int netId) {

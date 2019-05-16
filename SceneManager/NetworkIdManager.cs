@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     static class NetworkIdManager {
         private static HashSet<int> m_actorUnitNetIdSet = new HashSet<int> ();
         private static HashSet<int> m_itemNetIdSet = new HashSet<int> ();

@@ -1,22 +1,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MFSMS_CastSingAndFront : IMFSMState {
         public MFSMStateType m_Type { get { return MFSMStateType.CAST_SING_AND_FRONT; } }
         public E_Monster m_Self { get; set; }
         private E_Skill m_skill;
-        private TargetPosition m_tarPos;
+        private SkillParam m_skillParam;
         private float m_timer;
-        public MFSMS_CastSingAndFront (E_Monster self, E_Skill skill, TargetPosition tarPos) {
+        public MFSMS_CastSingAndFront (E_Monster self, E_Skill skill, SkillParam parm) {
             m_Self = self;
             m_skill = skill;
-            m_tarPos = tarPos;
+            m_skillParam = parm;
             m_timer = 0f;
         }
         public void OnEnter (MFSMStateType prevType) {
-            m_timer = m_skill.m_singTime + m_skill.m_castFrontTime;
-            m_Self.RequestCastSkillBegin (m_skill, m_tarPos, new SkillParam ());
+            m_timer = m_skill.m_SingTime + m_skill.m_castFrontTime;
+            m_Self.RequestCastSkillBegin (m_skill, new SkillParam ());
         }
         public void OnTick (float dT) {
             m_timer -= dT;
@@ -34,7 +34,7 @@ namespace MirRemake {
         }
         public void OnExit (MFSMStateType nextType) {
             if (nextType == MFSMStateType.CAST_BACK) {
-                m_Self.RequestCastSkillSettle (m_skill, m_tarPos);
+                m_Self.RequestCastSkillSettle (m_skill, m_skillParam);
             }
         }
     }

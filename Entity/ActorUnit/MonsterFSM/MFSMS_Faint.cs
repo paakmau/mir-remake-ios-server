@@ -1,4 +1,4 @@
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MFSMS_Faint : IMFSMState {
         public MFSMStateType m_Type { get { return MFSMStateType.FAINT; } }
         public E_Monster m_Self { get; set; }

@@ -1,4 +1,4 @@
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MT_KillMonster : IMissionTarget {
         public MissionTargetType m_TargetType { get { return MissionTargetType.KILL_MONSTER; } }
         public short m_MissionId { get; }

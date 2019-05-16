@@ -1,6 +1,6 @@
 using System;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     static class MyRandom {
         private static Random s_randomObj = new Random (DateTime.Now.Millisecond);
         /// <summary>

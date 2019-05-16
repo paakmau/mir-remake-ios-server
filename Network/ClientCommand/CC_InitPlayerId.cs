@@ -1,7 +1,7 @@
 using System;
 using LiteNetLib.Utils;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class CC_InitPlayerId : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_PLAYER_ID; } }
         public void Execute(NetDataReader reader, int netId) {

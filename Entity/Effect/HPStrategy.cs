@@ -8,7 +8,7 @@
 
 using System.Collections.Generic;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class HPStrategy {
         public Dictionary<ActorUnitConcreteAttributeType, float> strategyFactorDict;
     }

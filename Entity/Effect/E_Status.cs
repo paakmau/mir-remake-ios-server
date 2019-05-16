@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct E_Status {
         public short m_id;
         public int m_attackerNetId;

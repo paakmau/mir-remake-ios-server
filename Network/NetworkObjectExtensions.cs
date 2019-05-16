@@ -2,7 +2,7 @@ using LiteNetLib.Utils;
 using UnityEngine;
 
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.x);
@@ -12,24 +12,12 @@ namespace MirRemake {
             return new Vector2 (reader.GetFloat (), reader.GetFloat ());
         }
         public static void Put (this NetDataWriter writer, NO_SkillParam value) {
-            writer.Put (value.m_data);
+            writer.Put (value.m_targetNetworkId);
+            writer.Put (value.m_direction);
+            writer.Put (value.m_position);
         }
         public static NO_SkillParam GetSkillParam (this NetDataReader reader) {
-            return new NO_SkillParam (reader.GetVector2());
-        }
-        public static void Put (this NetDataWriter writer, NO_TargetPosition value) {
-            writer.Put (value.m_isMovable);
-            if (value.m_isMovable)
-                writer.Put (value.m_targetNetworkId);
-            else
-                writer.Put (value.m_targetPosition);
-        }
-        public static NO_TargetPosition GetTargetPosition (this NetDataReader reader) {
-            bool isMovable = reader.GetBool ();
-            if (isMovable)
-                return new NO_TargetPosition (reader.GetInt ());
-            else
-                return new NO_TargetPosition (reader.GetVector2 ());
+            return new NO_SkillParam (reader.GetInt (), reader.GetVector2 (), reader.GetVector2 ());
         }
         public static void Put (this NetDataWriter writer, NO_Status status) {
             writer.Put (status.m_id);

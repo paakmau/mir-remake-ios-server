@@ -1,18 +1,39 @@
 using System.Collections.Generic;
-namespace MirRemake {
+namespace MirRemakeBackend {
     enum CampType : byte {
         SELF,
         FRIEND,
         ENEMY
     }
+    /// <summary>
+    /// 技能瞄准类型
+    /// 单体或多体由SkillTargetChooser决定
+    /// </summary>
     enum SkillAimType : byte {
-        SELF,
-        OTHER,
-        NOT_AIM
-    }
-    enum SkillRangeType : byte {
-        SECTOR,
-        LINE
+        /// <summary>
+        /// 指向性圆形
+        /// </summary>
+        AIM_CICLE,
+        /// <summary>
+        /// 指向性自身出发的扇形
+        /// </summary>
+        AIM_SELF_SECTOR,
+        /// <summary>
+        /// 非指向性圆形
+        /// </summary>
+        NOT_AIM_CIRCLE,
+        /// <summary>
+        /// 非指向性自身出发的圆形
+        /// </summary>
+        NOT_AIM_SELF_CIRCLE,
+        /// <summary>
+        /// 非指向性自身出发的扇形
+        /// </summary>
+        NOT_AIM_SELF_SECTOR,
+        /// <summary>
+        /// 非指向性自身出发的矩形
+        /// </summary>
+        NOT_AIM_SELF_RECT
     }
     enum EffectDeltaHPType : byte {
         PHYSICS,

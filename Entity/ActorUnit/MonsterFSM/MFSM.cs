@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace MirRemake {
+namespace MirRemakeBackend {
     class MFSM {
         public IMFSMState m_curState;
         public MFSM (IMFSMState initState) {

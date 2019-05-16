@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using LiteNetLib.Utils;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class CC_ApplyAcceptMission : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ACCEPT_MISSION; } }
         public void Execute(NetDataReader reader, int netId) {

@@ -1,5 +1,5 @@
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     enum NetworkToClientDataType : byte {
         INIT_SELF_NETWORK_ID,
         INIT_SELF_INFO,

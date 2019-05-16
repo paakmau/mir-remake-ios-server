@@ -7,7 +7,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using UnityEngine;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class NetworkService : INetEventListener, INetworkService {
         private const int c_serverPort = 23333;
         private const int c_maxClientNum = 3000;

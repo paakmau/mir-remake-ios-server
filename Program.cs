@@ -4,13 +4,15 @@ using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class Program {
         private const float c_networkFrameTime = 0.1f;
         private static NetworkService s_networkService;
         static void Main (string[] args) {
             s_networkService = new NetworkService ();
             SM_ActorUnit.s_instance = new SM_ActorUnit (s_networkService);
+            SM_Mission.s_instance = new SM_Mission ();
+            SM_Skill.s_instance = new SM_Skill ();
             DateTime time = DateTime.Now;
             float netFrameTimer = 0f;
             while (true) {

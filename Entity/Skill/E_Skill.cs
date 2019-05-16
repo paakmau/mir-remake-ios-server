@@ -9,24 +9,28 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-namespace MirRemake {
+namespace MirRemakeBackend {
     class E_Skill {
         public short m_id;
-        private byte m_type; //
         private string m_name;
         private string m_details;
         public int m_costHP;
         public int m_costMP;
         private short m_level;
         public short m_Level { get { return m_level; } set { this.m_level = value; } }
+        private short m_maxLevel;
+        public short m_MaxLevel { get { return m_maxLevel; } }
+        private short m_characterLevelInNeed;
+        public short m_CharacterLevelInNeed { get { return m_characterLevelInNeed; } }
         // 技能熟练度
-        private int m_masterly; //
+        private int m_masterly;
         public int m_Masterly { get { return this.m_masterly; } set { this.m_masterly = value; } }
         // 升级技能所需金钱
-        public long m_upgradeMoneyInNeed;
+        private long m_upgradeMoneyInNeed;
+        public long m_UpgradeMoneyInNeed { get { return m_upgradeMoneyInNeed; } }
         // 咏唱时间
-        public float m_singTime;
-        // 是否需要咏唱
+        private float m_singTime;
+        public float m_SingTime { get { return m_singTime; } }
         public bool m_NeedSing { get { return m_singTime != 0.0f; } }
         // 前摇时间
         public float m_castFrontTime;
@@ -34,14 +38,9 @@ namespace MirRemake {
         public float m_castBackTime;
         // 冷却时间
         public float m_coolDownTime;
-        private SkillTargetChooser m_targetChooser;
-        public IRangeChecker m_RangeChecker { get { return m_targetChooser; } }
+        private SkillTargetChooserBase m_targetChooser;
         public E_Effect m_skillEffect;
-        // TODO:是否能升级，（等级与熟练度是否都足够）
-        public bool m_IsUpgradable {
-            get { return false; }
-        }
-        public SkillAimType m_AimType { get { return m_targetChooser.m_targetAimType; } }
+        public SkillAimType m_AimType { get { return m_targetChooser.m_TargetAimType; } }
         public short m_FatherId {
             get { return 0; }
         }
@@ -51,43 +50,21 @@ namespace MirRemake {
         public E_Skill (short id) {
             // TODO: 仅用于测试, 日后应当删除
             m_id = id;
+            m_level = 1;
             m_costHP = 0;
             m_costMP = 30;
             m_singTime = 0.0f;
             m_castFrontTime = 0.2f;
             m_castBackTime = 0.3f;
             m_coolDownTime = 3f;
-            m_targetChooser = new SkillTargetChooser ();
+            m_targetChooser = new STC_AimCircle ();
             m_skillEffect = new E_Effect ();
         }
-        // TODO:技能升级
-        public bool Upgrade () {
-            if (this.m_IsUpgradable) {
-                return true;
-            }
-            return false;
+        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm) {
+            return m_targetChooser.GetEffectTargets (self, parm);
         }
-        // TODO:遗忘技能
-        public bool Forget () {
-            return true;
-        }
-        // public E_ActorUnit GetCastTargetIfAim (E_ActorUnit self, E_ActorUnit aimedTarget) {
-        //     return m_targetChooser.GetCastTargetIfAim (self, aimedTarget);
-        // }
-        public TargetPosition GetCastTargetPosition (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
-            return m_targetChooser.GetCastTargetPosition (self, aimedTarget, parm);
-        }
-        public bool CheckInRange (E_ActorUnit self, TargetPosition tarPos) {
-            return m_targetChooser.CheckInRange (self, tarPos);
-        }
-        public bool CheckCostEnough (E_ActorUnit self) {
-            return self.m_CurHP > m_costHP && self.m_CurMP >= m_costMP;
-        }
-        public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, TargetPosition tarPos, SkillParam parm) {
-            return m_targetChooser.GetEffectTargets (self, tarPos, parm);
-        }
-        public Vector2 GetCastDirection (E_ActorUnit self, TargetPosition tarPos, SkillParam parm) {
-            return m_targetChooser.GetCastDirection (self, tarPos, parm);
+        public bool InRange (Vector2 pos, SkillParam parm) {
+            return m_targetChooser.InRange (pos, parm);
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class SC_ApplyOtherActorUnitInSight : IServerCommand {
         // TODO: 修改为, 当视野变化的时候才会发送, 且只发送新增与离开的单位, 并发送新增单位的初始信息(FSM, HP, MP, Level, Status)
         // TODO: 区分玩家与怪物的接口(因为玩家需要得到装备)

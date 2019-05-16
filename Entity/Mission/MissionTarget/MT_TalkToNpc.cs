@@ -1,4 +1,4 @@
-namespace MirRemake {
+namespace MirRemakeBackend {
     struct MT_TalkToNpc : IMissionTarget {
         public MissionTargetType m_TargetType { get { return MissionTargetType.TALK_TO_NPC; } }
         public short m_MissionId { get; }

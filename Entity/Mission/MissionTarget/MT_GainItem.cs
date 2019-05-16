@@ -1,4 +1,4 @@
-namespace MirRemake {
+namespace MirRemakeBackend {
     class MT_GainItem : IMissionTarget {
         public MissionTargetType m_TargetType { get { return MissionTargetType.GAIN_ITEM; } }
         public short m_MissionId { get; }

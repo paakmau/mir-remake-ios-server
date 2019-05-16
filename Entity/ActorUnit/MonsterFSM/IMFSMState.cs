@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     interface IMFSMState {
         /// <summary>
         /// 状态的类别

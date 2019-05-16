@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System;
 
 
-namespace MirRemake {
+namespace MirRemakeBackend {
     class E_Mission {
         private short m_id;
         private byte m_type;// TODO:
