@@ -17,7 +17,12 @@ namespace MirRemakeBackend {
         public abstract SkillAimType m_TargetAimType { get; }
         // 作用对象数量
         public byte m_targetNumber;
-
+        /// <summary>
+        /// 完善技能参数
+        /// 例如自动选择最近的目标等, 看甲方
+        /// </summary>
+        /// <returns></returns>
+        public abstract SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm);
         /// <summary>
         /// 检查是否在射程之内
         /// </summary>

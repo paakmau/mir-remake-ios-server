@@ -63,6 +63,9 @@ namespace MirRemakeBackend {
         public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm) {
             return m_targetChooser.GetEffectTargets (self, parm);
         }
+        public SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
+            return m_targetChooser.CompleteSkillParam (self, aimedTarget, parm);
+        }
         public bool InRange (Vector2 pos, SkillParam parm) {
             return m_targetChooser.InRange (pos, parm);
         }

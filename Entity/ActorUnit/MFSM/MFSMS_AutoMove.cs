@@ -2,19 +2,17 @@ using System;
 using UnityEngine;
 
 namespace MirRemakeBackend {
-    struct FSMS_Free : IFSMState {
-        public FSMStateType m_Type { get { return FSMStateType.FREE; } }
+    struct MFSMS_AutoMove : IMFSMState {
+        public MFSMStateType m_Type { get { return MFSMStateType.AUTO_MOVE; } }
         public E_Monster m_Self { get; set; }
         private float m_moveTimeLeft;
         private Vector2 m_targetPos;
-        private E_Skill m_targetSkill;
-        public FSMS_Free (E_Monster self) {
+        public MFSMS_AutoMove (E_Monster self) {
             m_Self = self;
             m_targetPos = self.m_Position;
             m_moveTimeLeft = 0f;
-            m_targetSkill = null;
         }
-        public void OnEnter (FSMStateType prevType) { }
+        public void OnEnter (MFSMStateType prevType) { }
         public void OnTick (float dT) {
             // 如果受到攻击
             if (m_Self.m_highestHatredTarget != null) {
@@ -32,25 +30,19 @@ namespace MirRemakeBackend {
                 m_Self.m_Position = m_Self.m_Position + deltaP;
                 if ((m_Self.m_Position - m_targetPos).sqrMagnitude <= 0.01f) {
                     m_moveTimeLeft = MyRandom.NextFloat (3f, 6f);
-                    m_targetPos = m_Self.m_oriPosition + new Vector2 (MyRandom.NextFloat (0f, 2.5f), MyRandom.NextFloat(0f, 2.5f));
+                    m_targetPos = m_Self.m_oriPosition + new Vector2 (MyRandom.NextFloat (0f, 2.5f), MyRandom.NextFloat (0f, 2.5f));
                 }
             }
         }
-        public IFSMState GetNextState () {
+        public IMFSMState GetNextState () {
+            if (m_Self.m_IsFaint)
+                return new MFSMS_Faint (m_Self);
             if (m_Self.m_IsDead)
-                return new FSMS_Dead(m_Self);
-            if (m_Self.m_highestHatredTarget != null) {
-                if (m_targetSkill == null)
-                    m_targetSkill = m_Self.GetRandomValidSkill();
-                if (m_targetSkill != null) {
-                    // TODO: 为SkillParam添加根据仇恨目标生成的接口
-                    // var sp = new SkillParam (, m_Self.m_highestHatredTarget);
-                    // if (m_targetSkill.CheckInRange (m_Self.m_Position, tarPos))
-                    //     return new FSMS_CastSingAndFront (m_Self, m_targetSkill, new SkillParam ());
-                }
-            }
+                return new MFSMS_Dead (m_Self);
+            if (m_Self.m_highestHatredTarget != null)
+                return new MFSMS_AutoBattle (m_Self);
             return null;
         }
-        public void OnExit (FSMStateType nextType) { }
+        public void OnExit (MFSMStateType nextType) { }
     }
 }

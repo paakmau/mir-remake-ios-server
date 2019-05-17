@@ -24,6 +24,22 @@ namespace MirRemakeBackend {
             m_castRange = 3.0f;
             m_damageRange = 1.0f;
         }
+        public override SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
+            // 已锁定目标且阵营匹配
+            if (aimedTarget != null && SM_ActorUnit.s_instance.CheckCampMatch(self, aimedTarget, m_targetCamp)) {
+                parm.m_target = aimedTarget;
+                return parm;
+            }
+            else {
+                // 寻找释放目标
+                List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, 5, m_targetCamp, 1);
+                if (targetList.Count == 1) {
+                    parm.m_target = targetList[0];
+                    return parm;
+                }
+                return SkillParam.s_invalidSkillParam;
+            }
+        }
         public override bool InRange (Vector2 pos, SkillParam parm) {
             if ((parm.m_TargetPosition - pos).magnitude <= m_castRange)
                 return true;

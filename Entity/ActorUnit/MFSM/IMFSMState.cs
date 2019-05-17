@@ -1,13 +1,13 @@
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend {
-    interface IFSMState {
+    interface IMFSMState {
         /// <summary>
         /// 状态的类别
         /// </summary>
-        FSMStateType m_Type { get; }
+        MFSMStateType m_Type { get; }
         E_Monster m_Self { get; set; }
-        void OnEnter (FSMStateType prevType);
+        void OnEnter (MFSMStateType prevType);
         /// <summary>
         /// 每帧调用, 可对unit施加影响
         /// </summary>
@@ -21,7 +21,7 @@ namespace MirRemakeBackend {
         /// 若需要退出, 则返回下一个状态  
         /// 否则返回null  
         /// </returns>
-        IFSMState GetNextState ();
-        void OnExit (FSMStateType nextType);
+        IMFSMState GetNextState ();
+        void OnExit (MFSMStateType nextType);
     }
 }

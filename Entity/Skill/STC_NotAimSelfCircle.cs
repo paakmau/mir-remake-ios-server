@@ -24,6 +24,11 @@ namespace MirRemakeBackend {
             m_castRange = 3.0f;
             m_damageRange = 1.0f;
         }
+        public override SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
+            if (aimedTarget != null && !parm.m_isValid)
+                return new SkillParam (m_TargetAimType, null, Vector2.zero, aimedTarget.m_Position);
+            return parm;
+        }
         public override bool InRange (Vector2 pos, SkillParam tarPos) {
             return true;
         }
