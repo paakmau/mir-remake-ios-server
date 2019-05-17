@@ -12,7 +12,7 @@ namespace MirRemakeBackend {
         /// <param name="networkId"></param>
         /// <param name="skillId"></param>
         /// <returns></returns>
-        E_Skill GetSkillByIdAndPlayerNetworkId (int networkId, short skillId) {
+        public E_Skill GetSkillByIdAndPlayerNetworkId (int networkId, short skillId) {
             Dictionary<short, short> playerSkillIdLevelDict = null;
             if (!m_playerNetworkIdAndSkillIdLevelDict.TryGetValue (networkId, out playerSkillIdLevelDict))
                 return null;
@@ -26,7 +26,7 @@ namespace MirRemakeBackend {
                 return null;
             return skillAllLevelList[skillLv - 1];
         }
-        E_Skill GetSkillByIdAndLevel (short skillId, short level) {
+        public E_Skill GetSkillByIdAndLevel (short skillId, short level) {
             List<E_Skill> skillAllLevelList = null;
             if (!m_skillAllLevelDict.TryGetValue (skillId, out skillAllLevelList))
                 return null;

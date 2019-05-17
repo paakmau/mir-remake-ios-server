@@ -29,8 +29,7 @@ namespace MirRemakeBackend {
         private long m_upgradeMoneyInNeed;
         public long m_UpgradeMoneyInNeed { get { return m_upgradeMoneyInNeed; } }
         // 咏唱时间
-        private float m_singTime;
-        public float m_SingTime { get { return m_singTime; } }
+        public float m_singTime;
         public bool m_NeedSing { get { return m_singTime != 0.0f; } }
         // 前摇时间
         public float m_castFrontTime;

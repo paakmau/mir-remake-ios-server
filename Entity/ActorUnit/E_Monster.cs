@@ -52,16 +52,13 @@ namespace MirRemakeBackend {
                     return null;
             return skill;
         }
-        public void RequestCastSkillBegin (E_Skill skill, SkillParam parm) {
-            SM_ActorUnit.s_instance.NotifyApplyCastSkillBegin (m_networkId, skill.m_id, parm);
+        public void FSMCastSkillBegin (E_Skill skill, SkillParam parm) {
+            SM_ActorUnit.s_instance.NotifyApplyCastSkillBegin (this, skill, parm);
         }
-        public void RequestCastSkillSettle (E_Skill skill, SkillParam parm) {
+        public void FSMCastSkillSettle (E_Skill skill, SkillParam parm) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
             List<E_ActorUnit> unitList = skill.GetEffectTargets(this, parm);
-            int[] unitNetIdArr = new int[unitList.Count];
-            for (int i=0; i<unitList.Count; i++)
-                unitNetIdArr[i] = unitList[i].m_networkId;
-            SM_ActorUnit.s_instance.NotifyApplyCastSkillSettle (m_networkId, skill.m_id, unitNetIdArr);
+            SM_ActorUnit.s_instance.NotifyApplyCastSkillSettle (this, skill, unitList);
         }
         public override void Tick (float dT) {
             base.Tick (dT);
@@ -98,8 +95,8 @@ namespace MirRemakeBackend {
             // 关于MonsterFSM
             m_mFSM.Tick (dT);
         }
-        protected override bool CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
-            bool hit = base.CalculateAndApplyEffect (attackerNetId, initEffect, out newStatusArr);
+        protected override bool CalculateAndApplyEffectToSelf (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
+            bool hit = base.CalculateAndApplyEffectToSelf (attackerNetId, initEffect, out newStatusArr);
             // 若命中
             if (hit) {
                 // 计算仇恨

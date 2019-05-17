@@ -15,8 +15,8 @@ namespace MirRemakeBackend {
             m_timer = 0f;
         }
         public void OnEnter (MFSMStateType prevType) {
-            m_timer = m_skill.m_SingTime + m_skill.m_castFrontTime;
-            m_Self.RequestCastSkillBegin (m_skill, new SkillParam ());
+            m_timer = m_skill.m_singTime + m_skill.m_castFrontTime;
+            m_Self.FSMCastSkillBegin (m_skill, new SkillParam ());
         }
         public void OnTick (float dT) {
             m_timer -= dT;
@@ -36,7 +36,7 @@ namespace MirRemakeBackend {
         }
         public void OnExit (MFSMStateType nextType) {
             if (nextType == MFSMStateType.CAST_BACK) {
-                m_Self.RequestCastSkillSettle (m_skill, m_skillParam);
+                m_Self.FSMCastSkillSettle (m_skill, m_skillParam);
             }
         }
     }

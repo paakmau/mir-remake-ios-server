@@ -109,13 +109,13 @@ namespace MirRemakeBackend {
                 SM_ActorUnit.s_instance.NotifyUnitDead (killerNetId, m_networkId);
         }
         /// <summary>
-        /// 计算技能效果
+        /// 计算并施加技能效果
         /// </summary>
         /// <param name="skill"></param>
         /// <param name="targets"></param>
         /// <param name="netIdAndStatusArr">对于每个target的新增状态列表</param>
         /// <param name="deadNetIdArr">因为本次释放死亡的target单位</param>
-        public void ApplyCastSkill (E_Skill skill, List<E_ActorUnit> targets, out KeyValuePair<int, E_Status[]>[] netIdAndStatusArr) {
+        public void CastSkillSettle (E_Skill skill, List<E_ActorUnit> targets, out KeyValuePair<int, E_Status[]>[] netIdAndStatusArr) {
             netIdAndStatusArr = new KeyValuePair<int, E_Status[]>[targets.Count];
             // 计算初始Effect
             E_Effect initEffect = skill.m_skillEffect.GetClone ();
@@ -123,7 +123,7 @@ namespace MirRemakeBackend {
             for (int i = 0; i < targets.Count; i++) {
                 E_Status[] newStatusArr;
                 E_Effect initEffectClone = initEffect.GetClone ();
-                targets[i].CalculateAndApplyEffect (m_networkId, initEffectClone, out newStatusArr);
+                targets[i].CalculateAndApplyEffectToSelf (m_networkId, initEffectClone, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead)
                     SM_ActorUnit.s_instance.NotifyUnitDead (m_networkId, targets[i].m_networkId);
@@ -137,7 +137,7 @@ namespace MirRemakeBackend {
         /// <param name="initEffect">被施加到自身的Effect, 会被修改</param>
         /// <param name="newStatusArr">所有新增的Status, 若未命中则为null</param>
         /// <return>命中为true, 否则false</return>
-        protected virtual bool CalculateAndApplyEffect (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
+        protected virtual bool CalculateAndApplyEffectToSelf (int attackerNetId, E_Effect initEffect, out E_Status[] newStatusArr) {
             // 根据自身属性计算最终Effect
             bool hit = CalculateApplyEffect (initEffect);
             if (hit) {

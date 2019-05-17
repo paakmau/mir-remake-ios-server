@@ -70,7 +70,11 @@ namespace MirRemakeBackend {
         CRITICAL_RATE,
         CRITICAL_BONUS,
         HIT_RATE,
-        DODGE_RATE
+        DODGE_RATE,
+        LIFE_STEAL,
+        HP_DAMAGE_PER_SECOND_PHYSICS,
+        HP_DAMAGE_PER_SECOND_MAIGC,
+        SHIELD
     }
     enum ActorUnitSpecialAttributeType : byte {
         FAINT,
