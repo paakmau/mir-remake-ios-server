@@ -106,7 +106,7 @@ namespace MirRemakeBackend {
             }
 
             if (m_IsDead)
-                SM_ActorUnit.s_instance.NotifyUnitDead (killerNetId, this);
+                SM_ActorUnit.s_instance.NotifyUnitDead (killerNetId, m_networkId);
         }
         /// <summary>
         /// 计算技能效果
@@ -126,7 +126,7 @@ namespace MirRemakeBackend {
                 targets[i].CalculateAndApplyEffect (m_networkId, initEffectClone, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead)
-                    SM_ActorUnit.s_instance.NotifyUnitDead (m_networkId, targets[i]);
+                    SM_ActorUnit.s_instance.NotifyUnitDead (m_networkId, targets[i].m_networkId);
             }
         }
         /// <summary>

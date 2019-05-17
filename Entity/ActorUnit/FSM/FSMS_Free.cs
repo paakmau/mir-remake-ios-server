@@ -2,19 +2,19 @@ using System;
 using UnityEngine;
 
 namespace MirRemakeBackend {
-    struct MFSMS_Free : IMFSMState {
-        public MFSMStateType m_Type { get { return MFSMStateType.FREE; } }
+    struct FSMS_Free : IFSMState {
+        public FSMStateType m_Type { get { return FSMStateType.FREE; } }
         public E_Monster m_Self { get; set; }
         private float m_moveTimeLeft;
         private Vector2 m_targetPos;
         private E_Skill m_targetSkill;
-        public MFSMS_Free (E_Monster self) {
+        public FSMS_Free (E_Monster self) {
             m_Self = self;
             m_targetPos = self.m_Position;
             m_moveTimeLeft = 0f;
             m_targetSkill = null;
         }
-        public void OnEnter (MFSMStateType prevType) { }
+        public void OnEnter (FSMStateType prevType) { }
         public void OnTick (float dT) {
             // 如果受到攻击
             if (m_Self.m_highestHatredTarget != null) {
@@ -36,9 +36,9 @@ namespace MirRemakeBackend {
                 }
             }
         }
-        public IMFSMState GetNextState () {
+        public IFSMState GetNextState () {
             if (m_Self.m_IsDead)
-                return new MFSMS_Dead(m_Self);
+                return new FSMS_Dead(m_Self);
             if (m_Self.m_highestHatredTarget != null) {
                 if (m_targetSkill == null)
                     m_targetSkill = m_Self.GetRandomValidSkill();
@@ -46,11 +46,11 @@ namespace MirRemakeBackend {
                     // TODO: 为SkillParam添加根据仇恨目标生成的接口
                     // var sp = new SkillParam (, m_Self.m_highestHatredTarget);
                     // if (m_targetSkill.CheckInRange (m_Self.m_Position, tarPos))
-                    //     return new MFSMS_CastSingAndFront (m_Self, m_targetSkill, new SkillParam ());
+                    //     return new FSMS_CastSingAndFront (m_Self, m_targetSkill, new SkillParam ());
                 }
             }
             return null;
         }
-        public void OnExit (MFSMStateType nextType) { }
+        public void OnExit (FSMStateType nextType) { }
     }
 }

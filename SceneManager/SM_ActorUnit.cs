@@ -7,12 +7,13 @@ namespace MirRemakeBackend {
         public static SM_ActorUnit s_instance;
         private INetworkService m_networkService;
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
-        private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
         private Dictionary<int, MyTimer.Time> m_networkIdAndMonsterRefreshTimeDict = new Dictionary<int, MyTimer.Time> ();
+        private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
+        private Stack<int> m_monsterIdToRefreshStack = new Stack<int> ();
         public SM_ActorUnit (INetworkService netService) {
             m_networkService = netService;
 
@@ -97,12 +98,23 @@ namespace MirRemakeBackend {
             }
             return false;
         }
-        public void NotifyUnitDead (int killerNetId, E_ActorUnit deadUnit) {
-            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetPlayerInSightIdList (deadUnit.m_networkId, true), killerNetId, deadUnit.m_networkId));
+        public void NotifyUnitDead (int killerNetId, int deadUnitNetId) {
+            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetPlayerInSightIdList (deadUnitNetId, true), killerNetId, deadUnitNetId));
         }
         public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
             // 死亡单位移除准备
             m_networkIdBodyToDisappearStack.Push (deadUnit);
+        }
+        public void NotifyApplyCastSkillSettle (int netId, short skillId, int[] tarIdArr) {
+            E_ActorUnit unit = GetActorUnitByNetworkId (netId);
+            if (unit == null) return;
+            E_Skill skill = new E_Skill (skillId);
+            KeyValuePair<int, E_Status[]>[] statusPairArr;
+            unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
+            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (netId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
+        }
+        public void NotifyApplyCastSkillBegin (int netId, short skillId, SkillParam parm) {
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, parm.GetNo ()));
         }
         public void Tick (float dT) {
             // 每个单位的Tick
@@ -122,13 +134,12 @@ namespace MirRemakeBackend {
             }
 
             // 处理怪物刷新
-            List<int> monsterIdToRefreshList = new List<int> ();
             var monsterDeathTimeEn = m_networkIdAndMonsterRefreshTimeDict.GetEnumerator ();
             while (monsterDeathTimeEn.MoveNext ())
                 if (MyTimer.CheckTimeUp (monsterDeathTimeEn.Current.Value))
-                    monsterIdToRefreshList.Add (monsterDeathTimeEn.Current.Key);
-            for (int i = 0; i < monsterIdToRefreshList.Count; i++) {
-                int monsterIdToRefresh = monsterIdToRefreshList[i];
+                    m_monsterIdToRefreshStack.Push (monsterDeathTimeEn.Current.Key);
+            int monsterIdToRefresh;
+            while (m_monsterIdToRefreshStack.TryPop (out monsterIdToRefresh)) {
                 m_networkIdAndMonsterRefreshTimeDict.Remove (monsterIdToRefresh);
                 m_networkIdAndActorUnitDict.Add (monsterIdToRefresh, new E_Monster (monsterIdToRefresh, m_networkIdAndMonsterIdDict[monsterIdToRefresh], m_networkIdAndMonsterPosDict[monsterIdToRefresh]));
             }
@@ -210,19 +221,10 @@ namespace MirRemakeBackend {
             m_networkIdAndActorUnitDict[netId].m_Position = pos;
         }
         public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parm) {
-            SkillParam spObj = new SkillParam ();
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, parm));
         }
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetPlayerInSightIdList (netId, false), netId));
-        }
-        public void CommandApplyCastSkillSettle (int netId, short skillId, int[] tarIdArr) {
-            E_ActorUnit unit = GetActorUnitByNetworkId (netId);
-            if (unit == null) return;
-            E_Skill skill = new E_Skill (skillId);
-            KeyValuePair<int, E_Status[]>[] statusPairArr;
-            unit.ApplyCastSkill (skill, GetActorUnitArrByNetworkIdArr (tarIdArr), out statusPairArr);
-            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (netId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
         }
         public void CommandUseConsumableItem (int netId, int itemRealId) {
             // TODO: 
@@ -245,38 +247,5 @@ namespace MirRemakeBackend {
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetSkillLevel) {
             // TODO: 
         }
-
-        // public void NetworkKillMonster (short monsterId) {
-        //     var acceptedMissionEn = m_accecptedMissionDict.Values.GetEnumerator ();
-        //     while (acceptedMissionEn.MoveNext ()) {
-        //         if (acceptedMissionEn.Current.IsProgressChangedAfterNetworkKillMonster (monsterId)) {
-        //             // TODO: 通知UI层
-        //         }
-        //     }
-        // }
-        // public void NetworkGainOrLoseItem (short itemId) {
-        //     var acceptedMissionEn = m_accecptedMissionDict.Values.GetEnumerator ();
-        //     while (acceptedMissionEn.MoveNext ()) {
-        //         if (acceptedMissionEn.Current.IsProgressChangedAfterNetworkGainOrLoseItem (itemId)) {
-        //             // TODO: 通知UI层
-        //         }
-        //     }
-        // }
-        // public void NetworkTalkToMissionNpc (short npcId, short missionId) {
-        //     E_Mission mission = null;
-        //     m_accecptedMissionDict.TryGetValue (missionId, out mission);
-        //     if (mission == null) return;
-        //     if (mission.IsProgressChangedAfterNetworkTalkToMissionNpc (npcId)) {
-        //         // TODO: 通知UI层
-        //     }
-        // }
-        // public void NetworkSkillLevelUp (short skillId) {
-        //     var acceptedMissionEn = m_accecptedMissionDict.Values.GetEnumerator ();
-        //     while (acceptedMissionEn.MoveNext ()) {
-        //         if (acceptedMissionEn.Current.IsProgressChangedAfterNetworkGainOrLoseItem (skillId)) {
-        //             // TODO: 通知UI层
-        //         }
-        //     }
-        // }
     }
 }

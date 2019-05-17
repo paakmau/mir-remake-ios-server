@@ -4,14 +4,14 @@ using UnityEngine;
 namespace MirRemakeBackend {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
-        private MFSM m_mFSM;
+        private FSM m_mFSM;
         private E_Skill[] m_skillArr;
         private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
         public E_Monster (int networkId, int monsterId, Vector2 pos) {
-            m_mFSM = new MFSM (new MFSMS_Free (this));
+            m_mFSM = new FSM (new FSMS_Free (this));
 
             m_networkId = networkId;
             m_Position = pos;
@@ -53,7 +53,7 @@ namespace MirRemakeBackend {
             return skill;
         }
         public void RequestCastSkillBegin (E_Skill skill, SkillParam parm) {
-            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (m_networkId, skill.m_id, parm.GetNo ());
+            SM_ActorUnit.s_instance.NotifyApplyCastSkillBegin (m_networkId, skill.m_id, parm);
         }
         public void RequestCastSkillSettle (E_Skill skill, SkillParam parm) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
@@ -61,7 +61,7 @@ namespace MirRemakeBackend {
             int[] unitNetIdArr = new int[unitList.Count];
             for (int i=0; i<unitList.Count; i++)
                 unitNetIdArr[i] = unitList[i].m_networkId;
-            SM_ActorUnit.s_instance.CommandApplyCastSkillSettle (m_networkId, skill.m_id, unitNetIdArr);
+            SM_ActorUnit.s_instance.NotifyApplyCastSkillSettle (m_networkId, skill.m_id, unitNetIdArr);
         }
         public override void Tick (float dT) {
             base.Tick (dT);

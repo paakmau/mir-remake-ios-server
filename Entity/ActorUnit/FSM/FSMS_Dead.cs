@@ -1,14 +1,14 @@
 namespace MirRemakeBackend {
-    struct MFSMS_Dead : IMFSMState {
-        public MFSMStateType m_Type { get { return MFSMStateType.DEAD; } }
+    struct FSMS_Dead : IFSMState {
+        public FSMStateType m_Type { get { return FSMStateType.DEAD; } }
         public E_Monster m_Self { get; set; }
         private const float c_bodyDisappearTime = 10f;
         private float m_timer;
-        public MFSMS_Dead (E_Monster self) {
+        public FSMS_Dead (E_Monster self) {
             m_Self = self;
             m_timer = 0f;
         }
-        public void OnEnter (MFSMStateType prevType) {
+        public void OnEnter (FSMStateType prevType) {
             m_timer = c_bodyDisappearTime;
         }
         public void OnTick (float dT) {
@@ -16,9 +16,9 @@ namespace MirRemakeBackend {
             if (m_timer <= 0f)
                 SM_ActorUnit.s_instance.NotifyUnitBodyDisappear (m_Self);
         }
-        public IMFSMState GetNextState () {
+        public IFSMState GetNextState () {
             return null;
         }
-        public void OnExit (MFSMStateType nextType) { }
+        public void OnExit (FSMStateType nextType) { }
     }
 }
