@@ -7,7 +7,6 @@ namespace MirRemakeBackend {
         public static SM_ActorUnit s_instance;
         private INetworkService m_networkService;
         private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
-        private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
         private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
@@ -28,16 +27,10 @@ namespace MirRemakeBackend {
             m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-3, 1);
             m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 10f);
         }
-        public E_ActorUnit GetActorUnitByNetworkId (int networkId) {
-            E_ActorUnit res = null;
-            m_networkIdAndActorUnitDict.TryGetValue (networkId, out res);
-            return res;
-        }
         private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr (int[] networkIdArr) {
             List<E_ActorUnit> res = new List<E_ActorUnit> (networkIdArr.Length);
             foreach (var netId in networkIdArr) {
-                E_ActorUnit unit = null;
-                m_networkIdAndActorUnitDict.TryGetValue (netId, out unit);
+                E_ActorUnit unit = EM_ActorUnit.GetActorUnitByNetworkId (netId);
                 if (unit != null)
                     res.Add (unit);
             }
@@ -46,7 +39,7 @@ namespace MirRemakeBackend {
         public List<E_ActorUnit> GetActorUnitsInSectorRange (E_ActorUnit self, Vector2 center, Vector2 dir, float range, float radian, CampType targetCamp, byte num) {
             // TODO: 解决非圆扇形的作用目标判定
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
-            var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
+            var unitEn = EM_ActorUnit.GetActorUnitValueEnumerator ();
             while (unitEn.MoveNext ()) {
                 if (CheckCampMatch (self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
@@ -55,7 +48,7 @@ namespace MirRemakeBackend {
         }
         public List<E_ActorUnit> GetActorUnitsInCircleRange (E_ActorUnit self, Vector2 center, float range, CampType targetCamp, byte num) {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
-            var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
+            var unitEn = EM_ActorUnit.GetActorUnitValueEnumerator ();
             while (unitEn.MoveNext ()) {
                 if (CheckCampMatch (self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
                     res.Add (unitEn.Current);
@@ -64,7 +57,7 @@ namespace MirRemakeBackend {
         }
         public List<E_ActorUnit> GetActorUnitsInLineRange (E_ActorUnit self, Vector2 center, Vector2 dir, float distance, float width, CampType targetCamp, byte num) {
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
-            var unitEn = m_networkIdAndActorUnitDict.Values.GetEnumerator ();
+            var unitEn = EM_ActorUnit.GetActorUnitValueEnumerator ();
             while (unitEn.MoveNext ()) {
                 if (CheckCampMatch (self, unitEn.Current, targetCamp) && false) // TODO: 解决直线的作用目标判定
                     res.Add (unitEn.Current);
@@ -115,14 +108,14 @@ namespace MirRemakeBackend {
         }
         public void Tick (float dT) {
             // 每个单位的Tick
-            var unitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
+            var unitEn = EM_ActorUnit.GetActorUnitEnumerator ();
             while (unitEn.MoveNext ())
                 unitEn.Current.Value.Tick (dT);
 
             // 移除消失的尸体
             E_ActorUnit bodyToDisappear;
-            while (m_networkIdBodyToDisappearStack.TryPop(out bodyToDisappear)) {
-                m_networkIdAndActorUnitDict.Remove (bodyToDisappear.m_networkId);
+            while (m_networkIdBodyToDisappearStack.TryPop (out bodyToDisappear)) {
+                EM_ActorUnit.UnloadActorUnitByNetworkId (bodyToDisappear.m_networkId);
                 if (bodyToDisappear.m_ActorUnitType == ActorUnitType.MONSTER) {
                     MyTimer.Time refreshTime = MyTimer.s_CurTime;
                     refreshTime.Tick (c_monsterRefreshTime);
@@ -138,7 +131,7 @@ namespace MirRemakeBackend {
             int monsterIdToRefresh;
             while (m_monsterIdToRefreshStack.TryPop (out monsterIdToRefresh)) {
                 m_networkIdAndMonsterRefreshTimeDict.Remove (monsterIdToRefresh);
-                m_networkIdAndActorUnitDict.Add (monsterIdToRefresh, new E_Monster (monsterIdToRefresh, m_networkIdAndMonsterIdDict[monsterIdToRefresh], m_networkIdAndMonsterPosDict[monsterIdToRefresh]));
+                EM_ActorUnit.LoadActorUnit (new E_Monster (monsterIdToRefresh, m_networkIdAndMonsterIdDict[monsterIdToRefresh], m_networkIdAndMonsterPosDict[monsterIdToRefresh]));
             }
         }
         public void NetworkTick () {
@@ -146,12 +139,12 @@ namespace MirRemakeBackend {
 
             while (selfKeyEn.MoveNext ()) {
                 var selfNetId = selfKeyEn.Current;
-                var self = (E_Character) m_networkIdAndActorUnitDict[selfNetId];
+                var self = (E_Character) EM_ActorUnit.GetActorUnitByNetworkId (selfNetId);
 
                 // 发送其他unit视野信息
                 List<int> playerNetIdList = new List<int> ();
                 List<int> monsterNetIdList = new List<int> ();
-                var otherUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
+                var otherUnitEn = EM_ActorUnit.GetActorUnitEnumerator ();
                 while (otherUnitEn.MoveNext ()) {
                     if (otherUnitEn.Current.Key == selfNetId) continue;
                     switch (otherUnitEn.Current.Value.m_ActorUnitType) {
@@ -169,7 +162,7 @@ namespace MirRemakeBackend {
                 // 发送视野内所有单位的位置信息
                 List<int> unitNetIdList = new List<int> ();
                 List<Vector2> posList = new List<Vector2> ();
-                var allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
+                var allUnitEn = EM_ActorUnit.GetActorUnitEnumerator ();
                 while (allUnitEn.MoveNext ())
                     if (allUnitEn.Current.Key != selfNetId) {
                         unitNetIdList.Add (allUnitEn.Current.Key);
@@ -180,7 +173,7 @@ namespace MirRemakeBackend {
                 // 发送视野内所有单位的HP与MP
                 unitNetIdList.Clear ();
                 List<Dictionary<ActorUnitConcreteAttributeType, int>> HPMPList = new List<Dictionary<ActorUnitConcreteAttributeType, int>> ();
-                allUnitEn = m_networkIdAndActorUnitDict.GetEnumerator ();
+                allUnitEn = EM_ActorUnit.GetActorUnitEnumerator ();
                 while (allUnitEn.MoveNext ()) {
                     var allUnit = allUnitEn.Current.Value;
                     if (allUnit.m_IsDead) continue;
@@ -200,12 +193,13 @@ namespace MirRemakeBackend {
         }
         public void CommandRemoveCharacter (int netId) {
             NetworkIdManager.RemoveActorUnitNetworkId (netId);
-            m_networkIdAndActorUnitDict.Remove (netId);
+            EM_ActorUnit.UnloadActorUnitByNetworkId (netId);
             m_playerNetIdSet.Remove (netId);
         }
         public void CommandInitCharacterPlayerId (int netId, int playerId) {
+            // TODO: 获取DDO
             E_Character newChar = new E_Character (netId, playerId);
-            m_networkIdAndActorUnitDict[netId] = newChar;
+            EM_ActorUnit.LoadActorUnit (newChar);
             m_playerNetIdSet.Add (netId);
             short[] skillIdArr;
             short[] skillLvArr;
@@ -215,22 +209,26 @@ namespace MirRemakeBackend {
             m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> { netId }, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr));
         }
         public void CommandSetPosition (int netId, Vector2 pos) {
-            m_networkIdAndActorUnitDict[netId].m_Position = pos;
+            E_ActorUnit unit = EM_ActorUnit.GetActorUnitByNetworkId (netId);
+            if (unit == null) return;
+            unit.m_Position = pos;
         }
         public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo) {
-            E_ActorUnit player = null;
-            if (!m_networkIdAndActorUnitDict.TryGetValue (netId, out player)) return;
+            E_ActorUnit player = EM_ActorUnit.GetActorUnitByNetworkId (netId);
+            if (player == null) return;
             E_Skill skill = SM_Skill.s_instance.GetSkillByIdAndPlayerNetworkId (netId, skillId);
-            E_ActorUnit target = GetActorUnitByNetworkId (parmNo.m_targetNetworkId);
+            E_ActorUnit target = EM_ActorUnit.GetActorUnitByNetworkId (parmNo.m_targetNetworkId);
             SkillParam parm = new SkillParam (skill.m_AimType, target, parmNo.m_direction, parmNo.m_position);
-            ((E_Character)player).CastSkillBegin (skill, parm);
+            ((E_Character) player).CastSkillBegin (skill, parm);
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, parmNo));
         }
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetPlayerInSightIdList (netId, false), netId));
         }
         public void CommandUseConsumableItem (int netId, int itemRealId) {
-            // TODO: 
+            E_ActorUnit player = EM_ActorUnit.GetActorUnitByNetworkId (netId);
+            if (player == null) return;
+
         }
         public void CommandUseEquipmentItem (int netId, int itemRealId) {
             // TODO: 
