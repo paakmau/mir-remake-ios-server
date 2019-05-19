@@ -103,7 +103,7 @@ namespace MirRemakeBackend {
                 MyTimer.Time hatred;
                 if (!m_networkIdAndHatredRefreshDict.TryGetValue (attackerNetId, out hatred))
                     hatred = MyTimer.s_CurTime;
-                hatred.Tick (10f * (-(float) initEffect.m_deltaHP / (float) m_MaxHP - (float) initEffect.m_deltaMP * 0.5f / (float) m_MaxMP + (float) newStatusArr.Length * 0.1f));
+                hatred.Tick (10f * (-(float) initEffect.m_deltaHp / (float) m_MaxHP - (float) initEffect.m_deltaMp * 0.5f / (float) m_MaxMP + (float) newStatusArr.Length * 0.1f));
                 m_networkIdAndHatredRefreshDict[attackerNetId] = hatred;
             }
             return hit;

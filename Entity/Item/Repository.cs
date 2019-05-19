@@ -6,13 +6,6 @@ namespace MirRemakeBackend {
     class Repository {
         //该repository中的所有物品
         private List<E_Item> m_itemList;
-        public Repository () {
-            m_itemList = new List<E_Item> () {
-                E_Item.CreateInstance (ItemType.EQUIPMENT, 2, 1, 1),
-                E_Item.CreateInstance (ItemType.EQUIPMENT, 2, 2, 1),
-                E_Item.CreateInstance (ItemType.EQUIPMENT, 2, 3, 1),
-            };
-        }
         public Repository (List<E_Item> m_itemList) {
             this.m_itemList = m_itemList;
         }

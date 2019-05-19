@@ -12,19 +12,6 @@ using System.Collections.Generic;
 using System;
 namespace MirRemakeBackend {
     abstract class E_Item {
-        public static E_Item CreateInstance (ItemType type, long realId, short id, short num) {
-            switch (type) {
-                case ItemType.CONSUMABLE:
-                    return new E_ConsumableItem (realId, id, num);
-                case ItemType.EQUIPMENT:
-                    return new E_EquipmentItem (realId, id, num);
-                case ItemType.MATERIAL:
-                    return new E_MaterialItem (realId, id, num);
-                case ItemType.EMPTY:
-                    return new E_EmptyItem ();
-            }
-            return null;
-        }
         /// <summary>
         /// 为 -1 则为空物品
         /// </summary>

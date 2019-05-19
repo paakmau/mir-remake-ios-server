@@ -21,7 +21,7 @@ namespace MirRemakeBackend {
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY
     }
     enum NetworkToServerDataType : byte {
-        INIT_PLAYER_ID,
+        INIT_CHARACTER_ID,
         SET_POSITION,
         APPLY_CAST_SKILL_BEGIN,
         APPLY_CAST_SKILL_SING_CANCEL,

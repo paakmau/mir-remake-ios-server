@@ -52,27 +52,23 @@ namespace MirRemakeBackend {
         }
 
         private void AttachStatusToAttr (E_Status status) {
-            if (status.m_affectConcreteAttributeDict != null) {
-                var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
-                while (statusConcreteAttrEn.MoveNext ())
-                    m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] += statusConcreteAttrEn.Current.Value * status.m_value;
+            if (status.m_affectConcreteAttributeArr != null) {
+                foreach (var item in status.m_affectConcreteAttributeArr)
+                    m_concreteAttributeDict[item.Key] += item.Value;
             }
-            if (status.m_affectSpecialAttributeDict != null) {
-                var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
-                while (statusSpecialAttrEn.MoveNext ())
-                    m_specialAttributeDict[statusSpecialAttrEn.Current.Key] += statusSpecialAttrEn.Current.Value;
+            if (status.m_affectSpecialAttributeArr != null) {
+                foreach (var item in status.m_affectSpecialAttributeArr)
+                    m_specialAttributeDict[item] ++;
             }
         }
         private void RemoveStatusToAttr (E_Status status) {
-            if (status.m_affectConcreteAttributeDict != null) {
-                var statusConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
-                while (statusConcreteAttrEn.MoveNext ())
-                    m_concreteAttributeDict[statusConcreteAttrEn.Current.Key] -= statusConcreteAttrEn.Current.Value * status.m_value;
+            if (status.m_affectConcreteAttributeArr != null) {
+                foreach (var item in status.m_affectConcreteAttributeArr)
+                    m_concreteAttributeDict[item.Key] -= item.Value;
             }
-            if (status.m_affectSpecialAttributeDict != null) {
-                var statusSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
-                while (statusSpecialAttrEn.MoveNext ())
-                    m_specialAttributeDict[statusSpecialAttrEn.Current.Key] -= statusSpecialAttrEn.Current.Value;
+            if (status.m_affectSpecialAttributeArr != null) {
+                foreach (var item in status.m_affectSpecialAttributeArr)
+                    m_specialAttributeDict[item] --;
             }
         }
         protected float deltaTimeAfterLastSecond = 0f;
@@ -90,7 +86,7 @@ namespace MirRemakeBackend {
                     int dHP = m_statusList[i].m_DeltaHP;
                     if (dHP > maxDeltaHP) {
                         maxDeltaHP = dHP;
-                        killerNetId = m_statusList[i].m_attackerNetId;
+                        killerNetId = m_statusList[i].m_castererNetworkId;
                     }
                 }
             }
@@ -118,11 +114,11 @@ namespace MirRemakeBackend {
         public void CastSkillSettle (E_Skill skill, List<E_ActorUnit> targets, out KeyValuePair<int, E_Status[]>[] netIdAndStatusArr) {
             netIdAndStatusArr = new KeyValuePair<int, E_Status[]>[targets.Count];
             // 计算初始Effect
-            E_Effect initEffect = skill.m_skillEffect.GetClone ();
+            E_Effect initEffect = skill.m_skillEffect;
             CalculateCastEffect (initEffect);
             for (int i = 0; i < targets.Count; i++) {
                 E_Status[] newStatusArr;
-                E_Effect initEffectClone = initEffect.GetClone ();
+                E_Effect initEffectClone = initEffect;
                 targets[i].CalculateAndApplyEffectToSelf (m_networkId, initEffectClone, out newStatusArr);
                 netIdAndStatusArr[i] = new KeyValuePair<int, E_Status[]> (targets[i].m_networkId, newStatusArr);
                 if (targets[i].m_IsDead)
@@ -143,8 +139,8 @@ namespace MirRemakeBackend {
             if (hit) {
                 newStatusArr = new E_Status[initEffect.m_StatusAttachNum];
                 // 应用到HP与MP上
-                int newHP = m_CurHP + initEffect.m_deltaHP;
-                int newMP = m_CurMP + initEffect.m_deltaMP;
+                int newHP = m_CurHP + initEffect.m_deltaHp;
+                int newMP = m_CurMP + initEffect.m_deltaMp;
                 m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
                 m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
                 // 附加状态并应用到自身属性
@@ -153,16 +149,7 @@ namespace MirRemakeBackend {
                     foreach (var status in initEffect.m_statusAttachArray) {
                         newStatusArr[i] = status;
                         m_statusList.Add (status);
-                        if (status.m_affectConcreteAttributeDict != null) {
-                            var affectConcreteAttrEn = status.m_affectConcreteAttributeDict.GetEnumerator ();
-                            while (affectConcreteAttrEn.MoveNext ())
-                                m_concreteAttributeDict[affectConcreteAttrEn.Current.Key] += affectConcreteAttrEn.Current.Value * status.m_value;
-                        }
-                        if (status.m_affectSpecialAttributeDict != null) {
-                            var affectSpecialAttrEn = status.m_affectSpecialAttributeDict.GetEnumerator ();
-                            while (affectSpecialAttrEn.MoveNext ())
-                                m_specialAttributeDict[affectSpecialAttrEn.Current.Key] += affectSpecialAttrEn.Current.Value;
-                        }
+                        AttachStatusToAttr (status);
                         i++;
                     }
                 }
@@ -179,20 +166,19 @@ namespace MirRemakeBackend {
             effect.m_hitRate *= m_HitRate;
             effect.m_criticalRate *= m_CriticalRate;
             // 处理初始伤害(或能量剥夺)
-            switch (effect.m_deltaHPType) {
+            switch (effect.m_deltaHpType) {
                 case EffectDeltaHPType.PHYSICS:
-                    effect.m_deltaHP *= m_Attack;
+                    effect.m_deltaHp *= m_Attack;
                     break;
                 case EffectDeltaHPType.MAGIC:
-                    effect.m_deltaHP *= m_Magic;
+                    effect.m_deltaHp *= m_Magic;
                     break;
             }
-            switch (effect.m_deltaMPType) {
+            switch (effect.m_deltaMpType) {
                 case EffectDeltaMPType.MAGIC:
-                    effect.m_deltaMP *= m_Magic;
+                    effect.m_deltaMp *= m_Magic;
                     break;
             }
-            CalculateByHPStrategy (effect, effect.m_selfHPStrategy);
         }
         /// <summary>
         /// 传入的Effect会被修改, 不会被应用到自己身上
@@ -208,20 +194,19 @@ namespace MirRemakeBackend {
             // 是否暴击
             bool isCritical = (MyRandom.NextInt (1, 101) <= effect.m_criticalRate);
 
-            switch (effect.m_deltaHPType) {
+            switch (effect.m_deltaHpType) {
                 case EffectDeltaHPType.PHYSICS:
-                    effect.m_deltaHP /= m_Defence;
+                    effect.m_deltaHp /= m_Defence;
                     break;
                 case EffectDeltaHPType.MAGIC:
-                    effect.m_deltaHP /= m_Resistance;
+                    effect.m_deltaHp /= m_Resistance;
                     break;
             }
-            switch (effect.m_deltaMPType) {
+            switch (effect.m_deltaMpType) {
                 case EffectDeltaMPType.MAGIC:
-                    effect.m_deltaMP /= m_Resistance;
+                    effect.m_deltaMp /= m_Resistance;
                     break;
             }
-            CalculateByHPStrategy (effect, effect.m_targetHPStrategy);
 
             // 计算异常状态持续时间(根据韧性)
             if (effect.m_statusAttachArray != null)
@@ -234,15 +219,8 @@ namespace MirRemakeBackend {
 
             // 处理暴击
             if (isCritical)
-                effect.m_deltaHP = (int) (effect.m_deltaHP * 1.5f);
+                effect.m_deltaHp = (int) (effect.m_deltaHp * 1.5f);
             return true;
-        }
-        private void CalculateByHPStrategy (E_Effect effect, HPStrategy hPStrategy) {
-            if (hPStrategy == null) return;
-            float value = 0;
-            foreach (var item in hPStrategy.strategyFactorDict)
-                value += m_concreteAttributeDict[item.Key] * item.Value;
-            effect.m_deltaHP += (int) value;
         }
 
         /// <summary>

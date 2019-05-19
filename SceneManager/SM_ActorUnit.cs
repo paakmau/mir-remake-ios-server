@@ -3,10 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MirRemakeBackend {
+    static class NetworkIdManager {
+        private static HashSet<int> m_actorUnitNetIdSet = new HashSet<int> ();
+        private static HashSet<int> m_itemNetIdSet = new HashSet<int> ();
+        private static int m_actorUnitCnt = 0;
+        private static int m_itemCnt = 0;
+
+        public static int GetNewActorUnitNetworkId() {
+            // 分配NetworkId
+            while(true) {
+                ++m_actorUnitCnt;
+                if(!m_actorUnitNetIdSet.Contains(m_actorUnitCnt))
+                    break;
+            }
+            m_actorUnitNetIdSet.Add(m_actorUnitCnt);
+            return m_actorUnitCnt;
+        }
+        public static void RemoveActorUnitNetworkId(int netId) {
+            m_actorUnitNetIdSet.Remove(netId);
+        }
+    }
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance;
+        private IDDS_Character m_characterDynamicDataService;
+        private IDS_Character m_characterDataService;
+        private SM_Item m_itemSceneManager;
+        private SM_Skill m_skillSceneManager;
         private INetworkService m_networkService;
-        private HashSet<int> m_playerNetIdSet = new HashSet<int> ();
+        private HashSet<int> m_characterNetIdSet = new HashSet<int> ();
         private const float c_monsterRefreshTime = 15f;
         private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
@@ -70,10 +94,10 @@ namespace MirRemakeBackend {
             // units.Sort();
             return units;
         }
-        private List<int> GetPlayerInSightIdList (int selfNetId, bool includeSelf) {
+        private List<int> GetCharacterInSightIdList (int selfNetId, bool includeSelf) {
             // TODO: 处理视野问题
             List<int> res = new List<int> ();
-            foreach (var netId in m_playerNetIdSet) {
+            foreach (var netId in m_characterNetIdSet) {
                 if (includeSelf || netId != selfNetId)
                     res.Add (netId);
             }
@@ -92,7 +116,7 @@ namespace MirRemakeBackend {
             return false;
         }
         public void NotifyUnitDead (int killerNetId, int deadUnitNetId) {
-            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetPlayerInSightIdList (deadUnitNetId, true), killerNetId, deadUnitNetId));
+            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetCharacterInSightIdList (deadUnitNetId, true), killerNetId, deadUnitNetId));
         }
         public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
             // 死亡单位移除准备
@@ -101,10 +125,10 @@ namespace MirRemakeBackend {
         public void NotifyApplyCastSkillSettle (E_ActorUnit unit, E_Skill skill, List<E_ActorUnit> tarList) {
             KeyValuePair<int, E_Status[]>[] statusPairArr;
             unit.CastSkillSettle (skill, tarList, out statusPairArr);
-            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetPlayerInSightIdList (unit.m_networkId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
+            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetCharacterInSightIdList (unit.m_networkId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
         }
         public void NotifyApplyCastSkillBegin (E_ActorUnit unit, E_Skill skill, SkillParam parm) {
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (unit.m_networkId, false), unit.m_networkId, skill.m_id, parm.GetNo ()));
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetCharacterInSightIdList (unit.m_networkId, false), unit.m_networkId, skill.m_id, parm.GetNo ()));
         }
         public void Tick (float dT) {
             // 每个单位的Tick
@@ -135,14 +159,14 @@ namespace MirRemakeBackend {
             }
         }
         public void NetworkTick () {
-            var selfKeyEn = m_playerNetIdSet.GetEnumerator ();
+            var selfKeyEn = m_characterNetIdSet.GetEnumerator ();
 
             while (selfKeyEn.MoveNext ()) {
                 var selfNetId = selfKeyEn.Current;
                 var self = (E_Character) EM_ActorUnit.GetActorUnitByNetworkId (selfNetId);
 
                 // 发送其他unit视野信息
-                List<int> playerNetIdList = new List<int> ();
+                List<int> characterNetIdList = new List<int> ();
                 List<int> monsterNetIdList = new List<int> ();
                 var otherUnitEn = EM_ActorUnit.GetActorUnitEnumerator ();
                 while (otherUnitEn.MoveNext ()) {
@@ -152,11 +176,11 @@ namespace MirRemakeBackend {
                             monsterNetIdList.Add (otherUnitEn.Current.Key);
                             break;
                         case ActorUnitType.PLAYER:
-                            playerNetIdList.Add (otherUnitEn.Current.Key);
+                            characterNetIdList.Add (otherUnitEn.Current.Key);
                             break;
                     }
                 }
-                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.PLAYER, playerNetIdList));
+                m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.PLAYER, characterNetIdList));
                 m_networkService.SendServerCommand (new SC_ApplyOtherActorUnitInSight (new List<int> { selfNetId }, ActorUnitType.MONSTER, monsterNetIdList));
 
                 // 发送视野内所有单位的位置信息
@@ -194,13 +218,18 @@ namespace MirRemakeBackend {
         public void CommandRemoveCharacter (int netId) {
             NetworkIdManager.RemoveActorUnitNetworkId (netId);
             EM_ActorUnit.UnloadActorUnitByNetworkId (netId);
-            m_playerNetIdSet.Remove (netId);
+            m_characterNetIdSet.Remove (netId);
         }
-        public void CommandInitCharacterPlayerId (int netId, int playerId) {
-            // TODO: 获取DDO
-            E_Character newChar = new E_Character (netId, playerId);
+        public void CommandInitCharacterId (int netId, int charId) {
+            DDO_Character charDdo = m_characterDynamicDataService.GetCharacterById (charId);
+            DO_Character charDo = m_characterDataService.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level);
+            List<E_Skill> skillDdoList = m_skillSceneManager.InitCharacterSkill (charId);
+            List<E_Item> itemInBagDdoList, itemInStoreHouseList;
+            List<E_Item> equipedList;
+            m_itemSceneManager.InitCharacterItems (netId, charId, out itemInBagDdoList, out itemInStoreHouseList, out equipedList);
+            E_Character newChar = new E_Character (netId, charId, charDo, charDdo);
             EM_ActorUnit.LoadActorUnit (newChar);
-            m_playerNetIdSet.Add (netId);
+            m_characterNetIdSet.Add (netId);
             short[] skillIdArr;
             short[] skillLvArr;
             int[] skillMasterlyArr;
@@ -214,20 +243,20 @@ namespace MirRemakeBackend {
             unit.m_Position = pos;
         }
         public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo) {
-            E_ActorUnit player = EM_ActorUnit.GetActorUnitByNetworkId (netId);
-            if (player == null) return;
-            E_Skill skill = SM_Skill.s_instance.GetSkillByIdAndPlayerNetworkId (netId, skillId);
+            E_ActorUnit character = EM_ActorUnit.GetActorUnitByNetworkId (netId);
+            if (character == null) return;
+            E_Skill skill = m_skillSceneManager.GetSkillByIdAndNetworkId (skillId, netId);
             E_ActorUnit target = EM_ActorUnit.GetActorUnitByNetworkId (parmNo.m_targetNetworkId);
             SkillParam parm = new SkillParam (skill.m_AimType, target, parmNo.m_direction, parmNo.m_position);
-            ((E_Character) player).CastSkillBegin (skill, parm);
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetPlayerInSightIdList (netId, false), netId, skillId, parmNo));
+            ((E_Character) character).CastSkillBegin (skill, parm);
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetCharacterInSightIdList (netId, false), netId, skillId, parmNo));
         }
         public void CommandApplyCastSkillSingCancel (int netId) {
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetPlayerInSightIdList (netId, false), netId));
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetCharacterInSightIdList (netId, false), netId));
         }
         public void CommandUseConsumableItem (int netId, int itemRealId) {
-            E_ActorUnit player = EM_ActorUnit.GetActorUnitByNetworkId (netId);
-            if (player == null) return;
+            E_ActorUnit character = EM_ActorUnit.GetActorUnitByNetworkId (netId);
+            if (character == null) return;
 
         }
         public void CommandUseEquipmentItem (int netId, int itemRealId) {

@@ -35,6 +35,27 @@ namespace MirRemakeBackend {
         /// </summary>
         NOT_AIM_SELF_RECT
     }
+    /// <summary>
+    /// 技能瞄准的参数类型
+    /// </summary>
+    enum SkillAimParamType : byte {
+        /// <summary>
+        /// 半径
+        /// </summary>
+        RADIUS,
+        /// <summary>
+        /// 角度
+        /// </summary>
+        RADIAN,
+        /// <summary>
+        /// 长度
+        /// </summary>
+        LENGTH,
+        /// <summary>
+        /// 宽度
+        /// </summary>
+        WIDTH
+    }
     enum EffectDeltaHPType : byte {
         PHYSICS,
         MAGIC,

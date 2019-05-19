@@ -11,46 +11,31 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MirRemakeBackend {
-    class E_Effect {
+    struct E_Effect {
+        public int m_casterNetworkId;
         public short m_animId;
         public float m_hitRate;
         public float m_criticalRate;
-        public int m_deltaHP;
-        public EffectDeltaHPType m_deltaHPType;
-        public int m_deltaMP;
-        public EffectDeltaMPType m_deltaMPType;
+        public int m_deltaHp;
+        public EffectDeltaHPType m_deltaHpType;
+        public int m_deltaMp;
+        public EffectDeltaMPType m_deltaMpType;
         public E_Status[] m_statusAttachArray;
-        public int m_StatusAttachNum { get { return m_statusAttachArray == null? 0 : m_statusAttachArray.Length; } }
-        public HPStrategy m_selfHPStrategy;
-        public HPStrategy m_targetHPStrategy;
+        public int m_StatusAttachNum { get { return m_statusAttachArray.Length; } }
 
-        public E_Effect () {
-            // TODO: 仅用于测试, 日后应当删除
-            m_hitRate = 10000.0f;
-            m_criticalRate = 0.0f;
-            m_deltaHP = -500;
-            m_deltaHPType = EffectDeltaHPType.MAGIC;
-            m_deltaMP = 0;
-            m_deltaMPType = EffectDeltaMPType.MAGIC;
-            m_statusAttachArray = new E_Status[1] { new E_Status(1, 10, 2f) };
-            m_selfHPStrategy = null;
-            m_targetHPStrategy = null;
-        }
-        public E_Effect GetClone () {
-            E_Effect res = new E_Effect ();
-            res.m_hitRate = m_hitRate;
-            res.m_deltaHP = m_deltaHP;
-            res.m_deltaHPType = m_deltaHPType;
-            res.m_deltaMP = m_deltaMP;
-            res.m_deltaMPType = m_deltaMPType;
-            if (m_statusAttachArray != null) {
-                res.m_statusAttachArray = new E_Status[m_statusAttachArray.Length];
-                Array.Copy (m_statusAttachArray, res.m_statusAttachArray, m_statusAttachArray.Length);
-            } else
-                res.m_statusAttachArray = null;
-            res.m_selfHPStrategy = m_selfHPStrategy;
-            res.m_targetHPStrategy = m_targetHPStrategy;
-            return res;
+        public E_Effect (DO_Effect effectDo, int casterNetId) {
+            m_casterNetworkId = casterNetId;
+            m_animId = effectDo.m_animId;
+            m_hitRate = effectDo.m_hitRate;
+            m_criticalRate = effectDo.m_criticalRate;
+            m_deltaHp = effectDo.m_deltaHP;
+            m_deltaHpType = effectDo.m_deltaHPType;
+            m_deltaMp = effectDo.m_deltaMP;
+            m_deltaMpType = effectDo.m_deltaMPType;
+            DO_Status[] statusDoArr = effectDo.m_statusAttachArray;
+            m_statusAttachArray = new E_Status[statusDoArr.Length];
+            for (int i=0; i<statusDoArr.Length; i++)
+                m_statusAttachArray[i] = new E_Status (statusDoArr[i], casterNetId);
         }
     }
 }

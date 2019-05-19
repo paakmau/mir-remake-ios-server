@@ -14,9 +14,9 @@ namespace MirRemakeBackend {
     }
     struct NO_Status {
         public short m_id;
-        public int m_value;
+        public float m_value;
         public float m_time;
-        public NO_Status (short id, int value, float time) {
+        public NO_Status (short id, float value, float time) {
             m_id = id;
             m_value = value;
             m_time = time;

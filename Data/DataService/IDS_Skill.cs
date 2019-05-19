@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 
 namespace MirRemakeBackend {
-    interface DS_Item
-    {
+    interface IDS_Skill {
         
     }
 }

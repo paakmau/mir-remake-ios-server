@@ -12,20 +12,21 @@ using UnityEngine;
 namespace MirRemakeBackend {
     struct E_Status {
         public short m_id;
-        public int m_attackerNetId;
+        public int m_castererNetworkId;
         public StatusType m_type;
-        public string m_name;
-        public string m_details;
-        public Dictionary<ActorUnitConcreteAttributeType, int> m_affectConcreteAttributeDict;
-        public Dictionary<ActorUnitSpecialAttributeType, int> m_affectSpecialAttributeDict;
+        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_affectConcreteAttributeArr;
+        public ActorUnitSpecialAttributeType[] m_affectSpecialAttributeArr;
         public int m_DeltaHP {
             get {
                 int res = 0;
-                m_affectConcreteAttributeDict.TryGetValue(ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, out res);
+                foreach (var affectAttr in m_affectConcreteAttributeArr) {
+                    if (affectAttr.Key == ActorUnitConcreteAttributeType.HP_DAMAGE_PER_SECOND_MAIGC || affectAttr.Key == ActorUnitConcreteAttributeType.HP_DAMAGE_PER_SECOND_PHYSICS)
+                        res += affectAttr.Value;
+                }
                 return res;
             }
         }
-        public int m_value;
+        public float m_value;
         private float m_durationTime;
         public float m_DurationTime {
             get { return m_durationTime; }
@@ -35,21 +36,15 @@ namespace MirRemakeBackend {
             }
         }
         public MyTimer.Time m_endTime;
-        public E_Status (short id, int value, float durationTime) {
-            // TODO: 测试用
-            m_type = StatusType.DEBUFF;
-            m_name = "龙之吐息";
-            m_details = "gfy深深吸了一口气，并对你缓缓吐出";
-            m_affectConcreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> () {
-                { ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, -10 }
-            };
-            m_affectSpecialAttributeDict = null;
-
-            m_id = id;
-            m_attackerNetId = 0;
-            m_value = value;
-            m_durationTime = durationTime;
-            m_endTime = MyTimer.s_CurTime.Ticked (durationTime);
+        public E_Status (DO_Status statusDo, int casterNetId) {
+            m_id = statusDo.m_id;
+            m_type = statusDo.m_type;
+            m_castererNetworkId = casterNetId;
+            m_affectConcreteAttributeArr = statusDo.m_affectAttributeArr;
+            m_affectSpecialAttributeArr = statusDo.m_specialAttributeArr;
+            m_value = statusDo.m_value;
+            m_durationTime = statusDo.m_lastingTime;
+            m_endTime = MyTimer.s_CurTime.Ticked (m_durationTime);
         }
         public NO_Status GetNo () {
             return new NO_Status (m_id, m_value, m_durationTime);

@@ -7,11 +7,10 @@ using LiteNetLib.Utils;
 namespace MirRemakeBackend {
     class Program {
         private const float c_networkFrameTime = 0.1f;
-        private static NetworkService s_networkService;
         static void Main (string[] args) {
-            s_networkService = new NetworkService ();
-            SM_ActorUnit.s_instance = new SM_ActorUnit (s_networkService);
-            SM_Skill.s_instance = new SM_Skill ();
+            NetworkService networkService = new NetworkService ();
+            SM_Skill skillSceneManager = new SM_Skill ();
+            SM_ActorUnit.s_instance = new SM_ActorUnit (networkService);
             DateTime time = DateTime.Now;
             float netFrameTimer = 0f;
             while (true) {
@@ -20,7 +19,7 @@ namespace MirRemakeBackend {
                 time = newTime;
 
                 MyTimer.Tick (dT);
-                s_networkService.Tick ();
+                networkService.Tick ();
                 SM_ActorUnit.s_instance.Tick (dT);
 
                 netFrameTimer += dT;
