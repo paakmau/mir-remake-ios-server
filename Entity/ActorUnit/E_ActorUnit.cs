@@ -5,11 +5,9 @@ using Random = System.Random;
 namespace MirRemakeBackend {
     abstract class E_ActorUnit {
         public int m_networkId;
-        // 等级
-        protected short m_level;
-        public short m_Level { get { return this.m_level; } }
         // 单位种类 (玩家, 怪物, NPC随从)
-        public virtual ActorUnitType m_ActorUnitType { get; }
+        public abstract ActorUnitType m_ActorUnitType { get; }
+        public short m_level;
         // 具体属性
         public Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         public Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
@@ -44,7 +42,7 @@ namespace MirRemakeBackend {
         /// <summary>
         /// 当前位置
         /// </summary>
-        public Vector2 m_Position { get; set; }
+        public Vector2 m_position;
         public Vector2 m_oriPosition;
         // Unit的占地半径
         public float m_CoverRadius {

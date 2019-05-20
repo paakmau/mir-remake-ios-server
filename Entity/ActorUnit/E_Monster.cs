@@ -4,35 +4,32 @@ using UnityEngine;
 namespace MirRemakeBackend {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
-        public int m_monsterId;
         private MFSM m_mFSM;
-        private E_Skill[] m_skillArr;
+        private DE_Skill[] m_skillArr;
         // 技能冷却
         private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
-        public E_Monster (int networkId, Vector2 pos, DO_Monster dataObj, E_Skill[] skillArr) {
+        public E_Monster (int networkId, Vector2 pos, DE_Monster de, DE_Skill[] skillArr) {
             m_mFSM = new MFSM (new MFSMS_AutoMove (this));
-
-            foreach (var attr in dataObj.m_attrArr)
-                m_concreteAttributeDict.Add (attr.Key, attr.Value);
             m_networkId = networkId;
-            m_Position = pos;
-
-            m_monsterId = dataObj.m_monsterId;
+            m_level = de.m_level;
+            m_position = pos;
             m_skillArr = skillArr;
+            for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
+                m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Key, de.m_concreteAttributeList[i].Value);
         }
         /// <summary>
         /// 获得自身的随机一个不在冷却的技能
         /// </summary>
         /// <returns></returns>
-        public E_Skill GetRandomValidSkill () {
+        public DE_Skill GetRandomValidSkill () {
             int num = MyRandom.NextInt (0, m_skillArr.Length);
-            E_Skill skill = m_skillArr[num];
+            DE_Skill skill = m_skillArr[num];
             // 若技能正在冷却
-            for (int i = 0; i<m_skillIdAndCoolDownList.Count; i++)
-                if (m_skillIdAndCoolDownList[i].Key == skill.m_id)
+            for (int i = 0; i < m_skillIdAndCoolDownList.Count; i++)
+                if (m_skillIdAndCoolDownList[i].Key == skill.m_skillId)
                     return null;
             return skill;
         }
@@ -41,7 +38,7 @@ namespace MirRemakeBackend {
         }
         public void FSMCastSkillSettle (E_Skill skill, SkillParam parm) {
             m_skillIdAndCoolDownList.Add (new KeyValuePair<short, MyTimer.Time> (skill.m_id, MyTimer.s_CurTime.Ticked (skill.m_coolDownTime)));
-            List<E_ActorUnit> unitList = skill.GetEffectTargets(this, parm);
+            List<E_ActorUnit> unitList = skill.GetEffectTargets (this, parm);
             SM_ActorUnit.s_instance.NotifyApplyCastSkillSettle (this, skill, unitList);
         }
         public override void Tick (float dT) {

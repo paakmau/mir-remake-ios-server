@@ -14,11 +14,11 @@ namespace MirRemakeBackend {
         public void OnTick (float dT) {
             // 如果受到攻击
             if (m_Self.m_highestHatredTarget != null) {
-                var dir = m_Self.m_highestHatredTarget.m_Position - m_Self.m_Position;
+                var dir = m_Self.m_highestHatredTarget.m_position - m_Self.m_position;
                 var deltaP = dir.normalized * m_Self.m_Speed * dT / 100f;
                 if (deltaP.magnitude >= dir.magnitude)
                     deltaP = dir;
-                m_Self.m_Position = m_Self.m_Position + deltaP;
+                m_Self.m_position = m_Self.m_position + deltaP;
             }
         }
         public IMFSMState GetNextState () {
@@ -33,7 +33,7 @@ namespace MirRemakeBackend {
                 m_targetSkill = m_Self.GetRandomValidSkill ();
             if (m_targetSkill != null) {
                 SkillParam sp = m_targetSkill.CompleteSkillParam (m_Self, m_Self.m_highestHatredTarget, SkillParam.s_invalidSkillParam);
-                if (m_targetSkill.InRange (m_Self.m_Position, sp))
+                if (m_targetSkill.InRange (m_Self.m_position, sp))
                     return new MFSMS_CastSingAndFront (m_Self, m_targetSkill, sp);
             }
             return null;

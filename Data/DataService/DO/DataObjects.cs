@@ -1,57 +1,62 @@
 using System.Collections.Generic;
 
 namespace MirRemakeBackend {
-    struct DO_Monster{
+    struct DO_Monster {
         public short m_monsterId;
         public short m_level;
         public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_attrArr;
         public KeyValuePair<short, short>[] m_skillIdAndLevelArr;
         public short[] m_dropItemIdArr;
     }
-    struct DO_Skill{
-            public short m_skillId;
-            public short m_skillLevel;
-            public short m_skillMaxLevel;
-            public short m_upgradeCharacterLevelInNeed;
-            public long m_upgradeMoneyInNeed;
-            public int m_upgradeMasterlyInNeed;
-            public short[] m_fatherIdArr;
-            public short[] m_childrenIdArr;
-            public int m_manaCost;
-            public float m_singTime;
-            public float m_castFrontTime;
-            public float m_castBackTime;
-            public float m_coolDownTime;
-            public SkillAimType m_skillAimType;
-            public CampType m_targetCamp;
-            public byte m_targetNumber;
-            public float m_castRange;
-            /// <summary>
-            /// 技能伤害判定的范围参数
-            /// </summary>
-            public KeyValuePair<SkillAimParamType, float>[] m_damageParamArr;
-            public DO_Effect m_skillEffect;
-        }
-    struct DO_Effect{
+    struct DO_Character {
+        public OccupationType m_occupation;
+        public short m_level;
+        public KeyValuePair<ActorUnitMainAttributeType, int>[] m_mainAttributeArr;
+        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_concreteAttributeArr;
+        public short m_mainAttrPointNumber;
+        public int m_upgradeExperienceInNeed;
+    }
+    struct DO_Skill {
+        public short m_skillId;
+        public short m_skillLevel;
+        public short m_skillMaxLevel;
+        public short m_upgradeCharacterLevelInNeed;
+        public long m_upgradeMoneyInNeed;
+        public int m_upgradeMasterlyInNeed;
+        public short[] m_fatherIdArr;
+        public short[] m_childrenIdArr;
+        public int m_mpCost;
+        public float m_singTime;
+        public float m_castFrontTime;
+        public float m_castBackTime;
+        public float m_coolDownTime;
+        public SkillAimType m_skillAimType;
+        public CampType m_targetCamp;
+        public byte m_targetNumber;
+        public float m_castRange;
+        /// <summary>
+        /// 技能伤害判定的范围参数
+        /// </summary>
+        public KeyValuePair<SkillAimParamType, float>[] m_damageParamArr;
+        public DO_Effect m_skillEffect;
+    }
+    struct DO_Effect {
+        public EffectType m_type;
         public short m_animId;
         public float m_hitRate;
         public float m_criticalRate;
         public int m_deltaHP;
-        public EffectDeltaHPType m_deltaHPType;
         public int m_deltaMP;
-        public EffectDeltaMPType m_deltaMPType;
-        public DO_Status[] m_statusAttachArray;
+        public KeyValuePair<short, KeyValuePair<float, float>>[] m_statusIdAndValueAndTimeArr;
     }
-    struct DO_Status{
-        public short m_id;
+    struct DO_Status {
+        public short m_statusId;
         public StatusType m_type;
         public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_affectAttributeArr;
         public ActorUnitSpecialAttributeType[] m_specialAttributeArr;
-        public float m_value;
-        public float m_lastingTime;
     }
-    struct DO_Item{
-        public short m_id;
+    struct DO_Item {
+        public short m_itemId;
         public ItemType m_type;
         public short m_maxNum;
         public ItemQuality m_quality;
@@ -64,17 +69,11 @@ namespace MirRemakeBackend {
         public OccupationType m_occupation;
         public short m_levelInNeed;
         public EquipmentPosition m_position;
-        public KeyValuePair<ActorUnitConcreteAttributeType,int>[] m_equipmentAttributeArr;
+        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_equipmentAttributeArr;
         public float m_wave;
         public ItemQuality m_quality;
     }
-    struct DO_Character{
-        public KeyValuePair<ActorUnitMainAttributeType,int>[] m_mainAttributeArr;
-        public KeyValuePair<ActorUnitConcreteAttributeType,int>[] m_concreteAttributeArr;
-        public short m_giftPointNumber;
-        public int m_experienceInNeed;
-    }
-    struct DO_Mission{
+    struct DO_Mission {
         public short m_id;
         public MissionOccupation m_missionOccupation;
         public string m_title;
@@ -86,9 +85,9 @@ namespace MirRemakeBackend {
         public short m_levelInNeed;
         public int[] m_fatherMissionIdArr;
         public int[] m_childrenMissions;
-        public KeyValuePair<MissionTargetType,KeyValuePair<short,int>>[] m_missionTarget;
+        public KeyValuePair<MissionTargetType, KeyValuePair<short, int>>[] m_missionTarget;
         public int m_bonusMoney;
         public int m_bonusExperiences;
-        public KeyValuePair<short,short>[] m_bonusItemIdAndNumList;
+        public KeyValuePair<short, short>[] m_bonusItemIdAndNumList;
     }
 }

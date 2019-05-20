@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+
 namespace MirRemakeBackend {
     enum CampType : byte {
         SELF,
@@ -56,12 +58,19 @@ namespace MirRemakeBackend {
         /// </summary>
         WIDTH
     }
+    [Obsolete("请使用EffectType代替, 一个Effect只能有一个EffectType")]
     enum EffectDeltaHPType : byte {
         PHYSICS,
         MAGIC,
         CONSUMABLE
     }
+    [Obsolete("请使用EffectType代替, 一个Effect只能有一个EffectType")]
     enum EffectDeltaMPType : byte {
+        MAGIC,
+        CONSUMABLE
+    }
+    enum EffectType : byte {
+        PHYSICS,
         MAGIC,
         CONSUMABLE
     }
@@ -80,22 +89,25 @@ namespace MirRemakeBackend {
         MAX_MP,
         CURRENT_HP,
         CURRENT_MP,
-        DELTA_HP_PER_SECOND,
-        DELTA_MP_PER_SECOND,
-        ATTACK,
-        MAGIC,
-        DEFENCE,
-        RESISTANCE,
-        TENACITY,
-        SPEED,
-        CRITICAL_RATE,
-        CRITICAL_BONUS,
-        HIT_RATE,
-        DODGE_RATE,
-        LIFE_STEAL,
+        DELTA_HP_PER_SECOND, // 每秒回复生命值
+        DELTA_MP_PER_SECOND, // 每秒回复法力值
+        ATTACK, // 物理攻击
+        MAGIC, // 法术攻击
+        DEFENCE, // 物理防御
+        RESISTANCE, // 法术抗性
+        TENACITY, // 抵抗能力 /100
+        SPEED, // 速度 /100
+        CRITICAL_RATE, // 暴击率 /100
+        CRITICAL_BONUS, // 暴击伤害 /100
+        HIT_RATE, // 命中率 /100
+        DODGE_RATE, // 闪避 /100
+        LIFE_STEAL, // 吸取生命值 /100
         HP_DAMAGE_PER_SECOND_PHYSICS,
         HP_DAMAGE_PER_SECOND_MAIGC,
-        SHIELD
+        SHIELD,
+        PHYSICS_VULERNABILITY, // 物理易伤
+        MAGIC_VULERNABILITY, // 魔法易伤
+        DAMAGE_REDUCTION // 百分比减伤，物理魔法通用，绝对防御 /100
     }
     enum ActorUnitSpecialAttributeType : byte {
         FAINT,
