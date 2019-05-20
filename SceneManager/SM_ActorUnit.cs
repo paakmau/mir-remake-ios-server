@@ -9,24 +9,25 @@ namespace MirRemakeBackend {
         private static int m_actorUnitCnt = 0;
         private static int m_itemCnt = 0;
 
-        public static int GetNewActorUnitNetworkId() {
+        public static int GetNewActorUnitNetworkId () {
             // 分配NetworkId
-            while(true) {
+            while (true) {
                 ++m_actorUnitCnt;
-                if(!m_actorUnitNetIdSet.Contains(m_actorUnitCnt))
+                if (!m_actorUnitNetIdSet.Contains (m_actorUnitCnt))
                     break;
             }
-            m_actorUnitNetIdSet.Add(m_actorUnitCnt);
+            m_actorUnitNetIdSet.Add (m_actorUnitCnt);
             return m_actorUnitCnt;
         }
-        public static void RemoveActorUnitNetworkId(int netId) {
-            m_actorUnitNetIdSet.Remove(netId);
+        public static void RemoveActorUnitNetworkId (int netId) {
+            m_actorUnitNetIdSet.Remove (netId);
         }
     }
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance;
         private IDDS_Character m_characterDynamicDataService;
         private IDS_Character m_characterDataService;
+        private IDS_Monster m_monsterDataService;
         private SM_Item m_itemSceneManager;
         private SM_Skill m_skillSceneManager;
         private INetworkService m_networkService;
@@ -36,7 +37,7 @@ namespace MirRemakeBackend {
         private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
         private Dictionary<int, MyTimer.Time> m_networkIdAndMonsterRefreshTimeDict = new Dictionary<int, MyTimer.Time> ();
         private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
-        private Stack<int> m_monsterIdToRefreshStack = new Stack<int> ();
+        private Stack<int> m_monsterToRefreshNetworkIdStack = new Stack<int> ();
         public SM_ActorUnit (INetworkService netService) {
             m_networkService = netService;
 
@@ -151,11 +152,14 @@ namespace MirRemakeBackend {
             var monsterDeathTimeEn = m_networkIdAndMonsterRefreshTimeDict.GetEnumerator ();
             while (monsterDeathTimeEn.MoveNext ())
                 if (MyTimer.CheckTimeUp (monsterDeathTimeEn.Current.Value))
-                    m_monsterIdToRefreshStack.Push (monsterDeathTimeEn.Current.Key);
-            int monsterIdToRefresh;
-            while (m_monsterIdToRefreshStack.TryPop (out monsterIdToRefresh)) {
-                m_networkIdAndMonsterRefreshTimeDict.Remove (monsterIdToRefresh);
-                EM_ActorUnit.LoadActorUnit (new E_Monster (monsterIdToRefresh, m_networkIdAndMonsterIdDict[monsterIdToRefresh], m_networkIdAndMonsterPosDict[monsterIdToRefresh]));
+                    m_monsterToRefreshNetworkIdStack.Push (monsterDeathTimeEn.Current.Key);
+            int monsterToRefreshNetId;
+            while (m_monsterToRefreshNetworkIdStack.TryPop (out monsterToRefreshNetId)) {
+                m_networkIdAndMonsterRefreshTimeDict.Remove (monsterToRefreshNetId);
+                short monsterToRefreshId = m_networkIdAndMonsterIdDict[monsterToRefreshNetId];
+                DO_Monster monsterDo = m_monsterDataService.GetMonsterById (monsterToRefreshId);
+                E_Skill[] monsterSkillArr = m_skillSceneManager.InitMonsterSkill (monsterToRefreshNetId, monsterDo.m_skillIdAndLevelArr);
+                EM_ActorUnit.LoadActorUnit (new E_Monster (monsterToRefreshNetId, m_networkIdAndMonsterPosDict[monsterToRefreshNetId], monsterDo, monsterSkillArr));
             }
         }
         public void NetworkTick () {
@@ -223,17 +227,21 @@ namespace MirRemakeBackend {
         public void CommandInitCharacterId (int netId, int charId) {
             DDO_Character charDdo = m_characterDynamicDataService.GetCharacterById (charId);
             DO_Character charDo = m_characterDataService.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level);
-            List<E_Skill> skillDdoList = m_skillSceneManager.InitCharacterSkill (charId);
-            List<E_Item> itemInBagDdoList, itemInStoreHouseList;
+            List<E_Skill> skillList = m_skillSceneManager.InitCharacterSkill (netId, charId);
+            List<E_Item> itemInBagList, itemInStoreHouseList;
             List<E_Item> equipedList;
-            m_itemSceneManager.InitCharacterItems (netId, charId, out itemInBagDdoList, out itemInStoreHouseList, out equipedList);
+            m_itemSceneManager.InitCharacterItems (netId, charId, out itemInBagList, out itemInStoreHouseList, out equipedList);
             E_Character newChar = new E_Character (netId, charId, charDo, charDdo);
             EM_ActorUnit.LoadActorUnit (newChar);
             m_characterNetIdSet.Add (netId);
-            short[] skillIdArr;
-            short[] skillLvArr;
-            int[] skillMasterlyArr;
-            newChar.GetAllLearnedSkill (out skillIdArr, out skillLvArr, out skillMasterlyArr);
+            short[] skillIdArr = new short[skillList.Count];
+            short[] skillLvArr = new short[skillList.Count];
+            int[] skillMasterlyArr = new int[skillList.Count];
+            for (int i = 0; i < skillList.Count; i++) {
+                skillIdArr[i] = skillList[i].m_id;
+                skillLvArr[i] = skillList[i].m_level;
+                skillMasterlyArr[i] = skillList[i].m_masterly;
+            }
 
             m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> { netId }, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr));
         }

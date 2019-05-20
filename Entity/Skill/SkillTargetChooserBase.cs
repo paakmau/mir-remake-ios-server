@@ -17,6 +17,13 @@ namespace MirRemakeBackend {
         public abstract SkillAimType m_TargetAimType { get; }
         // 作用对象数量
         public byte m_targetNumber;
+        // 射程
+        public float m_castRange;
+        public SkillTargetChooserBase (CampType targetCamp, byte targetNum, float castRange) {
+            m_targetCamp = targetCamp;
+            m_targetNumber = targetNum;
+            m_castRange = castRange;
+        }
         /// <summary>
         /// 完善技能参数
         /// 例如自动选择最近的目标等, 看甲方
@@ -29,5 +36,14 @@ namespace MirRemakeBackend {
         /// <returns></returns>
         public abstract bool InRange (Vector2 pos, SkillParam parm);
         public abstract List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm);
+        protected bool TryGetValue (KeyValuePair<SkillAimParamType, float>[] param, SkillAimParamType type, out float value) {
+            foreach (var item in param)
+                if (item.Key == type) {
+                    value = item.Value;
+                    return true;
+                }
+            value = 0.0f;
+            return false;
+        }
     }
 }

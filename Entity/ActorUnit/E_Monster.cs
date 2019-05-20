@@ -4,40 +4,24 @@ using UnityEngine;
 namespace MirRemakeBackend {
     class E_Monster : E_ActorUnit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
+        public int m_monsterId;
         private MFSM m_mFSM;
         private E_Skill[] m_skillArr;
+        // 技能冷却
         private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
-        public E_Monster (int networkId, int monsterId, Vector2 pos) {
+        public E_Monster (int networkId, Vector2 pos, DO_Monster dataObj, E_Skill[] skillArr) {
             m_mFSM = new MFSM (new MFSMS_AutoMove (this));
 
+            foreach (var attr in dataObj.m_attrArr)
+                m_concreteAttributeDict.Add (attr.Key, attr.Value);
             m_networkId = networkId;
             m_Position = pos;
 
-            // TODO: 从数据库获取怪物等级技能属性等, 并把等级等发送到客户端
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_HP, 1500);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAX_MP, 1500);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_HP, 1500);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CURRENT_MP, 1500);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, 5);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, 5);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.ATTACK, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.MAGIC, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DEFENCE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.RESISTANCE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.TENACITY, 15);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.SPEED, 700);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_RATE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.CRITICAL_BONUS, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.HIT_RATE, 150);
-            m_concreteAttributeDict.Add (ActorUnitConcreteAttributeType.DODGE_RATE, 150);
-            m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.FAINT, 0);
-            m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.SILENT, 0);
-            m_specialAttributeDict.Add (ActorUnitSpecialAttributeType.IMMOBILE, 0);
-
-            m_skillArr = new E_Skill[1] { new E_Skill (0)};
+            m_monsterId = dataObj.m_monsterId;
+            m_skillArr = skillArr;
         }
         /// <summary>
         /// 获得自身的随机一个不在冷却的技能

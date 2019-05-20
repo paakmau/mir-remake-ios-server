@@ -5,26 +5,32 @@ namespace MirRemakeBackend {
         public short m_monsterId;
         public short m_level;
         public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_attrArr;
-        public short[] m_skillIdArr;
+        public KeyValuePair<short, short>[] m_skillIdAndLevelArr;
         public short[] m_dropItemIdArr;
     }
     struct DO_Skill{
             public short m_skillId;
-            public int[] m_manaCost;
-            public float[] m_singTime;
-            public float[] m_castFrontTime;
-            public float[] m_castBackTime;
+            public short m_skillLevel;
+            public short m_skillMaxLevel;
+            public short m_upgradeCharacterLevelInNeed;
+            public long m_upgradeMoneyInNeed;
+            public int m_upgradeMasterlyInNeed;
             public short[] m_fatherIdArr;
             public short[] m_childrenIdArr;
-            public CampType m_campType;
+            public int m_manaCost;
+            public float m_singTime;
+            public float m_castFrontTime;
+            public float m_castBackTime;
+            public float m_coolDownTime;
             public SkillAimType m_skillAimType;
-            public int m_castRange;
-            public int m_targetNumber;
+            public CampType m_targetCamp;
+            public byte m_targetNumber;
+            public float m_castRange;
             /// <summary>
-            /// 技能伤害范围
+            /// 技能伤害判定的范围参数
             /// </summary>
-            public KeyValuePair<SkillAimParamType, int>[] m_damageParamArr;
-            public DO_Effect[] m_skillEffect;
+            public KeyValuePair<SkillAimParamType, float>[] m_damageParamArr;
+            public DO_Effect m_skillEffect;
         }
     struct DO_Effect{
         public short m_animId;

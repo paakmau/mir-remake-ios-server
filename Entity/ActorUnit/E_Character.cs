@@ -31,12 +31,6 @@ namespace MirRemakeBackend {
                 }
             }
         }
-        public void GetAllLearnedSkill (out short[] skillIdArr, out short[] skillLvArr, out int[] skillMasterlyArr) {
-            // TODO: 技能相关需要访问数据库
-            skillIdArr = new short[3] { 0, 1, 2 };
-            skillLvArr = new short[3] { 2, 1, 4 };
-            skillMasterlyArr = new int[3] { 10053, 233, 15 };
-        }
         public void CastSkillBegin (E_Skill skill, SkillParam parm) {
             // TODO: 有缘改为FSM
             float castAndFront = skill.m_castFrontTime + skill.m_singTime;

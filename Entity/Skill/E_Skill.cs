@@ -12,22 +12,16 @@ using UnityEngine;
 namespace MirRemakeBackend {
     class E_Skill {
         public short m_id;
-        private string m_name;
-        private string m_details;
-        public int m_costHP;
-        public int m_costMP;
-        private short m_level;
-        public short m_Level { get { return m_level; } set { this.m_level = value; } }
-        private short m_maxLevel;
-        public short m_MaxLevel { get { return m_maxLevel; } }
-        private short m_characterLevelInNeed;
-        public short m_CharacterLevelInNeed { get { return m_characterLevelInNeed; } }
+        public short m_level;
         // 技能熟练度
-        private int m_masterly;
-        public int m_Masterly { get { return this.m_masterly; } set { this.m_masterly = value; } }
-        // 升级技能所需金钱
-        private long m_upgradeMoneyInNeed;
-        public long m_UpgradeMoneyInNeed { get { return m_upgradeMoneyInNeed; } }
+        public int m_masterly;
+        public short m_maxLevel;
+        public short m_upgradeCharacterLevelInNeed;
+        public long m_upgradeMoneyInNeed;
+        public int m_upgradeMasterlyInNeed;
+        public short[] m_fatherIdArr;
+        public short[] m_childrenIdArr;
+        public int m_costMP;
         // 咏唱时间
         public float m_singTime;
         public bool m_NeedSing { get { return m_singTime != 0.0f; } }
@@ -37,28 +31,37 @@ namespace MirRemakeBackend {
         public float m_castBackTime;
         // 冷却时间
         public float m_coolDownTime;
-        private SkillTargetChooserBase m_targetChooser;
+        public SkillTargetChooserBase m_targetChooser;
         public E_Effect m_skillEffect;
         public SkillAimType m_AimType { get { return m_targetChooser.m_TargetAimType; } }
-        public short m_FatherId {
-            get { return 0; }
+        public E_Skill (DO_Skill dataObj, DDO_Skill ddo, int casterNetId) {
+            m_id = ddo.m_skillId;
+            m_level = ddo.m_skillLevel;
+            m_masterly = ddo.m_masterly;
+            m_maxLevel = dataObj.m_skillMaxLevel;
+            m_upgradeCharacterLevelInNeed = dataObj.m_upgradeCharacterLevelInNeed;
+            m_upgradeMoneyInNeed = dataObj.m_upgradeMoneyInNeed;
+            m_upgradeMasterlyInNeed = dataObj.m_upgradeMasterlyInNeed;
+            m_fatherIdArr = dataObj.m_fatherIdArr;
+            m_childrenIdArr = dataObj.m_childrenIdArr;
+            m_costMP = dataObj.m_manaCost;
+            m_singTime = dataObj.m_singTime;
+            m_castFrontTime = dataObj.m_castFrontTime;
+            m_castBackTime = dataObj.m_castBackTime;
+            m_coolDownTime = dataObj.m_coolDownTime;
+
+            switch (dataObj.m_skillAimType) {
+                case SkillAimType.AIM_CICLE:
+                    m_targetChooser = new STC_AimCircle (dataObj.m_targetCamp, dataObj.m_targetNumber, dataObj.m_targetNumber, dataObj.m_damageParamArr);
+                    break;
+                case SkillAimType.NOT_AIM_SELF_CIRCLE:
+                    m_targetChooser = new STC_NotAimSelfCircle (dataObj.m_targetCamp, dataObj.m_targetNumber, dataObj.m_targetNumber, dataObj.m_damageParamArr);
+                    break;
+                    // TODO: 
+            }
+            m_skillEffect = new E_Effect (dataObj.m_skillEffect, casterNetId);
         }
-        public List<short> m_ChildrenId {
-            get { return null; }
-        }
-        public E_Skill (short id) {
-            // TODO: 仅用于测试, 日后应当删除
-            m_id = id;
-            m_level = 1;
-            m_costHP = 0;
-            m_costMP = 30;
-            m_singTime = 0.0f;
-            m_castFrontTime = 0.2f;
-            m_castBackTime = 0.3f;
-            m_coolDownTime = 3f;
-            m_targetChooser = new STC_AimCircle ();
-            m_skillEffect = new E_Effect ();
-        }
+        public E_Skill (DO_Skill dataObj, int casterNetId) : this (dataObj, new DDO_Skill (), casterNetId) { }
         public List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm) {
             return m_targetChooser.GetEffectTargets (self, parm);
         }

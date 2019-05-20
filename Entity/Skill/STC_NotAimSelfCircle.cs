@@ -13,16 +13,10 @@ namespace MirRemakeBackend {
     class STC_NotAimSelfCircle : SkillTargetChooserBase {
         // 技能释放点类型
         public override SkillAimType m_TargetAimType { get { return SkillAimType.NOT_AIM_SELF_CIRCLE; } }
-        // 射程
-        public float m_castRange;
         // 伤害半径
-        public float m_damageRange;
-        public STC_NotAimSelfCircle () {
-            // TODO: 仅用于测试, 日后应当删除
-            m_targetCamp = CampType.ENEMY;
-            m_targetNumber = 3;
-            m_castRange = 3.0f;
-            m_damageRange = 1.0f;
+        public float m_radius;
+        public STC_NotAimSelfCircle (CampType targetCamp, byte targetNum, float castRange, KeyValuePair<SkillAimParamType, float>[] param) : base (targetCamp, targetNum, castRange) {
+            TryGetValue (param, SkillAimParamType.RADIUS, out m_radius);
         }
         public override SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
             if (aimedTarget != null && !parm.m_isValid)

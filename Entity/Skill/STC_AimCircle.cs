@@ -13,24 +13,17 @@ namespace MirRemakeBackend {
     class STC_AimCircle : SkillTargetChooserBase {
         // 技能释放点类型
         public override SkillAimType m_TargetAimType { get { return SkillAimType.AIM_CICLE; } }
-        // 射程
-        public float m_castRange;
         // 伤害半径
-        public float m_damageRange;
-        public STC_AimCircle () {
-            // TODO: 仅用于测试, 日后应当删除
-            m_targetCamp = CampType.ENEMY;
-            m_targetNumber = 3;
-            m_castRange = 3.0f;
-            m_damageRange = 1.0f;
+        public float m_radius;
+        public STC_AimCircle (CampType targetCamp, byte targetNum, float castRange, KeyValuePair<SkillAimParamType, float>[] param) : base (targetCamp, targetNum, castRange) {
+            TryGetValue (param, SkillAimParamType.RADIUS, out m_radius);
         }
         public override SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
             // 已锁定目标且阵营匹配
-            if (aimedTarget != null && SM_ActorUnit.s_instance.CheckCampMatch(self, aimedTarget, m_targetCamp)) {
+            if (aimedTarget != null && SM_ActorUnit.s_instance.CheckCampMatch (self, aimedTarget, m_targetCamp)) {
                 parm.m_target = aimedTarget;
                 return parm;
-            }
-            else {
+            } else {
                 // 寻找释放目标
                 List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, 5, m_targetCamp, 1);
                 if (targetList.Count == 1) {

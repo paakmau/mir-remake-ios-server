@@ -15,6 +15,15 @@ namespace MirRemakeBackend {
         public E_Skill GetSkillByIdAndNetworkId (short skillId, int netId) {
             return EM_Skill.GetSkillByIdAndNetworkId (skillId, netId);
         }
+        public E_Skill[] InitMonsterSkill (int netId, KeyValuePair<short, short>[] skillIdAndLevelArr) {
+            E_Skill[] res = new E_Skill[skillIdAndLevelArr.Length];
+            for (int i=0; i<skillIdAndLevelArr.Length; i++) {
+                var skillDo = m_skillDataService.GetSkillByIdAndLevel (skillIdAndLevelArr[i].Key, skillIdAndLevelArr[i].Value);
+                res[i] = new E_Skill(skillDo, netId);
+            }
+            EM_Skill.LoadUnitSkillArr (netId, res);
+            return res;
+        }
         /// <summary>
         /// 初始化角色的技能
         /// 依赖数据库读取
@@ -23,12 +32,14 @@ namespace MirRemakeBackend {
         /// </summary>
         /// <param name="characterId"></param>
         /// <returns></returns>
-        public List<E_Skill> InitCharacterSkill (int characterId) {
+        public List<E_Skill> InitCharacterSkill (int netId, int charId) {
             List<E_Skill> res = new List<E_Skill> ();
-            var skillListDdo = m_skillDynamicDataService.GetSkillListByCharacterId (characterId);
-            for (int i=0; i<skillListDdo.Count; i++) {
-
+            var skillDdoList = m_skillDynamicDataService.GetSkillListByCharacterId (charId);
+            for (int i=0; i<skillDdoList.Count; i++) {
+                DO_Skill dataObj = m_skillDataService.GetSkillByIdAndLevel (skillDdoList[i].m_skillId, skillDdoList[i].m_skillLevel);
+                res.Add (new E_Skill (dataObj, skillDdoList[i], netId));
             }
+            EM_Skill.LoadUnitSkillList (netId, res);
             return res;
         }
     }
