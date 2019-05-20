@@ -23,6 +23,42 @@ namespace MirRemakeBackend {
             m_actorUnitNetIdSet.Remove (netId);
         }
     }
+    static class MonsterRespawnManager {
+        private const float c_monsterRespawnhTime = 15f;
+        private static Dictionary<int, KeyValuePair<short, Vector2>> s_networkIdAndMonsterIdAndPosDict = new Dictionary<int, KeyValuePair<short, Vector2>> ();
+        private static Dictionary<int, MyTimer.Time> s_networkIdAndMonsterRespawnTimeDict = new Dictionary<int, MyTimer.Time> ();
+        private static Stack<KeyValuePair<int, KeyValuePair<short, Vector2>>> s_networkIdAndMonsterIdToRespawnStack = new Stack<KeyValuePair<int, KeyValuePair<short, Vector2>>> ();
+        public static void InitMonster (int netId, KeyValuePair<short, Vector2> monsterIdAndPos) {
+            s_networkIdAndMonsterIdAndPosDict[netId] = monsterIdAndPos;
+            s_networkIdAndMonsterRespawnTimeDict[netId] = MyTimer.s_CurTime.Ticked (c_monsterRespawnhTime);
+        }
+        public static void SetMonsterToWaitRespawn (int netId) {
+            MyTimer.Time refreshTime = MyTimer.s_CurTime.Ticked (c_monsterRespawnhTime);
+            s_networkIdAndMonsterRespawnTimeDict[netId] = refreshTime;
+        }
+        public static void SetMonsterRespawned (int netId) {
+            s_networkIdAndMonsterRespawnTimeDict.Remove (netId);
+        }
+        /// <summary>
+        /// 获取当前需要刷新的怪物
+        /// </summary>
+        /// <returns>
+        /// Key: netId  
+        /// Value.Key: monsterId  
+        /// Value.Value: monsterPosition  
+        /// </returns>
+        public static Stack<KeyValuePair<int, KeyValuePair<short, Vector2>>> GetMonsterToRespawn () {
+            s_networkIdAndMonsterIdToRespawnStack.Clear ();
+            var monsterRespawnTimeEn = s_networkIdAndMonsterRespawnTimeDict.GetEnumerator ();
+            while (monsterRespawnTimeEn.MoveNext ())
+                if (MyTimer.CheckTimeUp (monsterRespawnTimeEn.Current.Value))
+                    s_networkIdAndMonsterIdToRespawnStack.Push (
+                        new KeyValuePair<int, KeyValuePair<short, Vector2>>(
+                            monsterRespawnTimeEn.Current.Key,
+                            s_networkIdAndMonsterIdAndPosDict[monsterRespawnTimeEn.Current.Key]));
+            return s_networkIdAndMonsterIdToRespawnStack;
+        }
+    }
     class SM_ActorUnit {
         public static SM_ActorUnit s_instance;
         private IDDS_Character m_characterDynamicDataService;
@@ -32,25 +68,15 @@ namespace MirRemakeBackend {
         private SM_Skill m_skillSceneManager;
         private INetworkService m_networkService;
         private HashSet<int> m_characterNetIdSet = new HashSet<int> ();
-        private const float c_monsterRefreshTime = 15f;
-        private Dictionary<int, Vector2> m_networkIdAndMonsterPosDict = new Dictionary<int, Vector2> ();
-        private Dictionary<int, short> m_networkIdAndMonsterIdDict = new Dictionary<int, short> ();
-        private Dictionary<int, MyTimer.Time> m_networkIdAndMonsterRefreshTimeDict = new Dictionary<int, MyTimer.Time> ();
         private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
-        private Stack<int> m_monsterToRefreshNetworkIdStack = new Stack<int> ();
         public SM_ActorUnit (INetworkService netService) {
             m_networkService = netService;
 
-            // TODO: 用于测试
-            int monsterNetId;
-            monsterNetId = NetworkIdManager.GetNewActorUnitNetworkId ();
-            m_networkIdAndMonsterIdDict[monsterNetId] = 0;
-            m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-1, 0);
-            m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 1f);
-            monsterNetId = NetworkIdManager.GetNewActorUnitNetworkId ();
-            m_networkIdAndMonsterIdDict[monsterNetId] = 1;
-            m_networkIdAndMonsterPosDict[monsterNetId] = new Vector2 (-3, 1);
-            m_networkIdAndMonsterRefreshTimeDict[monsterNetId] = new MyTimer.Time (0, 10f);
+            var monsterIdAndPositionArr = m_monsterDataService.GetAllMonsterSpawnPosition ();
+            foreach (var monsterIdAndPos in monsterIdAndPositionArr) {
+                int monsterNetId = NetworkIdManager.GetNewActorUnitNetworkId ();
+                MonsterRespawnManager.InitMonster (monsterNetId, monsterIdAndPos);
+            }
         }
         private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr (int[] networkIdArr) {
             List<E_ActorUnit> res = new List<E_ActorUnit> (networkIdArr.Length);
@@ -141,25 +167,18 @@ namespace MirRemakeBackend {
             E_ActorUnit bodyToDisappear;
             while (m_networkIdBodyToDisappearStack.TryPop (out bodyToDisappear)) {
                 EM_ActorUnit.UnloadActorUnitByNetworkId (bodyToDisappear.m_networkId);
-                if (bodyToDisappear.m_ActorUnitType == ActorUnitType.MONSTER) {
-                    MyTimer.Time refreshTime = MyTimer.s_CurTime;
-                    refreshTime.Tick (c_monsterRefreshTime);
-                    m_networkIdAndMonsterRefreshTimeDict.Add (bodyToDisappear.m_networkId, refreshTime);
-                }
+                if (bodyToDisappear.m_ActorUnitType == ActorUnitType.MONSTER)
+                    MonsterRespawnManager.SetMonsterToWaitRespawn (bodyToDisappear.m_networkId);
             }
 
             // 处理怪物刷新
-            var monsterDeathTimeEn = m_networkIdAndMonsterRefreshTimeDict.GetEnumerator ();
-            while (monsterDeathTimeEn.MoveNext ())
-                if (MyTimer.CheckTimeUp (monsterDeathTimeEn.Current.Value))
-                    m_monsterToRefreshNetworkIdStack.Push (monsterDeathTimeEn.Current.Key);
-            int monsterToRefreshNetId;
-            while (m_monsterToRefreshNetworkIdStack.TryPop (out monsterToRefreshNetId)) {
-                m_networkIdAndMonsterRefreshTimeDict.Remove (monsterToRefreshNetId);
-                short monsterToRefreshId = m_networkIdAndMonsterIdDict[monsterToRefreshNetId];
-                DO_Monster monsterDo = m_monsterDataService.GetMonsterById (monsterToRefreshId);
-                E_Skill[] monsterSkillArr = m_skillSceneManager.InitMonsterSkill (monsterToRefreshNetId, monsterDo.m_skillIdAndLevelArr);
-                EM_ActorUnit.LoadActorUnit (new E_Monster (monsterToRefreshNetId, m_networkIdAndMonsterPosDict[monsterToRefreshNetId], monsterDo, monsterSkillArr));
+            Stack<KeyValuePair<int, KeyValuePair<short, Vector2>>> monsterToRespawnNetIdAndInfoStack = MonsterRespawnManager.GetMonsterToRespawn ();
+            KeyValuePair<int, KeyValuePair<short, Vector2>> monsterToRespawnNetIdAndInfo;
+            while (monsterToRespawnNetIdAndInfoStack.TryPop (out monsterToRespawnNetIdAndInfo)) {
+                MonsterRespawnManager.SetMonsterRespawned (monsterToRespawnNetIdAndInfo.Key);
+                DO_Monster monsterDo = m_monsterDataService.GetMonsterById (monsterToRespawnNetIdAndInfo.Value.Key);
+                E_Skill[] monsterSkillArr = m_skillSceneManager.InitMonsterSkill (monsterToRespawnNetIdAndInfo.Key, monsterDo.m_skillIdAndLevelArr);
+                EM_ActorUnit.LoadActorUnit (new E_Monster (monsterToRespawnNetIdAndInfo.Key, monsterToRespawnNetIdAndInfo.Value.Value, monsterDo, monsterSkillArr));
             }
         }
         public void NetworkTick () {
