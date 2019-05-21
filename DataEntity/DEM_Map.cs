@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace MirRemakeBackend {
     /// <summary>
-    /// 数据型Entity的管理器  
+    /// 数据型Entity的容器  
     /// 地图  
     /// </summary>
     class DEM_Map {

@@ -4,11 +4,12 @@ using System.Collections.Generic;
 namespace MirRemakeBackend
 {
     /// <summary>
-    /// 管理场景中的实体, 充当内存池  
-    /// 单位, 怪物, 玩家  
+    /// 管理场景中Character的视野信息  
+    /// 存放场景中所有能够显示的单位  
+    /// 无内存池  
     /// </summary>
-    class EM_ActorUnit {
-        public static EM_ActorUnit s_instance;
+    class EM_Sight {
+        public static EM_Sight s_instance;
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitDict = new Dictionary<int, E_ActorUnit> ();
         public E_ActorUnit GetActorUnitByNetworkId (int networkId) {
             E_ActorUnit res = null;

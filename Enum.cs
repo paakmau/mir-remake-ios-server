@@ -130,10 +130,14 @@ namespace MirRemakeBackend {
         CHARGE
     }
     enum OccupationType : byte{
-        WARRIOR,
-        ROGUE,
-        MAGE,
-        TAOIST
+        NONE = 0,
+        WARRIOR = 1,
+        ROGUE = 2,
+        MAGE = 4,
+        TAOIST = 8,
+        ALL = WARRIOR | ROGUE | MAGE | TAOIST,
+        PHYSICS_OCCUPATION = WARRIOR | ROGUE,
+        MAGIC_OCCUPATION = MAGE | TAOIST
     }
     enum NpcActionType : byte {
         MISSION_ACCEPT,

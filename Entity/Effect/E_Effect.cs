@@ -12,26 +12,22 @@ using UnityEngine;
 
 namespace MirRemakeBackend {
     struct E_Effect {
+        public DE_Effect m_dataEntity;
         public int m_casterNetworkId;
-        public short m_animId;
         public float m_hitRate;
         public float m_criticalRate;
         public int m_deltaHp;
-        public EffectDeltaHPType m_deltaHpType;
         public int m_deltaMp;
-        public EffectDeltaMPType m_deltaMpType;
         public E_Status[] m_statusAttachArray;
         public int m_StatusAttachNum { get { return m_statusAttachArray.Length; } }
 
-        public E_Effect (DO_Effect effectDo, int casterNetId) {
+        public E_Effect (DE_Effect effectDe, int casterNetId) {
+            m_dataEntity = effectDe;
             m_casterNetworkId = casterNetId;
-            m_animId = effectDo.m_animId;
             m_hitRate = effectDo.m_hitRate;
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHp = effectDo.m_deltaHP;
-            m_deltaHpType = effectDo.m_deltaHPType;
             m_deltaMp = effectDo.m_deltaMP;
-            m_deltaMpType = effectDo.m_deltaMPType;
             DO_Status[] statusDoArr = effectDo.m_statusAttachArray;
             m_statusAttachArray = new E_Status[statusDoArr.Length];
             for (int i=0; i<statusDoArr.Length; i++)

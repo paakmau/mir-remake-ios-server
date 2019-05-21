@@ -6,17 +6,12 @@ namespace MirRemakeBackend {
     /// <summary>
     /// 处理战斗相关逻辑
     /// </summary>
-    class SM_Battle {
-        public static SM_Battle s_instance;
-        private IDDS_Character m_characterDynamicDataService;
-        private IDS_Character m_characterDataService;
-        private IDS_Monster m_monsterDataService;
+    class SM_ActorUnit {
         private INetworkService m_networkService;
         private HashSet<int> m_characterNetIdSet = new HashSet<int> ();
         private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
-        public SM_Battle (INetworkService netService) {
+        public SM_ActorUnit (INetworkService netService) {
             m_networkService = netService;
-
         }
         private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr (int[] networkIdArr) {
             List<E_ActorUnit> res = new List<E_ActorUnit> (networkIdArr.Length);

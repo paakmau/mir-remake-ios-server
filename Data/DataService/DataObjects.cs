@@ -16,22 +16,31 @@ namespace MirRemakeBackend {
         public short m_mainAttrPointNumber;
         public int m_upgradeExperienceInNeed;
     }
+    /// <summary>
+    /// 一种技能
+    /// </summary>
     struct DO_Skill {
         public short m_skillId;
-        public short m_skillLevel;
         public short m_skillMaxLevel;
+        public short[] m_fatherIdArr;
+        public short[] m_childrenIdArr;
+        public SkillAimType m_skillAimType;
+        public CampType m_targetCamp;
+        public DO_SkillData[] m_skillDataAllLevel;
+    }
+    /// <summary>
+    /// 同种技能的不同等级数据
+    /// </summary>
+    struct DO_SkillData {
+        public short m_skillLevel;
         public short m_upgradeCharacterLevelInNeed;
         public long m_upgradeMoneyInNeed;
         public int m_upgradeMasterlyInNeed;
-        public short[] m_fatherIdArr;
-        public short[] m_childrenIdArr;
         public int m_mpCost;
         public float m_singTime;
         public float m_castFrontTime;
         public float m_castBackTime;
         public float m_coolDownTime;
-        public SkillAimType m_skillAimType;
-        public CampType m_targetCamp;
         public byte m_targetNumber;
         public float m_castRange;
         /// <summary>
@@ -66,12 +75,11 @@ namespace MirRemakeBackend {
         public DO_Effect m_effect;
     }
     struct DO_EquipmentInfo {
-        public OccupationType m_occupation;
-        public short m_levelInNeed;
-        public EquipmentPosition m_position;
+        public OccupationType m_validOccupation;
+        public short m_equipLevelInNeed;
+        public EquipmentPosition m_equipPosition;
         public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_equipmentAttributeArr;
-        public float m_wave;
-        public ItemQuality m_quality;
+        public float m_attrWave;
     }
     struct DO_Mission {
         public short m_id;

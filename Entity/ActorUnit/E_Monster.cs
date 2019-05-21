@@ -3,20 +3,20 @@ using UnityEngine;
 
 namespace MirRemakeBackend {
     class E_Monster : E_ActorUnit {
+        private DE_Monster m_dataEntity;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
         private MFSM m_mFSM;
-        private DE_Skill[] m_skillArr;
         // 技能冷却
-        private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();
+        // private List<KeyValuePair<short, MyTimer.Time>> m_skillIdAndCoolDownList = new List<KeyValuePair<short, MyTimer.Time>> ();
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
-        public E_Monster (int networkId, Vector2 pos, DE_Monster de, DE_Skill[] skillArr) {
-            m_mFSM = new MFSM (new MFSMS_AutoMove (this));
+        public E_Monster (int networkId, Vector2 pos, DE_Monster de) {
+            m_dataEntity = de;
             m_networkId = networkId;
             m_level = de.m_level;
             m_position = pos;
-            m_skillArr = skillArr;
+            m_mFSM = new MFSM (new MFSMS_AutoMove (this));
             for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
                 m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Key, de.m_concreteAttributeList[i].Value);
         }
@@ -24,12 +24,12 @@ namespace MirRemakeBackend {
         /// 获得自身的随机一个不在冷却的技能
         /// </summary>
         /// <returns></returns>
-        public DE_Skill GetRandomValidSkill () {
+        public DE_SkillData GetRandomValidSkill () {
             int num = MyRandom.NextInt (0, m_skillArr.Length);
-            DE_Skill skill = m_skillArr[num];
+            DE_SkillData skill = m_skillArr[num];
             // 若技能正在冷却
             for (int i = 0; i < m_skillIdAndCoolDownList.Count; i++)
-                if (m_skillIdAndCoolDownList[i].Key == skill.m_skillId)
+                if (m_skillIdAndCoolDownList[i].Key == skill.)
                     return null;
             return skill;
         }

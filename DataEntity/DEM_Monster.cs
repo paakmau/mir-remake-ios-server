@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MirRemakeBackend {
     /// <summary>
-    /// 数据型Entity的管理器  
+    /// 数据型Entity的容器  
     /// 怪物  
     /// </summary>
     class DEM_Monster {
@@ -18,6 +18,9 @@ namespace MirRemakeBackend {
             DE_Monster res = null;
             m_monsterDict.TryGetValue (monsterId, out res);
             return res;
+        }
+        public Dictionary<short, DE_Monster>.Enumerator GetAllMonsterEn () {
+            return m_monsterDict.GetEnumerator ();
         }
     }
 }

@@ -2,6 +2,10 @@ using System.Collections.Generic;
 
 
 namespace MirRemakeBackend {
+    /// <summary>
+    /// 索引场景中的怪物
+    /// 不需要内存池因为每个怪物都需要Respawn且不会消失
+    /// </summary>
     class EM_Monster {
         public static EM_Monster s_instance;
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
@@ -9,12 +13,7 @@ namespace MirRemakeBackend {
             var idAndPosList = DEM_Map.s_instance.GetAllMonsterIdAndRespawnPosition ();
             for (int i=0; i<idAndPosList.Count; i++) {
                 DE_Monster monsterDe = DEM_Monster.s_instance.GetMonsterById (idAndPosList[i].Key);
-                DE_Skill[] skillDeArr = new DE_Skill[monsterDe.m_skillIdAndLevelList.Count];
-                for (int j=0; j<monsterDe.m_skillIdAndLevelList.Count; j++)
-                    skillDeArr[j] = DEM_Skill.s_instance.GetSkillByIdAndLevel (
-                        monsterDe.m_skillIdAndLevelList[j].Key,
-                        monsterDe.m_skillIdAndLevelList[j].Value);
-                E_Monster monster = new E_Monster (NetworkIdManager.s_instance.GetNewActorUnitNetworkId (), idAndPosList[i].Value, monsterDe, skillDeArr);
+                E_Monster monster = new E_Monster (NetworkIdManager.s_instance.GetNewActorUnitNetworkId (), idAndPosList[i].Value, monsterDe);
             }
         }
         public E_Monster GetMonsterByNetworkId (int netId) {
