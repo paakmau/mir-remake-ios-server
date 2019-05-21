@@ -33,6 +33,13 @@ namespace MirRemakeBackend {
             List<DDO_Skill> skillDdoList = m_skillDds.GetSkillListByCharacterId (charId);
             E_Skill[] res = new E_Skill[skillDdoList.Count];
             for (int i=0; i<skillDdoList.Count; i++) {
+                DE_Skill de;
+                DE_SkillData dataDe;
+                if (!DEM_Skill.s_instance.GetSkillByIdAndLevel (skillDdoList[i].m_skillId, skillDdoList[i].m_skillLevel, out de, out dataDe))
+                    continue;
+                E_Skill skillObj = EntityManagerPoolInstance.s_skillPool.GetInstance ();
+                skillObj.Reset (de, dataDe, skillDdoList[i]);
+                res[i] = skillObj;
             }
             return res;
         }
