@@ -1,22 +1,17 @@
-/**
- *Enity，状态实体
- *创建者 yuk
- *时间 2019/4/3
- *最后修改者 yuk
- *时间 2019/4/3
- */
+
 
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+using MirRemakeBackend.Network;
+
+namespace MirRemakeBackend.Entity {
     struct E_Status {
-        public short m_id;
+        // TODO: 有缘改成命令模式, 可以实现嘲讽
         public int m_castererNetworkId;
-        public StatusType m_type;
-        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_affectConcreteAttributeArr;
-        public ActorUnitSpecialAttributeType[] m_affectSpecialAttributeArr;
-        public int m_DeltaHP {
+        public short m_id;
+        public DE_Status m_dataEntity;
+        public int m_Hatred {
             get {
                 int res = 0;
                 foreach (var affectAttr in m_affectConcreteAttributeArr) {
@@ -36,14 +31,13 @@ namespace MirRemakeBackend {
             }
         }
         public MyTimer.Time m_endTime;
-        public E_Status (DO_Status statusDo, int casterNetId) {
-            m_id = statusDo.m_id;
-            m_type = statusDo.m_type;
+        public E_Status (DE_Status de, short id, KeyValuePair<float, float> statusParm, int casterNetId) {
             m_castererNetworkId = casterNetId;
-            m_affectConcreteAttributeArr = statusDo.m_affectAttributeArr;
-            m_affectSpecialAttributeArr = statusDo.m_specialAttributeArr;
-            m_value = statusDo.m_value;
-            m_durationTime = statusDo.m_lastingTime;
+            m_id = id;
+            m_dataEntity = de;
+
+            m_value = statusParm.Key;
+            m_durationTime = statusParm.Value;
             m_endTime = MyTimer.s_CurTime.Ticked (m_durationTime);
         }
         public NO_Status GetNo () {

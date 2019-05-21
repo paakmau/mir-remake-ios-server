@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using LiteNetLib.Utils;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Network {
     class CC_SetPosition : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.SET_POSITION; } }
         public void Execute(NetDataReader reader, int netId) {

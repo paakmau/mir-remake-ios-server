@@ -1,13 +1,17 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Network {
+    interface INetworkService {
+        void AssignNetworkId (int netId);
+        void SendServerCommand (IServerCommand command);
+    }
     class NetworkService : INetEventListener, INetworkService {
         private const int c_serverPort = 23333;
         private const int c_maxClientNum = 3000;
@@ -16,18 +20,17 @@ namespace MirRemakeBackend {
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
         private Dictionary<NetworkToServerDataType, IClientCommand> m_clientCommandDict = new Dictionary<NetworkToServerDataType, IClientCommand> ();
+        private Stack<NetPeer> m_peerWaitForNetworkIdStack = new Stack<NetPeer> ();
         private NetDataWriter m_writer = new NetDataWriter ();
         public NetworkService () {
             // 初始化LiteNet
             m_serverNetManager = new NetManager (this);
             m_serverNetManager.Start (c_serverPort);
-
-
             // 实例化所有实现了ClientCommand接口的class
             var ccType = typeof (IClientCommand);
-            var ccImplTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany (s => s.GetTypes()).Where(p => p.IsClass && ccType.IsAssignableFrom(p));
+            var ccImplTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && ccType.IsAssignableFrom (p));
             foreach (var type in ccImplTypes) {
-                IClientCommand cc = type.GetConstructor(Type.EmptyTypes).Invoke(null) as IClientCommand;
+                IClientCommand cc = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IClientCommand;
                 m_clientCommandDict.Add (cc.m_DataType, cc);
             }
         }
@@ -41,9 +44,21 @@ namespace MirRemakeBackend {
         public void SendServerCommand (IServerCommand command) {
             m_writer.Put ((byte) command.m_DataType);
             command.PutData (m_writer);
-            for (int i=0; i<command.m_ToClientList.Count; i++)
+            for (int i = 0; i < command.m_ToClientList.Count; i++)
                 m_netIdAndPeerDict[command.m_ToClientList[i]].Send (m_writer, command.m_DeliveryMethod);
             m_writer.Reset ();
+        }
+        public void AssignNetworkId (int netId) {
+            NetPeer peer;
+            if (!m_peerWaitForNetworkIdStack.TryPop (out peer))
+                return;
+            m_peerIdAndNetworkIdDict[peer.Id] = netId;
+            m_networkIdAndPeerIdDict[netId] = peer.Id;
+            // 保存peer
+            m_netIdAndPeerDict[netId] = peer;
+            // 发送NetId
+            SendServerCommand (new SC_InitSelfNetworkId (new List<int> { netId }, netId));
+            Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnConnectionRequest (ConnectionRequest request) {
             request.AcceptIfKey ("client");
@@ -61,25 +76,16 @@ namespace MirRemakeBackend {
             // 超过连接上限
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
-
             // 分配NetId
-            int netId = SM_ActorUnit.s_instance.CommandAssignNetworkId ();
-            m_peerIdAndNetworkIdDict[peer.Id] = netId;
-            m_networkIdAndPeerIdDict[netId] = peer.Id;
-
-            // 保存peer
-            m_netIdAndPeerDict[netId] = peer;
-
-            // 发送NetId
-            SendServerCommand (new SC_InitSelfNetworkId(new List<int> {netId}, netId));
-            Console.WriteLine (peer.Id + "连接成功");
+            Messenger.Broadcast ("CommandAddCharacter");
+            m_peerWaitForNetworkIdStack.Push (peer);
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             var netId = m_peerIdAndNetworkIdDict[peer.Id];
             m_netIdAndPeerDict.Remove (netId);
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
-            SM_ActorUnit.s_instance.CommandRemoveCharacter (netId);
+            Messenger.Broadcast<int> ("CommandRemoveCharacter", netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
     }

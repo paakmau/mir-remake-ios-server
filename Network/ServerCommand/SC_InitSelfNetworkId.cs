@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Network {
     class SC_InitSelfNetworkId : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }

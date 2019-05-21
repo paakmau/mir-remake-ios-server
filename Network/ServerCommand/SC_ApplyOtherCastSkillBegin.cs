@@ -3,7 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Network {
     class SC_ApplyOtherCastSkillBegin : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_BEGIN; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Network {
     class SC_SetAllHPAndMP : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_HP_AND_MP; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }

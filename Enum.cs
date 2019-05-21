@@ -15,7 +15,7 @@ namespace MirRemakeBackend {
         /// <summary>
         /// 指向性圆形
         /// </summary>
-        AIM_CICLE,
+        AIM_CIRCLE,
         /// <summary>
         /// 指向性自身出发的扇形
         /// </summary>

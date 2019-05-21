@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Network {
     interface IServerCommand {
         NetworkToClientDataType m_DataType { get; }
         DeliveryMethod m_DeliveryMethod { get; }

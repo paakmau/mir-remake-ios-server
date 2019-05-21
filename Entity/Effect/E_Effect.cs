@@ -12,26 +12,27 @@ using UnityEngine;
 
 namespace MirRemakeBackend {
     struct E_Effect {
-        public DE_Effect m_dataEntity;
+        // TODO: 有缘改成命令模式
         public int m_casterNetworkId;
+        public EffectType m_type;
         public float m_hitRate;
         public float m_criticalRate;
         public int m_deltaHp;
         public int m_deltaMp;
-        public E_Status[] m_statusAttachArray;
-        public int m_StatusAttachNum { get { return m_statusAttachArray.Length; } }
+        public KeyValuePair<short, KeyValuePair<float, float>>[] m_statusIdAndValueAndTimeArray;
+        public int m_StatusAttachNum { get { return m_statusIdAndValueAndTimeArray.Length; } }
 
         public E_Effect (DE_Effect effectDe, int casterNetId) {
-            m_dataEntity = effectDe;
             m_casterNetworkId = casterNetId;
-            m_hitRate = effectDo.m_hitRate;
-            m_criticalRate = effectDo.m_criticalRate;
-            m_deltaHp = effectDo.m_deltaHP;
-            m_deltaMp = effectDo.m_deltaMP;
-            DO_Status[] statusDoArr = effectDo.m_statusAttachArray;
-            m_statusAttachArray = new E_Status[statusDoArr.Length];
-            for (int i=0; i<statusDoArr.Length; i++)
-                m_statusAttachArray[i] = new E_Status (statusDoArr[i], casterNetId);
+            m_type = effectDe.m_type;
+            m_hitRate = effectDe.m_hitRate;
+            m_criticalRate = effectDe.m_criticalRate;
+            m_deltaHp = effectDe.m_deltaHP;
+            m_deltaMp = effectDe.m_deltaMP;
+            List<int> res = new List<int> ();
+            m_statusIdAndValueAndTimeArray = new KeyValuePair<short, KeyValuePair<float, float>>[effectDe.m_statusIdAndValueAndTimeList.Count];
+            for (int i=0; i<effectDe.m_statusIdAndValueAndTimeList.Count; i++)
+                m_statusIdAndValueAndTimeArray[i] = effectDe.m_statusIdAndValueAndTimeList[i];
         }
     }
 }
