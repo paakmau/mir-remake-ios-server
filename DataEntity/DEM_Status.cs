@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using MirRemakeBackend.Data;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.DataEntity {
     /// <summary>
     /// 数据型Entity的容器  
     /// 技能  
@@ -12,7 +13,7 @@ namespace MirRemakeBackend {
         public DEM_Status (IDS_Status statusDs) {
             var statusDoArr = statusDs.GetAllStatus ();
             foreach (var statusDo in statusDoArr)
-                m_statusDict.Add (statusDo.m_statusId, new DE_Status(statusDo));
+                m_statusDict.Add (statusDo.m_statusId, new DE_Status (statusDo));
         }
         public DE_Status GetStatusById (short statusId) {
             DE_Status res = null;

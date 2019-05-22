@@ -4,7 +4,7 @@ using UnityEngine;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
-    partial class GL_Battle {
+    partial class GL_BattleSettle : GameLogicBase {
         struct SkillParam {
             public static SkillParam s_invalidSkillParam = new SkillParam () { m_isValid = false };
             public SkillAimType m_aimType;

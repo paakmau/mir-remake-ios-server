@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using MirRemakeBackend.Data;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.DataEntity {
     /// <summary>
     /// 数据型Entity的容器  
     /// 技能  
@@ -12,7 +13,7 @@ namespace MirRemakeBackend {
         public DEM_Skill (IDS_Skill skillDs) {
             var skillDoArr = skillDs.GetAllSkill ();
             foreach (var skillDo in skillDoArr)
-                m_skillAllLevelDict.Add (skillDo.m_skillId, new DE_Skill(skillDo));
+                m_skillAllLevelDict.Add (skillDo.m_skillId, new DE_Skill (skillDo));
         }
         public bool GetSkillByIdAndLevel (short skillId, short skillLv, out DE_Skill skill, out DE_SkillData skillData) {
             skill = null;

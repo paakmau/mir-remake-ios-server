@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
-
+using MirRemakeBackend.DataEntity;
+using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Entity;
 
 namespace MirRemakeBackend.EntityManager {
     class NetworkIdManager {
@@ -40,9 +43,10 @@ namespace MirRemakeBackend.EntityManager {
             // 实例化所有的怪物
             var idAndPosList = DEM_Map.s_instance.GetAllMonsterIdAndRespawnPosition ();
             int[] netIdArr = NetworkIdManager.s_instance.AssignNetworkId (idAndPosList.Count);
-            for (int i=0; i<idAndPosList.Count; i++) {
-                DE_Monster monsterDe = DEM_Monster.s_instance.GetMonsterById (idAndPosList[i].Key);
-                E_Monster monster = new E_Monster (netIdArr[i], idAndPosList[i].Value, monsterDe);
+            for (int i = 0; i < idAndPosList.Count; i++) {
+                Tuple<DE_ActorUnit, DE_Monster> deTuple = DEM_ActorUnit.s_instance.GetMonsterById (idAndPosList[i].Key);
+                E_Monster monster = new E_Monster ();
+                monster.Reset (netIdArr[i], idAndPosList[i].Value, deTuple.Item1, deTuple.Item2);
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
             }
         }
@@ -59,9 +63,9 @@ namespace MirRemakeBackend.EntityManager {
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
             newChar = EntityManagerPoolInstance.s_characterPool.GetInstance ();
-            DE_Character charDe = DEM_Character.s_instance.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level);
+            var deTuple = DEM_ActorUnit.s_instance.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level);
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charId, charDe, charDdo);
+            newChar.Reset (netId, charId, deTuple.Item1, deTuple.Item2, charDdo);
             return newChar;
         }
         /// <summary>
@@ -78,6 +82,14 @@ namespace MirRemakeBackend.EntityManager {
             E_Monster res = null;
             m_networkIdAndMonsterDict.TryGetValue (netId, out res);
             return res;
+        }
+        public E_Character GetCharacterByNetworkId (int netId) {
+            E_Character res = null;
+            m_networkIdAndCharacterDict.TryGetValue (netId, out res);
+            return res;
+        }
+        public Dictionary<int, E_Character>.Enumerator GetCharacterEnumerator () {
+            return m_networkIdAndCharacterDict.GetEnumerator ();
         }
     }
 }

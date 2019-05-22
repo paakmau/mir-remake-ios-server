@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.DynamicData {
     interface IDDS_Skill {
         List<DDO_Skill> GetSkillListByCharacterId (int charId);
         void SetSkillLevelByIdAndCharacterId (short skillLevel, short skillId, int charId);

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace MirRemakeBackend {
-    class EquipmentRegion {
+    class E_EquipmentRegion {
         Dictionary<EquipmentPosition, E_EquipmentItem> m_equipPositionAndEquipmentDict = new Dictionary<EquipmentPosition, E_EquipmentItem> ();
-        public List<E_Item> GetAllItem () {
+        public List<E_Item> GetAllItemList () {
             List<E_Item> res = new List<E_Item> ();
             var equipmentEn = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
             while (equipmentEn.MoveNext ())

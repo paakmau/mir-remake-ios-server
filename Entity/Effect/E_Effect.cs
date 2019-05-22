@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     struct E_Effect {
         // TODO: 有缘改成命令模式
         public int m_casterNetworkId;

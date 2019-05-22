@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.DynamicData {
     interface IDDS_Character {
         /// <summary>
         /// 创建一个角色

@@ -1,9 +1,7 @@
-
-
 using System.Collections.Generic;
-using UnityEngine;
-
+using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Network;
+using UnityEngine;
 
 namespace MirRemakeBackend.Entity {
     struct E_Status {

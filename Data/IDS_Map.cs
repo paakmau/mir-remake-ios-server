@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Data {
     interface IDS_Map {
         /// <summary>
         /// 获取所有怪物的刷新位置

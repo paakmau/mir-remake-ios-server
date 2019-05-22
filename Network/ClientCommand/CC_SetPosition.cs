@@ -7,7 +7,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.SET_POSITION; } }
         public void Execute(NetDataReader reader, int netId) {
             var position = reader.GetVector2();
-            SM_ActorUnit.s_instance.CommandSetPosition(netId, position);
+            Messenger.Broadcast<int, Vector2> ("CommandSetPosition", netId, position);
         }
     }
 }

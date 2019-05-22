@@ -1,28 +1,30 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using MirRemakeBackend.Data;
 using UnityEngine;
 
-namespace MirRemakeBackend {
-    abstract class DE_ActorUnit {
+namespace MirRemakeBackend.DataEntity {
+    class DE_ActorUnit {
         public readonly IReadOnlyList<KeyValuePair<ActorUnitConcreteAttributeType, int>> m_concreteAttributeList;
-        public DE_ActorUnit (KeyValuePair<ActorUnitConcreteAttributeType, int>[] attrArr) {
+        private DE_ActorUnit (KeyValuePair<ActorUnitConcreteAttributeType, int>[] attrArr) {
             m_concreteAttributeList = new List<KeyValuePair<ActorUnitConcreteAttributeType, int>> (attrArr);
         }
+        public DE_ActorUnit (DO_Monster monster) : this (monster.m_attrArr) { }
+        public DE_ActorUnit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }
     }
-    class DE_Monster : DE_ActorUnit {
+    class DE_Monster {
         public readonly short m_level;
         public readonly IReadOnlyList<KeyValuePair<short, short>> m_skillIdAndLevelList;
         public readonly IReadOnlyList<short> m_dropItemIdList;
-        public DE_Monster (DO_Monster monsterDo) : base (monsterDo.m_attrArr) {
+        public DE_Monster (DO_Monster monsterDo) {
             m_skillIdAndLevelList = new List<KeyValuePair<short, short>> (monsterDo.m_skillIdAndLevelArr);
             m_dropItemIdList = new List<short> (monsterDo.m_dropItemIdArr);
         }
     }
-    class DE_Character : DE_ActorUnit {
+    class DE_Character {
         public readonly int m_upgradeExperienceInNeed;
         public readonly IReadOnlyList<KeyValuePair<ActorUnitMainAttributeType, int>> m_mainAttributeList;
         public readonly int m_mainAttributePointNum;
-        public DE_Character (DO_Character charDo) : base (charDo.m_concreteAttributeArr) {
+        public DE_Character (DO_Character charDo) {
             m_upgradeExperienceInNeed = charDo.m_upgradeExperienceInNeed;
             m_mainAttributeList = new List<KeyValuePair<ActorUnitMainAttributeType, int>> (charDo.m_mainAttributeArr);
             m_mainAttributePointNum = charDo.m_mainAttrPointNumber;
@@ -71,7 +73,7 @@ namespace MirRemakeBackend {
             m_skillAimType = skillDo.m_skillAimType;
             m_targetCamp = skillDo.m_targetCamp;
             DE_SkillData[] dataArr = new DE_SkillData[skillDo.m_skillDataAllLevel.Length];
-            for (int i=0; i<skillDo.m_skillDataAllLevel.Length; i++)
+            for (int i = 0; i < skillDo.m_skillDataAllLevel.Length; i++)
                 dataArr[i] = new DE_SkillData (skillDo.m_skillDataAllLevel[i]);
             m_skillDataAllLevel = new List<DE_SkillData> (dataArr);
         }
@@ -104,10 +106,22 @@ namespace MirRemakeBackend {
             m_specialAttributeList = new List<ActorUnitSpecialAttributeType> (statusDo.m_specialAttributeArr);
         }
     }
+    class DE_Item {
+        public readonly ItemType m_type;
+        public readonly short m_maxNum;
+        public readonly ItemQuality m_quality;
+        public readonly long m_price;
+        public DE_Item (DO_Item itemDo) {
+            m_type = itemDo.m_type;
+            m_maxNum = itemDo.m_maxNum;
+            m_quality = itemDo.m_quality;
+            m_price = itemDo.m_price;
+        }
+    }
     class DE_Consumable {
         public readonly DE_Effect m_itemEffect;
-        public DE_Consumable (DO_ConsumableInfo info) {
-            m_itemEffect = new DE_Effect (info.m_effect);
+        public DE_Consumable (DO_Consumable consumDo) {
+            m_itemEffect = new DE_Effect (consumDo.m_effect);
         }
     }
     class DE_Equipment {
@@ -116,12 +130,12 @@ namespace MirRemakeBackend {
         public readonly EquipmentPosition m_equipPosition;
         public readonly IReadOnlyList<KeyValuePair<ActorUnitConcreteAttributeType, int>> m_attrList;
         public readonly float m_attrWave;
-        public DE_Equipment (DO_EquipmentInfo eInfoDo) {
-            m_validOccupation = eInfoDo.m_validOccupation;
-            m_equipLevelInNeed = eInfoDo.m_equipLevelInNeed;
-            m_equipPosition = eInfoDo.m_equipPosition;
-            m_attrList = new List<KeyValuePair<ActorUnitConcreteAttributeType, int>> (eInfoDo.m_equipmentAttributeArr);
-            m_attrWave = eInfoDo.m_attrWave;
+        public DE_Equipment (DO_Equipment equipDo) {
+            m_validOccupation = equipDo.m_validOccupation;
+            m_equipLevelInNeed = equipDo.m_equipLevelInNeed;
+            m_equipPosition = equipDo.m_equipPosition;
+            m_attrList = new List<KeyValuePair<ActorUnitConcreteAttributeType, int>> (equipDo.m_equipmentAttributeArr);
+            m_attrWave = equipDo.m_attrWave;
         }
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 
-namespace MirRemakeBackend
-{
+namespace MirRemakeBackend.DynamicData {
     struct DDO_Character {
         public int m_characterId;
         public short m_level;

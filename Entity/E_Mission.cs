@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System;
 
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     class E_Mission {
         public short m_id;
         public string m_title;

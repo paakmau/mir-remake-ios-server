@@ -1,27 +1,27 @@
 using System.Collections.Generic;
+using MirRemakeBackend.Data;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.DataEntity {
     /// <summary>
     /// 数据型Entity的容器  
     /// 道具  
     /// </summary>
     class DEM_Item {
         public static DEM_Item s_instance;
+        private Dictionary<short, DE_Item> m_itemDict = new Dictionary<short, DE_Item> ();
         private Dictionary<short, DE_Consumable> m_consumableDict = new Dictionary<short, DE_Consumable> ();
         private Dictionary<short, DE_Equipment> m_equipmentDict = new Dictionary<short, DE_Equipment> ();
         public DEM_Item (IDS_Item itemDs) {
             var itemDoArr = itemDs.GetAllItem ();
-            foreach (var itemDo in itemDoArr) {
-                switch (itemDo.m_type) {
-                    case ItemType.CONSUMABLE:
-                        m_consumableDict.Add (itemDo.m_itemId, new DE_Consumable (itemDs.GetConsumableInfoById (itemDo.m_itemId)));
-                        break;
-                    case ItemType.EQUIPMENT:
-                        m_equipmentDict.Add (itemDo.m_itemId, new DE_Equipment (itemDs.GetEquipmentInfoById (itemDo.m_itemId)));
-                        break;
-                }
-            }
+            var consumableDoArr = itemDs.GetAllConsumable ();
+            var equipmentDoArr = itemDs.GetAllEquipment ();
+            foreach (var itemDo in itemDoArr)
+                m_itemDict.Add (itemDo.m_itemId, new DE_Item (itemDo));
+            foreach (var consumDo in consumableDoArr)
+                m_consumableDict.Add (consumDo.m_itemId, new DE_Consumable(consumDo));
+            foreach (var equipDo in equipmentDoArr)
+                m_equipmentDict.Add (equipDo.m_itemId, new DE_Equipment(equipDo));
         }
         public DE_Consumable GetConsumableById (short itemId) {
             DE_Consumable res = null;

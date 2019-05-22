@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using MirRemakeBackend.Entity;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.EntityManager {
     /// <summary>
     /// 内存池
     /// </summary>
@@ -27,7 +28,11 @@ namespace MirRemakeBackend {
     static class EntityManagerPoolInstance {
         private const int c_characterPoolSize = 400;
         private const int c_skillPoolSize = 5000;
+        private const int c_consumableItemPoolSize = 5000;
+        private const int c_equipmentItemPoolSize = 5000;
         public static EntityManagerPool<E_Character> s_characterPool = new EntityManagerPool<E_Character> (c_characterPoolSize);
         public static EntityManagerPool<E_Skill> s_skillPool = new EntityManagerPool<E_Skill> (c_skillPoolSize);
+        public static EntityManagerPool<E_ConsumableItem> s_consumableItemPool = new EntityManagerPool<E_ConsumableItem> (c_consumableItemPoolSize);
+        public static EntityManagerPool<E_EquipmentItem> s_EquipmentItemPool = new EntityManagerPool<E_EquipmentItem> (c_equipmentItemPoolSize); 
     }
 }

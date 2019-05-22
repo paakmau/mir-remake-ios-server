@@ -7,21 +7,6 @@ namespace MirRemakeBackend {
     /// 处理战斗相关逻辑
     /// </summary>
     class SM_ActorUnit {
-        private INetworkService m_networkService;
-        private HashSet<int> m_characterNetIdSet = new HashSet<int> ();
-        private Stack<E_ActorUnit> m_networkIdBodyToDisappearStack = new Stack<E_ActorUnit> ();
-        public SM_ActorUnit (INetworkService netService) {
-            m_networkService = netService;
-        }
-        private List<E_ActorUnit> GetActorUnitArrByNetworkIdArr (int[] networkIdArr) {
-            List<E_ActorUnit> res = new List<E_ActorUnit> (networkIdArr.Length);
-            foreach (var netId in networkIdArr) {
-                E_ActorUnit unit = EM_ActorUnit.GetActorUnitByNetworkId (netId);
-                if (unit != null)
-                    res.Add (unit);
-            }
-            return res;
-        }
         public List<E_ActorUnit> GetActorUnitsInSectorRange (E_ActorUnit self, Vector2 center, Vector2 dir, float range, float radian, CampType targetCamp, byte num) {
             // TODO: 解决非圆扇形的作用目标判定
             List<E_ActorUnit> res = new List<E_ActorUnit> ();
@@ -56,15 +41,6 @@ namespace MirRemakeBackend {
             // units.Sort();
             return units;
         }
-        private List<int> GetCharacterInSightIdList (int selfNetId, bool includeSelf) {
-            // TODO: 处理视野问题
-            List<int> res = new List<int> ();
-            foreach (var netId in m_characterNetIdSet) {
-                if (includeSelf || netId != selfNetId)
-                    res.Add (netId);
-            }
-            return res;
-        }
         public bool CheckCampMatch (E_ActorUnit self, E_ActorUnit target, CampType camp) {
             switch (camp) {
                 case CampType.SELF:
@@ -76,13 +52,6 @@ namespace MirRemakeBackend {
             }
             return false;
         }
-        public void NotifyUnitDead (int killerNetId, int deadUnitNetId) {
-            m_networkService.SendServerCommand (new SC_ApplyAllDead (GetCharacterInSightIdList (deadUnitNetId, true), killerNetId, deadUnitNetId));
-        }
-        public void NotifyUnitBodyDisappear (E_ActorUnit deadUnit) {
-            // 死亡单位移除准备
-            m_networkIdBodyToDisappearStack.Push (deadUnit);
-        }
         public void NotifyApplyCastSkillSettle (E_ActorUnit unit, E_Skill skill, List<E_ActorUnit> tarList) {
             KeyValuePair<int, E_Status[]>[] statusPairArr;
             unit.CastSkillSettle (skill, tarList, out statusPairArr);
@@ -90,21 +59,6 @@ namespace MirRemakeBackend {
         }
         public void NotifyApplyCastSkillBegin (E_ActorUnit unit, E_Skill skill, SkillParam parm) {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetCharacterInSightIdList (unit.m_networkId, false), unit.m_networkId, skill.m_id, parm.GetNo ()));
-        }
-        public void Tick (float dT) {
-            // 每个单位的Tick
-            var unitEn = EM_ActorUnit.GetActorUnitEnumerator ();
-            while (unitEn.MoveNext ())
-                unitEn.Current.Value.Tick (dT);
-
-            // 移除消失的尸体
-            E_ActorUnit bodyToDisappear;
-            while (m_networkIdBodyToDisappearStack.TryPop (out bodyToDisappear)) {
-                EM_ActorUnit.UnloadActorUnitByNetworkId (bodyToDisappear.m_networkId);
-                if (bodyToDisappear.m_ActorUnitType == ActorUnitType.MONSTER)
-                    MonsterRespawnManager.SetMonsterToWaitRespawn (bodyToDisappear.m_networkId);
-            }
-
         }
         public void NetworkTick () {
             var selfKeyEn = m_characterNetIdSet.GetEnumerator ();
@@ -205,29 +159,6 @@ namespace MirRemakeBackend {
         }
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetCharacterInSightIdList (netId, false), netId));
-        }
-        public void CommandUseConsumableItem (int netId, int itemRealId) {
-            E_ActorUnit character = EM_ActorUnit.GetActorUnitByNetworkId (netId);
-            if (character == null) return;
-
-        }
-        public void CommandUseEquipmentItem (int netId, int itemRealId) {
-            // TODO: 
-        }
-        public void CommandAcceptMission (int netId, short missionId) {
-            // TODO: 
-        }
-        public void CommandFinishMission (int netId, short missionId) {
-            // TODO: 
-        }
-        public void CommandCancelMission (int netId, short missionId) {
-            // TODO: 
-        }
-        public void CommandTalkToMissionNpc (int netId, short npcId, short missionId) {
-            // TODO: 
-        }
-        public void CommandUpdateSkillLevel (int netId, short skillId, short targetSkillLevel) {
-            // TODO: 
         }
     }
 }

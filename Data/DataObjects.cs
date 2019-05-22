@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Data {
     struct DO_Monster {
         public short m_monsterId;
         public short m_level;
@@ -71,10 +71,12 @@ namespace MirRemakeBackend {
         public ItemQuality m_quality;
         public long m_price;
     }
-    struct DO_ConsumableInfo {
+    struct DO_Consumable {
+        public short m_itemId;
         public DO_Effect m_effect;
     }
-    struct DO_EquipmentInfo {
+    struct DO_Equipment {
+        public short m_itemId;
         public OccupationType m_validOccupation;
         public short m_equipLevelInNeed;
         public EquipmentPosition m_equipPosition;

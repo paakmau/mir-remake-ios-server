@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend {
     class E_EquipmentItem : E_Item {
@@ -7,11 +9,10 @@ namespace MirRemakeBackend {
         public float m_wave;
         public short m_strengthenNum;
         public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_enchantAttr;
-
-        public E_EquipmentItem (long realId, short itemId, DO_EquipmentInfo infoDo, DDO_Equipment ddp) : base (realId, itemId, 1) {
-            m_equipmentAttributeDict = infoDo.m_equipmentAttributeArr;
-            m_strengthenNum = ddp.m_strengthNum;
-            m_enchantAttr = ddp.m_enchantAttr;
+        public void Reset (DE_Item itemDe, DE_Equipment equipmentDe, long realId, short itemId, DDO_Item itemDdo, DDO_Equipment equipDdo) {
+            base.Reset (itemDe, itemDdo);
+            m_strengthenNum = equipDdo.m_strengthNum;
+            m_enchantAttr = equipDdo.m_enchantAttr;
         }
     }
 }

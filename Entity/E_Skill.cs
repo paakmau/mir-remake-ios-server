@@ -1,15 +1,10 @@
-/**
- *Enity，技能实体
- *创建者 fn
- *时间 2019/4/1
- *最后修改者 yuk
- *时间 2019/4/3
- */
-
 using System;
 using System.Collections.Generic;
+using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.DataEntity;
 using UnityEngine;
-namespace MirRemakeBackend {
+
+namespace MirRemakeBackend.Entity {
     class E_Skill {
         private DE_Skill m_skillDe;
         private DE_SkillData m_skillDataDe;

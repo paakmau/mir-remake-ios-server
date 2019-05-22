@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using MirRemakeBackend.Data;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.DataEntity {
     /// <summary>
     /// 数据型Entity的容器  
     /// 地图  

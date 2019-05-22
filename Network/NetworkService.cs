@@ -77,7 +77,7 @@ namespace MirRemakeBackend.Network {
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
             // 分配NetId
-            Messenger.Broadcast ("CommandAddCharacter");
+            Messenger.Broadcast ("CommandAssignNetworkId");
             m_peerWaitForNetworkIdStack.Push (peer);
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {

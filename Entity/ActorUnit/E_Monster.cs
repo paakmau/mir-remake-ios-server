@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.DataEntity;
 using UnityEngine;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     class E_Monster : E_ActorUnit {
-        private DE_Monster m_dataEntity;
+        private DE_Monster m_monsterDe;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
         private MFSM m_mFSM;
         // 技能冷却
@@ -11,14 +13,12 @@ namespace MirRemakeBackend {
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
-        public E_Monster (int networkId, Vector2 pos, DE_Monster de) {
-            m_dataEntity = de;
+        public void Reset (int networkId, Vector2 pos, DE_ActorUnit auDe, DE_Monster mDe) {
+            base.Reset (auDe);
+            m_monsterDe = mDe;
             m_networkId = networkId;
-            m_level = de.m_level;
+            m_level = mDe.m_level;
             m_position = pos;
-            m_mFSM = new MFSM (new MFSMS_AutoMove (this));
-            for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
-                m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Key, de.m_concreteAttributeList[i].Value);
         }
         /// <summary>
         /// 获得自身的随机一个不在冷却的技能

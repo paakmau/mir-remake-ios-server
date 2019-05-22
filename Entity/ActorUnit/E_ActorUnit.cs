@@ -2,8 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
-namespace MirRemakeBackend {
+using MirRemakeBackend.DataEntity;
+
+namespace MirRemakeBackend.Entity {
     abstract class E_ActorUnit {
+        protected DE_ActorUnit m_actorUnitDe;
         public int m_networkId;
         // 单位种类 (玩家, 怪物, NPC随从)
         public abstract ActorUnitType m_ActorUnitType { get; }
@@ -48,7 +51,11 @@ namespace MirRemakeBackend {
         public float m_CoverRadius {
             get { return 5.0f; }
         }
-
+        public virtual void Reset (DE_ActorUnit de) {
+            m_actorUnitDe = de;
+            for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
+                m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Key, de.m_concreteAttributeList[i].Value);
+        }
         private void AttachStatusToAttr (E_Status status) {
             if (status.m_affectConcreteAttributeArr != null) {
                 foreach (var item in status.m_affectConcreteAttributeArr)
