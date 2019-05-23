@@ -1,7 +1,7 @@
+using System.Numerics;
 using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
-using UnityEngine;
 
 namespace MirRemakeBackend.GameLogic {
     partial class GL_BattleSettle : GameLogicBase {
@@ -26,13 +26,8 @@ namespace MirRemakeBackend.GameLogic {
                 m_targetNumber = targetNum;
                 m_castRange = castRange;
             }
-            /// <summary>
-            /// 检查是否在射程之内
-            /// </summary>
-            /// <returns></returns>
-            public abstract bool InRange (Vector2 pos, SkillParam parm);
             public abstract List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm);
-            protected bool TryGetValue (KeyValuePair<SkillAimParamType, float>[] param, SkillAimParamType type, out float value) {
+            protected bool TryGetAimParamValue (KeyValuePair<SkillAimParamType, float>[] param, SkillAimParamType type, out float value) {
                 foreach (var item in param)
                     if (item.Key == type) {
                         value = item.Value;
@@ -47,26 +42,7 @@ namespace MirRemakeBackend.GameLogic {
             // 伤害半径
             public float m_radius;
             public STC_AimCircle (CampType targetCamp, byte targetNum, float castRange, KeyValuePair<SkillAimParamType, float>[] param) : base (targetCamp, targetNum, castRange) {
-                TryGetValue (param, SkillAimParamType.RADIUS, out m_radius);
-            }
-            public override SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget) {
-                if (aimedTarget != null && EM_Camp.s_instance.GetCampType (self, aimedTarget) == m_targetCamp) {
-                    parm.m_target = aimedTarget;
-                    return parm;
-                } else {
-                    // 寻找释放目标
-                    List<E_ActorUnit> targetList = SM_ActorUnit.s_instance.GetActorUnitsInCircleRange (self, self.m_Position, 5, m_targetCamp, 1);
-                    if (targetList.Count == 1) {
-                        parm.m_target = targetList[0];
-                        return parm;
-                    }
-                    return SkillParam.s_invalidSkillParam;
-                }
-            }
-            public override bool InRange (Vector2 pos, SkillParam parm) {
-                if ((parm.m_TargetPosition - pos).magnitude <= m_castRange)
-                    return true;
-                return false;
+                TryGetAimParamValue (param, SkillAimParamType.RADIUS, out m_radius);
             }
             public override List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm) {
                 // TODO: 
@@ -78,15 +54,7 @@ namespace MirRemakeBackend.GameLogic {
             // 伤害半径
             public float m_radius;
             public STC_NotAimSelfCircle (CampType targetCamp, byte targetNum, float castRange, KeyValuePair<SkillAimParamType, float>[] param) : base (targetCamp, targetNum, castRange) {
-                TryGetValue (param, SkillAimParamType.RADIUS, out m_radius);
-            }
-            public override SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
-                if (aimedTarget != null && !parm.m_isValid)
-                    return new SkillParam (m_TargetAimType, null, Vector2.zero, aimedTarget.m_position);
-                return parm;
-            }
-            public override bool InRange (Vector2 pos, SkillParam tarPos) {
-                return true;
+                TryGetAimParamValue (param, SkillAimParamType.RADIUS, out m_radius);
             }
             public override List<E_ActorUnit> GetEffectTargets (E_ActorUnit self, SkillParam parm) {
                 // TODO: 
