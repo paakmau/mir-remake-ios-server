@@ -1,8 +1,13 @@
 using System.Collections.Generic;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     class E_EquipmentRegion {
         Dictionary<EquipmentPosition, E_EquipmentItem> m_equipPositionAndEquipmentDict = new Dictionary<EquipmentPosition, E_EquipmentItem> ();
+        public void Reset (E_Item[] itemArr) {
+            m_equipPositionAndEquipmentDict.Clear ();
+            foreach (var item in itemArr)
+                m_equipPositionAndEquipmentDict.Add (((E_EquipmentItem)item).m_EquipmentPosition, (E_EquipmentItem)item);
+        }
         public List<E_Item> GetAllItemList () {
             List<E_Item> res = new List<E_Item> ();
             var equipmentEn = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     abstract class E_Item {
+        public static E_Item s_emptyItem = new E_EmptyItem ();
         private DE_Item m_itemDe;
         public short m_itemId;
         public virtual ItemType m_Type { get; }

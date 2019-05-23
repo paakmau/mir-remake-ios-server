@@ -2,8 +2,6 @@ using System.Collections.Generic;
 
 namespace MirRemakeBackend.DynamicData {
     interface IDDS_Item {
-        void DeleteItemByRealId (long realId);
-        void UpdateItem (DDO_Item itemDdo);
         List<DDO_Item> GetBagByCharacterId (int charId);
         List<DDO_Item> GetStoreHouseByCharacterId (int charId);
         /// <summary>

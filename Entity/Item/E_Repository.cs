@@ -1,13 +1,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     class E_Repository {
-        private List<E_Item> m_itemList;
+        private List<E_Item> m_itemList = new List<E_Item> ();
         public List<E_Item> m_ItemList { get { return m_itemList; } }
-        public E_Repository (List<E_Item> m_itemList) {
-            this.m_itemList = m_itemList;
+        public void Reset (E_Item[] itemArr) {
+            m_itemList.Clear ();
+            foreach (var item in itemArr)
+                m_itemList.Add (item);
         }
+        /// <summary>
+        /// 从背包移除物品  
+        /// 返回成功移除的量  
+        /// </summary>
         public short RemoveItem (long realId, short num) {
             for (int i=0; i<m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId) {

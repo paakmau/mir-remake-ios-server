@@ -1,7 +1,7 @@
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 
-namespace MirRemakeBackend {
+namespace MirRemakeBackend.Entity {
     class E_ConsumableItem : E_Item {
         public override ItemType m_Type { get { return ItemType.CONSUMABLE; } }
         private DE_Consumable m_consumableDe;

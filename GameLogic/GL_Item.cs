@@ -26,29 +26,40 @@ namespace MirRemakeBackend.GameLogic {
             var eqRegionDdo = m_itemDds.GetEquipmentRegionByCharacterId (charId);
             var equipmentDdo = m_itemDds.GetAllEquipmentByCharacterId (charId);
             EM_Item.s_instance.InitCharacterItem(netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo);
-            // TODO: 读取角色bag, storeHouse, equiped道具, 并发送给Client
+            // TODO: 把bag, storeHouse, equiped道具, 发送给Client
         }
         public void CommandRemoveCharacter (int netId) {
-            // TODO: 移除角色相关的道具, 仓库, 装备区
+            EM_Item.s_instance.RemoveCharacterItem (netId);
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_Item item = EM_Item.s_instance.GetItemByRealId (realId);
-            if (item == null) return;
+            E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
+            if (item == null || bag == null) return;
+            // 从背包中移除该物品
+            if (bag.RemoveItem (realId, 1) != 1) return;
             Messenger.Broadcast<int, E_ConsumableItem> ("NotifyUseConsumable", netId, (E_ConsumableItem) item);
+            // TODO: 考虑数据库修改
             // TODO: 向客户端发送道具消耗
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
-            E_EquipmentItem eq = EM_Item.s_instance.GetItemByRealId (realId) as E_EquipmentItem;
-            E_EquipmentRegion equips = EM_Item.s_instance.GetEquipedByNetworkId (netId);
+            E_EquipmentItem equipment = EM_Item.s_instance.GetItemByRealId (realId) as E_EquipmentItem;
+            E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquipedByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
-            if (eq == null || equips == null || bag == null) return;
+            if (equipment == null || eqRegion == null || bag == null) return;
+            // 从背包中移除该装备
             if (bag.RemoveItem (realId, 1) != 1) return;
-            E_EquipmentItem oriEq = equips.PutOnEquipment (eq);
-            bag.StoreItem (oriEq);
-            if (oriEq != null)
+            // 穿上该装备, 并卸下该位置上原有装备(如果有)
+            E_EquipmentItem oriEq = eqRegion.PutOnEquipment (equipment);
+            // 如果该位置原本非空, 存入背包
+            if (oriEq != null) {
+                bag.StoreItem (oriEq);
+                // 通知装备被卸下
                 Messenger.Broadcast<int, E_EquipmentItem> ("NotifyTakeOffEquipment", netId, oriEq);
-            Messenger.Broadcast<int, E_EquipmentItem> ("NotifyPutOnEquipment", netId, eq);
-            // TODO: 向客户端发送道具移动
+            }
+            // 通知装备穿上
+            Messenger.Broadcast<int, E_EquipmentItem> ("NotifyPutOnEquipment", netId, equipment);
+            // TODO: 考虑数据库修改
+            // TODO: 向客户端发送装备更替
         }
     }
 }
