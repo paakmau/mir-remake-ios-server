@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MirRemakeBackend.DynamicData {
@@ -17,7 +18,7 @@ namespace MirRemakeBackend.DynamicData {
         /// 装备附魔的属性
         /// 可以为null
         /// </summary>
-        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_enchantAttr;
+        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_enchantAttr;
         /// <summary>
         /// 镶嵌的宝石Id列表
         /// </summary>

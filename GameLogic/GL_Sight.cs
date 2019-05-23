@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
-using UnityEngine;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_Sight : GameLogicBase {
@@ -10,7 +9,7 @@ namespace MirRemakeBackend.GameLogic {
         /// 每一帧计算的视野数
         /// </summary>
         private const int c_handleSightNumPerTick = 10;
-        private const float c_sqrSightRadius = 10000f;
+        private const float c_sightRadius = 100f;
         public GL_Sight (INetworkService netService) : base (netService) {
             Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
             Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
@@ -29,7 +28,7 @@ namespace MirRemakeBackend.GameLogic {
                 var unitEn = EM_Sight.s_instance.GetActorUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
                     if (unitEn.Current == charObj) continue;
-                    if ((charObj.m_position - unitEn.Current.m_position).sqrMagnitude > c_sqrSightRadius) continue;
+                    if ((charObj.m_position - unitEn.Current.m_position).LengthSquared() > c_sightRadius * c_sightRadius) continue;
                     charSight.Add (unitEn.Current);
                 }
             }

@@ -4,14 +4,15 @@ namespace MirRemakeBackend.DynamicData {
     interface IDDS_Item {
         void DeleteItemByRealId (long realId);
         void UpdateItem (DDO_Item itemDdo);
-        DDO_Equipment GetEquipmentByRealId (long realId);
-        List<DDO_Item> GetAllItemInBagByCharacterId (int charId);
-        List<DDO_Item> GetAllItemInStoreHouseByCharacterId (int charId);
+        List<DDO_Item> GetBagByCharacterId (int charId);
+        List<DDO_Item> GetStoreHouseByCharacterId (int charId);
         /// <summary>
-        /// 获取角色身上的装备
+        /// 获取角色身上的 (装备区内) 装备
         /// </summary>
-        /// <param name="characterId"></param>
-        /// <returns></returns>
-        List<DDO_Item> GetEquipedByCharacterId (int characterId);
+        List<DDO_Item> GetEquipmentRegionByCharacterId (int charId);
+        /// <summary>
+        /// 获取属于该角色的所有装备 (包括背包仓库和装备区)
+        /// </summary>
+        List<DDO_Equipment> GetAllEquipmentByCharacterId (int charId);
     }
 }

@@ -22,6 +22,11 @@ namespace MirRemakeBackend.DataEntity {
             foreach (var equipDo in equipmentDoArr)
                 m_equipmentDict.Add (equipDo.m_itemId, new DE_Equipment(equipDo));
         }
+        public DE_Item GetItemById (short itemId) {
+            DE_Item res = null;
+            m_itemDict.TryGetValue (itemId, out res);
+            return res;
+        }
         public DE_Consumable GetConsumableById (short itemId) {
             DE_Consumable res = null;
             m_consumableDict.TryGetValue (itemId, out res);

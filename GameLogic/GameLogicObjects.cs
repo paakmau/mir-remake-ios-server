@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
@@ -12,7 +13,7 @@ namespace MirRemakeBackend.GameLogic {
         public float m_criticalRate;
         public int m_deltaHp;
         public int m_deltaMp;
-        public KeyValuePair<short, KeyValuePair<float, float>>[] m_statusIdAndValueAndTimeArray;
+        public ValueTuple<short, ValueTuple<float, float>>[] m_statusIdAndValueAndTimeArray;
         public int m_StatusAttachNum { get { return m_statusIdAndValueAndTimeArray.Length; } }
         public Effect (DE_Effect effectDe, int casterNetId) {
             m_casterNetworkId = casterNetId;
@@ -22,7 +23,7 @@ namespace MirRemakeBackend.GameLogic {
             m_deltaHp = effectDe.m_deltaHP;
             m_deltaMp = effectDe.m_deltaMP;
             List<int> res = new List<int> ();
-            m_statusIdAndValueAndTimeArray = new KeyValuePair<short, KeyValuePair<float, float>>[effectDe.m_statusIdAndValueAndTimeList.Count];
+            m_statusIdAndValueAndTimeArray = new ValueTuple<short, ValueTuple<float, float>>[effectDe.m_statusIdAndValueAndTimeList.Count];
             for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++)
                 m_statusIdAndValueAndTimeArray[i] = effectDe.m_statusIdAndValueAndTimeList[i];
         }

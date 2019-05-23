@@ -25,7 +25,7 @@ namespace MirRemakeBackend.GameLogic {
         class SPG_AIM_CIRCLE : SkillParamGeneratorBase {
             public override SkillAimType m_AimType { get { return SkillAimType.AIM_CIRCLE; } }
             public override SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget) {
-                return new SkillParam (m_AimType, aimedTarget, Vector2);
+                return new SkillParam (m_AimType, aimedTarget, Vector2.Zero, Vector2.Zero);
             }
         }
         public GL_MonsterAction (INetworkService netService) : base (netService) { }

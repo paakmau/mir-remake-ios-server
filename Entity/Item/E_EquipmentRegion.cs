@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace MirRemakeBackend {
     class E_EquipmentRegion {
@@ -18,6 +17,11 @@ namespace MirRemakeBackend {
         public E_EquipmentItem GetEquipmentByEquipPosition (EquipmentPosition ePos) {
             E_EquipmentItem res = null;
             m_equipPositionAndEquipmentDict.TryGetValue (ePos, out res);
+            return res;
+        }
+        public E_EquipmentItem PutOnEquipment (E_EquipmentItem eq) {
+            E_EquipmentItem res = GetEquipmentByEquipPosition (eq.m_EquipmentPosition);
+            m_equipPositionAndEquipmentDict[eq.m_EquipmentPosition] = res;
             return res;
         }
     }
