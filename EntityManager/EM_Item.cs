@@ -13,7 +13,7 @@ namespace MirRemakeBackend.EntityManager {
         private Dictionary<long, E_Item> m_realIdAndItemDict = new Dictionary<long, E_Item> ();
         private Dictionary<int, E_Repository> m_networkIdAndBagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
-        private Dictionary <int, E_EquipmentRegion> m_networkIdAndEquipmentRegion = new Dictionary<int, E_EquipmentRegion> ();
+        private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegion = new Dictionary<int, E_EquipmentRegion> ();
         public E_Item GetItemByRealId (long realId) {
             E_Item res = null;
             m_realIdAndItemDict.TryGetValue (realId, out res);
@@ -42,7 +42,7 @@ namespace MirRemakeBackend.EntityManager {
             m_realIdAndItemDict.Remove (realId);
         }
         private void UnloadItemByItemList (List<E_Item> itemList) {
-            for (int i=0; i<itemList.Count; i++)
+            for (int i = 0; i < itemList.Count; i++)
                 m_realIdAndItemDict.Remove (itemList[i].m_realId);
         }
         public void LoadItem (E_Item item) {

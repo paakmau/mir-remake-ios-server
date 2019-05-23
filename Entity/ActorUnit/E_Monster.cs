@@ -1,7 +1,7 @@
+using System.Numerics;
 using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.DataEntity;
-using UnityEngine;
 
 namespace MirRemakeBackend.Entity {
     class E_Monster : E_ActorUnit {

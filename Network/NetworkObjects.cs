@@ -1,5 +1,5 @@
+using System.Numerics;
 using LiteNetLib.Utils;
-using UnityEngine;
 
 namespace MirRemakeBackend.Network {
     struct NO_SkillParam {

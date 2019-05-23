@@ -1,31 +1,10 @@
 using System.Collections.Generic;
-using UnityEngine;
-
+using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
+using UnityEngine;
 
 namespace MirRemakeBackend.GameLogic {
     partial class GL_BattleSettle : GameLogicBase {
-        struct SkillParam {
-            public static SkillParam s_invalidSkillParam = new SkillParam () { m_isValid = false };
-            public SkillAimType m_aimType;
-            /// <summary>
-            /// 技能的选定作用目标
-            /// </summary>
-            public E_ActorUnit m_target;
-            public Vector2 m_direction;
-            public Vector2 m_position;
-            public bool m_isValid;
-            public SkillParam (SkillAimType aimType, E_ActorUnit target, Vector2 direciton, Vector2 position) {
-                m_aimType = aimType;
-                m_target = target;
-                m_direction = direciton;
-                m_position = position;
-                m_isValid = true;
-            }
-            public NO_SkillParam GetNo () {
-                return new NO_SkillParam (m_target.m_networkId, m_direction, m_position);
-            }
-        }
         /// <summary>
         /// 技能目标选择器  
         /// 目标阵营: 友方, 敌方  
@@ -47,12 +26,6 @@ namespace MirRemakeBackend.GameLogic {
                 m_targetNumber = targetNum;
                 m_castRange = castRange;
             }
-            /// <summary>
-            /// 完善技能参数
-            /// 例如自动选择最近的目标等, 看甲方
-            /// </summary>
-            /// <returns></returns>
-            public abstract SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget);
             /// <summary>
             /// 检查是否在射程之内
             /// </summary>
@@ -76,9 +49,8 @@ namespace MirRemakeBackend.GameLogic {
             public STC_AimCircle (CampType targetCamp, byte targetNum, float castRange, KeyValuePair<SkillAimParamType, float>[] param) : base (targetCamp, targetNum, castRange) {
                 TryGetValue (param, SkillAimParamType.RADIUS, out m_radius);
             }
-            public override SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget) {
-                // 已锁定目标且阵营匹配
-                if (aimedTarget != null && SM_ActorUnit.s_instance.CheckCampMatch (self, aimedTarget, m_targetCamp)) {
+            public override SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget) {
+                if (aimedTarget != null && EM_Camp.s_instance.GetCampType (self, aimedTarget) == m_targetCamp) {
                     parm.m_target = aimedTarget;
                     return parm;
                 } else {
@@ -108,7 +80,7 @@ namespace MirRemakeBackend.GameLogic {
             public STC_NotAimSelfCircle (CampType targetCamp, byte targetNum, float castRange, KeyValuePair<SkillAimParamType, float>[] param) : base (targetCamp, targetNum, castRange) {
                 TryGetValue (param, SkillAimParamType.RADIUS, out m_radius);
             }
-            public override SkillParam CompleteSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
+            public override SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget, SkillParam parm) {
                 if (aimedTarget != null && !parm.m_isValid)
                     return new SkillParam (m_TargetAimType, null, Vector2.zero, aimedTarget.m_position);
                 return parm;

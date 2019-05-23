@@ -1,18 +1,19 @@
+using System;
 using System.Collections.Generic;
 
 namespace MirRemakeBackend.Data {
     struct DO_Monster {
         public short m_monsterId;
         public short m_level;
-        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_attrArr;
-        public KeyValuePair<short, short>[] m_skillIdAndLevelArr;
+        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_attrArr;
+        public ValueTuple<short, short>[] m_skillIdAndLevelArr;
         public short[] m_dropItemIdArr;
     }
     struct DO_Character {
         public OccupationType m_occupation;
         public short m_level;
-        public KeyValuePair<ActorUnitMainAttributeType, int>[] m_mainAttributeArr;
-        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_concreteAttributeArr;
+        public ValueTuple<ActorUnitMainAttributeType, int>[] m_mainAttributeArr;
+        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_concreteAttributeArr;
         public short m_mainAttrPointNumber;
         public int m_upgradeExperienceInNeed;
     }
@@ -46,7 +47,7 @@ namespace MirRemakeBackend.Data {
         /// <summary>
         /// 技能伤害判定的范围参数
         /// </summary>
-        public KeyValuePair<SkillAimParamType, float>[] m_damageParamArr;
+        public ValueTuple<SkillAimParamType, float>[] m_damageParamArr;
         public DO_Effect m_skillEffect;
     }
     struct DO_Effect {
@@ -56,12 +57,12 @@ namespace MirRemakeBackend.Data {
         public float m_criticalRate;
         public int m_deltaHP;
         public int m_deltaMP;
-        public KeyValuePair<short, KeyValuePair<float, float>>[] m_statusIdAndValueAndTimeArr;
+        public ValueTuple<short, ValueTuple<float, float>>[] m_statusIdAndValueAndTimeArr;
     }
     struct DO_Status {
         public short m_statusId;
         public StatusType m_type;
-        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_affectAttributeArr;
+        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_affectAttributeArr;
         public ActorUnitSpecialAttributeType[] m_specialAttributeArr;
     }
     struct DO_Item {
@@ -80,7 +81,7 @@ namespace MirRemakeBackend.Data {
         public OccupationType m_validOccupation;
         public short m_equipLevelInNeed;
         public EquipmentPosition m_equipPosition;
-        public KeyValuePair<ActorUnitConcreteAttributeType, int>[] m_equipmentAttributeArr;
+        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_equipmentAttributeArr;
         public float m_attrWave;
     }
     struct DO_Mission {
@@ -95,9 +96,9 @@ namespace MirRemakeBackend.Data {
         public short m_levelInNeed;
         public int[] m_fatherMissionIdArr;
         public int[] m_childrenMissions;
-        public KeyValuePair<MissionTargetType, KeyValuePair<short, int>>[] m_missionTarget;
+        public ValueTuple<MissionTargetType, ValueTuple<short, int>>[] m_missionTarget;
         public int m_bonusMoney;
         public int m_bonusExperiences;
-        public KeyValuePair<short, short>[] m_bonusItemIdAndNumList;
+        public ValueTuple<short, short>[] m_bonusItemIdAndNumList;
     }
 }

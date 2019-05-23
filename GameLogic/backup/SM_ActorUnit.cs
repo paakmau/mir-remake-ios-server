@@ -109,54 +109,6 @@ namespace MirRemakeBackend {
                 m_networkService.SendServerCommand (new SC_SetAllHPAndMP (new List<int> { selfNetId }, unitNetIdList, HPMPList));
             }
         }
-        /// <summary>
-        /// 在新的玩家连接到服务器后调用
-        /// 为它分配并返回一个NetworkId
-        /// </summary>
-        /// <returns></returns>
-        public int CommandAssignNetworkId () {
-            return NetworkIdManager.GetNewActorUnitNetworkId ();
-        }
-        public void CommandRemoveCharacter (int netId) {
-            NetworkIdManager.RemoveActorUnitNetworkId (netId);
-            EM_ActorUnit.UnloadActorUnitByNetworkId (netId);
-            m_characterNetIdSet.Remove (netId);
-        }
-        public void CommandInitCharacterId (int netId, int charId) {
-            DDO_Character charDdo = m_characterDynamicDataService.GetCharacterById (charId);
-            DO_Character charDo = m_characterDataService.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level);
-            List<E_Skill> skillList = m_skillSceneManager.InitCharacterSkill (netId, charId);
-            List<E_Item> itemInBagList, itemInStoreHouseList;
-            List<E_Item> equipedList;
-            m_itemSceneManager.InitCharacterItems (netId, charId, out itemInBagList, out itemInStoreHouseList, out equipedList);
-            E_Character newChar = new E_Character (netId, charId, charDo, charDdo);
-            EM_ActorUnit.LoadActorUnit (newChar);
-            m_characterNetIdSet.Add (netId);
-            short[] skillIdArr = new short[skillList.Count];
-            short[] skillLvArr = new short[skillList.Count];
-            int[] skillMasterlyArr = new int[skillList.Count];
-            for (int i = 0; i < skillList.Count; i++) {
-                skillIdArr[i] = skillList[i].m_id;
-                skillLvArr[i] = skillList[i].m_level;
-                skillMasterlyArr[i] = skillList[i].m_masterly;
-            }
-
-            m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> { netId }, newChar.m_Level, newChar.m_Experience, skillIdArr, skillLvArr, skillMasterlyArr));
-        }
-        public void CommandSetPosition (int netId, Vector2 pos) {
-            E_ActorUnit unit = EM_ActorUnit.GetActorUnitByNetworkId (netId);
-            if (unit == null) return;
-            unit.m_Position = pos;
-        }
-        public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo) {
-            E_ActorUnit character = EM_ActorUnit.GetActorUnitByNetworkId (netId);
-            if (character == null) return;
-            E_Skill skill = m_skillSceneManager.GetSkillByIdAndNetworkId (skillId, netId);
-            E_ActorUnit target = EM_ActorUnit.GetActorUnitByNetworkId (parmNo.m_targetNetworkId);
-            SkillParam parm = new SkillParam (skill.m_AimType, target, parmNo.m_direction, parmNo.m_position);
-            ((E_Character) character).CastSkillBegin (skill, parm);
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetCharacterInSightIdList (netId, false), netId, skillId, parmNo));
-        }
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (GetCharacterInSightIdList (netId, false), netId));
         }

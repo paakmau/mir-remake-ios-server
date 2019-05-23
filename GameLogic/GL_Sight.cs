@@ -12,7 +12,8 @@ namespace MirRemakeBackend.GameLogic {
         private const int c_handleSightNumPerTick = 10;
         private const float c_sqrSightRadius = 10000f;
         public GL_Sight (INetworkService netService) : base (netService) {
-            Messenger.AddListener<int> ("NotifyInitCharacterSight", NotifyInitCharacterSight);
+            Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
+            Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
             Messenger.AddListener<int> ("NotifyActorUnitDisappear", NotifyActorUnitDisappear);
             Messenger.AddListener<E_ActorUnit> ("NotifyActorUnitRespawn", NotifyActorUnitRespawn);
         }
@@ -34,10 +35,10 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () { }
-        public void NotifyInitCharacterSight (int netId) {
+        public void CommandInitCharacterId (int netId, int charId) {
             EM_Sight.s_instance.InitCharacterSight (netId);
         }
-        public void NotifyRemoveCharacter (int netId) {
+        public void CommandRemoveCharacter (int netId) {
             EM_Sight.s_instance.RemoveCharacterSight (netId);
         }
         public void NotifyActorUnitDisappear (int netId) {

@@ -8,7 +8,7 @@ namespace MirRemakeBackend.Network {
         public void Execute(NetDataReader reader, int netId) {
             short skillId = reader.GetShort ();
             NO_SkillParam skillParm = reader.GetSkillParam ();
-            SM_ActorUnit.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm);
+            Messenger.Broadcast<int, short, NO_SkillParam> ("CommandApplyCastSkillBegin", netId, skillId, skillParm);
         }
     }
 }

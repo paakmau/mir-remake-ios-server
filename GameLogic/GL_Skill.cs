@@ -13,6 +13,7 @@ namespace MirRemakeBackend.GameLogic {
         public GL_Skill (IDDS_Skill skillDds, INetworkService netService) : base (netService) {
             m_skillDds = skillDds;
             Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
+            Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -29,6 +30,9 @@ namespace MirRemakeBackend.GameLogic {
                 skillMasterlyArr[i] = skillArr[i].m_masterly;
             }
             // TODO: 发送给客户端
+        }
+        public void CommandRemoveCharacter (int netId) {
+            EM_Skill.s_instance.RemoveCharacterSkill (netId);
         }
     }
 }

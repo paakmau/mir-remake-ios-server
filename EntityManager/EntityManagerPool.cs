@@ -33,6 +33,6 @@ namespace MirRemakeBackend.EntityManager {
         public static EntityManagerPool<E_Character> s_characterPool = new EntityManagerPool<E_Character> (c_characterPoolSize);
         public static EntityManagerPool<E_Skill> s_skillPool = new EntityManagerPool<E_Skill> (c_skillPoolSize);
         public static EntityManagerPool<E_ConsumableItem> s_consumableItemPool = new EntityManagerPool<E_ConsumableItem> (c_consumableItemPoolSize);
-        public static EntityManagerPool<E_EquipmentItem> s_EquipmentItemPool = new EntityManagerPool<E_EquipmentItem> (c_equipmentItemPoolSize); 
+        public static EntityManagerPool<E_EquipmentItem> s_EquipmentItemPool = new EntityManagerPool<E_EquipmentItem> (c_equipmentItemPoolSize);
     }
 }

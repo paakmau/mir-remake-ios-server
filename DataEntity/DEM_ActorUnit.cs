@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
-using UnityEngine;
 
 namespace MirRemakeBackend.DataEntity {
     /// <summary>
     /// 数据型Entity的容器  
-    /// 怪物  
+    /// 怪物与角色  
     /// </summary>
     class DEM_ActorUnit {
         public static DEM_ActorUnit s_instance;

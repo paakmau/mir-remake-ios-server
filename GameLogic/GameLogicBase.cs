@@ -1,6 +1,5 @@
 using MirRemakeBackend.Network;
 
-
 namespace MirRemakeBackend.GameLogic {
     abstract class GameLogicBase {
         protected INetworkService m_networkService;

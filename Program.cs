@@ -3,6 +3,8 @@ using System.Text;
 using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using MirRemakeBackend.Data;
+using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.GameLogic;
@@ -54,8 +56,7 @@ namespace MirRemakeBackend {
             IDS_Skill skillDs = null;
             IDS_Item itemDs = null;
             DEM_Map.s_instance = new DEM_Map (mapDs);
-            DEM_Character.s_instance = new DEM_Character (charDs);
-            DEM_Monster.s_instance = new DEM_Monster (monsterDs);
+            DEM_ActorUnit.s_instance = new DEM_ActorUnit (monsterDs, charDs);
             DEM_Status.s_instance = new DEM_Status (statusDs);
             DEM_Skill.s_instance = new DEM_Skill (skillDs);
             DEM_Item.s_instance = new DEM_Item (itemDs);
@@ -77,12 +78,12 @@ namespace MirRemakeBackend {
         }
         static void InitGameLogic () {
             s_gameLogicArr = new GameLogicBase[] {
-                new GL_Login (s_characterDds, s_networkService),
+                new GL_Character (s_characterDds, s_networkService),
+                new GL_Item (s_itemDds, s_networkService),
+                new GL_Skill (s_skillDds, s_networkService),
                 new GL_CharacterAction (s_networkService),
                 new GL_MonsterAction (s_networkService),
                 new GL_BattleSettle (s_networkService),
-                new GL_Item (s_itemDds, s_networkService),
-                new GL_Skill (s_networkService),
                 new GL_Sight (s_networkService)
             };
         }

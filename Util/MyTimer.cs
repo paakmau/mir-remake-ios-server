@@ -44,6 +44,9 @@ namespace MirRemakeBackend {
         public static void Tick (float dT) {
             s_timer.Tick (dT);
         }
+        /// <summary>
+        /// 判断time是否已经达到
+        /// </summary>
         public static bool CheckTimeUp (Time time) {
             return s_CurTime >= time;
         }

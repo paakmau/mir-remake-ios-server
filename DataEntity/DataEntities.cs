@@ -1,32 +1,32 @@
+using System;
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
-using UnityEngine;
 
 namespace MirRemakeBackend.DataEntity {
     class DE_ActorUnit {
-        public readonly IReadOnlyList<KeyValuePair<ActorUnitConcreteAttributeType, int>> m_concreteAttributeList;
-        private DE_ActorUnit (KeyValuePair<ActorUnitConcreteAttributeType, int>[] attrArr) {
-            m_concreteAttributeList = new List<KeyValuePair<ActorUnitConcreteAttributeType, int>> (attrArr);
+        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_concreteAttributeList;
+        private DE_ActorUnit (ValueTuple<ActorUnitConcreteAttributeType, int>[] attrArr) {
+            m_concreteAttributeList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (attrArr);
         }
         public DE_ActorUnit (DO_Monster monster) : this (monster.m_attrArr) { }
         public DE_ActorUnit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }
     }
     class DE_Monster {
         public readonly short m_level;
-        public readonly IReadOnlyList<KeyValuePair<short, short>> m_skillIdAndLevelList;
+        public readonly IReadOnlyList<ValueTuple<short, short>> m_skillIdAndLevelList;
         public readonly IReadOnlyList<short> m_dropItemIdList;
         public DE_Monster (DO_Monster monsterDo) {
-            m_skillIdAndLevelList = new List<KeyValuePair<short, short>> (monsterDo.m_skillIdAndLevelArr);
+            m_skillIdAndLevelList = new List<ValueTuple<short, short>> (monsterDo.m_skillIdAndLevelArr);
             m_dropItemIdList = new List<short> (monsterDo.m_dropItemIdArr);
         }
     }
     class DE_Character {
         public readonly int m_upgradeExperienceInNeed;
-        public readonly IReadOnlyList<KeyValuePair<ActorUnitMainAttributeType, int>> m_mainAttributeList;
+        public readonly IReadOnlyList<ValueTuple<ActorUnitMainAttributeType, int>> m_mainAttributeList;
         public readonly int m_mainAttributePointNum;
         public DE_Character (DO_Character charDo) {
             m_upgradeExperienceInNeed = charDo.m_upgradeExperienceInNeed;
-            m_mainAttributeList = new List<KeyValuePair<ActorUnitMainAttributeType, int>> (charDo.m_mainAttributeArr);
+            m_mainAttributeList = new List<ValueTuple<ActorUnitMainAttributeType, int>> (charDo.m_mainAttributeArr);
             m_mainAttributePointNum = charDo.m_mainAttrPointNumber;
         }
     }
@@ -44,7 +44,7 @@ namespace MirRemakeBackend.DataEntity {
         /// <summary>
         /// 技能伤害判定的范围参数
         /// </summary>
-        public readonly IReadOnlyList<KeyValuePair<SkillAimParamType, float>> m_damageParamList;
+        public readonly IReadOnlyList<ValueTuple<SkillAimParamType, float>> m_damageParamList;
         public readonly DE_Effect m_skillEffect;
         public DE_SkillData (DO_SkillData dataObj) {
             m_upgradeCharacterLevelInNeed = dataObj.m_upgradeCharacterLevelInNeed;
@@ -57,7 +57,7 @@ namespace MirRemakeBackend.DataEntity {
             m_coolDownTime = dataObj.m_coolDownTime;
             m_targetNumber = dataObj.m_targetNumber;
             m_castRange = dataObj.m_castRange;
-            m_damageParamList = new List<KeyValuePair<SkillAimParamType, float>> (dataObj.m_damageParamArr);
+            m_damageParamList = new List<ValueTuple<SkillAimParamType, float>> (dataObj.m_damageParamArr);
             m_skillEffect = new DE_Effect (dataObj.m_skillEffect);
         }
     }
@@ -85,7 +85,7 @@ namespace MirRemakeBackend.DataEntity {
         public readonly float m_criticalRate;
         public readonly int m_deltaHP;
         public readonly int m_deltaMP;
-        public readonly IReadOnlyList<KeyValuePair<short, KeyValuePair<float, float>>> m_statusIdAndValueAndTimeList;
+        public readonly IReadOnlyList<ValueTuple<short, ValueTuple<float, float>>> m_statusIdAndValueAndTimeList;
         public DE_Effect (DO_Effect effectDo) {
             m_type = effectDo.m_type;
             m_animId = effectDo.m_animId;
@@ -93,16 +93,16 @@ namespace MirRemakeBackend.DataEntity {
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHP = effectDo.m_deltaHP;
             m_deltaMP = effectDo.m_deltaMP;
-            m_statusIdAndValueAndTimeList = new List<KeyValuePair<short, KeyValuePair<float, float>>> (effectDo.m_statusIdAndValueAndTimeArr);
+            m_statusIdAndValueAndTimeList = new List<ValueTuple<short, ValueTuple<float, float>>> (effectDo.m_statusIdAndValueAndTimeArr);
         }
     }
     class DE_Status {
         public readonly StatusType m_type;
-        public readonly IReadOnlyList<KeyValuePair<ActorUnitConcreteAttributeType, int>> m_affectAttributeList;
+        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_affectAttributeList;
         public readonly IReadOnlyList<ActorUnitSpecialAttributeType> m_specialAttributeList;
         public DE_Status (DO_Status statusDo) {
             m_type = statusDo.m_type;
-            m_affectAttributeList = new List<KeyValuePair<ActorUnitConcreteAttributeType, int>> (statusDo.m_affectAttributeArr);
+            m_affectAttributeList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (statusDo.m_affectAttributeArr);
             m_specialAttributeList = new List<ActorUnitSpecialAttributeType> (statusDo.m_specialAttributeArr);
         }
     }
@@ -128,13 +128,13 @@ namespace MirRemakeBackend.DataEntity {
         public readonly OccupationType m_validOccupation;
         public readonly short m_equipLevelInNeed;
         public readonly EquipmentPosition m_equipPosition;
-        public readonly IReadOnlyList<KeyValuePair<ActorUnitConcreteAttributeType, int>> m_attrList;
+        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_attrList;
         public readonly float m_attrWave;
         public DE_Equipment (DO_Equipment equipDo) {
             m_validOccupation = equipDo.m_validOccupation;
             m_equipLevelInNeed = equipDo.m_equipLevelInNeed;
             m_equipPosition = equipDo.m_equipPosition;
-            m_attrList = new List<KeyValuePair<ActorUnitConcreteAttributeType, int>> (equipDo.m_equipmentAttributeArr);
+            m_attrList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (equipDo.m_equipmentAttributeArr);
             m_attrWave = equipDo.m_attrWave;
         }
     }
