@@ -55,9 +55,9 @@ namespace MirRemakeBackend.Data {
         public short m_animId;
         public float m_hitRate;
         public float m_criticalRate;
-        public int m_deltaHP;
-        public int m_deltaMP;
-        public ValueTuple<short, ValueTuple<float, float>>[] m_statusIdAndValueAndTimeArr;
+        public int m_deltaHp;
+        public int m_deltaMp;
+        public ValueTuple<short, float, float>[] m_statusIdAndValueAndTimeArr;
     }
     struct DO_Status {
         public short m_statusId;

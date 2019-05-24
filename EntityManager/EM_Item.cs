@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.EntityManager {
     /// <summary>
     /// 管理游戏场景中出现的所有道具
     /// 范围: 仓库, 背包, 地面
     /// </summary>
-    class EM_Item {
+    class EM_Item : EntityManagerBase {
         public static EM_Item s_instance;
         private Dictionary<long, E_Item> m_realIdAndItemDict = new Dictionary<long, E_Item> ();
         private Dictionary<int, E_Repository> m_networkIdAndBagDict = new Dictionary<int, E_Repository> ();
@@ -48,9 +49,9 @@ namespace MirRemakeBackend.EntityManager {
             for (int i = 0; i < allEquipmentDdoList.Count; i++)
                 eqDdoDict.Add (allEquipmentDdoList[i].m_realId, allEquipmentDdoList[i]);
             // 初始化背包, 仓库, 装备区
-            E_Repository bag = EntityManagerPoolInstance.s_repositoryPool.GetInstance ();
-            E_Repository storeHouse = EntityManagerPoolInstance.s_repositoryPool.GetInstance ();
-            E_EquipmentRegion eqRegion = EntityManagerPoolInstance.s_equipmentRegionPool.GetInstance ();
+            E_Repository bag = s_entityPool.m_repositoryPool.GetInstance ();
+            E_Repository storeHouse = s_entityPool.m_repositoryPool.GetInstance ();
+            E_EquipmentRegion eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
             E_Item[] itemInBag = new E_Item[bagDdo.Count];
             E_Item[] itemInStoreHouse = new E_Item[storeHouseDdo.Count];
             E_Item[] itemEquiped = new E_Item[equipedDdo.Count];
@@ -82,17 +83,17 @@ namespace MirRemakeBackend.EntityManager {
                 E_Item item = null;
                 switch (itemDe.m_type) {
                     case ItemType.CONSUMABLE:
-                        item = EntityManagerPoolInstance.s_consumableItemPool.GetInstance ();
+                        item = s_entityPool.m_consumableItemPool.GetInstance ();
                         ((E_ConsumableItem) item).Reset (itemDe, itemDdo);
                         break;
                     case ItemType.EQUIPMENT:
-                        item = EntityManagerPoolInstance.s_equipmentItemPool.GetInstance ();
+                        item = s_entityPool.m_equipmentItemPool.GetInstance ();
                         DE_Equipment eqDe = DEM_Item.s_instance.GetEquipmentById (itemId);
                         DDO_Equipment eqDdo = eqDdoDict[realId];
                         ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
                         break;
                     case ItemType.MATERIAL:
-                        item = EntityManagerPoolInstance.s_materialItemPool.GetInstance ();
+                        item = s_entityPool.m_materialItemPool.GetInstance ();
                         ((E_MaterialItem) item).Reset (itemDe, itemDdo);
                         break;
                 }
@@ -106,9 +107,9 @@ namespace MirRemakeBackend.EntityManager {
             m_networkIdAndBagDict.Remove (netId);
             m_networkIdAndStoreHouseDict.Remove (netId);
             m_networkIdAndEquipmentRegionDict.Remove (netId);
-            EntityManagerPoolInstance.s_repositoryPool.RecycleInstance (bag);
-            EntityManagerPoolInstance.s_repositoryPool.RecycleInstance (storeHouse);
-            EntityManagerPoolInstance.s_equipmentRegionPool.RecycleInstance (equiped);
+            s_entityPool.m_repositoryPool.RecycleInstance (bag);
+            s_entityPool.m_repositoryPool.RecycleInstance (storeHouse);
+            s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);
             UnloadItemByItemList (bag.m_ItemList);
             UnloadItemByItemList (storeHouse.m_ItemList);
             UnloadItemByItemList (equiped.GetAllItemList ());

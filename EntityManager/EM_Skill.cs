@@ -9,7 +9,7 @@ namespace MirRemakeBackend.EntityManager {
     /// 索引Character的所学技能  
     /// 索引Monster的技能  
     /// </summary>
-    class EM_Skill {
+    class EM_Skill : EntityManagerBase {
         public static EM_Skill s_instance;
         private Dictionary<int, Dictionary<short, E_Skill>> m_networkIdAndCharacterSkillDict = new Dictionary<int, Dictionary<short, E_Skill>> ();
         private Dictionary<short, KeyValuePair<DE_Skill, DE_SkillData>[]> m_monsterIdAndSKillListDict = new Dictionary<short, KeyValuePair<DE_Skill, DE_SkillData>[]> ();
@@ -37,7 +37,7 @@ namespace MirRemakeBackend.EntityManager {
                 DE_SkillData dataDe;
                 if (!DEM_Skill.s_instance.GetSkillByIdAndLevel (ddoList[i].m_skillId, ddoList[i].m_skillLevel, out de, out dataDe))
                     continue;
-                E_Skill skillObj = EntityManagerPoolInstance.s_skillPool.GetInstance ();
+                E_Skill skillObj = s_entityPool.m_skillPool.GetInstance ();
                 skillObj.Reset (de, dataDe, ddoList[i]);
                 res[i] = skillObj;
             }

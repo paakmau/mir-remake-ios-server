@@ -1,8 +1,5 @@
-
-using UnityEngine;
-using System.Collections.Generic;
 using System;
-
+using System.Collections.Generic;
 
 namespace MirRemakeBackend.Entity {
     class E_Mission {

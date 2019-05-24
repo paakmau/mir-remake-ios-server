@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Random = System.Random;
+using MirRemakeBackend.Util;
+using MirRemakeBackend.Entity;
 using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend.Entity {
@@ -54,7 +55,7 @@ namespace MirRemakeBackend.Entity {
         public virtual void Reset (DE_ActorUnit de) {
             m_actorUnitDe = de;
             for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
-                m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Key, de.m_concreteAttributeList[i].Value);
+                m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Item1, de.m_concreteAttributeList[i].Item2);
         }
         private void AttachStatusToAttr (E_Status status) {
             if (status.m_affectConcreteAttributeArr != null) {
@@ -102,8 +103,8 @@ namespace MirRemakeBackend.Entity {
                 deltaTimeAfterLastSecond -= 1.0f;
                 int newHP = m_CurHP + m_DeltaHPPerSecond;
                 int newMP = m_CurMP + m_DeltaMPPerSecond;
-                m_CurHP = Mathf.Max (Mathf.Min (newHP, m_MaxHP), 0);
-                m_CurMP = Mathf.Max (Mathf.Min (newMP, m_MaxMP), 0);
+                m_CurHP = Math.Max (Math.Min (newHP, m_MaxHP), 0);
+                m_CurMP = Math.Max (Math.Min (newMP, m_MaxMP), 0);
             }
 
             if (m_IsDead)

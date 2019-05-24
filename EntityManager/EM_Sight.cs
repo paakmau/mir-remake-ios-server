@@ -6,7 +6,7 @@ namespace MirRemakeBackend.EntityManager {
     /// 管理场景中Character的视野信息  
     /// 存放场景中所有能够显示的单位  
     /// </summary>
-    class EM_Sight {
+    class EM_Sight : EntityManagerBase {
         public static EM_Sight s_instance;
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitVisibleDict = new Dictionary<int, E_ActorUnit> ();
         /// <summary>
@@ -22,7 +22,7 @@ namespace MirRemakeBackend.EntityManager {
         /// <returns></returns>
         private LinkedList<int> m_unitNetworkIdLinkedList = new LinkedList<int> ();
         /// <summary>
-        /// 根据NetId获取他的视野内的单位  
+        /// 根据NetId获取他的视野内的单位 (包括自身)  
         /// 可以对其视野进行读写  
         /// </summary>
         public List<E_ActorUnit> GetRawActorUnitsInSightByNetworkId (int netId) {
@@ -30,7 +30,7 @@ namespace MirRemakeBackend.EntityManager {
             m_networkIdAndActorUnitListInSightDict.TryGetValue (netId, out res);
             return res;
         }
-        public List<int> GetActorUnitsInSightNetworkIdByNetworkId (int netId, bool includeSelf) {
+        public IReadOnlyList<int> GetActorUnitsInSightNetworkIdByNetworkId (int netId, bool includeSelf) {
             var rawList = GetRawActorUnitsInSightByNetworkId (netId);
             if (rawList == null) return null;
             List<int> res = new List<int> ();

@@ -83,17 +83,17 @@ namespace MirRemakeBackend.DataEntity {
         public readonly short m_animId;
         public readonly float m_hitRate;
         public readonly float m_criticalRate;
-        public readonly int m_deltaHP;
-        public readonly int m_deltaMP;
-        public readonly IReadOnlyList<ValueTuple<short, ValueTuple<float, float>>> m_statusIdAndValueAndTimeList;
+        public readonly int m_deltaHp;
+        public readonly int m_deltaMp;
+        public readonly IReadOnlyList<ValueTuple<short, float, float>> m_statusIdAndValueAndTimeList;
         public DE_Effect (DO_Effect effectDo) {
             m_type = effectDo.m_type;
             m_animId = effectDo.m_animId;
             m_hitRate = effectDo.m_hitRate;
             m_criticalRate = effectDo.m_criticalRate;
-            m_deltaHP = effectDo.m_deltaHP;
-            m_deltaMP = effectDo.m_deltaMP;
-            m_statusIdAndValueAndTimeList = new List<ValueTuple<short, ValueTuple<float, float>>> (effectDo.m_statusIdAndValueAndTimeArr);
+            m_deltaHp = effectDo.m_deltaHp;
+            m_deltaMp = effectDo.m_deltaMp;
+            m_statusIdAndValueAndTimeList = new List<ValueTuple<short, float, float>> (effectDo.m_statusIdAndValueAndTimeArr);
         }
     }
     class DE_Status {

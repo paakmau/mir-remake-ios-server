@@ -1,22 +1,17 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Network;
-using UnityEngine;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
-    struct E_Status {
+    class E_Status {
         // TODO: 有缘改成命令模式, 可以实现嘲讽
+        public DE_Status m_dataEntity;
         public int m_castererNetworkId;
         public short m_id;
-        public DE_Status m_dataEntity;
         public int m_Hatred {
             get {
-                int res = 0;
-                foreach (var affectAttr in m_affectConcreteAttributeArr) {
-                    if (affectAttr.Key == ActorUnitConcreteAttributeType.HP_DAMAGE_PER_SECOND_MAIGC || affectAttr.Key == ActorUnitConcreteAttributeType.HP_DAMAGE_PER_SECOND_PHYSICS)
-                        res += affectAttr.Value;
-                }
-                return res;
+                return (int)(m_durationTime * m_value);
             }
         }
         public float m_value;
@@ -29,13 +24,12 @@ namespace MirRemakeBackend.Entity {
             }
         }
         public MyTimer.Time m_endTime;
-        public E_Status (DE_Status de, short id, KeyValuePair<float, float> statusParm, int casterNetId) {
+        public void Reset (DE_Status de, short id, float value, float durationTime, int casterNetId) {
+            m_dataEntity = de;
             m_castererNetworkId = casterNetId;
             m_id = id;
-            m_dataEntity = de;
-
-            m_value = statusParm.Key;
-            m_durationTime = statusParm.Value;
+            m_value = value;
+            m_durationTime = durationTime;
             m_endTime = MyTimer.s_CurTime.Ticked (m_durationTime);
         }
         public NO_Status GetNo () {

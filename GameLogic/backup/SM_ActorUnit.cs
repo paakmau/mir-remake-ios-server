@@ -1,65 +1,11 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace MirRemakeBackend {
     /// <summary>
     /// 处理战斗相关逻辑
     /// </summary>
     class SM_ActorUnit {
-        public List<E_ActorUnit> GetActorUnitsInSectorRange (E_ActorUnit self, Vector2 center, Vector2 dir, float range, float radian, CampType targetCamp, byte num) {
-            // TODO: 解决非圆扇形的作用目标判定
-            List<E_ActorUnit> res = new List<E_ActorUnit> ();
-            var unitEn = EM_ActorUnit.GetActorUnitValueEnumerator ();
-            while (unitEn.MoveNext ()) {
-                if (CheckCampMatch (self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
-                    res.Add (unitEn.Current);
-            }
-            return GetNearestUnits (center, res, num);
-        }
-        public List<E_ActorUnit> GetActorUnitsInCircleRange (E_ActorUnit self, Vector2 center, float range, CampType targetCamp, byte num) {
-            List<E_ActorUnit> res = new List<E_ActorUnit> ();
-            var unitEn = EM_ActorUnit.GetActorUnitValueEnumerator ();
-            while (unitEn.MoveNext ()) {
-                if (CheckCampMatch (self, unitEn.Current, targetCamp) && (center - unitEn.Current.m_Position).magnitude < range + unitEn.Current.m_CoverRadius)
-                    res.Add (unitEn.Current);
-            }
-            return GetNearestUnits (center, res, num);
-        }
-        public List<E_ActorUnit> GetActorUnitsInLineRange (E_ActorUnit self, Vector2 center, Vector2 dir, float distance, float width, CampType targetCamp, byte num) {
-            List<E_ActorUnit> res = new List<E_ActorUnit> ();
-            var unitEn = EM_ActorUnit.GetActorUnitValueEnumerator ();
-            while (unitEn.MoveNext ()) {
-                if (CheckCampMatch (self, unitEn.Current, targetCamp) && false) // TODO: 解决直线的作用目标判定
-                    res.Add (unitEn.Current);
-            }
-            return GetNearestUnits (center, res, num);
-        }
-        private List<E_ActorUnit> GetNearestUnits (Vector2 center, List<E_ActorUnit> units, byte num) {
-            if (units.Count <= num) return units;
-            // TODO: 对units进行排序并剔除多余的unit
-            // units.Sort();
-            return units;
-        }
-        public bool CheckCampMatch (E_ActorUnit self, E_ActorUnit target, CampType camp) {
-            switch (camp) {
-                case CampType.SELF:
-                    return self == target;
-                case CampType.FRIEND:
-                    return false;
-                case CampType.ENEMY:
-                    return self != target;
-            }
-            return false;
-        }
-        public void NotifyApplyCastSkillSettle (E_ActorUnit unit, E_Skill skill, List<E_ActorUnit> tarList) {
-            KeyValuePair<int, E_Status[]>[] statusPairArr;
-            unit.CastSkillSettle (skill, tarList, out statusPairArr);
-            m_networkService.SendServerCommand (new SC_ApplyAllEffect (GetCharacterInSightIdList (unit.m_networkId, true), skill.m_skillEffect.m_animId, (byte) skill.m_skillEffect.m_StatusAttachNum, statusPairArr));
-        }
-        public void NotifyApplyCastSkillBegin (E_ActorUnit unit, E_Skill skill, SkillParam parm) {
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (GetCharacterInSightIdList (unit.m_networkId, false), unit.m_networkId, skill.m_id, parm.GetNo ()));
-        }
         public void NetworkTick () {
             var selfKeyEn = m_characterNetIdSet.GetEnumerator ();
 

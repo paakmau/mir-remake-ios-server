@@ -27,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
                 charSight.Clear ();
                 var unitEn = EM_Sight.s_instance.GetActorUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
-                    if (unitEn.Current == charObj) continue;
+                    // 若在视野范围外
                     if ((charObj.m_position - unitEn.Current.m_position).LengthSquared() > c_sightRadius * c_sightRadius) continue;
                     charSight.Add (unitEn.Current);
                 }

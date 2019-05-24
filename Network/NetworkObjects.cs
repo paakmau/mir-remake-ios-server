@@ -24,8 +24,8 @@ namespace MirRemakeBackend.Network {
     }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
-            writer.Put (value.x);
-            writer.Put (value.y);
+            writer.Put (value.X);
+            writer.Put (value.Y);
         }
         public static Vector2 GetVector2 (this NetDataReader reader) {
             return new Vector2 (reader.GetFloat (), reader.GetFloat ());

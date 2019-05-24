@@ -15,10 +15,6 @@ namespace MirRemakeBackend.Entity {
                 res.Add (equipmentEn.Current);
             return res;
         }
-        public List<E_EquipmentItem> GetAllEquipment () {
-            var res = CollectionUtils.DictionaryToValueList (m_equipPositionAndEquipmentDict);
-            return res;
-        }
         public E_EquipmentItem GetEquipmentByEquipPosition (EquipmentPosition ePos) {
             E_EquipmentItem res = null;
             m_equipPositionAndEquipmentDict.TryGetValue (ePos, out res);
