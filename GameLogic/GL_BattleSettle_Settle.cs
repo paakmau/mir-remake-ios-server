@@ -11,9 +11,7 @@ namespace MirRemakeBackend.GameLogic {
     partial class GL_BattleSettle : GameLogicBase {
         public void EffectSettle (E_ActorUnit caster, DE_Effect effectDe, IReadOnlyList<E_ActorUnit> targetList) {
             for (int i = 0; i < targetList.Count; i++) {
-                Effect effect = new Effect ();
-                effect.InitWithCasterAndTarget (effectDe, caster, targetList[i]);
-                Messenger.Broadcast<Effect, E_ActorUnit> ("NotifyApplyEffect", effect, targetList[i]);
+                Messenger.Broadcast<DE_Effect, E_ActorUnit, E_ActorUnit> ("NotifyApplyEffect", effectDe, caster, targetList[i]);
                 // TODO: 向Client发Effect
             }
         }
