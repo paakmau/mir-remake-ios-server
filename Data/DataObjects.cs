@@ -57,6 +57,7 @@ namespace MirRemakeBackend.Data {
         public float m_criticalRate;
         public int m_deltaHp;
         public int m_deltaMp;
+        public ValueTuple<ActorUnitConcreteAttributeType, float>[] m_attributeArr;
         public ValueTuple<short, float, float>[] m_statusIdAndValueAndTimeArr;
     }
     struct DO_Status {
