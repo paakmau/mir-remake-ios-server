@@ -8,6 +8,7 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 控制Monster的AI
+    /// TODO: 处理Monster的Respawn
     /// </summary>
     class GL_MonsterAction : GameLogicBase {
         abstract class SkillParamGeneratorBase {

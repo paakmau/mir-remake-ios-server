@@ -5,7 +5,8 @@ using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend.Entity {
     class E_EquipmentItem : E_Item {
-        private DE_Equipment m_equipmentDe;
+        public const int c_maxStrengthenNum = 10;
+        public DE_Equipment m_equipmentDe;
         public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
         public short m_strengthenNum;
         public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_enchantAttr;
@@ -18,6 +19,9 @@ namespace MirRemakeBackend.Entity {
             m_enchantAttr = equipDdo.m_enchantAttr;
             m_inlaidGemIdList = equipDdo.m_inlaidGemIdList;
             m_holeNum = equipDdo.m_holeNum;
+        }
+        public int CalcStrengthenedAttr (int value) {
+            return (int) (value * (1 + m_strengthenNum / c_maxStrengthenNum * m_equipmentDe.m_attrWave));
         }
     }
 }

@@ -20,6 +20,9 @@ namespace MirRemakeBackend.EntityManager {
             m_realIdAndItemDict.TryGetValue (realId, out res);
             return res;
         }
+        public DE_Gem GetGemById (short itemId) {
+            return DEM_Item.s_instance.GetGemById (itemId);
+        }
         public E_EquipmentRegion GetEquipedByNetworkId (int netId) {
             E_EquipmentRegion er = null;
             m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out er);
@@ -84,7 +87,8 @@ namespace MirRemakeBackend.EntityManager {
                 switch (itemDe.m_type) {
                     case ItemType.CONSUMABLE:
                         item = s_entityPool.m_consumableItemPool.GetInstance ();
-                        ((E_ConsumableItem) item).Reset (itemDe, itemDdo);
+                        DE_Consumable cDe = DEM_Item.s_instance.GetConsumableById (itemId);
+                        ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo);
                         break;
                     case ItemType.EQUIPMENT:
                         item = s_entityPool.m_equipmentItemPool.GetInstance ();
@@ -96,6 +100,12 @@ namespace MirRemakeBackend.EntityManager {
                         item = s_entityPool.m_materialItemPool.GetInstance ();
                         ((E_MaterialItem) item).Reset (itemDe, itemDdo);
                         break;
+                    case ItemType.GEM:
+                        item = s_entityPool.m_gemItemPool.GetInstance ();
+                        DE_Gem gDe = DEM_Item.s_instance.GetGemById (itemId);
+                        ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
+                        break;
+
                 }
                 itemArr[i] = item;
             }

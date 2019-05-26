@@ -11,16 +11,20 @@ namespace MirRemakeBackend.DataEntity {
         private Dictionary<short, DE_Item> m_itemDict = new Dictionary<short, DE_Item> ();
         private Dictionary<short, DE_Consumable> m_consumableDict = new Dictionary<short, DE_Consumable> ();
         private Dictionary<short, DE_Equipment> m_equipmentDict = new Dictionary<short, DE_Equipment> ();
+        private Dictionary<short, DE_Gem> m_gemDict = new Dictionary<short, DE_Gem> ();
         public DEM_Item (IDS_Item itemDs) {
             var itemDoArr = itemDs.GetAllItem ();
             var consumableDoArr = itemDs.GetAllConsumable ();
             var equipmentDoArr = itemDs.GetAllEquipment ();
+            var gemDoArr = itemDs.GetAllGem ();
             foreach (var itemDo in itemDoArr)
                 m_itemDict.Add (itemDo.m_itemId, new DE_Item (itemDo));
             foreach (var consumDo in consumableDoArr)
                 m_consumableDict.Add (consumDo.m_itemId, new DE_Consumable(consumDo));
             foreach (var equipDo in equipmentDoArr)
                 m_equipmentDict.Add (equipDo.m_itemId, new DE_Equipment(equipDo));
+            foreach (var gemDo in gemDoArr)
+                m_gemDict.Add (gemDo.m_itemId, new DE_Gem(gemDo));
         }
         public DE_Item GetItemById (short itemId) {
             DE_Item res = null;
@@ -35,6 +39,11 @@ namespace MirRemakeBackend.DataEntity {
         public DE_Equipment GetEquipmentById (short itemId) {
             DE_Equipment res = null;
             m_equipmentDict.TryGetValue (itemId, out res);
+            return res;
+        }
+        public DE_Gem GetGemById (short itemId) {
+            DE_Gem res = null;
+            m_gemDict.TryGetValue (itemId, out res);
             return res;
         }
     }

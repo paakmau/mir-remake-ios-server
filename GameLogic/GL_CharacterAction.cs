@@ -61,12 +61,14 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (otherList, netId, skillId, parmNo));
         }
         /// <summary>
-        /// client角色取消技能读条
-        /// 需要通知视野内其他client播放动画
-        /// 并移除待结算技能计时
+        /// client角色取消技能读条  
+        /// 移除待结算技能计时  
+        /// 通知视野内其他client播放动画  
         /// </summary>
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkIdAndSkillCastDict.Remove (netId);
+            var otherList = EM_Sight.s_instance.GetActorUnitsInSightNetworkIdByNetworkId (netId, false);
+            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (otherList, netId));
         }
     }
 }

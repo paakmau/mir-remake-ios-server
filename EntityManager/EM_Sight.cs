@@ -21,6 +21,7 @@ namespace MirRemakeBackend.EntityManager {
         /// <typeparam name="int"></typeparam>
         /// <returns></returns>
         private LinkedList<int> m_unitNetworkIdLinkedList = new LinkedList<int> ();
+        private List<int> t_intList = new List<int> ();
         /// <summary>
         /// 根据NetId获取他的视野内的单位 (包括自身)  
         /// 可以对其视野进行读写  
@@ -33,11 +34,11 @@ namespace MirRemakeBackend.EntityManager {
         public IReadOnlyList<int> GetActorUnitsInSightNetworkIdByNetworkId (int netId, bool includeSelf) {
             var rawList = GetRawActorUnitsInSightByNetworkId (netId);
             if (rawList == null) return null;
-            List<int> res = new List<int> ();
+            t_intList.Clear ();
             for (int i = 0; i < rawList.Count; i++)
                 if (includeSelf || rawList[i].m_networkId != netId)
-                    res.Add (rawList[i].m_networkId);
-            return res;
+                    t_intList.Add (rawList[i].m_networkId);
+            return t_intList;
         }
         public E_ActorUnit GetActorUnitVisibleByNetworkId (int netId) {
             E_ActorUnit res = null;

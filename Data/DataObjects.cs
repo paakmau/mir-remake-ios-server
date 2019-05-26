@@ -84,6 +84,10 @@ namespace MirRemakeBackend.Data {
         public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_equipmentAttributeArr;
         public float m_attrWave;
     }
+    struct DO_Gem {
+        public short m_itemId;
+        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_equipmentAttributeArr;
+    }
     struct DO_Mission {
         public short m_id;
         public MissionOccupation m_missionOccupation;

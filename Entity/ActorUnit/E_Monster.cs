@@ -1,7 +1,8 @@
-using System.Numerics;
 using System.Collections.Generic;
-using MirRemakeBackend.DynamicData;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
+using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     class E_Monster : E_ActorUnit {

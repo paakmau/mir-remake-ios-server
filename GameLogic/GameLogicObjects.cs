@@ -1,31 +1,50 @@
 using System;
-using System.Numerics;
 using System.Collections.Generic;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
+using MirRemakeBackend.EntityManager;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     struct Effect {
-        public int m_casterNetworkId;
-        public EffectType m_type;
-        public float m_hitRate;
-        public float m_criticalRate;
+        public bool m_hit;
+        public bool m_critical;
         public int m_deltaHp;
         public int m_deltaMp;
-        public ValueTuple<short, ValueTuple<float, float>>[] m_statusIdAndValueAndTimeArray;
-        public int m_StatusAttachNum { get { return m_statusIdAndValueAndTimeArray.Length; } }
-        public Effect (DE_Effect effectDe, int casterNetId) {
-            m_casterNetworkId = casterNetId;
-            m_type = effectDe.m_type;
-            m_hitRate = effectDe.m_hitRate;
-            m_criticalRate = effectDe.m_criticalRate;
-            m_deltaHp = effectDe.m_deltaHP;
-            m_deltaMp = effectDe.m_deltaMP;
-            List<int> res = new List<int> ();
-            m_statusIdAndValueAndTimeArray = new ValueTuple<short, ValueTuple<float, float>>[effectDe.m_statusIdAndValueAndTimeList.Count];
-            for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++)
-                m_statusIdAndValueAndTimeArray[i] = effectDe.m_statusIdAndValueAndTimeList[i];
+        public ValueTuple<short, float, float, int>[] m_statusIdAndValueAndTimeAndCasterNetIdArr;
+        public void InitWithCasterAndTarget (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
+            // 处理命中
+            float hitRate = effectDe.m_hitRate * caster.m_HitRate / target.m_DodgeRate;
+            m_hit = MyRandom.NextInt (1, 101) >= hitRate;
+            if (m_hit) {
+                // 处理基础伤害(或能量剥夺)
+                m_deltaHp = effectDe.m_deltaHp;
+                m_deltaMp = effectDe.m_deltaMp;
+                switch (effectDe.m_type) {
+                    case EffectType.PHYSICS:
+                        m_deltaHp *= caster.m_Attack / target.m_Defence;
+                        break;
+                    case EffectType.MAGIC:
+                        m_deltaHp *= caster.m_Magic / target.m_Resistance;
+                        m_deltaMp *= caster.m_Magic / target.m_Resistance;
+                        break;
+                }
+                // 处理暴击
+                float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate / target.m_DodgeRate;
+                m_critical = MyRandom.NextInt (1, 101) >= criticalRate;
+                if (m_critical)
+                    m_deltaHp *= caster.m_CriticalBonus;
+                // 处理状态
+                m_statusIdAndValueAndTimeAndCasterNetIdArr = new ValueTuple<short, float, float, int>[effectDe.m_statusIdAndValueAndTimeList.Count];
+                for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
+                    var info = effectDe.m_statusIdAndValueAndTimeList[i];
+                    float value = info.Item2 / target.m_Tenacity;
+                    float durationTime = info.Item3 / target.m_Tenacity;
+                    m_statusIdAndValueAndTimeAndCasterNetIdArr[i] = new ValueTuple<short, float, float, int> (info.Item1, value, durationTime, caster.m_networkId);
+                }
+            }
         }
     }
     struct SkillParam {

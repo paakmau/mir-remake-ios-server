@@ -1,3 +1,4 @@
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
@@ -39,6 +40,7 @@ namespace MirRemakeBackend.EntityManager {
         public static EM_ActorUnit s_instance;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
+        private Dictionary<int, Vector2> m_networkIdAndMonsterRespawnDict = new Dictionary<int, Vector2> ();
         public EM_ActorUnit () {
             // 实例化所有的怪物
             var idAndPosList = DEM_Map.s_instance.GetAllMonsterIdAndRespawnPosition ();
@@ -48,6 +50,7 @@ namespace MirRemakeBackend.EntityManager {
                 E_Monster monster = new E_Monster ();
                 monster.Reset (netIdArr[i], idAndPosList[i].Value, deTuple.Item1, deTuple.Item2);
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
+                m_networkIdAndMonsterRespawnDict[netIdArr[i]] = idAndPosList[i].Value;
             }
         }
         public int AssignCharacterNetworkId () {

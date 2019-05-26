@@ -123,7 +123,8 @@ namespace MirRemakeBackend {
         EMPTY,
         CONSUMABLE,
         MATERIAL,
-        EQUIPMENT
+        EQUIPMENT,
+        GEM
     }
     enum CurrencyType : byte {
         VIRTUAL,

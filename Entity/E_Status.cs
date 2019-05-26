@@ -5,7 +5,7 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     class E_Status {
-        // TODO: 有缘改成命令模式, 可以实现嘲讽
+        // TODO: 有缘改成命令模式, 可以高雅实现秒伤, 嘲讽等复杂状态
         public DE_Status m_dataEntity;
         public int m_castererNetworkId;
         public short m_id;
@@ -16,13 +16,6 @@ namespace MirRemakeBackend.Entity {
         }
         public float m_value;
         private float m_durationTime;
-        public float m_DurationTime {
-            get { return m_durationTime; }
-            set {
-                m_durationTime = value;
-                m_endTime = MyTimer.s_CurTime.Ticked (value);
-            }
-        }
         public MyTimer.Time m_endTime;
         public void Reset (DE_Status de, short id, float value, float durationTime, int casterNetId) {
             m_dataEntity = de;

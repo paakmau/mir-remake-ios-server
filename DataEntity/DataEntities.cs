@@ -138,4 +138,10 @@ namespace MirRemakeBackend.DataEntity {
             m_attrWave = equipDo.m_attrWave;
         }
     }
+    class DE_Gem {
+        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_attrList;
+        public DE_Gem (DO_Gem gemDo) {
+            m_attrList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (gemDo.m_equipmentAttributeArr);
+        }
+    }
 }
