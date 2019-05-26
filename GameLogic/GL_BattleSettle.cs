@@ -18,6 +18,10 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         void NotifySkillSettle (E_ActorUnit self, DE_Skill skillDe, DE_SkillData skillDataDe, SkillParam parm) {
             var targetList = m_targetStage.GetTargetList (self, skillDe, skillDataDe, parm);
+            for (int i = 0; i < targetList.Count; i++) {
+                Messenger.Broadcast<DE_Effect, E_ActorUnit, E_ActorUnit> ("NotifyApplyEffect", skillDataDe.m_skillEffect, self, targetList[i]);
+                // TODO: 向Client发Effect
+            }
         }
     }
 }

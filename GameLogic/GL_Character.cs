@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
-using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
@@ -13,7 +13,6 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_Character : GameLogicBase {
         private IDDS_Character m_characterDds;
-        private List<int> t_intList = new List<int> ();
         public GL_Character (IDDS_Character charDds, INetworkService netService) : base (netService) {
             m_characterDds = charDds;
             Messenger.AddListener ("CommandAssignNetworkId", CommandAssignNetworkId);
@@ -23,21 +22,7 @@ namespace MirRemakeBackend.GameLogic {
             Messenger.AddListener<int, E_EquipmentItem> ("NotifyPutOnEquipment", NotifyPutOnEquipment);
             Messenger.AddListener<int, E_ConsumableItem> ("NotifyUseConsumable", NotifyUseConsumable);
         }
-        public override void Tick (float dT) { // 移除超时的状态
-            var statusEn = EM_Status.s_instance.GetStatusEn ();
-            while (statusEn.MoveNext ()) {
-                int netId = statusEn.Current.Key;
-                E_ActorUnit unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
-                t_intList.Clear ();
-                for (int i = 0; i < statusEn.Current.Value.Count; i++) {
-                    if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {
-                        t_intList.Add (i);
-
-                    }
-                }
-                EM_Status.s_instance.RemoveStatus (netId, t_intList);
-            }
-        }
+        public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandAssignNetworkId () {
             int netId = EM_ActorUnit.s_instance.AssignCharacterNetworkId ();
@@ -54,7 +39,6 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandRemoveCharacter (int netId) {
             EM_ActorUnit.s_instance.RemoveCharacterByNetworkId (netId);
-            EM_Status.s_instance.RemoveCharacterStatus (netId);
         }
         public void NotifyTakeOffEquipment (int netId, E_EquipmentItem eqObj) {
             EquipmentToAttr (netId, eqObj, -1);
@@ -68,17 +52,17 @@ namespace MirRemakeBackend.GameLogic {
             // 处理基础属性与强化
             var attrList = eqObj.m_equipmentDe.m_attrList;
             for (int i = 0; i < attrList.Count; i++)
-                unit.AddAttr (attrList[i].Item1, k * eqObj.CalcStrengthenedAttr(attrList[i].Item2));
+                unit.AddConAttr (attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2));
             // 处理附魔
             var enchantAttr = eqObj.m_enchantAttr;
             foreach (var attr in enchantAttr)
-                unit.AddAttr (attr.Item1, k * attr.Item2);
+                unit.AddConAttr (attr.Item1, k * attr.Item2);
             // 处理镶嵌
             var gemIdList = eqObj.m_inlaidGemIdList;
-            for (int i=0; i<gemIdList.Count; i++) {
+            for (int i = 0; i < gemIdList.Count; i++) {
                 var gemDe = EM_Item.s_instance.GetGemById (gemIdList[i]);
-                for (int j=0; j<gemDe.m_attrList.Count; j++)
-                    unit.AddAttr (gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2);
+                for (int j = 0; j < gemDe.m_attrList.Count; j++)
+                    unit.AddConAttr (gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2);
             }
         }
         void NotifyUseConsumable (int netId, E_ConsumableItem conObj) {

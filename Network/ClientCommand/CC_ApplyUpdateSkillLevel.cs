@@ -6,7 +6,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short skillId = reader.GetShort ();
             short targetSkillLevel = reader.GetShort ();
-            SM_ActorUnit.s_instance.CommandUpdateSkillLevel (netId, skillId, targetSkillLevel);
+            Messenger.Broadcast<int, short, short> ("CommandUpdateSkillLevel", netId, skillId, targetSkillLevel);
         }
     }
 }

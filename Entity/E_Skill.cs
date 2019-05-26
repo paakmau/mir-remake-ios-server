@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.DataEntity;
+using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
     class E_Skill {
@@ -19,6 +19,12 @@ namespace MirRemakeBackend.Entity {
             m_id = ddo.m_skillId;
             m_level = ddo.m_skillLevel;
             m_masterly = ddo.m_masterly;
+        }
+        public void Upgrade () {
+            if (m_level >= m_skillDe.m_skillMaxLevel) return;
+            m_level++;
+            m_masterly -= m_skillDataDe.m_upgradeMasterlyInNeed;
+            m_skillDataDe = m_skillDe.m_skillDataAllLevel[m_level - 1];
         }
     }
 }

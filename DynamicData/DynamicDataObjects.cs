@@ -7,6 +7,7 @@ namespace MirRemakeBackend.DynamicData {
         public short m_level;
         public OccupationType m_occupation;
         public int m_experience;
+        public long m_coin;
     }
     struct DDO_Equipment {
         public long m_realId;

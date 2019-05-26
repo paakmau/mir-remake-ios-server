@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.EntityManager;
@@ -46,13 +47,14 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
         }
+        private List<int> t_intList = new List<int> ();
         public GL_Effect (INetworkService netService) : base (netService) {
             Messenger.AddListener<DE_Effect, E_ActorUnit, E_ActorUnit> ("NotifyApplyEffect", NotifyApplyEffect);
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         /// <summary>
-        /// 对目标的属性和状态添加影响
+        /// 对目标的属性添加影响
         /// </summary>
         /// <param name="target"></param>
         public void NotifyApplyEffect (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
@@ -61,7 +63,8 @@ namespace MirRemakeBackend.GameLogic {
             if (effect.m_hit) {
                 target.m_CurHp += effect.m_deltaHp;
                 target.m_CurMp += effect.m_deltaMp;
-                EM_Status.s_instance.AddStatus (target.m_networkId, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
+                // 通知状态
+                Messenger.Broadcast<E_ActorUnit, ValueTuple<short, float, float, int>[]> ("NotifyAddStatus", target, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
             }
         }
     }

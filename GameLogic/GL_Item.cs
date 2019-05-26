@@ -35,7 +35,7 @@ namespace MirRemakeBackend.GameLogic {
             E_Item item = EM_Item.s_instance.GetItemByRealId (realId);
             E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
             if (item == null || bag == null) return;
-            // 从背包中移除该物品
+            // 从背包中移除一个该物品
             if (bag.RemoveItem (realId, 1) != 1) return;
             Messenger.Broadcast<int, E_ConsumableItem> ("NotifyUseConsumable", netId, (E_ConsumableItem) item);
             // TODO: 考虑数据库修改

@@ -3,6 +3,7 @@ using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
+using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
@@ -14,6 +15,7 @@ namespace MirRemakeBackend.GameLogic {
             m_skillDds = skillDds;
             Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
             Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
+            Messenger.AddListener<int, short, short> ("CommandUpdateSkillLevel", CommandUpdateSkillLevel);
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -34,5 +36,24 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandRemoveCharacter (int netId) {
             EM_Skill.s_instance.RemoveCharacterSkill (netId);
         }
+        public void CommandUpdateSkillLevel (int netId, short skillId, short targetLv) {
+            var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
+            var charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            if (skill == null || charObj == null) return;
+            short oriLv = skill.m_level;
+            while (skill.m_level < targetLv && skill.m_level < skill.m_skillDe.m_skillMaxLevel) {
+                if (skill.m_skillDataDe.m_upgradeMoneyInNeed > charObj.m_coin) break;
+                if (skill.m_skillDataDe.m_upgradeCharacterLevelInNeed > charObj.m_level) break;
+                if (skill.m_skillDataDe.m_upgradeMasterlyInNeed > skill.m_masterly) break;
+                charObj.m_coin -= skill.m_skillDataDe.m_upgradeMoneyInNeed;
+                skill.Upgrade ();
+            }
+            if (oriLv != skill.m_level) {
+                // TODO: 考虑数据库
+                // TODO: 发给Client
+            }
+        }
     }
 }
+
+

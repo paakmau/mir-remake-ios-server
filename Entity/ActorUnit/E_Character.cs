@@ -9,6 +9,7 @@ namespace MirRemakeBackend.Entity {
         public int m_UpgradeExperienceInNeed { get { return m_characterDe.m_upgradeExperienceInNeed; } }
         public int m_characterId;
         public int m_experience;
+        public long m_coin;
         public void Reset (int netId, int charId, DE_ActorUnit auDe, DE_Character charDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
@@ -16,6 +17,7 @@ namespace MirRemakeBackend.Entity {
             m_characterId = charId;
             m_level = charDdo.m_level;
             m_experience = charDdo.m_experience;
+            m_coin = charDdo.m_coin;
         }
     }
 }

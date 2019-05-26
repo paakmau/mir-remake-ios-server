@@ -87,8 +87,11 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
                 m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Item1, de.m_concreteAttributeList[i].Item2);
         }
-        public void AddAttr (ActorUnitConcreteAttributeType type, int value) {
+        public void AddConAttr (ActorUnitConcreteAttributeType type, int value) {
             m_concreteAttributeDict[type] += value;
+        }
+        public void AddSpAttr (ActorUnitSpecialAttributeType type, int value) {
+            m_specialAttributeDict[type] += value;
         }
         public virtual void Tick (float dT) {
             if (m_IsDead) return;
