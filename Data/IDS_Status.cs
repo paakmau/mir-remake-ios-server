@@ -13,7 +13,7 @@ namespace MirRemakeBackend.Data
     {
         private static JsonData s_statusDatas;
         private DO_Status[] res;
-        public IDS_StatusImpl()
+        public DO_Status[] GetAllStatus()
         {
             string jsonFile = File.ReadAllText("Data/D_Status.json");
             s_statusDatas = JsonMapper.ToObject(jsonFile);
@@ -38,12 +38,7 @@ namespace MirRemakeBackend.Data
                 }
                 res[i] = status;
             }
-
-
-
-        }
-        public DO_Status[] GetAllStatus()
-        {
             return res;
         }
     }
+}

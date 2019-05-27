@@ -18,7 +18,7 @@ namespace MirRemakeBackend.Data
     {
         private static JsonData s_characterDatas;
         private DO_Character[][] res;
-        public IDS_CharacterImpl()
+        public DO_Character[][] GetAllCharacter()
         {
             string jsonFile = File.ReadAllText("Data/D_Character.json");
             s_characterDatas = JsonMapper.ToObject(jsonFile);
@@ -55,9 +55,6 @@ namespace MirRemakeBackend.Data
                 }
             }
 
-        }
-        public DO_Character[][] GetAllCharacter()
-        {
             return res;
         }
 

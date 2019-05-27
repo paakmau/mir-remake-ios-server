@@ -9,20 +9,23 @@ namespace MirRemakeBackend.Data {
     class IDS_MonsterImpl : IDS_Monster {
         private static JsonData s_monsterDatas;
         private static DO_Monster[] res;
-        public IDS_MonsterImpl() {
+        public DO_Monster[] GetAllMonster() {
             string jsonFile = File.ReadAllText("Data/D_Monster.json");
             s_monsterDatas = JsonMapper.ToObject(jsonFile);
             res = new DO_Monster[s_monsterDatas.Count];
-            for(int durex = 0; durex < s_monsterDatas.Count; durex++) {
+            for (int durex = 0; durex < s_monsterDatas.Count; durex++)
+            {
                 DO_Monster monster = new DO_Monster();
                 monster.m_monsterId = short.Parse(s_monsterDatas[durex]["MonsterID"].ToString());
                 monster.m_level = short.Parse(s_monsterDatas[durex]["Level"].ToString());
                 monster.m_dropItemIdArr = new short[s_monsterDatas[durex]["DropList"].Count];
-                for(int i = 0; i < s_monsterDatas[durex]["DropList"].Count; i++) {
+                for (int i = 0; i < s_monsterDatas[durex]["DropList"].Count; i++)
+                {
                     monster.m_dropItemIdArr[i] = short.Parse(s_monsterDatas[durex]["DropList"][i].ToString());
                 }
                 monster.m_skillIdAndLevelArr = new ValueTuple<short, short>[s_monsterDatas[durex]["SkillList"].Count];
-                for(int i = 0; i < monster.m_skillIdAndLevelArr.Length; i++) {
+                for (int i = 0; i < monster.m_skillIdAndLevelArr.Length; i++)
+                {
                     monster.m_skillIdAndLevelArr[i] = new ValueTuple<short, short>
                         (short.Parse(s_monsterDatas[durex]["SkillList"].ToString().Split(' ')[0]), short.Parse(s_monsterDatas[durex]["SkillList"].ToString().Split(' ')[1]));
                 }
@@ -34,8 +37,6 @@ namespace MirRemakeBackend.Data {
                 }
                 res[durex] = monster;
             }
-        }
-        public DO_Monster[] GetAllMonster() {
             return res;
         }
     }

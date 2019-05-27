@@ -1,12 +1,14 @@
 ﻿<Properties StartupConfiguration="{EA1992AE-08E1-4BA3-802D-963CE5CF0F6F}|Default">
   <MonoDevelop.Ide.ItemProperties.mir-remake-ios-server PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DataEntity/DEM_Item.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Data/IDS_Status.cs">
     <Files>
-      <File FileName="DataEntity/DEM_Item.cs" Line="1" Column="1" />
-      <File FileName="DynamicData/IDDS_Character.cs" Line="12" Column="2" />
-      <File FileName="Data/IDS_Monster.cs" Line="7" Column="45" />
-      <File FileName="Data/DataObjects.cs" Line="1" Column="1" />
-      <File FileName="Enum.cs" Line="72" Column="10" />
+      <File FileName="Data/IDS_Item.cs" Line="36" Column="107" />
+      <File FileName="Data/IDS_Character.cs" Line="24" Column="57" />
+      <File FileName="Data/IDS_Monster.cs" Line="13" Column="71" />
+      <File FileName="Data/IDS_Skill.cs" Line="98" Column="18" />
+      <File FileName="Data/IDS_Status.cs" Line="44" Column="1" />
+      <File FileName="Data/DataObjects.cs" Line="87" Column="38" />
+      <File FileName="Enum.cs" Line="201" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -14,8 +16,15 @@
           <Node name="mir-remake-ios-server" expanded="True">
             <Node name="mir-remake-ios-server" expanded="True">
               <Node name="Data" expanded="True">
-                <Node name="DataObjects.cs" selected="True" />
+                <Node name="IDS_Status.cs" selected="True" />
               </Node>
+              <Node name="DataEntity" expanded="True" />
+              <Node name="DynamicData" expanded="True" />
+              <Node name="Entity" expanded="True">
+                <Node name="ActorUnit" expanded="True" />
+                <Node name="Item" expanded="True" />
+              </Node>
+              <Node name="GameLogic" expanded="True" />
             </Node>
           </Node>
         </State>
