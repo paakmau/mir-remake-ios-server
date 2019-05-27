@@ -6,12 +6,12 @@ using System.IO;
 namespace MirRemakeBackend.Data {
     interface IDS_Item {
         DO_Item[] GetAllItem();
-        DO_Equipment[] GetAllEquipment ();
+        DO_Equipment[] GetAllEquipment ();//done
         DO_Consumable[] GetAllConsumable ();
         DO_Gem[] GetAllGem ();
     }
     class IDS_ItemImpl {
-        private DO_Item[] items;
+        private DO_Item[] items=null;
         private DO_Equipment[] equipments;
         private DO_Consumable[] consumables;
         private DO_Gem[] gems;
@@ -42,12 +42,33 @@ namespace MirRemakeBackend.Data {
                         ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType),s_equipmentDatas[i]["AttributeAttachArray"][m].ToString().Split(' ')[0]),
                         int.Parse(s_equipmentDatas[i]["AttributeAttachArray"][m].ToString().Split(' ').ToString()));
                 }
+                equipments[i] = equipment;
                 
 
             }
             return equipments;
         }
         public DO_Consumable[] GetAllConsumables() {
+            string jsonFile = File.ReadAllText("Data/D_Consumable.json");
+            s_consumableDatas = JsonMapper.ToObject(jsonFile);
+            consumables = new DO_Consumable[s_consumableDatas.Count];
+            for(int i = 0; i < s_consumableDatas.Count; i++) {
+                DO_Consumable consumable = new DO_Consumable();
+                consumable.m_itemId = short.Parse(s_consumableDatas[i]["ID"].ToString());
+                DO_Effect effect = new DO_Effect();
+                effect.m_type = EffectType.CONSUMABLE;
+                effect.m_deltaHp = int.Parse(s_consumableDatas[i]["EffectDeltaHP"].ToString());
+                effect.m_deltaMp = int.Parse(s_consumableDatas[i]["EffectDeltaMP"].ToString());
+                effect.m_statusIdAndValueAndTimeArr = new ValueTuple<short,float,float>[s_consumableDatas[i]["StatusAttachArray"].Count];
+                for(int mm = 0; mm < s_consumableDatas[i]["StatusAttachArray"].Count; mm++) {
+                    effect.m_statusIdAndValueAndTimeArr[i] = new ValueTuple<short, float, float>
+                        (short.Parse(s_consumableDatas[i]["StatusAttachArray"]["StatusID"].ToString()),
+                        float.Parse(s_consumableDatas[i]["StatusAttachArray"]["Value"].ToString()),
+                        float.Parse(s_consumableDatas[i]["StatusAttachArray"]["LastingTime"].ToString()));
+                }
+                consumable.m_effect = effect;
+                consumables[i] = consumable;
+            }
             return consumables;
         }
         public DO_Gem[] GetAllGem() {
