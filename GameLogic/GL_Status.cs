@@ -8,11 +8,11 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_Status : GameLogicBase {
+        public static GL_Status s_instance;
         private List<int> t_intList = new List<int> ();
         public GL_Status (INetworkService netService) : base (netService) {
             Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
             Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
-            Messenger.AddListener<E_ActorUnit, ValueTuple<short, float, float, int>[]> ("NotifyAddStatus", NotifyAddStatus);
         }
         public override void Tick (float dT) {
             // 移除超时的状态

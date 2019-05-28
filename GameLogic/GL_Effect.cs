@@ -8,6 +8,7 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_Effect : GameLogicBase {
+        public static GL_Effect s_instance;
         struct Effect {
             public bool m_hit;
             public bool m_critical;
@@ -49,7 +50,6 @@ namespace MirRemakeBackend.GameLogic {
         }
         private List<int> t_intList = new List<int> ();
         public GL_Effect (INetworkService netService) : base (netService) {
-            Messenger.AddListener<DE_Effect, E_ActorUnit, E_ActorUnit> ("NotifyApplyEffect", NotifyApplyEffect);
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -64,7 +64,7 @@ namespace MirRemakeBackend.GameLogic {
                 target.m_CurHp += effect.m_deltaHp;
                 target.m_CurMp += effect.m_deltaMp;
                 // 通知状态
-                Messenger.Broadcast<E_ActorUnit, ValueTuple<short, float, float, int>[]> ("NotifyAddStatus", target, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
+                GL_Status.s_instance.NotifyAddStatus (target, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
             }
         }
     }

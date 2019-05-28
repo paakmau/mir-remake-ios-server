@@ -23,7 +23,7 @@ namespace MirRemakeBackend.GameLogic {
             private E_Monster m_monster;
             public MFSM (E_Monster monster) {
                 m_monster = monster;
-                m_curState = new MFSMS_AutoMove ();
+                m_curState = new MFSMS_Dead ();
             }
             public void Tick (float dT) {
                 m_curState.OnTick (m_monster, dT);
@@ -142,7 +142,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_timer = skill.Item2.m_singTime + skill.Item2.m_castFrontTime;
             }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
-                // TODO: 通知Client播放技能动画
+                GL_MonsterAction.s_instance.MFSMCastSkillBegin (self.m_networkId, m_skill.Item1.m_skillId);
             }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
@@ -165,9 +165,8 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
                 if (nextType == MFSMStateType.CAST_BACK) {
-                    // TODO: 技能结算
+                    GL_MonsterAction.s_instance.MFSMSkillSettle (self, m_skill.Item1, m_skill.Item2, m_skillParam);
                 }
-                // TODO: 通知Client技能打断
             }
         }
         class MFSMS_CastBack : MFSMStateBase {
@@ -210,7 +209,7 @@ namespace MirRemakeBackend.GameLogic {
             private float m_timer;
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
                 m_timer = MyRandom.NextFloat (c_respawnTimeMin, c_respawnTimeMax);
-                // TODO: 修改EM_Sight
+                GL_MonsterAction.s_instance.MFSMDead (self);
             }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
@@ -222,7 +221,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
                 self.m_position = self.m_respawnPosition;
-                // TODO: 通知Client刷新怪物
+                GL_MonsterAction.s_instance.MFSMRespawn (self);
             }
         }
     }

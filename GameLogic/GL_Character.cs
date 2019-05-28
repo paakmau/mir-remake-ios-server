@@ -12,6 +12,7 @@ namespace MirRemakeBackend.GameLogic {
     /// 以及具体属性等
     /// </summary>
     class GL_Character : GameLogicBase {
+        public static GL_Character s_instance;
         private IDDS_Character m_characterDds;
         public GL_Character (IDDS_Character charDds, INetworkService netService) : base (netService) {
             m_characterDds = charDds;

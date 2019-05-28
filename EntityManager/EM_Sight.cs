@@ -10,18 +10,15 @@ namespace MirRemakeBackend.EntityManager {
         public static EM_Sight s_instance;
         private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitVisibleDict = new Dictionary<int, E_ActorUnit> ();
         /// <summary>
-        /// 每个角色的视野信息, (包括自身)
+        /// 每个角色的视野信息
         /// </summary>
         /// <returns></returns>
         private Dictionary<int, List<E_ActorUnit>> m_networkIdAndActorUnitListInSightDict = new Dictionary<int, List<E_ActorUnit>> ();
         /// <summary>
-        /// 循环链表  
-        /// 每一帧获取若干个角色为其计算视野  
+        /// 每个单位在玩家视野中的信息
         /// </summary>
-        /// <typeparam name="int"></typeparam>
         /// <returns></returns>
-        private LinkedList<int> m_unitNetworkIdLinkedList = new LinkedList<int> ();
-        private List<int> t_intList = new List<int> ();
+        private Dictionary<int, List<E_Character>> m_networkIdAndCharacterListInSightDict = new Dictionary<int, List<E_Character>> ();
         /// <summary>
         /// 根据NetId获取他的视野内的单位 (包括自身)  
         /// 可以对其视野进行读写  
@@ -31,43 +28,41 @@ namespace MirRemakeBackend.EntityManager {
             m_networkIdAndActorUnitListInSightDict.TryGetValue (netId, out res);
             return res;
         }
-        public IReadOnlyList<int> GetActorUnitsInSightNetworkIdByNetworkId (int netId, bool includeSelf) {
-            var rawList = GetRawActorUnitsInSightByNetworkId (netId);
-            if (rawList == null) return null;
-            t_intList.Clear ();
-            for (int i = 0; i < rawList.Count; i++)
-                if (includeSelf || rawList[i].m_networkId != netId)
-                    t_intList.Add (rawList[i].m_networkId);
-            return t_intList;
-        }
+        /// <summary>
+        /// 根据NetId获取可视单位
+        /// </summary>
         public E_ActorUnit GetActorUnitVisibleByNetworkId (int netId) {
             E_ActorUnit res = null;
             m_networkIdAndActorUnitVisibleDict.TryGetValue (netId, out res);
             return res;
         }
+        /// <summary>
+        /// 获取所有可视单位的迭代器
+        /// </summary>
         public Dictionary<int, E_ActorUnit>.ValueCollection.Enumerator GetActorUnitVisibleEnumerator () {
             return m_networkIdAndActorUnitVisibleDict.Values.GetEnumerator ();
         }
-        public bool TryGetNextCharacterNetworkIdToGetSight (out int netId) {
-            if (m_unitNetworkIdLinkedList.Count == 0) {
-                netId = 0;
-                return false;
-            }
-            netId = m_unitNetworkIdLinkedList.First.Value;
-            m_unitNetworkIdLinkedList.RemoveFirst ();
-            m_unitNetworkIdLinkedList.AddLast (netId);
-            return true;
-        }
+        /// <summary>
+        /// 为角色初始化视野
+        /// </summary>
         public void InitCharacterSight (int netId) {
-            m_unitNetworkIdLinkedList.AddFirst (netId);
             m_networkIdAndActorUnitListInSightDict.Add (netId, new List<E_ActorUnit> ());
         }
+        /// <summary>
+        /// 移除一个角色的视野信息
+        /// </summary>
         public void RemoveCharacterSight (int netId) {
             m_networkIdAndActorUnitListInSightDict.Remove (netId);
         }
+        /// <summary>
+        /// 添加可视单位
+        /// </summary>
         public void SetUnitVisible (E_ActorUnit unit) {
             m_networkIdAndActorUnitVisibleDict[unit.m_networkId] = unit;
         }
+        /// <summary>
+        /// 移除可视单位
+        /// </summary>
         public void SetUnitInvisible (int netId) {
             m_networkIdAndActorUnitVisibleDict.Remove (netId);
         }

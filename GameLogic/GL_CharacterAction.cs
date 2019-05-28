@@ -13,6 +13,7 @@ namespace MirRemakeBackend.GameLogic {
     /// 例如技能释放, 移动等
     /// </summary>
     class GL_CharacterAction : GameLogicBase {
+        public static GL_CharacterAction s_instance;
         private Dictionary<int, ValueTuple<MyTimer.Time, E_ActorUnit, DE_Skill, DE_SkillData, SkillParam>> m_networkIdAndSkillCastDict = new Dictionary<int, ValueTuple<MyTimer.Time, E_ActorUnit, DE_Skill, DE_SkillData, SkillParam>> ();
         public GL_CharacterAction (INetworkService netService) : base (netService) {
             Messenger.AddListener<int, Vector2> ("CommandSetPosition", CommandSetPosition);
@@ -30,7 +31,7 @@ namespace MirRemakeBackend.GameLogic {
                 var skillToCast = m_networkIdAndSkillCastDict[netIdToCastSkillList[i]];
                 m_networkIdAndSkillCastDict.Remove (netIdToCastSkillList[i]);
                 // 通知技能结算逻辑
-                Messenger.Broadcast<E_ActorUnit, DE_Skill, DE_SkillData, SkillParam> ("NotifySkillSettle", skillToCast.Item2, skillToCast.Item3, skillToCast.Item4, skillToCast.Item5);
+                GL_BattleSettle.s_instance.NotifySkillSettle (skillToCast.Item2, skillToCast.Item3, skillToCast.Item4, skillToCast.Item5);
             }
         }
         public override void NetworkTick () { }

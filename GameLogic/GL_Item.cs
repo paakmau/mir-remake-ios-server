@@ -11,6 +11,7 @@ namespace MirRemakeBackend.GameLogic {
     /// 装备强化, 附魔, 镶嵌
     /// </summary>
     class GL_Item : GameLogicBase {
+        public static GL_Item s_instance;
         private IDDS_Item m_itemDds;
         public GL_Item (IDDS_Item itemDds, INetworkService netService) : base (netService) {
             m_itemDds = itemDds;
@@ -39,7 +40,7 @@ namespace MirRemakeBackend.GameLogic {
             if (item == null || bag == null || unit == null) return;
             // 从背包中移除一个该物品
             if (bag.RemoveItem (realId, 1) != 1) return;
-            Messenger.Broadcast<DE_Effect, E_ActorUnit, E_ActorUnit> ("NotifyApplyEffect", item.m_consumableDe.m_itemEffect, unit, unit);
+            GL_Effect.s_instance.NotifyApplyEffect(item.m_consumableDe.m_itemEffect, unit, unit);
             // TODO: 考虑数据库修改
             // TODO: 向客户端发送道具消耗
         }

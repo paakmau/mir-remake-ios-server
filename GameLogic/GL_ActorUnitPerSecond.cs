@@ -8,6 +8,7 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_ActorUnitPerSecond : GameLogicBase {
+        public static GL_ActorUnitPerSecond s_instance;
         private float deltaTimeAfterLastSecond = 0f;
         public GL_ActorUnitPerSecond (INetworkService netService) : base (netService) {
         }

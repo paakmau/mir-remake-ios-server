@@ -5,6 +5,7 @@ using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_Sight : GameLogicBase {
+        public static GL_Sight s_instance;
         /// <summary>
         /// 每一帧计算的视野数
         /// </summary>
@@ -13,7 +14,6 @@ namespace MirRemakeBackend.GameLogic {
         public GL_Sight (INetworkService netService) : base (netService) {
             Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
             Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
-            Messenger.AddListener<int> ("NotifyActorUnitDisappear", NotifyActorUnitDisappear);
         }
         public override void Tick (float dT) {
             for (int i = 0; i < c_handleSightNumPerTick; i++) {
@@ -39,8 +39,11 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandRemoveCharacter (int netId) {
             EM_Sight.s_instance.RemoveCharacterSight (netId);
         }
-        public void NotifyActorUnitDisappear (int netId) {
+        public void NotifyActorUnitDead (int netId) {
             EM_Sight.s_instance.SetUnitInvisible (netId);
+        }
+        public void NotifyActorUnitRespawn (E_ActorUnit unit) {
+            EM_Sight.s_instance.SetUnitVisible (unit);
         }
     }
 }

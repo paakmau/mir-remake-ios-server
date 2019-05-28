@@ -78,14 +78,28 @@ namespace MirRemakeBackend {
             EM_Item.s_instance = new EM_Item ();
         }
         static void InitGameLogic () {
+            GL_ActorUnitPerSecond.s_instance = new GL_ActorUnitPerSecond (s_networkService);
+            GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
+            GL_Character.s_instance = new GL_Character (s_characterDds, s_networkService);
+            GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
+            GL_Effect.s_instance = new GL_Effect (s_networkService);
+            GL_Item.s_instance = new GL_Item (s_itemDds, s_networkService);
+            GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
+            GL_Sight.s_instance = new GL_Sight (s_networkService);
+            GL_Skill.s_instance = new GL_Skill (s_skillDds, s_networkService);
+            GL_Status.s_instance = new GL_Status (s_networkService);
+            
             s_gameLogicArr = new GameLogicBase[] {
-                new GL_Character (s_characterDds, s_networkService),
-                new GL_Item (s_itemDds, s_networkService),
-                new GL_Skill (s_skillDds, s_networkService),
-                new GL_CharacterAction (s_networkService),
-                new GL_MonsterAction (s_networkService),
-                new GL_BattleSettle (s_networkService),
-                new GL_Sight (s_networkService)
+                GL_ActorUnitPerSecond.s_instance,
+                GL_BattleSettle.s_instance,
+                GL_Character.s_instance,
+                GL_CharacterAction.s_instance,
+                GL_Effect.s_instance,
+                GL_Item.s_instance,
+                GL_MonsterAction.s_instance,
+                GL_Sight.s_instance,
+                GL_Skill.s_instance,
+                GL_Status.s_instance
             };
         }
     }

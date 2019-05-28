@@ -10,6 +10,7 @@ namespace MirRemakeBackend.GameLogic {
     /// 管理技能的学习, 升级
     /// </summary>
     class GL_Skill : GameLogicBase {
+        public static GL_Skill s_instance;
         private IDDS_Skill m_skillDds;
         public GL_Skill (IDDS_Skill skillDds, INetworkService netService) : base (netService) {
             m_skillDds = skillDds;

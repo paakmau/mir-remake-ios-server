@@ -5,7 +5,7 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     class E_Status {
-        // TODO: 有缘改成命令模式, 可以高雅实现秒伤, 嘲讽等复杂状态
+        // 有缘改成命令模式, 可以高雅实现秒伤, 嘲讽等复杂状态
         public DE_Status m_dataEntity;
         public int m_castererNetworkId;
         public short m_id;
