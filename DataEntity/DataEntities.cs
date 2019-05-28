@@ -62,6 +62,7 @@ namespace MirRemakeBackend.DataEntity {
         }
     }
     class DE_Skill {
+        public readonly short m_skillId;
         public readonly short m_skillMaxLevel;
         public readonly IReadOnlyList<short> m_fatherIdList;
         public readonly IReadOnlyList<short> m_childrenIdList;

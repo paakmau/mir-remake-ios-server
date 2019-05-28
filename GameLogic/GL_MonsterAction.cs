@@ -4,32 +4,20 @@ using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
+using MirRemakeBackend.EntityManager;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 控制Monster的AI
-    /// TODO: 处理Monster的Respawn
     /// </summary>
-    class GL_MonsterAction : GameLogicBase {
-        abstract class SkillParamGeneratorBase {
-            public abstract SkillAimType m_AimType { get; }
-            public virtual bool InCastRange (E_ActorUnit self, float castRange, E_ActorUnit aimedTarget) {
-                return (self.m_position - aimedTarget.m_position).LengthSquared() <= castRange * castRange;
-            }
-            /// <summary>
-            /// 完善技能参数
-            /// 例如自动选择最近的目标等, 看甲方
-            /// </summary>
-            /// <returns></returns>
-            public abstract SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget);
-        }
-        class SPG_AIM_CIRCLE : SkillParamGeneratorBase {
-            public override SkillAimType m_AimType { get { return SkillAimType.AIM_CIRCLE; } }
-            public override SkillParam GetSkillParam (E_ActorUnit self, E_ActorUnit aimedTarget) {
-                return new SkillParam (m_AimType, aimedTarget, Vector2.Zero, Vector2.Zero);
+    partial class GL_MonsterAction : GameLogicBase {
+        private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
+        public GL_MonsterAction (INetworkService netService) : base (netService) {
+            var monEn = EM_ActorUnit.s_instance.GetMonsterEn ();
+            while (monEn.MoveNext ()) {
+                var mfsm = new MFSM (monEn.Current.Value);
             }
         }
-        public GL_MonsterAction (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
     }

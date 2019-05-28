@@ -93,37 +93,6 @@ namespace MirRemakeBackend.Entity {
         public void AddSpAttr (ActorUnitSpecialAttributeType type, int value) {
             m_specialAttributeDict[type] += value;
         }
-        public virtual void Tick (float dT) {
-            if (m_IsDead) return;
 
-            int maxDeltaHP = 0;
-            int killerNetId = 0;
-            // 移除超时的状态 与 得到状态伤害最高的攻击者
-            for (int i = m_statusList.Count - 1; i >= 0; i--) {
-                if (MyTimer.CheckTimeUp (m_statusList[i].m_endTime)) {
-                    RemoveStatusToAttr (m_statusList[i]);
-                    m_statusList.RemoveAt (i);
-                } else {
-                    int dHP = m_statusList[i].m_DeltaHP;
-                    if (dHP > maxDeltaHP) {
-                        maxDeltaHP = dHP;
-                        killerNetId = m_statusList[i].m_castererNetworkId;
-                    }
-                }
-            }
-
-            // 根据状态处理具体属性的每秒变化
-            deltaTimeAfterLastSecond += dT;
-            while (deltaTimeAfterLastSecond >= 1.0f) {
-                deltaTimeAfterLastSecond -= 1.0f;
-                int newHP = m_CurHP + m_DeltaHPPerSecond;
-                int newMP = m_CurMP + m_DeltaMPPerSecond;
-                m_CurHP = Math.Max (Math.Min (newHP, m_MaxHP), 0);
-                m_CurMP = Math.Max (Math.Min (newMP, m_MaxMP), 0);
-            }
-
-            if (m_IsDead)
-                SM_ActorUnit.s_instance.NotifyUnitDead (killerNetId, m_networkId);
-        }
     }
 }

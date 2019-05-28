@@ -51,7 +51,7 @@ namespace MirRemakeBackend.GameLogic {
             // 处理特殊属性
             var sAttrList = status.m_dataEntity.m_specialAttributeList;
             for (int i=0; i<sAttrList.Count; i++)
-                unit.AddSpAttr ()
+                unit.AddSpAttr (sAttrList[i], k);
             // TODO: 通知Client
         }
     }

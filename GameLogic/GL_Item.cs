@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.EntityManager;
@@ -25,19 +26,20 @@ namespace MirRemakeBackend.GameLogic {
             var storeHouseDdo = m_itemDds.GetStoreHouseByCharacterId (charId);
             var eqRegionDdo = m_itemDds.GetEquipmentRegionByCharacterId (charId);
             var equipmentDdo = m_itemDds.GetAllEquipmentByCharacterId (charId);
-            EM_Item.s_instance.InitCharacterItem(netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo);
+            EM_Item.s_instance.InitCharacterItem (netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo);
             // TODO: 把bag, storeHouse, equiped道具, 发送给Client
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacterItem (netId);
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
-            E_Item item = EM_Item.s_instance.GetItemByRealId (realId);
+            E_ConsumableItem item = EM_Item.s_instance.GetItemByRealId (realId) as E_ConsumableItem;
             E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
-            if (item == null || bag == null) return;
+            E_ActorUnit unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            if (item == null || bag == null || unit == null) return;
             // 从背包中移除一个该物品
             if (bag.RemoveItem (realId, 1) != 1) return;
-            Messenger.Broadcast<int, E_ConsumableItem> ("NotifyUseConsumable", netId, (E_ConsumableItem) item);
+            Messenger.Broadcast<DE_Effect, E_ActorUnit, E_ActorUnit> ("NotifyApplyEffect", item.m_consumableDe.m_itemEffect, unit, unit);
             // TODO: 考虑数据库修改
             // TODO: 向客户端发送道具消耗
         }
@@ -53,13 +55,32 @@ namespace MirRemakeBackend.GameLogic {
             // 如果该位置原本非空, 存入背包
             if (oriEq != null) {
                 bag.StoreItem (oriEq);
-                // 通知装备被卸下
-                Messenger.Broadcast<int, E_EquipmentItem> ("NotifyTakeOffEquipment", netId, oriEq);
+                // 装备被卸下Attr
+                EquipmentToAttr (netId, oriEq, -1);
             }
-            // 通知装备穿上
-            Messenger.Broadcast<int, E_EquipmentItem> ("NotifyPutOnEquipment", netId, equipment);
+            // 装备穿上Attr
+            EquipmentToAttr (netId, oriEq, 1);
             // TODO: 考虑数据库修改
             // TODO: 向客户端发送装备更替
+        }
+        private void EquipmentToAttr (int netId, E_EquipmentItem eqObj, int k) {
+            E_ActorUnit unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            if (unit == null) return;
+            // 处理基础属性与强化
+            var attrList = eqObj.m_equipmentDe.m_attrList;
+            for (int i = 0; i < attrList.Count; i++)
+                unit.AddConAttr (attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2));
+            // 处理附魔
+            var enchantAttr = eqObj.m_enchantAttr;
+            foreach (var attr in enchantAttr)
+                unit.AddConAttr (attr.Item1, k * attr.Item2);
+            // 处理镶嵌
+            var gemIdList = eqObj.m_inlaidGemIdList;
+            for (int i = 0; i < gemIdList.Count; i++) {
+                var gemDe = EM_Item.s_instance.GetGemById (gemIdList[i]);
+                for (int j = 0; j < gemDe.m_attrList.Count; j++)
+                    unit.AddConAttr (gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2);
+            }
         }
     }
 }

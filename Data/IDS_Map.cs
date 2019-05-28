@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using System.Collections.Generic;
 
@@ -11,6 +12,6 @@ namespace MirRemakeBackend.Data {
         /// Key: MonsterId  
         /// Value: 刷新位置
         /// </returns>
-        KeyValuePair<short, Vector2>[] GetAllMonsterRespawnPosition ();
+        ValueTuple<short, Vector2>[] GetAllMonsterRespawnPosition ();
     }
 }

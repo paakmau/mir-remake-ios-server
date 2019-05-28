@@ -1,12 +1,12 @@
-using System.Numerics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 
 namespace MirRemakeBackend.EntityManager {
-    class NetworkIdManager{
+    class NetworkIdManager {
         public static NetworkIdManager s_instance = new NetworkIdManager ();
         private HashSet<int> m_actorUnitNetIdSet = new HashSet<int> ();
         private HashSet<int> m_itemNetIdSet = new HashSet<int> ();
@@ -40,17 +40,31 @@ namespace MirRemakeBackend.EntityManager {
         public static EM_ActorUnit s_instance;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
-        private Dictionary<int, Vector2> m_networkIdAndMonsterRespawnDict = new Dictionary<int, Vector2> ();
         public EM_ActorUnit () {
+            // 建立怪物技能索引
+            Dictionary<short, ValueTuple<DE_Skill, DE_SkillData>[]> monSkillDict = new Dictionary<short, ValueTuple<DE_Skill, DE_SkillData>[]> ();
+            var monsterEn = DEM_ActorUnit.s_instance.GetAllMonsterEn ();
+            while (monsterEn.MoveNext ()) {
+                short monsterId = monsterEn.Current.Key;
+                var skillIdAndLvList = monsterEn.Current.Value.Item2.m_skillIdAndLevelList;
+                ValueTuple<DE_Skill, DE_SkillData>[] monSkillArr = new ValueTuple<DE_Skill, DE_SkillData>[skillIdAndLvList.Count];
+                for (int i = 0; i < skillIdAndLvList.Count; i++) {
+                    DE_Skill skillDe;
+                    DE_SkillData skillDataDe;
+                    if (!DEM_Skill.s_instance.GetSkillByIdAndLevel (skillIdAndLvList[i].Item1, skillIdAndLvList[i].Item2, out skillDe, out skillDataDe))
+                        continue;
+                    monSkillArr[i] = new ValueTuple<DE_Skill, DE_SkillData> (skillDe, skillDataDe);
+                }
+                monSkillDict[monsterId] = monSkillArr;
+            }
             // 实例化所有的怪物
             var idAndPosList = DEM_Map.s_instance.GetAllMonsterIdAndRespawnPosition ();
             int[] netIdArr = NetworkIdManager.s_instance.AssignNetworkId (idAndPosList.Count);
             for (int i = 0; i < idAndPosList.Count; i++) {
-                Tuple<DE_ActorUnit, DE_Monster> deTuple = DEM_ActorUnit.s_instance.GetMonsterById (idAndPosList[i].Key);
+                Tuple<DE_ActorUnit, DE_Monster> deTuple = DEM_ActorUnit.s_instance.GetMonsterById (idAndPosList[i].Item1);
                 E_Monster monster = new E_Monster ();
-                monster.Reset (netIdArr[i], idAndPosList[i].Value, deTuple.Item1, deTuple.Item2);
+                monster.Reset (netIdArr[i], idAndPosList[i].Item2, monSkillDict[idAndPosList[i].Item1], deTuple.Item1, deTuple.Item2);
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
-                m_networkIdAndMonsterRespawnDict[netIdArr[i]] = idAndPosList[i].Value;
             }
         }
         public int AssignCharacterNetworkId () {
@@ -93,6 +107,9 @@ namespace MirRemakeBackend.EntityManager {
         }
         public Dictionary<int, E_Character>.Enumerator GetCharacterEnumerator () {
             return m_networkIdAndCharacterDict.GetEnumerator ();
+        }
+        public Dictionary<int, E_Monster>.Enumerator GetMonsterEn () {
+            return m_networkIdAndMonsterDict.GetEnumerator ();
         }
     }
 }

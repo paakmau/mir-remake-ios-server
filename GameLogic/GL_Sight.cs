@@ -14,7 +14,6 @@ namespace MirRemakeBackend.GameLogic {
             Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
             Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
             Messenger.AddListener<int> ("NotifyActorUnitDisappear", NotifyActorUnitDisappear);
-            Messenger.AddListener<E_ActorUnit> ("NotifyActorUnitRespawn", NotifyActorUnitRespawn);
         }
         public override void Tick (float dT) {
             for (int i = 0; i < c_handleSightNumPerTick; i++) {
@@ -42,9 +41,6 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyActorUnitDisappear (int netId) {
             EM_Sight.s_instance.SetUnitInvisible (netId);
-        }
-        public void NotifyActorUnitRespawn (E_ActorUnit unit) {
-            EM_Sight.s_instance.SetUnitVisible (unit);
         }
     }
 }
