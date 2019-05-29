@@ -61,7 +61,8 @@ namespace MirRemakeBackend.EntityManager {
             var idAndPosList = DEM_Map.s_instance.GetAllMonsterIdAndRespawnPosition ();
             int[] netIdArr = NetworkIdManager.s_instance.AssignNetworkId (idAndPosList.Count);
             for (int i = 0; i < idAndPosList.Count; i++) {
-                Tuple<DE_ActorUnit, DE_Monster> deTuple = DEM_ActorUnit.s_instance.GetMonsterById (idAndPosList[i].Item1);
+                ValueTuple<DE_ActorUnit, DE_MonsterData> deTuple;
+                DEM_ActorUnit.s_instance.GetMonsterById (idAndPosList[i].Item1, out deTuple);
                 E_Monster monster = new E_Monster ();
                 monster.Reset (netIdArr[i], idAndPosList[i].Item2, monSkillDict[idAndPosList[i].Item1], deTuple.Item1, deTuple.Item2);
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
@@ -80,7 +81,8 @@ namespace MirRemakeBackend.EntityManager {
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
             newChar = s_entityPool.m_characterPool.GetInstance ();
-            var deTuple = DEM_ActorUnit.s_instance.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level);
+            ValueTuple<DE_ActorUnit, DE_CharacterData> deTuple;
+            DEM_ActorUnit.s_instance.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out deTuple);
             m_networkIdAndCharacterDict[netId] = newChar;
             newChar.Reset (netId, charId, deTuple.Item1, deTuple.Item2, charDdo);
             return newChar;
@@ -89,7 +91,7 @@ namespace MirRemakeBackend.EntityManager {
         /// 从场景中移除角色  
         /// </summary>
         /// <param name="netId"></param>
-        public void RemoveCharacterByNetworkId (int netId) {
+        public void RemoveCharacter (int netId) {
             E_Character charObj = null;
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out charObj))
                 return;

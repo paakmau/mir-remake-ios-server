@@ -1,5 +1,6 @@
 using System;
 using LiteNetLib.Utils;
+using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
     class CC_ApplyCastSkillBegin : IClientCommand {
@@ -7,7 +8,7 @@ namespace MirRemakeBackend.Network {
         public void Execute(NetDataReader reader, int netId) {
             short skillId = reader.GetShort ();
             NO_SkillParam skillParm = reader.GetSkillParam ();
-            Messenger.Broadcast<int, short, NO_SkillParam> ("CommandApplyCastSkillBegin", netId, skillId, skillParm);
+            GL_CharacterAction.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
     interface INetworkService {
@@ -76,7 +77,7 @@ namespace MirRemakeBackend.Network {
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
             // 分配NetId
-            Messenger.Broadcast ("CommandAssignNetworkId");
+            GL_Character.s_instance.CommandAssignNetworkId ();
             m_peerWaitForNetworkIdStack.Push (peer);
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
@@ -84,7 +85,12 @@ namespace MirRemakeBackend.Network {
             m_netIdAndPeerDict.Remove (netId);
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
-            Messenger.Broadcast<int> ("CommandRemoveCharacter", netId);
+            // 移除角色
+            GL_Character.s_instance.CommandRemoveCharacter (netId);
+            GL_Skill.s_instance.CommandRemoveCharacter (netId);
+            GL_Item.s_instance.CommandRemoveCharacter (netId);
+            GL_Status.s_instance.CommandRemoveCharacter (netId);
+            GL_Mission.s_instance.CommandRemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
     }

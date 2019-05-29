@@ -78,7 +78,7 @@ namespace MirRemakeBackend {
             EM_Item.s_instance = new EM_Item ();
         }
         static void InitGameLogic () {
-            GL_ActorUnitPerSecond.s_instance = new GL_ActorUnitPerSecond (s_networkService);
+            GL_ActorUnit.s_instance = new GL_ActorUnit (s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (s_characterDds, s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
@@ -90,7 +90,7 @@ namespace MirRemakeBackend {
             GL_Status.s_instance = new GL_Status (s_networkService);
             
             s_gameLogicArr = new GameLogicBase[] {
-                GL_ActorUnitPerSecond.s_instance,
+                GL_ActorUnit.s_instance,
                 GL_BattleSettle.s_instance,
                 GL_Character.s_instance,
                 GL_CharacterAction.s_instance,

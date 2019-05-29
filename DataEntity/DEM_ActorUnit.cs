@@ -9,34 +9,34 @@ namespace MirRemakeBackend.DataEntity {
     /// </summary>
     class DEM_ActorUnit {
         public static DEM_ActorUnit s_instance;
-        private Dictionary<short, Tuple<DE_ActorUnit, DE_Monster>> m_monsterDict = new Dictionary<short, Tuple<DE_ActorUnit, DE_Monster>> ();
-        private Dictionary<OccupationType, Tuple<DE_ActorUnit, DE_Character>[]> m_characterDict = new Dictionary<OccupationType, Tuple<DE_ActorUnit, DE_Character>[]> ();
+        private Dictionary<short, ValueTuple<DE_ActorUnit, DE_MonsterData>> m_monsterDict = new Dictionary<short, ValueTuple<DE_ActorUnit, DE_MonsterData>> ();
+        private Dictionary<OccupationType, ValueTuple<DE_ActorUnit, DE_CharacterData>[]> m_characterDict = new Dictionary<OccupationType, ValueTuple<DE_ActorUnit, DE_CharacterData>[]> ();
         public DEM_ActorUnit (IDS_Monster monDs, IDS_Character charDs) {
             var monsterDoArr = monDs.GetAllMonster ();
             var charDoAllLvArr = charDs.GetAllCharacter ();
             foreach (var monsterDo in monsterDoArr)
-                m_monsterDict.Add (monsterDo.m_monsterId, new Tuple<DE_ActorUnit, DE_Monster> (new DE_ActorUnit (monsterDo), new DE_Monster (monsterDo)));
+                m_monsterDict.Add (monsterDo.m_monsterId, new ValueTuple<DE_ActorUnit, DE_MonsterData> (new DE_ActorUnit (monsterDo), new DE_MonsterData (monsterDo)));
             foreach (var charDoAllLv in charDoAllLvArr) {
-                Tuple<DE_ActorUnit, DE_Character>[] charAllLv = new Tuple<DE_ActorUnit, DE_Character>[charDoAllLv.Length];
+                ValueTuple<DE_ActorUnit, DE_CharacterData>[] charAllLv = new ValueTuple<DE_ActorUnit, DE_CharacterData>[charDoAllLv.Length];
                 for (int i = 0; i < charDoAllLv.Length; i++)
-                    charAllLv[i] = new Tuple<DE_ActorUnit, DE_Character> (new DE_ActorUnit (charDoAllLv[i]), new DE_Character (charDoAllLv[i]));
+                    charAllLv[i] = new ValueTuple<DE_ActorUnit, DE_CharacterData> (new DE_ActorUnit (charDoAllLv[i]), new DE_CharacterData (charDoAllLv[i]));
                 m_characterDict.Add (charDoAllLv[0].m_occupation, charAllLv);
             }
         }
-        public Tuple<DE_ActorUnit, DE_Character> GetCharacterByOccupationAndLevel (OccupationType occupation, short level) {
-                Tuple<DE_ActorUnit, DE_Character>[] charAllLv = null;
-                if (!m_characterDict.TryGetValue (occupation, out charAllLv))
-                    return null;
-                if (charAllLv.Length < level)
-                    return null;
-                return charAllLv[level - 1];
-            }
-        public Tuple<DE_ActorUnit, DE_Monster> GetMonsterById (short monsterId) {
-                Tuple<DE_ActorUnit, DE_Monster> res = null;
-                m_monsterDict.TryGetValue (monsterId, out res);
-                return res;
-            }
-        public Dictionary<short, Tuple<DE_ActorUnit, DE_Monster>>.Enumerator GetAllMonsterEn () {
+        public bool GetCharacterByOccupationAndLevel (OccupationType occupation, short level, out ValueTuple<DE_ActorUnit, DE_CharacterData> res) {
+            res = default;
+            ValueTuple<DE_ActorUnit, DE_CharacterData>[] charAllLv = null;
+            if (!m_characterDict.TryGetValue (occupation, out charAllLv))
+                return false;
+            if (charAllLv.Length < level)
+                return false;
+            res = charAllLv[level - 1];
+            return true;
+        }
+        public bool GetMonsterById (short monsterId, out ValueTuple<DE_ActorUnit, DE_MonsterData> res) {
+            return m_monsterDict.TryGetValue (monsterId, out res);
+        }
+        public Dictionary<short, ValueTuple<DE_ActorUnit, DE_MonsterData>>.Enumerator GetAllMonsterEn () {
             return m_monsterDict.GetEnumerator ();
         }
     }

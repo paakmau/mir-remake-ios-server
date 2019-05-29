@@ -1,6 +1,6 @@
-using System.Numerics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.EntityManager;
@@ -15,11 +15,7 @@ namespace MirRemakeBackend.GameLogic {
     class GL_CharacterAction : GameLogicBase {
         public static GL_CharacterAction s_instance;
         private Dictionary<int, ValueTuple<MyTimer.Time, E_ActorUnit, DE_Skill, DE_SkillData, SkillParam>> m_networkIdAndSkillCastDict = new Dictionary<int, ValueTuple<MyTimer.Time, E_ActorUnit, DE_Skill, DE_SkillData, SkillParam>> ();
-        public GL_CharacterAction (INetworkService netService) : base (netService) {
-            Messenger.AddListener<int, Vector2> ("CommandSetPosition", CommandSetPosition);
-            Messenger.AddListener<int, short, NO_SkillParam> ("CommandApplyCastSkillBegin", CommandApplyCastSkillBegin);
-            Messenger.AddListener<int> ("CommandApplyCastSkillSingCancel", CommandApplyCastSkillSingCancel);
-        }
+        public GL_CharacterAction (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 判断角色技能吟唱与前摇结束
             List<int> netIdToCastSkillList = new List<int> ();

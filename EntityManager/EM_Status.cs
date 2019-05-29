@@ -12,9 +12,14 @@ namespace MirRemakeBackend.EntityManager {
             m_networkIdAndStatusListDict.Add (netId, new List<E_Status> ());
         }
         public void RemoveCharacterStatus (int netId) {
+            List<E_Status> statusList = null;
+            m_networkIdAndStatusListDict.TryGetValue (netId, out statusList);
+            if (statusList == null) return;
             m_networkIdAndStatusListDict.Remove (netId);
+            for (int i=0; i<statusList.Count; i++)
+                s_entityPool.m_statusPool.RecycleInstance (statusList[i]);
         }
-        public List<E_Status> AddStatus (int netId, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
+        public List<E_Status> AttachStatus (int netId, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
             List<E_Status> oriStatusList = null;
             if (!m_networkIdAndStatusListDict.TryGetValue (netId, out oriStatusList))
                 return null;
@@ -27,7 +32,7 @@ namespace MirRemakeBackend.EntityManager {
             }
             return t_statusList;
         }
-        public void RemoveStatus (int netId, List<int> orderedIndexList) {
+        public void RemoveOrderedStatus (int netId, List<int> orderedIndexList) {
             List<E_Status> statusList = null;
             m_networkIdAndStatusListDict.TryGetValue (netId, out statusList);
             if (statusList == null)

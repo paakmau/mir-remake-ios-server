@@ -39,4 +39,8 @@ namespace MirRemakeBackend.DynamicData {
         public short m_skillLevel;
         public int m_masterly;
     }
+    struct DDO_Mission {
+        public short m_missionId;
+        public List<int> m_missionTargetProgressList;
+    }
 }

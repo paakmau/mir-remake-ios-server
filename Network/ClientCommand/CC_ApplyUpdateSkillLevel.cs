@@ -1,4 +1,5 @@
 using LiteNetLib.Utils;
+using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
     class CC_ApplyUpdateSkillLevel : IClientCommand {
@@ -6,7 +7,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short skillId = reader.GetShort ();
             short targetSkillLevel = reader.GetShort ();
-            Messenger.Broadcast<int, short, short> ("CommandUpdateSkillLevel", netId, skillId, targetSkillLevel);
+            GL_Skill.s_instance.CommandUpdateSkillLevel (netId, skillId, targetSkillLevel);
         }
     }
 }

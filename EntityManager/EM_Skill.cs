@@ -28,7 +28,13 @@ namespace MirRemakeBackend.EntityManager {
             return res;
         }
         public void RemoveCharacterSkill (int netId) {
+            Dictionary<short, E_Skill> skills = null;
+            m_networkIdAndCharacterSkillDict.TryGetValue (netId, out skills);
+            if (skills == null) return;
             m_networkIdAndCharacterSkillDict.Remove (netId);
+            var en = skills.GetEnumerator ();
+            while (en.MoveNext ())
+                s_entityPool.m_skillPool.RecycleInstance (en.Current.Value);
         }
         public E_Skill GetCharacterSkillByIdAndNetworkId (short skillId, int netId) {
             Dictionary<short, E_Skill> learnedSkill = null;

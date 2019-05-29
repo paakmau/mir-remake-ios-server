@@ -11,20 +11,20 @@ namespace MirRemakeBackend.DataEntity {
         public DE_ActorUnit (DO_Monster monster) : this (monster.m_attrArr) { }
         public DE_ActorUnit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }
     }
-    class DE_Monster {
+    class DE_MonsterData {
         public readonly short m_level;
         public readonly IReadOnlyList<ValueTuple<short, short>> m_skillIdAndLevelList;
         public readonly IReadOnlyList<short> m_dropItemIdList;
-        public DE_Monster (DO_Monster monsterDo) {
+        public DE_MonsterData (DO_Monster monsterDo) {
             m_skillIdAndLevelList = new List<ValueTuple<short, short>> (monsterDo.m_skillIdAndLevelArr);
             m_dropItemIdList = new List<short> (monsterDo.m_dropItemIdArr);
         }
     }
-    class DE_Character {
+    class DE_CharacterData {
         public readonly int m_upgradeExperienceInNeed;
         public readonly IReadOnlyList<ValueTuple<ActorUnitMainAttributeType, int>> m_mainAttributeList;
         public readonly int m_mainAttributePointNum;
-        public DE_Character (DO_Character charDo) {
+        public DE_CharacterData (DO_Character charDo) {
             m_upgradeExperienceInNeed = charDo.m_upgradeExperienceInNeed;
             m_mainAttributeList = new List<ValueTuple<ActorUnitMainAttributeType, int>> (charDo.m_mainAttributeArr);
             m_mainAttributePointNum = charDo.m_mainAttrPointNumber;
@@ -108,30 +108,32 @@ namespace MirRemakeBackend.DataEntity {
         }
     }
     class DE_Item {
+        public readonly short m_id;
         public readonly ItemType m_type;
         public readonly short m_maxNum;
         public readonly ItemQuality m_quality;
         public readonly long m_price;
         public DE_Item (DO_Item itemDo) {
+            m_id = itemDo.m_itemId;
             m_type = itemDo.m_type;
             m_maxNum = itemDo.m_maxNum;
             m_quality = itemDo.m_quality;
             m_price = itemDo.m_price;
         }
     }
-    class DE_Consumable {
+    class DE_ConsumableData {
         public readonly DE_Effect m_itemEffect;
-        public DE_Consumable (DO_Consumable consumDo) {
+        public DE_ConsumableData (DO_Consumable consumDo) {
             m_itemEffect = new DE_Effect (consumDo.m_effect);
         }
     }
-    class DE_Equipment {
+    class DE_EquipmentData {
         public readonly OccupationType m_validOccupation;
         public readonly short m_equipLevelInNeed;
         public readonly EquipmentPosition m_equipPosition;
         public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_attrList;
         public readonly float m_attrWave;
-        public DE_Equipment (DO_Equipment equipDo) {
+        public DE_EquipmentData (DO_Equipment equipDo) {
             m_validOccupation = equipDo.m_validOccupation;
             m_equipLevelInNeed = equipDo.m_equipLevelInNeed;
             m_equipPosition = equipDo.m_equipPosition;
@@ -139,10 +141,24 @@ namespace MirRemakeBackend.DataEntity {
             m_attrWave = equipDo.m_attrWave;
         }
     }
-    class DE_Gem {
+    class DE_GemData {
         public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_attrList;
-        public DE_Gem (DO_Gem gemDo) {
+        public DE_GemData (DO_Gem gemDo) {
             m_attrList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (gemDo.m_equipmentAttributeArr);
+        }
+    }
+    class DE_Mission {
+        public readonly short m_id;
+        public readonly IReadOnlyList<ValueTuple<MissionTargetType, short, int>> m_targetAndParamList;
+        public readonly int m_bonusCoin;
+        public readonly int m_bonusExperience;
+        public readonly IReadOnlyList<ValueTuple<short, short>> m_bonusItemIdAndNumList;
+        public DE_Mission (DO_Mission mDo) {
+            m_id = mDo.m_id;
+            m_targetAndParamList = new List<ValueTuple<MissionTargetType, short, int>> (mDo.m_missionTargetArr);
+            m_bonusCoin = mDo.m_bonusCoin;
+            m_bonusExperience = mDo.m_bonusExperience;
+            m_bonusItemIdAndNumList = new List<ValueTuple<short, short>> (mDo.m_bonusItemIdAndNumArr);
         }
     }
 }

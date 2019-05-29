@@ -93,18 +93,20 @@ namespace MirRemakeBackend.Data {
     struct DO_Mission {
         public short m_id;
         public MissionOccupation m_missionOccupation;
-        public string m_title;
-        public string m_details;
-        public string[] m_conversationsWhenAccepting;
-        public string[] m_conversationWhenDelivering;
-        public int m_acceptingNPCID;
-        public int m_deliveringNPCID;
         public short m_levelInNeed;
         public int[] m_fatherMissionIdArr;
         public int[] m_childrenMissions;
-        public ValueTuple<MissionTargetType, ValueTuple<short, int>>[] m_missionTarget;
-        public int m_bonusMoney;
-        public int m_bonusExperiences;
-        public ValueTuple<short, short>[] m_bonusItemIdAndNumList;
+        public int m_acceptingNPCID;
+        public int m_deliveringNPCID;
+        /// <summary>
+        /// 一个任务有多个目标  
+        /// 一个目标由 目标类型, Id参数, 数值参数 三个变量描述  
+        /// 例: 与Npc交流 Id参数为NpcId 数值参数为1
+        /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量
+        /// </summary>
+        public ValueTuple<MissionTargetType, short, int>[] m_missionTargetArr;
+        public int m_bonusCoin;
+        public int m_bonusExperience;
+        public ValueTuple<short, short>[] m_bonusItemIdAndNumArr;
     }
 }

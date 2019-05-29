@@ -4,13 +4,13 @@ using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend.Entity {
     class E_Character : E_ActorUnit {
-        private DE_Character m_characterDe;
+        private DE_CharacterData m_characterDe;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.PLAYER; } }
         public int m_UpgradeExperienceInNeed { get { return m_characterDe.m_upgradeExperienceInNeed; } }
         public int m_characterId;
         public int m_experience;
         public long m_coin;
-        public void Reset (int netId, int charId, DE_ActorUnit auDe, DE_Character charDe, DDO_Character charDdo) {
+        public void Reset (int netId, int charId, DE_ActorUnit auDe, DE_CharacterData charDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_networkId = netId;

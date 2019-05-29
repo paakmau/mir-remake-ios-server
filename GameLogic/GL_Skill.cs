@@ -14,9 +14,6 @@ namespace MirRemakeBackend.GameLogic {
         private IDDS_Skill m_skillDds;
         public GL_Skill (IDDS_Skill skillDds, INetworkService netService) : base (netService) {
             m_skillDds = skillDds;
-            Messenger.AddListener<int, int> ("CommandInitCharacterId", CommandInitCharacterId);
-            Messenger.AddListener<int> ("CommandRemoveCharacter", CommandRemoveCharacter);
-            Messenger.AddListener<int, short, short> ("CommandUpdateSkillLevel", CommandUpdateSkillLevel);
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }

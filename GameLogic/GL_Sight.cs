@@ -4,6 +4,9 @@ using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
+    /// <summary>
+    /// 每帧计算视野
+    /// </summary>
     class GL_Sight : GameLogicBase {
         public static GL_Sight s_instance;
         private const float c_sightRadius = 100f;
