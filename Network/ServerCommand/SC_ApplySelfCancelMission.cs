@@ -6,9 +6,9 @@ namespace MirRemakeBackend.Network {
     class SC_ApplySelfCancelMission : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CANCEL_MISSION; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        public List<int> m_ToClientList { get; }
+        public IReadOnlyList<int> m_ToClientList { get; }
         private short m_missionId;
-        public SC_ApplySelfCancelMission (List<int> toClientList, short missionId) {
+        public SC_ApplySelfCancelMission (IReadOnlyList<int> toClientList, short missionId) {
             m_ToClientList = toClientList;
             m_missionId = missionId;
         }

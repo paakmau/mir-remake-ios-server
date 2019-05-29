@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -6,11 +7,11 @@ namespace MirRemakeBackend.Network {
     class SC_ApplyAllEffect : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_EFFECT; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        public List<int> m_ToClientList { get; }
+        public IReadOnlyList<int> m_ToClientList { get; }
         private short m_effectAnimId;
         private byte m_statusNum;
-        private KeyValuePair<int, E_Status[]>[] m_allNetIdAndStatusArrPairArr;
-        public SC_ApplyAllEffect (List<int> toClientList, short effectAnimId, byte statusNum, KeyValuePair<int, E_Status[]>[] allNetIdAndStatusArrPairArr) {
+        private ValueTuple<int, NO_Status[]>[] m_allNetIdAndStatusArrPairArr;
+        public SC_ApplyAllEffect (IReadOnlyList<int> toClientList, short effectAnimId, byte statusNum, ValueTuple<int, NO_Status[]>[] allNetIdAndStatusArrPairArr) {
             m_ToClientList = toClientList;
             m_effectAnimId = effectAnimId;
             m_statusNum = statusNum;
@@ -22,19 +23,19 @@ namespace MirRemakeBackend.Network {
             int unitHitNum = 0;
             if (m_statusNum != 0)
                 foreach (var pair in m_allNetIdAndStatusArrPairArr)
-                    if (pair.Value != null)
+                    if (pair.Item2 != null)
                         unitHitNum++;
             writer.Put ((byte)unitHitNum);
             foreach (var pair in m_allNetIdAndStatusArrPairArr)
-                if (pair.Value != null) {
-                    writer.Put(pair.Key);
-                    foreach (var status in pair.Value)
-                        writer.Put(status.GetNo ());
+                if (pair.Item2 != null) {
+                    writer.Put(pair.Item1);
+                    foreach (var status in pair.Item2)
+                        writer.Put(status);
                 }
             writer.Put ((byte)(m_allNetIdAndStatusArrPairArr.Length - unitHitNum));
             foreach (var pair in m_allNetIdAndStatusArrPairArr)
-                if (pair.Value == null)
-                    writer.Put(pair.Key);
+                if (pair.Item2 == null)
+                    writer.Put(pair.Item1);
         }
     }
 }

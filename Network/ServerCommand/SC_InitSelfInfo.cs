@@ -6,13 +6,13 @@ namespace MirRemakeBackend.Network {
     class SC_InitSelfInfo : IServerCommand {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_INFO; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        public List<int> m_ToClientList { get; }
+        public IReadOnlyList<int> m_ToClientList { get; }
         private short m_level;
         private int m_exp;
         private short[] m_skillIds;
         private short[] m_skillLevels;
         private int[] m_skillMasterlys;
-        public SC_InitSelfInfo (List<int> toClientList, short level, int exp, short[] skillIds, short[] skillLevels, int[] skillMasterlys) {
+        public SC_InitSelfInfo (IReadOnlyList<int> toClientList, short level, int exp, short[] skillIds, short[] skillLevels, int[] skillMasterlys) {
             m_ToClientList = toClientList;
             m_level = level;
             m_exp = exp;

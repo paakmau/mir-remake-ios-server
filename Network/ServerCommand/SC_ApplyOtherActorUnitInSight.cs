@@ -9,10 +9,10 @@ namespace MirRemakeBackend.Network {
         // TODO: 视野需要有上限
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_IN_SIGHT; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
-        public List<int> m_ToClientList { get; }
+        public IReadOnlyList<int> m_ToClientList { get; }
         private ActorUnitType m_actorUnitType;
         private List<int> m_otherNetIdList;
-        public SC_ApplyOtherActorUnitInSight (List<int> toClientList, ActorUnitType actorUnitType, List<int> otherNetIdList) {
+        public SC_ApplyOtherActorUnitInSight (IReadOnlyList<int> toClientList, ActorUnitType actorUnitType, List<int> otherNetIdList) {
             m_ToClientList = toClientList;
             m_actorUnitType = actorUnitType;
             m_otherNetIdList = otherNetIdList;

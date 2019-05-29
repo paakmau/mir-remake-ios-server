@@ -21,5 +21,14 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyTalkToNpc (int netId, short npcId, short missionId) {
             
         }
+        public void CommandApplyAcceptMission (int netId, short missionId) {
+
+        }
+        public void CommandApplyDeliveryMission (int netId, short missionId) {
+
+        }
+        public void CommandCancelMission (int netId, short missionId) {
+            
+        }
     }
 }
