@@ -58,7 +58,7 @@ namespace MirRemakeBackend.GameLogic {
             // 添加到技能待释放字典
             m_networkIdAndSkillCastDict[netId] = new ValueTuple<MyTimer.Time, E_ActorUnit, DE_Skill, DE_SkillData, SkillParam> (castTime, charObj, skillDe, skillDataDe, skillParam);
             // 向Client发送CastBegin事件
-            var otherList = EM_Sight.s_instance.GetActorUnitsInSightNetworkIdByNetworkId (netId, false);
+            var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (otherList, netId, skillId, parmNo));
         }
         /// <summary>
@@ -68,7 +68,7 @@ namespace MirRemakeBackend.GameLogic {
         /// </summary>
         public void CommandApplyCastSkillSingCancel (int netId) {
             m_networkIdAndSkillCastDict.Remove (netId);
-            var otherList = EM_Sight.s_instance.GetActorUnitsInSightNetworkIdByNetworkId (netId, false);
+            var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (otherList, netId));
         }
     }

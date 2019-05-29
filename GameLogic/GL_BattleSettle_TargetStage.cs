@@ -47,7 +47,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             protected void GetActorUnitsInCircleRange (E_ActorUnit self, Vector2 center, float radius, CampType targetCamp, byte unitNum, List<E_ActorUnit> resList) {
                 resList.Clear ();
-                var unitInSightList = EM_Sight.s_instance.GetRawActorUnitsInSightByNetworkId (self.m_networkId);
+                var unitInSightList = EM_Sight.s_instance.GetRawCharacterSight (self.m_networkId);
                 for (int i = 0; i < unitInSightList.Count; i++) {
                     // 若阵营不匹配
                     if (EM_Camp.s_instance.GetCampType (self, unitInSightList[i]) != targetCamp) continue;

@@ -33,10 +33,8 @@ namespace MirRemakeBackend.GameLogic {
             GL_BattleSettle.s_instance.NotifySkillSettle(monster, skillDe, skillDataDe, sp);
         }
         public void MFSMDead (E_Monster monster) {
-            GL_Sight.s_instance.NotifyActorUnitDead (monster.m_networkId);
         }
         public void MFSMRespawn (E_Monster monster) {
-            GL_Sight.s_instance.NotifyActorUnitRespawn (monster);
         }
     }
 }

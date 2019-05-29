@@ -29,7 +29,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandInitCharacterId (int netId, int charId) {
             // 创建角色实例
             E_Character newChar = EM_ActorUnit.s_instance.InitCharacter (netId, charId, m_characterDds.GetCharacterById (charId));
-            EM_Sight.s_instance.SetUnitVisible (newChar);
+            EM_Sight.s_instance.InitCharacter (newChar);
             EM_Status.s_instance.InitCharacterStatus (netId);
 
             // 向客户端发送角色信息 TODO: 分开发
@@ -37,6 +37,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandRemoveCharacter (int netId) {
             EM_ActorUnit.s_instance.RemoveCharacterByNetworkId (netId);
+            EM_Sight.s_instance.RemoveCharacter (netId);
         }
     }
 }
