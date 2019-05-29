@@ -1,4 +1,5 @@
 using MirRemakeBackend.Network;
+using MirRemakeBackend.EntityManager;
 
 namespace MirRemakeBackend.GameLogic {
     abstract class GameLogicBase {

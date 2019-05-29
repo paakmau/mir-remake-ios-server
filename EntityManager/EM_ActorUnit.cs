@@ -43,8 +43,6 @@ namespace MirRemakeBackend.EntityManager {
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
         public EM_ActorUnit (DEM_ActorUnit dem) {
             m_dem = dem;
-        }
-        public void InitAllMonster () {
             // 实例化所有的怪物
             var idAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
             int[] netIdArr = NetworkIdManager.s_instance.AssignNetworkId (idAndPosList.Count);

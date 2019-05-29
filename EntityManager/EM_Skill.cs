@@ -18,19 +18,23 @@ namespace MirRemakeBackend.EntityManager {
         private Dictionary<short, ValueTuple<DE_Skill, DE_SkillData>[]> m_monsterSkillDict = new Dictionary < short, (DE_Skill, DE_SkillData) [] > ();
         // 怪物技能冷却
         private Dictionary<int, List<ValueTuple<short, MyTimer.Time>>> m_monsterSkillCoolDownDict = new Dictionary<int, List<(short, MyTimer.Time)>> ();
-        public EM_Skill (DEM_Skill dem) {
+        public EM_Skill (DEM_Skill dem, DEM_ActorUnit unitDem) {
             m_dem = dem;
-        }
-        public void InitMonsterSkill (short monId, IReadOnlyList<ValueTuple<short, short>> skillIdAndLvList) {
-            ValueTuple<DE_Skill, DE_SkillData>[] monSkillArr = new ValueTuple<DE_Skill, DE_SkillData>[skillIdAndLvList.Count];
-            for (int i = 0; i < skillIdAndLvList.Count; i++) {
-                DE_Skill skillDe;
-                DE_SkillData skillDataDe;
-                if (!m_dem.GetSkillByIdAndLevel (skillIdAndLvList[i].Item1, skillIdAndLvList[i].Item2, out skillDe, out skillDataDe))
-                    continue;
-                monSkillArr[i] = new ValueTuple<DE_Skill, DE_SkillData> (skillDe, skillDataDe);
+            // 实例化所有怪物技能
+            var monEn = unitDem.GetAllMonsterEn ();
+            while (monEn.MoveNext ()) {
+                short monId = monEn.Current.Key;
+                var skillIdAndLvList = monEn.Current.Value.Item2.m_skillIdAndLevelList;
+                ValueTuple<DE_Skill, DE_SkillData>[] monSkillArr = new ValueTuple<DE_Skill, DE_SkillData>[skillIdAndLvList.Count];
+                for (int i = 0; i < skillIdAndLvList.Count; i++) {
+                    DE_Skill skillDe;
+                    DE_SkillData skillDataDe;
+                    if (!m_dem.GetSkillByIdAndLevel (skillIdAndLvList[i].Item1, skillIdAndLvList[i].Item2, out skillDe, out skillDataDe))
+                        continue;
+                    monSkillArr[i] = new ValueTuple<DE_Skill, DE_SkillData> (skillDe, skillDataDe);
+                }
+                m_monsterSkillDict[monId] = monSkillArr;
             }
-            m_monsterSkillDict[monId] = monSkillArr;
         }
         public void InitMonsterSkillCoolDown (int netId) {
             m_monsterSkillCoolDownDict[netId] = new List<(short, MyTimer.Time)> ();

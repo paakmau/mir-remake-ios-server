@@ -49,8 +49,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         private List<int> t_intList = new List<int> ();
-        public GL_Effect (INetworkService netService) : base (netService) {
-        }
+        public GL_Effect (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         /// <summary>

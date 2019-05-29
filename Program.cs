@@ -60,7 +60,7 @@ namespace MirRemakeBackend {
             EM_ActorUnit.s_instance = new EM_ActorUnit (actorUnitDem);
             EM_Status.s_instance = new EM_Status (statusDem);
             EM_Sight.s_instance = new EM_Sight ();
-            EM_Skill.s_instance = new EM_Skill (skillDem);
+            EM_Skill.s_instance = new EM_Skill (skillDem, actorUnitDem);
             EM_Item.s_instance = new EM_Item (itemDem);
         }
         static void InitGameLogic () {

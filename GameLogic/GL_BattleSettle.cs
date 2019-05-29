@@ -12,8 +12,7 @@ namespace MirRemakeBackend.GameLogic {
     partial class GL_BattleSettle : GameLogicBase {
         public static GL_BattleSettle s_instance;
         private TargetStage m_targetStage = new TargetStage ();
-        public GL_BattleSettle (INetworkService networkService) : base (networkService) {
-        }
+        public GL_BattleSettle (INetworkService networkService) : base (networkService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifySkillSettle (E_ActorUnit self, DE_Skill skillDe, DE_SkillData skillDataDe, SkillParam parm) {

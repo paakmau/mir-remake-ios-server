@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
-using MirRemakeBackend.Network;
 using MirRemakeBackend.EntityManager;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
@@ -30,11 +30,9 @@ namespace MirRemakeBackend.GameLogic {
             // TODO: 通知Client
         }
         public void MFSMSkillSettle (E_Monster monster, DE_Skill skillDe, DE_SkillData skillDataDe, SkillParam sp) {
-            GL_BattleSettle.s_instance.NotifySkillSettle(monster, skillDe, skillDataDe, sp);
+            GL_BattleSettle.s_instance.NotifySkillSettle (monster, skillDe, skillDataDe, sp);
         }
-        public void MFSMDead (E_Monster monster) {
-        }
-        public void MFSMRespawn (E_Monster monster) {
-        }
+        public void MFSMDead (E_Monster monster) { }
+        public void MFSMRespawn (E_Monster monster) { }
     }
 }
