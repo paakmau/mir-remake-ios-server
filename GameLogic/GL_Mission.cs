@@ -3,7 +3,7 @@ using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
-    class GL_Mission : GameLogicBase {
+    partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;
         private IDDS_Mission m_missionDds;
         public GL_Mission (INetworkService ns, IDDS_Mission mDds) : base (ns) {
@@ -19,7 +19,7 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.RemoveCharacter (netId);
         }
         public void CommandApplyTalkToNpc (int netId, short npcId, short missionId) {
-
+            
         }
     }
 }

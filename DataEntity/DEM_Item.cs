@@ -7,7 +7,6 @@ namespace MirRemakeBackend.DataEntity {
     /// 道具  
     /// </summary>
     class DEM_Item {
-        public static DEM_Item s_instance;
         private Dictionary<short, DE_Item> m_itemDict = new Dictionary<short, DE_Item> ();
         private Dictionary<short, DE_ConsumableData> m_consumableDict = new Dictionary<short, DE_ConsumableData> ();
         private Dictionary<short, DE_EquipmentData> m_equipmentDict = new Dictionary<short, DE_EquipmentData> ();

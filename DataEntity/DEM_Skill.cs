@@ -7,7 +7,6 @@ namespace MirRemakeBackend.DataEntity {
     /// 技能  
     /// </summary>
     class DEM_Skill {
-        public static DEM_Skill s_instance;
         private Dictionary<short, DE_Skill> m_skillAllLevelDict;
         public DEM_Skill (IDS_Skill skillDs) {
             var skillDoArr = skillDs.GetAllSkill ();

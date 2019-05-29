@@ -9,12 +9,14 @@ namespace MirRemakeBackend.EntityManager {
     /// </summary>
     class EM_Mission : EntityManagerBase {
         public static EM_Mission s_instance;
+        private DEM_Mission m_dem;
         private Dictionary<int, List<E_Mission>> m_networkIdAndMissionDict = new Dictionary<int, List<E_Mission>> ();
+        public EM_Mission (DEM_Mission dem) { m_dem = dem; }
         public List<E_Mission> InitCharacterMission (int netId, int charId, List<DDO_Mission> ddoList) {
             List<E_Mission> mList = new List<E_Mission> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
                 E_Mission mis = s_entityPool.m_missionPool.GetInstance ();
-                DE_Mission de = DEM_Mission.s_instance.GetMissionById (ddoList[i].m_missionId);
+                DE_Mission de = m_dem.GetMissionById (ddoList[i].m_missionId);
                 mis.Reset (de, ddoList[i]);
                 mList[i] = mis;
             }

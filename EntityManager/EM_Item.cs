@@ -11,17 +11,19 @@ namespace MirRemakeBackend.EntityManager {
     /// </summary>
     class EM_Item : EntityManagerBase {
         public static EM_Item s_instance;
+        private DEM_Item m_dem;
         private Dictionary<long, E_Item> m_realIdAndItemDict = new Dictionary<long, E_Item> ();
         private Dictionary<int, E_Repository> m_networkIdAndBagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
+        public EM_Item (DEM_Item dem) { m_dem = dem; }
         public E_Item GetItemByRealId (long realId) {
             E_Item res = null;
             m_realIdAndItemDict.TryGetValue (realId, out res);
             return res;
         }
         public DE_GemData GetGemById (short itemId) {
-            return DEM_Item.s_instance.GetGemById (itemId);
+            return m_dem.GetGemById (itemId);
         }
         public E_EquipmentRegion GetEquipedByNetworkId (int netId) {
             E_EquipmentRegion er = null;
@@ -47,17 +49,17 @@ namespace MirRemakeBackend.EntityManager {
                 DDO_Item itemDdo = ddoList[i];
                 short itemId = itemDdo.m_itemId;
                 long realId = itemDdo.m_realId;
-                DE_Item itemDe = DEM_Item.s_instance.GetItemById (itemId);
+                DE_Item itemDe = m_dem.GetItemById (itemId);
                 E_Item item = null;
                 switch (itemDe.m_type) {
                     case ItemType.CONSUMABLE:
                         item = s_entityPool.m_consumableItemPool.GetInstance ();
-                        DE_ConsumableData cDe = DEM_Item.s_instance.GetConsumableById (itemId);
+                        DE_ConsumableData cDe = m_dem.GetConsumableById (itemId);
                         ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo);
                         break;
                     case ItemType.EQUIPMENT:
                         item = s_entityPool.m_equipmentItemPool.GetInstance ();
-                        DE_EquipmentData eqDe = DEM_Item.s_instance.GetEquipmentById (itemId);
+                        DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
                         DDO_Equipment eqDdo = eqDdoDict[realId];
                         ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
                         break;
@@ -67,7 +69,7 @@ namespace MirRemakeBackend.EntityManager {
                         break;
                     case ItemType.GEM:
                         item = s_entityPool.m_gemItemPool.GetInstance ();
-                        DE_GemData gDe = DEM_Item.s_instance.GetGemById (itemId);
+                        DE_GemData gDe = m_dem.GetGemById (itemId);
                         ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
                         break;
 

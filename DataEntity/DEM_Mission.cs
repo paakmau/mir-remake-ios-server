@@ -7,7 +7,6 @@ namespace MirRemakeBackend.DataEntity {
     /// 技能  
     /// </summary>
     class DEM_Mission {
-        public static DEM_Mission s_instance;
         private Dictionary<short, DE_Mission> m_missionDict;
         public DEM_Mission (IDS_Mission ds) {
             var doArr = ds.GetAllMission ();

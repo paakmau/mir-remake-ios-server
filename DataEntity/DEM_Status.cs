@@ -7,7 +7,6 @@ namespace MirRemakeBackend.DataEntity {
     /// 技能  
     /// </summary>
     class DEM_Status {
-        public static DEM_Status s_instance;
         private Dictionary<short, DE_Status> m_statusDict;
         public DEM_Status (IDS_Status statusDs) {
             var statusDoArr = statusDs.GetAllStatus ();

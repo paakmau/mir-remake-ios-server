@@ -1,3 +1,4 @@
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
@@ -8,10 +9,10 @@ namespace MirRemakeBackend.DataEntity {
     /// 怪物与角色  
     /// </summary>
     class DEM_ActorUnit {
-        public static DEM_ActorUnit s_instance;
         private Dictionary<short, ValueTuple<DE_ActorUnit, DE_MonsterData>> m_monsterDict = new Dictionary<short, ValueTuple<DE_ActorUnit, DE_MonsterData>> ();
         private Dictionary<OccupationType, ValueTuple<DE_ActorUnit, DE_CharacterData>[]> m_characterDict = new Dictionary<OccupationType, ValueTuple<DE_ActorUnit, DE_CharacterData>[]> ();
-        public DEM_ActorUnit (IDS_Monster monDs, IDS_Character charDs) {
+        private IReadOnlyList<ValueTuple<short, Vector2>> m_monsterIdAndRespawnPositionList;
+        public DEM_ActorUnit (IDS_Monster monDs, IDS_Character charDs, IDS_Map mapDs) {
             var monsterDoArr = monDs.GetAllMonster ();
             var charDoAllLvArr = charDs.GetAllCharacter ();
             foreach (var monsterDo in monsterDoArr)
@@ -22,6 +23,9 @@ namespace MirRemakeBackend.DataEntity {
                     charAllLv[i] = new ValueTuple<DE_ActorUnit, DE_CharacterData> (new DE_ActorUnit (charDoAllLv[i]), new DE_CharacterData (charDoAllLv[i]));
                 m_characterDict.Add (charDoAllLv[0].m_occupation, charAllLv);
             }
+            // 处理怪物刷新位置
+            var respawnPosArr = mapDs.GetAllMonsterRespawnPosition ();
+            m_monsterIdAndRespawnPositionList = new List<ValueTuple<short, Vector2>> (respawnPosArr);
         }
         public bool GetCharacterByOccupationAndLevel (OccupationType occupation, short level, out ValueTuple<DE_ActorUnit, DE_CharacterData> res) {
             res = default;
@@ -38,6 +42,9 @@ namespace MirRemakeBackend.DataEntity {
         }
         public Dictionary<short, ValueTuple<DE_ActorUnit, DE_MonsterData>>.Enumerator GetAllMonsterEn () {
             return m_monsterDict.GetEnumerator ();
+        }
+        public IReadOnlyList<ValueTuple<short, Vector2>> GetAllMonsterIdAndRespawnPosition () {
+            return m_monsterIdAndRespawnPositionList;
         }
     }
 }

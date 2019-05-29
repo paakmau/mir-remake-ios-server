@@ -56,11 +56,11 @@ namespace MirRemakeBackend {
             IDS_Status statusDs = null;
             IDS_Skill skillDs = null;
             IDS_Item itemDs = null;
-            DEM_Map.s_instance = new DEM_Map (mapDs);
-            DEM_ActorUnit.s_instance = new DEM_ActorUnit (monsterDs, charDs);
-            DEM_Status.s_instance = new DEM_Status (statusDs);
-            DEM_Skill.s_instance = new DEM_Skill (skillDs);
-            DEM_Item.s_instance = new DEM_Item (itemDs);
+            DEM_Map mapDem = new DEM_Map (mapDs);
+            DEM_ActorUnit actorUnitDem = new DEM_ActorUnit (monsterDs, charDs);
+            DEM_Status statusDem = new DEM_Status (statusDs);
+            DEM_Skill skillDem = new DEM_Skill (skillDs);
+            DEM_Item itemDem = new DEM_Item (itemDs);
         }
         static void InitDynamicDataService () {
             // TODO: 实例化IDynamicDataService接口的实现
