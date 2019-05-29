@@ -15,14 +15,9 @@ namespace MirRemakeBackend {
     class Program {
         private const float c_networkFrameTime = 0.1f;
         private static NetworkService s_networkService;
-        private static IDDS_Character s_characterDds;
-        private static IDDS_Item s_itemDds;
-        private static IDDS_Skill s_skillDds;
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
             s_networkService = new NetworkService ();
-            InitDynamicDataService ();
-            InitDataEntityManager ();
             InitEntityManager ();
             InitGameLogic ();
 
@@ -48,7 +43,7 @@ namespace MirRemakeBackend {
                 Thread.Sleep (20);
             }
         }
-        static void InitDataEntityManager () {
+        static void InitEntityManager () {
             // TODO: 实例化IDataService接口的实现
             IDS_Map mapDs = null;
             IDS_Character charDs = null;
@@ -56,39 +51,35 @@ namespace MirRemakeBackend {
             IDS_Status statusDs = null;
             IDS_Skill skillDs = null;
             IDS_Item itemDs = null;
-            DEM_Map mapDem = new DEM_Map (mapDs);
-            DEM_ActorUnit actorUnitDem = new DEM_ActorUnit (monsterDs, charDs);
+            // 实例化DataEntity
+            DEM_ActorUnit actorUnitDem = new DEM_ActorUnit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
             DEM_Item itemDem = new DEM_Item (itemDs);
-        }
-        static void InitDynamicDataService () {
-            // TODO: 实例化IDynamicDataService接口的实现
-            s_characterDds = null;
-            s_itemDds = null;
-            s_skillDds = null;
-        }
-        /// <summary>
-        /// 须在初始化DataEntityManager之后调用
-        /// </summary>
-        static void InitEntityManager () {
-            EM_ActorUnit.s_instance = new EM_ActorUnit ();
+            // 实例化EntityManager
+            EM_ActorUnit.s_instance = new EM_ActorUnit (actorUnitDem);
+            EM_Status.s_instance = new EM_Status (statusDem);
             EM_Sight.s_instance = new EM_Sight ();
-            EM_Skill.s_instance = new EM_Skill ();
-            EM_Item.s_instance = new EM_Item ();
+            EM_Skill.s_instance = new EM_Skill (skillDem);
+            EM_Item.s_instance = new EM_Item (itemDem);
         }
         static void InitGameLogic () {
+            // TODO: 实例化IDynamicDataService接口的实现
+            IDDS_Character characterDds = null;
+            IDDS_Item itemDds = null;
+            IDDS_Skill skillDds = null;
+            // 实例化GL层
             GL_ActorUnit.s_instance = new GL_ActorUnit (s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
-            GL_Character.s_instance = new GL_Character (s_characterDds, s_networkService);
+            GL_Character.s_instance = new GL_Character (characterDds, s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_Effect.s_instance = new GL_Effect (s_networkService);
-            GL_Item.s_instance = new GL_Item (s_itemDds, s_networkService);
+            GL_Item.s_instance = new GL_Item (itemDds, s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
             GL_Sight.s_instance = new GL_Sight (s_networkService);
-            GL_Skill.s_instance = new GL_Skill (s_skillDds, s_networkService);
+            GL_Skill.s_instance = new GL_Skill (skillDds, s_networkService);
             GL_Status.s_instance = new GL_Status (s_networkService);
-            
+            // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
                 GL_ActorUnit.s_instance,
                 GL_BattleSettle.s_instance,
