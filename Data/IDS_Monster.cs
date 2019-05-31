@@ -33,7 +33,7 @@ namespace MirRemakeBackend.Data {
                 for (int x = 0; x < s_monsterDatas[durex]["ConcreteAttributionTable"].Count; x++)
                 {
                     monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                        ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[0]), int.Parse(s_characterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]));
+                        ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[0]), int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]));
                 }
                 res[durex] = monster;
             }

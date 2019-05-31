@@ -1,23 +1,26 @@
 ﻿<Properties StartupConfiguration="{EA1992AE-08E1-4BA3-802D-963CE5CF0F6F}|Default">
   <MonoDevelop.Ide.ItemProperties.mir-remake-ios-server PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Data/DataObjects.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DataEntity/DEM_ActorUnit.cs">
     <Files>
-      <File FileName="Data/DataObjects.cs" Line="1" Column="1" />
+      <File FileName="Program.cs" Line="22" Column="30" />
+      <File FileName="EntityManager/EM_Skill.cs" Line="91" Column="24" />
+      <File FileName="DataEntity/DEM_ActorUnit.cs" Line="31" Column="19" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mir-remake-ios-server" expanded="True">
             <Node name="mir-remake-ios-server" expanded="True">
-              <Node name="Data" expanded="True">
-                <Node name="DataObjects.cs" selected="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="DataEntity" expanded="True">
+                <Node name="DEM_ActorUnit.cs" selected="True" />
               </Node>
-              <Node name="DataEntity" expanded="True" />
               <Node name="DynamicData" expanded="True" />
               <Node name="Entity" expanded="True">
                 <Node name="ActorUnit" expanded="True" />
                 <Node name="Item" expanded="True" />
               </Node>
+              <Node name="EntityManager" expanded="True" />
               <Node name="GameLogic" expanded="True" />
             </Node>
           </Node>
