@@ -1,21 +1,25 @@
 ﻿<Properties StartupConfiguration="{EA1992AE-08E1-4BA3-802D-963CE5CF0F6F}|Default">
   <MonoDevelop.Ide.ItemProperties.mir-remake-ios-server PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DataEntity/DEM_ActorUnit.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DynamicData/IDDS_Item.cs">
     <Files>
-      <File FileName="Program.cs" Line="22" Column="30" />
-      <File FileName="EntityManager/EM_Skill.cs" Line="91" Column="24" />
-      <File FileName="DataEntity/DEM_ActorUnit.cs" Line="31" Column="19" />
+      <File FileName="DynamicData/IDDS_Item.cs" Line="32" Column="41" />
+      <File FileName="DynamicData/SQLPool.cs" Line="138" Column="37" />
+      <File FileName="Entity/ActorUnit/E_Character.cs" Line="1" Column="1" />
+      <File FileName="DynamicData/IDDS_Character.cs" Line="35" Column="8" />
+      <File FileName="DynamicData/IDDS_Skill.cs" Line="55" Column="8" />
+      <File FileName="DynamicData/IDDS_Mission.cs" Line="7" Column="9" />
+      <File FileName="DynamicData/DynamicDataObjects.cs" Line="44" Column="54" />
+      <File FileName="DynamicData/IDDS_Impl.cs" Line="167" Column="54" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mir-remake-ios-server" expanded="True">
             <Node name="mir-remake-ios-server" expanded="True">
-              <Node name="Data" expanded="True" />
-              <Node name="DataEntity" expanded="True">
-                <Node name="DEM_ActorUnit.cs" selected="True" />
+              <Node name="DataEntity" expanded="True" />
+              <Node name="DynamicData" expanded="True">
+                <Node name="IDDS_Item.cs" selected="True" />
               </Node>
-              <Node name="DynamicData" expanded="True" />
               <Node name="Entity" expanded="True">
                 <Node name="ActorUnit" expanded="True" />
                 <Node name="Item" expanded="True" />
