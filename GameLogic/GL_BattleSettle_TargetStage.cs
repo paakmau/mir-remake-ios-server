@@ -106,9 +106,9 @@ namespace MirRemakeBackend.GameLogic {
                 m_targetChooserDict.Add (SkillAimType.AIM_CIRCLE, new ETC_AimCircle ());
                 m_targetChooserDict.Add (SkillAimType.NOT_AIM_SELF_CIRCLE, new ETC_NotAimSelfCircle ());
             }
-            public IReadOnlyList<E_ActorUnit> GetTargetList (E_ActorUnit self, DE_Skill skillDe, DE_SkillData skillDataDe, SkillParam skillParm) {
-                EffectTargetChooserBase targetChooser = m_targetChooserDict[skillDe.m_skillAimType];
-                targetChooser.Reset (skillDe.m_targetCamp, skillDataDe.m_targetNumber, skillDataDe.m_damageParamList);
+            public IReadOnlyList<E_ActorUnit> GetTargetList (E_ActorUnit self, E_MonsterSkill skill, SkillParam skillParm) {
+                EffectTargetChooserBase targetChooser = m_targetChooserDict[skill.m_AimType];
+                targetChooser.Reset (skill.m_TargetCamp, skill.m_TargetNumber, skill.m_DamageParamList);
                 targetChooser.GetEffectTargets (self, skillParm, m_targetList);
                 return m_targetList;
             }

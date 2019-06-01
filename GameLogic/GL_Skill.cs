@@ -25,7 +25,7 @@ namespace MirRemakeBackend.GameLogic {
             short[] skillLvArr = new short[skillArr.Length];
             int[] skillMasterlyArr = new int[skillArr.Length];
             for (int i = 0; i < skillArr.Length; i++) {
-                skillIdArr[i] = skillArr[i].m_id;
+                skillIdArr[i] = skillArr[i].m_skillId;
                 skillLvArr[i] = skillArr[i].m_level;
                 skillMasterlyArr[i] = skillArr[i].m_masterly;
             }

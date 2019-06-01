@@ -15,10 +15,10 @@ namespace MirRemakeBackend.GameLogic {
         public GL_BattleSettle (INetworkService networkService) : base (networkService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
-        public void NotifySkillSettle (E_ActorUnit self, DE_Skill skillDe, DE_SkillData skillDataDe, SkillParam parm) {
-            var targetList = m_targetStage.GetTargetList (self, skillDe, skillDataDe, parm);
+        public void NotifySkillSettle (E_ActorUnit self, E_MonsterSkill skill, SkillParam parm) {
+            var targetList = m_targetStage.GetTargetList (self, skill, parm);
             for (int i = 0; i < targetList.Count; i++) {
-                GL_Effect.s_instance.NotifyApplyEffect (skillDataDe.m_skillEffect, self, targetList[i]);
+                GL_Effect.s_instance.NotifyApplyEffect (skill.m_SkillEffect, self, targetList[i]);
                 // TODO: 向Client发Effect
             }
         }

@@ -117,10 +117,10 @@ namespace MirRemakeBackend.GameLogic {
                 if (self.m_IsSilent)
                     return null;
                 // 尝试对仇恨最高的目标释放技能
-                ValueTuple<DE_Skill, DE_SkillData> skill;
-                if (EM_Skill.s_instance.GetMonsterRandomValidSkill(self.m_networkId, self.m_MonsterId, out skill)) {
-                    var spg = SkillParamGeneratorBase.s_spgDict[skill.Item1.m_skillAimType];
-                    if (spg.InCastRange (self, skill.Item2.m_castRange, self.m_highestHatredTarget)) {
+                E_MonsterSkill skill;
+                if (EM_MonsterSkill.s_instance.GetRandomValidSkill(self.m_networkId, self.m_MonsterId, out skill)) {
+                    var spg = SkillParamGeneratorBase.s_spgDict[skill.m_AimType];
+                    if (spg.InCastRange (self, skill.m_CastRange, self.m_highestHatredTarget)) {
                         SkillParam sp = spg.GetSkillParam (self, self.m_highestHatredTarget);
                         var castState = new MFSMS_CastSingAndFront ();
                         castState.Reset (skill, sp);
@@ -133,16 +133,16 @@ namespace MirRemakeBackend.GameLogic {
         }
         class MFSMS_CastSingAndFront : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.CAST_SING_AND_FRONT; } }
-            private ValueTuple<DE_Skill, DE_SkillData> m_skill;
+            private E_MonsterSkill m_skill;
             private SkillParam m_skillParam;
             private float m_timer;
-            public void Reset (ValueTuple<DE_Skill, DE_SkillData> skill, SkillParam parm) {
+            public void Reset (E_MonsterSkill skill, SkillParam parm) {
                 m_skill = skill;
                 m_skillParam = parm;
-                m_timer = skill.Item2.m_singTime + skill.Item2.m_castFrontTime;
+                m_timer = skill.m_SingAndCastFrontTime;
             }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
-                GL_MonsterAction.s_instance.MFSMCastSkillBegin (self.m_networkId, m_skill.Item1.m_skillId);
+                GL_MonsterAction.s_instance.MFSMCastSkillBegin (self.m_networkId, m_skill);
             }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
@@ -155,7 +155,7 @@ namespace MirRemakeBackend.GameLogic {
                 // 咏唱结束
                 if (m_timer <= 0f) {
                     var castBackState = new MFSMS_CastBack ();
-                    castBackState.Reset (m_skill.Item2.m_castBackTime);
+                    castBackState.Reset (m_skill.m_CastBackTime);
                     return castBackState;
                 }
                 // 被沉默
@@ -165,7 +165,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
                 if (nextType == MFSMStateType.CAST_BACK) {
-                    GL_MonsterAction.s_instance.MFSMSkillSettle (self, m_skill.Item1, m_skill.Item2, m_skillParam);
+                    GL_MonsterAction.s_instance.MFSMSkillSettle (self, m_skill, m_skillParam);
                 }
             }
         }
