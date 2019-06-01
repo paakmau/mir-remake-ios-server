@@ -10,7 +10,7 @@ namespace MirRemakeBackend.DynamicData {
         /// <summary>
         /// 获取角色身上的 (装备区内) 装备
         /// </summary>
-        List<DDO_Equipment> GetEquipmentRegionByCharacterId (int charId);
+        List<DDO_Item> GetEquipmentRegionByCharacterId (int charId);
         /// <summary>
         /// 获取属于该角色的所有装备 (包括背包仓库和装备区)
         /// </summary>
