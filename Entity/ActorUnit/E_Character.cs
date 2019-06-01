@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.DataEntity;
@@ -9,7 +10,7 @@ namespace MirRemakeBackend.Entity {
         public int m_UpgradeExperienceInNeed { get { return m_characterDe.m_upgradeExperienceInNeed; } }
         public int m_characterId;
         public int m_experience;
-        public long m_coin;
+        public ValueTuple<CurrencyType, long>[] m_currencyArr;
         public void Reset (int netId, int charId, DE_ActorUnit auDe, DE_CharacterData charDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
@@ -17,7 +18,7 @@ namespace MirRemakeBackend.Entity {
             m_characterId = charId;
             m_level = charDdo.m_level;
             m_experience = charDdo.m_experience;
-            m_coin = charDdo.m_coin;
+            m_currencyArr = charDdo.m_currencyArr;
         }
     }
 }

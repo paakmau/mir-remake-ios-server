@@ -7,7 +7,11 @@ namespace MirRemakeBackend.DynamicData {
         public short m_level;
         public OccupationType m_occupation;
         public int m_experience;
-        public long m_coin;
+        public ValueTuple<CurrencyType, long>[] m_currencyArr;
+        /// <summary>
+        /// 已分配的主属性点情况
+        /// </summary>
+        public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPoints;
     }
     struct DDO_Equipment {
         public long m_realId;
@@ -33,6 +37,14 @@ namespace MirRemakeBackend.DynamicData {
         public long m_realId;
         public short m_itemId;
         public short m_num;
+        /// <summary>
+        /// 该物品所在的储存库 (背包, 仓库, 装备区)
+        /// </summary>
+        public RepositoryType m_repo;
+        /// <summary>
+        /// 该物品在储存库中的位置 (第几格)
+        /// </summary>
+        public short m_position;
     }
     struct DDO_Skill {
         public short m_skillId;

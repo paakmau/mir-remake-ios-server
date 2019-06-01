@@ -8,6 +8,12 @@ namespace MirRemakeBackend {
         ENEMY
     }
     /// <summary>
+    /// 技能类型，以备以后扩展用
+    /// </summary>
+    enum SkillType : byte {
+
+    }
+    /// <summary>
     /// 技能瞄准类型
     /// 单体或多体由SkillTargetChooser决定
     /// </summary>
@@ -126,6 +132,11 @@ namespace MirRemakeBackend {
         EQUIPMENT,
         GEM
     }
+    enum RepositoryType : byte {
+        BAG,
+        STORE_HOUSE,
+        EQUIPMENT_REGION
+    }
     enum CurrencyType : byte {
         VIRTUAL,
         CHARGE
@@ -155,7 +166,7 @@ namespace MirRemakeBackend {
         LEVEL_UP_SKILL,
         TALK_TO_NPC
     }
-    enum EquipmentPosition : byte{
+    public enum EquipmentPosition : byte{
         HELMET,//头
         NECKLACE,//项链(颈部)
         SHOULDER,//护肩
@@ -167,6 +178,7 @@ namespace MirRemakeBackend {
         RING,//戒指
         WEAPON
     }
+    [Obsolete("已经弃用, 请直接使用OccupationType")]
     enum MissionOccupation : byte{
         WARRIOR,
         ROGUE,
@@ -207,5 +219,139 @@ namespace MirRemakeBackend {
         LEGENDARY, // 传说
         HEIRLOOM // 传家宝
     }
-    
+    enum ShoppingMallActionType : byte {
+        /// <summary>
+        /// 消耗类商品
+        /// </summary>
+        CONSUMABLE,
+        /// <summary>
+        /// 装备类商品
+        /// </summary>
+        EQUIPMENT,
+        /// <summary>
+        /// 材料类商品
+        /// </summary>
+        MATERIAL,
+        /// <summary>
+        /// 宝石类商品
+        /// </summary>
+        GEM,
+        /// <summary>
+        /// 所有商品
+        /// </summary>
+        ALL,
+        /// <summary>
+        /// 活动商品
+        /// </summary>
+        ACTIVITY,
+        /// <summary>
+        /// 限时商品
+        /// </summary>
+        TIME_LIMITED,
+        /// <summary>
+        /// 一键回收
+        /// </summary>
+        ONE_PRESS_RECYCLE
+    }
+    public enum DirectionType : byte {
+        NORTH,
+        NORTH_EAST,
+        EAST,
+        SOUTH_EAST,
+        SOUTH,
+        SOUTH_WEST,
+        WEST,
+        NORTH_WEST
+    }
+    /// <summary>
+    /// 人物状态特效类型
+    /// </summary>
+    public enum CharacterStateEffectType : byte {
+        /// <summary>
+        /// 眩晕
+        /// </summary>
+        DIZZY,
+        /// <summary>
+        /// 流血
+        /// </summary> 
+        BLEEDING,
+        /// <summary>
+        /// 中毒
+        /// </summary>
+        POISONING,
+        /// <summary>
+        /// 被点燃
+        /// </summary>
+        FIRING,
+        /// <summary>
+        /// 死亡
+        /// </summary>
+        DEATH,
+        /// <summary>
+        /// 红buff，持续回血
+        /// </summary>
+        HP_BUFF,
+        /// <summary>
+        /// 蓝buff，持续回蓝
+        /// </summary>
+        MP_BUFF,
+    }
+    /// <summary>
+    /// 文本框样式类型
+    /// </summary>
+    public enum TextBoxStyleType : byte {
+        /// <summary>
+        /// 无
+        /// </summary>
+        NORMAL,
+        /// <summary>
+        /// 普通的角色名
+        /// </summary>
+        CHARACTER_NAME_NORMAL,
+        /// <summary>
+        /// 高级的角色名
+        /// </summary>
+        CHARACTER_NAME_HIGH_GRADE,
+        /// <summary>
+        /// 卓越的角色名
+        /// </summary>
+        CHARACTER_NAME_BRILLIANT,
+        /// <summary>
+        /// 普通的角色称号
+        /// </summary>
+        CHARACTER_TITLE_NORMAL,
+        /// <summary>
+        /// 高级的角色称号
+        /// </summary>
+        CHARACTER_TITLE_HIGH_GRADE,
+        /// <summary>
+        /// 卓越的角色称号
+        /// </summary>
+        CHARACTER_TITLE_BRILLIANT,
+    }
+    /// <summary>
+    /// 伤害类型
+    /// </summary>
+    public enum DamageType : byte {
+        /// <summary>
+        /// 普通伤害
+        /// </summary>
+        NORMAL,
+        /// <summary>
+        /// 暴击伤害
+        /// </summary>
+        CRITICAL,
+        /// <summary>
+        /// 流血
+        /// </summary>
+        BLEEDING,
+        /// <summary>
+        /// 中毒
+        /// </summary>
+        POISONING,
+        /// <summary>
+        /// 火烧
+        /// </summary>
+        FIRING,
+    }
 }

@@ -14,20 +14,17 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_CharacterAction : GameLogicBase {
         public static GL_CharacterAction s_instance;
-        private Dictionary<int, ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam>> m_networkIdAndSkillCastDict = new Dictionary<int, ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam>> ();
+        private List<ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam>> m_skillToCastList = new List < (MyTimer.Time, E_ActorUnit, E_Skill, SkillParam) > ();
         public GL_CharacterAction (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
-            // 判断角色技能吟唱与前摇结束
+            // 判断角色技能吟唱与前摇结束并释放
             List<int> netIdToCastSkillList = new List<int> ();
-            var skillCastEn = m_networkIdAndSkillCastDict.GetEnumerator ();
-            while (skillCastEn.MoveNext ())
-                if (MyTimer.CheckTimeUp (skillCastEn.Current.Value.Item1))
-                    netIdToCastSkillList.Add (skillCastEn.Current.Key);
-            for (int i = 0; i < netIdToCastSkillList.Count; i++) {
-                var skillToCast = m_networkIdAndSkillCastDict[netIdToCastSkillList[i]];
-                m_networkIdAndSkillCastDict.Remove (netIdToCastSkillList[i]);
-                // 通知技能结算逻辑
-                GL_BattleSettle.s_instance.NotifySkillSettle (skillToCast.Item2, skillToCast.Item3, skillToCast.Item4);
+            for (int i = m_skillToCastList.Count - 1; i >= 0; i--) {
+                var item = m_skillToCastList[i];
+                if (!MyTimer.CheckTimeUp (item.Item1))
+                    continue;
+                m_skillToCastList.RemoveAt (i);
+                GL_BattleSettle.s_instance.NotifySkillSettle (item.Item2, item.Item3, item.Item4);
             }
         }
         public override void NetworkTick () { }
@@ -49,8 +46,8 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null || skill == null || targetObj == null) return;
             MyTimer.Time castTime = MyTimer.s_CurTime.Ticked (skill.m_SingAndCastFrontTime);
             SkillParam skillParam = new SkillParam (skill.m_AimType, targetObj, parmNo.m_direction, parmNo.m_position);
-            // 添加到技能待释放字典
-            m_networkIdAndSkillCastDict[netId] = new ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam> (castTime, charObj, skill, skillParam);
+            // 添加到技能待释放列表
+            m_skillToCastList.Add (new ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam> (castTime, charObj, skill, skillParam));
             // 向Client发送CastBegin事件
             var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (otherList, netId, skillId, parmNo));
@@ -61,7 +58,11 @@ namespace MirRemakeBackend.GameLogic {
         /// 通知视野内其他client播放动画  
         /// </summary>
         public void CommandApplyCastSkillSingCancel (int netId) {
-            m_networkIdAndSkillCastDict.Remove (netId);
+            for (int i=0; i<m_skillToCastList.Count; i++)
+                if (m_skillToCastList[i].Item2.m_networkId == netId) {
+                    m_skillToCastList.RemoveAt(i);
+                    break;
+                }
             var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
             m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (otherList, netId));
         }
