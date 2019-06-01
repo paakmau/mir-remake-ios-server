@@ -66,19 +66,19 @@ namespace MirRemakeBackend {
         }
         static void InitGameLogic () {
             // TODO: 实例化IDynamicDataService接口的实现
-            IDDS_Character characterDds = null;
+            IDDS_Character charDds = null;
             IDDS_Item itemDds = null;
             IDDS_Skill skillDds = null;
             // 实例化GL层
             GL_ActorUnit.s_instance = new GL_ActorUnit (s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
-            GL_Character.s_instance = new GL_Character (characterDds, s_networkService);
+            GL_Character.s_instance = new GL_Character (charDds, s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_Effect.s_instance = new GL_Effect (s_networkService);
             GL_Item.s_instance = new GL_Item (itemDds, s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
             GL_Sight.s_instance = new GL_Sight (s_networkService);
-            GL_Skill.s_instance = new GL_Skill (skillDds, s_networkService);
+            GL_Skill.s_instance = new GL_Skill (skillDds, charDds, s_networkService);
             GL_Status.s_instance = new GL_Status (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
