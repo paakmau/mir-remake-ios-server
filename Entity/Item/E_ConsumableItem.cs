@@ -9,5 +9,8 @@ namespace MirRemakeBackend.Entity {
             base.Reset (itemDe, itemDdo);
             m_consumableDe = consumDe;
         }
+        public DDO_Item GetDdo (int charId, RepositoryType repo, int pos) {
+            return new DDO_Item (m_realId, m_itemId, charId, m_num, repo, pos);
+        }
     }
 }

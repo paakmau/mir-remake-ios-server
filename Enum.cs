@@ -132,10 +132,14 @@ namespace MirRemakeBackend {
         EQUIPMENT,
         GEM
     }
-    enum RepositoryType : byte {
+    /// <summary>
+    /// 道具所在的位置
+    /// </summary>
+    enum ItemPlace : byte {
         BAG,
         STORE_HOUSE,
-        EQUIPMENT_REGION
+        EQUIPMENT_REGION,
+        GROUND
     }
     enum CurrencyType : byte {
         VIRTUAL,

@@ -13,7 +13,7 @@ namespace MirRemakeBackend.DynamicData {
         /// </summary>
         public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPoints;
     }
-    struct DDO_Equipment {
+    struct DDO_EquipmentInfo {
         public long m_realId;
         public int m_characterId;
         /// <summary>
@@ -46,13 +46,27 @@ namespace MirRemakeBackend.DynamicData {
         /// <summary>
         /// 该物品在储存库中的位置 (第几格)
         /// </summary>
-        public short m_position;
+        public int m_position;
+        public DDO_Item (long realId, short itemId, int charId, short num, RepositoryType repo, int pos) {
+            m_realId = realId;
+            m_itemId = itemId;
+            m_characterId = charId;
+            m_num = num;
+            m_repo = repo;
+            m_position = pos;
+        }
     }
     struct DDO_Skill {
         public short m_skillId;
         public short m_characterId;
         public short m_skillLevel;
         public int m_masterly;
+        public DDO_Skill (short skillId, short charId, short skillLv, int masterly) {
+            m_skillId = skillId;
+            m_characterId = charId;
+            m_skillLevel = skillLv;
+            m_masterly = masterly;
+        }
     }
     struct DDO_Mission {
         public short m_missionId;

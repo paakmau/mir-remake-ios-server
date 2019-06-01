@@ -32,12 +32,19 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_ConsumableItem item = EM_Item.s_instance.GetItemByRealId (realId) as E_ConsumableItem;
             E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
-            E_ActorUnit unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
             if (item == null || bag == null || unit == null) return;
-            // 从背包中移除一个该物品
-            if (bag.RemoveItem (realId, 1) != 1) return;
+            // 移除一个该物品
+            bool runOut = item.RemoveNum (1);
+            if (runOut) {
+                bag.RemoveItem (item.m_realId);
+                m_itemDds.DeleteItemByRealId (item.m_realId);
+                EM_Item.s_instance.UnloadItem (item);
+            } else {
+                int pos = bag.GetItemPosition (item.m_realId);
+                m_itemDds.UpdateItem (item.GetDdo (unit.m_characterId, RepositoryType.BAG, pos));
+            }
             GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, unit, unit);
-            // TODO: 考虑数据库修改
             // TODO: 向客户端发送道具消耗
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
@@ -45,8 +52,10 @@ namespace MirRemakeBackend.GameLogic {
             E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquipedByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
             if (equipment == null || eqRegion == null || bag == null) return;
+            // 若背包中找不到该物品
+            if (bag.GetItemPosition (realId) == -1) return;
             // 从背包中移除该装备
-            if (bag.RemoveItem (realId, 1) != 1) return;
+            bag.RemoveItem (realId);
             // 穿上该装备, 并卸下该位置上原有装备(如果有)
             E_EquipmentItem oriEq = eqRegion.PutOnEquipment (equipment);
             // 如果该位置原本非空, 存入背包

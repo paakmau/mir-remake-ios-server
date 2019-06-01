@@ -44,7 +44,7 @@ namespace MirRemakeBackend.EntityManager {
         /// 根据ddoList写入itemArr  
         /// itemArr的空间需要足够  
         /// </summary>
-        private void GetItemEntityArrByDdo (List<DDO_Item> ddoList, Dictionary<long, DDO_Equipment> eqDdoDict, E_Item[] itemArr) {
+        private void GetItemEntityArrByDdo (List<DDO_Item> ddoList, Dictionary<long, DDO_EquipmentInfo> eqDdoDict, E_Item[] itemArr) {
             for (int i = 0; i < ddoList.Count; i++) {
                 DDO_Item itemDdo = ddoList[i];
                 short itemId = itemDdo.m_itemId;
@@ -60,7 +60,7 @@ namespace MirRemakeBackend.EntityManager {
                     case ItemType.EQUIPMENT:
                         item = s_entityPool.m_equipmentItemPool.GetInstance ();
                         DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
-                        DDO_Equipment eqDdo = eqDdoDict[realId];
+                        DDO_EquipmentInfo eqDdo = eqDdoDict[realId];
                         ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
                         break;
                     case ItemType.MATERIAL:
@@ -85,9 +85,9 @@ namespace MirRemakeBackend.EntityManager {
         /// <param name="storeHouseDdo"></param>
         /// <param name="equipedDdo"></param>
         /// <param name="allEquipmentDdoList"></param>
-        public void InitCharacterItem (int netId, List<DDO_Item> bagDdo, List<DDO_Item> storeHouseDdo, List<DDO_Item> equipedDdo, List<DDO_Equipment> allEquipmentDdoList) {
+        public void InitCharacterItem (int netId, List<DDO_Item> bagDdo, List<DDO_Item> storeHouseDdo, List<DDO_Item> equipedDdo, List<DDO_EquipmentInfo> allEquipmentDdoList) {
             // 索引角色的所有装备
-            Dictionary<long, DDO_Equipment> eqDdoDict = new Dictionary<long, DDO_Equipment> ();
+            Dictionary<long, DDO_EquipmentInfo> eqDdoDict = new Dictionary<long, DDO_EquipmentInfo> ();
             for (int i = 0; i < allEquipmentDdoList.Count; i++)
                 eqDdoDict.Add (allEquipmentDdoList[i].m_realId, allEquipmentDdoList[i]);
             // 初始化背包, 仓库, 装备区
@@ -126,11 +126,11 @@ namespace MirRemakeBackend.EntityManager {
             UnloadItemByItemList (storeHouse.m_ItemList);
             UnloadItemByItemList (equiped.GetAllItemList ());
         }
-        private void UnloadItem (E_Item item) {
+        public void UnloadItem (E_Item item) {
             m_realIdAndItemDict.Remove (item.m_realId);
-            s_entityPool.RecycleItem(item);
+            s_entityPool.RecycleItem (item);
         }
-        private void UnloadItemByItemList (List<E_Item> itemList) {
+        public void UnloadItemByItemList (List<E_Item> itemList) {
             for (int i = 0; i < itemList.Count; i++)
                 UnloadItem (itemList[i]);
         }

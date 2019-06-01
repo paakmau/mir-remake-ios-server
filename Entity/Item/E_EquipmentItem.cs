@@ -12,7 +12,7 @@ namespace MirRemakeBackend.Entity {
         public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_enchantAttr;
         public List<short> m_inlaidGemIdList;
         public short m_holeNum;
-        public void Reset (DE_Item itemDe, DE_EquipmentData equipmentDe, DDO_Item itemDdo, DDO_Equipment equipDdo) {
+        public void Reset (DE_Item itemDe, DE_EquipmentData equipmentDe, DDO_Item itemDdo, DDO_EquipmentInfo equipDdo) {
             base.Reset (itemDe, itemDdo);
             m_equipmentDe = equipmentDe;
             m_strengthenNum = equipDdo.m_strengthNum;
