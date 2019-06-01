@@ -9,7 +9,7 @@ namespace MirRemakeBackend.DynamicData {
         /// <returns>角色的id</returns>
         int CreateCharacter (OccupationType occupation);
         DDO_Character GetCharacterById (int characterId);
-        
+        void UpdateCharacter (DDO_Character charObj);
     }
     //SELECT LAST_INSERT_ID()
 

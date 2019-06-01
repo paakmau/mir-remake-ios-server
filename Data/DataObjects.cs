@@ -92,7 +92,7 @@ namespace MirRemakeBackend.Data {
     }
     struct DO_Mission {
         public short m_id;
-        public MissionOccupation m_missionOccupation;
+        public OccupationType m_missionOccupation;
         public short m_levelInNeed;
         public int[] m_fatherMissionIdArr;
         public int[] m_childrenMissions;

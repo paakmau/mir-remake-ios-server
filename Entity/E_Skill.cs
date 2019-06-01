@@ -9,7 +9,7 @@ namespace MirRemakeBackend.Entity {
         public DE_Skill m_skillDe;
         public DE_SkillData m_skillDataDe;
         public short m_skillId;
-        public short m_level;
+        public short m_skillLevel;
         public MyTimer.Time m_lastCastTime;
         public CampType m_TargetCamp { get { return m_skillDe.m_targetCamp; } }
         public byte m_TargetNumber { get { return m_skillDataDe.m_targetNumber; } }
@@ -24,7 +24,7 @@ namespace MirRemakeBackend.Entity {
         public E_MonsterSkill () { }
         public E_MonsterSkill (short skillId, short skillLv, DE_Skill de, DE_SkillData dataDe) {
             m_skillId = skillId;
-            m_level = skillLv;
+            m_skillLevel = skillLv;
             m_skillDe = de;
             m_skillDataDe = dataDe;
         }
@@ -40,14 +40,17 @@ namespace MirRemakeBackend.Entity {
             m_skillDe = skillDe;
             m_skillDataDe = skillDataDe;
             m_skillId = ddo.m_skillId;
-            m_level = ddo.m_skillLevel;
+            m_skillLevel = ddo.m_skillLevel;
             m_masterly = ddo.m_masterly;
         }
         public void Upgrade () {
-            if (m_level >= m_skillDe.m_skillMaxLevel) return;
-            m_level++;
+            if (m_skillLevel >= m_skillDe.m_skillMaxLevel) return;
+            m_skillLevel++;
             m_masterly -= m_skillDataDe.m_upgradeMasterlyInNeed;
-            m_skillDataDe = m_skillDe.m_skillDataAllLevel[m_level - 1];
+            m_skillDataDe = m_skillDe.m_skillDataAllLevel[m_skillLevel - 1];
+        }
+        public DDO_Skill GetDdo (int charId) {
+            return new DDO_Skill (m_skillId, charId, m_skillLevel, m_masterly);
         }
     }
 }

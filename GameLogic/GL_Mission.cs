@@ -22,7 +22,7 @@ namespace MirRemakeBackend.GameLogic {
             
         }
         public void CommandApplyAcceptMission (int netId, short missionId) {
-
+            
         }
         public void CommandApplyDeliveryMission (int netId, short missionId) {
 

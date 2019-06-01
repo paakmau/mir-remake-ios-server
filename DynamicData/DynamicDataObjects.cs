@@ -11,7 +11,15 @@ namespace MirRemakeBackend.DynamicData {
         /// <summary>
         /// 已分配的主属性点情况
         /// </summary>
-        public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPoints;
+        public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
+        public DDO_Character (int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr) {
+            m_characterId = charId;
+            m_level = level;
+            m_occupation = oc;
+            m_experience = exp;
+            m_currencyArr = currencyArr;
+            m_distributedMainAttrPointArr =  attrPointArr;
+        }
     }
     struct DDO_EquipmentInfo {
         public long m_realId;
@@ -58,10 +66,10 @@ namespace MirRemakeBackend.DynamicData {
     }
     struct DDO_Skill {
         public short m_skillId;
-        public short m_characterId;
+        public int m_characterId;
         public short m_skillLevel;
         public int m_masterly;
-        public DDO_Skill (short skillId, short charId, short skillLv, int masterly) {
+        public DDO_Skill (short skillId, int charId, short skillLv, int masterly) {
             m_skillId = skillId;
             m_characterId = charId;
             m_skillLevel = skillLv;

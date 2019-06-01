@@ -12,8 +12,10 @@ namespace MirRemakeBackend.GameLogic {
     class GL_Skill : GameLogicBase {
         public static GL_Skill s_instance;
         private IDDS_Skill m_skillDds;
-        public GL_Skill (IDDS_Skill skillDds, INetworkService netService) : base (netService) {
+        private IDDS_Character m_characterDds;
+        public GL_Skill (IDDS_Skill skillDds, IDDS_Character charDds, INetworkService netService) : base (netService) {
             m_skillDds = skillDds;
+            m_characterDds = charDds;
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -26,7 +28,7 @@ namespace MirRemakeBackend.GameLogic {
             int[] skillMasterlyArr = new int[skillArr.Length];
             for (int i = 0; i < skillArr.Length; i++) {
                 skillIdArr[i] = skillArr[i].m_skillId;
-                skillLvArr[i] = skillArr[i].m_level;
+                skillLvArr[i] = skillArr[i].m_skillLevel;
                 skillMasterlyArr[i] = skillArr[i].m_masterly;
             }
             // TODO: 发送给客户端
@@ -38,16 +40,17 @@ namespace MirRemakeBackend.GameLogic {
             var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             var charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
             if (skill == null || charObj == null) return;
-            short oriLv = skill.m_level;
-            while (skill.m_level < targetLv && skill.m_level < skill.m_skillDe.m_skillMaxLevel) {
-                if (skill.m_skillDataDe.m_upgradeMoneyInNeed > charObj.m_coin) break;
+            short oriLv = skill.m_skillLevel;
+            while (skill.m_skillLevel < targetLv && skill.m_skillLevel < skill.m_skillDe.m_skillMaxLevel) {
+                if (skill.m_skillDataDe.m_upgradeMoneyInNeed > charObj.m_VirtualCurrency) break;
                 if (skill.m_skillDataDe.m_upgradeCharacterLevelInNeed > charObj.m_level) break;
                 if (skill.m_skillDataDe.m_upgradeMasterlyInNeed > skill.m_masterly) break;
-                charObj.m_coin -= skill.m_skillDataDe.m_upgradeMoneyInNeed;
+                charObj.m_VirtualCurrency -= skill.m_skillDataDe.m_upgradeMoneyInNeed;
                 skill.Upgrade ();
             }
-            if (oriLv != skill.m_level) {
-                // TODO: 考虑数据库
+            if (oriLv != skill.m_skillLevel) {
+                m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
+                m_characterDds.UpdateCharacter (charObj.GetDdo ());
                 // TODO: 发给Client
             }
         }
