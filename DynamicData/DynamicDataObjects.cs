@@ -15,6 +15,7 @@ namespace MirRemakeBackend.DynamicData {
     }
     struct DDO_Equipment {
         public long m_realId;
+        public int m_characterId;
         /// <summary>
         /// 强化次数
         /// </summary>
@@ -36,6 +37,7 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_Item {
         public long m_realId;
         public short m_itemId;
+        public int m_characterId;
         public short m_num;
         /// <summary>
         /// 该物品所在的储存库 (背包, 仓库, 装备区)
@@ -48,11 +50,13 @@ namespace MirRemakeBackend.DynamicData {
     }
     struct DDO_Skill {
         public short m_skillId;
+        public short m_characterId;
         public short m_skillLevel;
         public int m_masterly;
     }
     struct DDO_Mission {
         public short m_missionId;
+        public short m_characterId;
         public List<int> m_missionTargetProgressList;
     }
 }

@@ -11,17 +11,15 @@ namespace MirRemakeBackend.Entity {
                 m_itemList.Add (item);
         }
         /// <summary>
-        /// 从背包移除物品  
-        /// 返回成功移除的量  
+        /// 从背包移除整格物品  
         /// </summary>
-        public short RemoveItem (long realId, short num) {
+        public bool RemoveItem (long realId) {
             for (int i=0; i<m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId) {
-                    short res = Math.Min (num, m_itemList[i].m_num);
-                    m_itemList[i].m_num -= res;
-                    return res;
+                    m_itemList[i] = E_Item.s_emptyItem;
+                    return true;
                 }
-            return 0;
+            return false;
         }
         /// <summary>
         /// 存储一个Item

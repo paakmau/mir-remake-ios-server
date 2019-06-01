@@ -15,6 +15,10 @@ namespace MirRemakeBackend.DynamicData {
         /// 获取属于该角色的所有装备 (包括背包仓库和装备区)
         /// </summary>
         List<DDO_Equipment> GetAllEquipmentByCharacterId (int charId);
+        /// <summary>
+        /// 直接更新一件物品
+        /// </summary>
+        void UpdateItem (DDO_Item item);
     }
     /*class IDDS_ItemImpl:IDDS_Item {
 
