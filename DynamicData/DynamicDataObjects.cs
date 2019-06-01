@@ -40,19 +40,19 @@ namespace MirRemakeBackend.DynamicData {
         public int m_characterId;
         public short m_num;
         /// <summary>
-        /// 该物品所在的储存库 (背包, 仓库, 装备区)
+        /// 该物品所在的地点 (背包, 仓库, 装备区, 地面)
         /// </summary>
-        public RepositoryType m_repo;
+        public ItemPlace m_place;
         /// <summary>
-        /// 该物品在储存库中的位置 (第几格)
+        /// 该物品在地点中的位置 (第几格)
         /// </summary>
         public int m_position;
-        public DDO_Item (long realId, short itemId, int charId, short num, RepositoryType repo, int pos) {
+        public DDO_Item (long realId, short itemId, int charId, short num, ItemPlace place, int pos) {
             m_realId = realId;
             m_itemId = itemId;
             m_characterId = charId;
             m_num = num;
-            m_repo = repo;
+            m_place = place;
             m_position = pos;
         }
     }

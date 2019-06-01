@@ -42,12 +42,13 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Item.s_instance.UnloadItem (item);
             } else {
                 int pos = bag.GetItemPosition (item.m_realId);
-                m_itemDds.UpdateItem (item.GetDdo (unit.m_characterId, RepositoryType.BAG, pos));
+                m_itemDds.UpdateItem (item.GetDdo (unit.m_characterId, ItemPlace.BAG, pos));
             }
             GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, unit, unit);
             // TODO: 向客户端发送道具消耗
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
+            E_Character charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
             E_EquipmentItem equipment = EM_Item.s_instance.GetItemByRealId (realId) as E_EquipmentItem;
             E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquipedByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
@@ -58,19 +59,19 @@ namespace MirRemakeBackend.GameLogic {
             bag.RemoveItem (realId);
             // 穿上该装备, 并卸下该位置上原有装备(如果有)
             E_EquipmentItem oriEq = eqRegion.PutOnEquipment (equipment);
-            // 如果该位置原本非空, 存入背包
+            m_itemDds.UpdateItem (equipment.GetDdo (charObj.m_characterId, ItemPlace.EQUIPMENT_REGION, -1));
+            // 如果有装备卸下, 存入背包
             if (oriEq != null) {
-                bag.StoreItem (oriEq);
-                // 装备被卸下Attr
-                EquipmentToAttr (netId, oriEq, -1);
+                int pos = bag.StoreSingleItem (oriEq);
+                m_itemDds.UpdateItem (oriEq.GetDdo (charObj.m_characterId, ItemPlace.BAG, pos));
+                // 装备被卸下改变Attr
+                EquipmentToAttr (charObj, oriEq, -1);
             }
             // 装备穿上Attr
-            EquipmentToAttr (netId, oriEq, 1);
-            // TODO: 考虑数据库修改
+            EquipmentToAttr (charObj, oriEq, 1);
             // TODO: 向客户端发送装备更替
         }
-        private void EquipmentToAttr (int netId, E_EquipmentItem eqObj, int k) {
-            E_ActorUnit unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+        private void EquipmentToAttr (E_Character unit, E_EquipmentItem eqObj, int k) {
             if (unit == null) return;
             // 处理基础属性与强化
             var attrList = eqObj.m_equipmentDe.m_attrList;

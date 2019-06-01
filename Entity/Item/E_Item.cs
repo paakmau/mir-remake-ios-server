@@ -20,12 +20,24 @@ namespace MirRemakeBackend.Entity {
             m_num = ddo.m_num;
         }
         /// <summary>
-        /// 从一个道具中移除一定的数量  
+        /// 移除一定的数量  
         /// </summary>
         /// <returns>整格用完返回true</returns>
         public bool RemoveNum (short num) {
             m_num = (short)Math.Max (0, m_num - num);
             return m_num == 0;
+        }
+        /// <summary>
+        /// 加入一定的数量  
+        /// 返回成功加入的数量
+        /// </summary>
+        public short AddNum (short num) {
+            short rNum = (short)Math.Min (m_MaxNum - m_num, num);
+            m_num += rNum;
+            return rNum;
+        }
+        public DDO_Item GetDdo (int charId, ItemPlace place, int pos) {
+            return new DDO_Item (m_realId, m_itemId, charId, m_num, place, pos);
         }
     }
 }
