@@ -72,7 +72,22 @@ namespace MirRemakeBackend.Data {
             return consumables;
         }
         public DO_Gem[] GetAllGem() {
+            string jsonFile = File.ReadAllText("Data/D_Gem.json");
+            s_gemDatas = JsonMapper.ToObject(jsonFile);
+            gems = new DO_Gem[s_gemDatas.Count];
+            for (short i = 0; i < s_gemDatas.Count; i++)
+            {
+                gems[i] = new DO_Gem();
+                gems[i].m_itemId = (short)(short.Parse(s_gemDatas[i]["ID"].ToString()));
+                gems[i].m_equipmentAttributeArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_gemDatas[i]["ConcreteAttributionTable"].Count];
+                for (int x = 0; x < s_gemDatas[i]["ConcreteAttributionTable"].Count; x++)
+                {
+                    gems[i].m_equipmentAttributeArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                        ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_gemDatas[i]["ConcreteAttributionTable"][x].ToString().Split(' ')[0]), int.Parse(s_gemDatas[i]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]));
+                }
+            }
             return gems;
         }
+
     }
 }

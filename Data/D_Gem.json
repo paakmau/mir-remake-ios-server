@@ -1,1 +1,17 @@
-﻿
+﻿[
+  {
+    "ID": 25000,
+    "Name": "璀璨黄晶",
+    "ConcreteAttributionTable": [ "MAX_HP 500", "DELTA_HP_PER_SECOND 25" ]
+  },
+  {
+    "ID": 25001,
+    "Name": "橙霞石",
+    "ConcreteAttributionTable": [ "ATTACK 500", "MAGIC 500", "CRITICAL_RATE 3" ]
+  },
+  {
+    "ID": 25002,
+    "Name": "紫电石",
+    "ConcreteAttributionTable": [ "DODGE_RATE 5", "LIFE_STEAL 5", "HIT_RATE 15" ]
+  }
+]
