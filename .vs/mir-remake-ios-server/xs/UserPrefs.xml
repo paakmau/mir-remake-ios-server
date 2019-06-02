@@ -1,28 +1,24 @@
 ﻿<Properties StartupConfiguration="{EA1992AE-08E1-4BA3-802D-963CE5CF0F6F}|Default">
   <MonoDevelop.Ide.ItemProperties.mir-remake-ios-server PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="DynamicData/IDDS_Impl.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Data/IDS_Mission.cs">
     <Files>
-      <File FileName="DynamicData/SQLPool.cs" Line="138" Column="37" />
-      <File FileName="Entity/ActorUnit/E_Character.cs" Line="1" Column="1" />
-      <File FileName="DynamicData/IDDS_Character.cs" Line="12" Column="9" />
-      <File FileName="DynamicData/IDDS_Skill.cs" Line="7" Column="9" />
-      <File FileName="DynamicData/IDDS_Mission.cs" Line="6" Column="34" />
-      <File FileName="DynamicData/DynamicDataObjects.cs" Line="79" Column="12" />
-      <File FileName="DynamicData/IDDS_Impl.cs" Line="69" Column="48" />
-      <File FileName="Enum.cs" Line="146" Column="15" />
-      <File FileName="DynamicData/IDDS_Item.cs" Line="7" Column="26" />
-      <File FileName="EntityManager/EM_MonsterSkill.cs" Line="43" Column="24" />
+      <File FileName="Data/IDS_Mission.cs" Line="10" Column="6" />
+      <File FileName="Data/DataObjects.cs" Line="93" Column="12" />
+      <File FileName="Data/D_Material.json" Line="1" Column="1" />
+      <File FileName="Data/IDS_Character.cs" Line="23" Column="13" />
+      <File FileName="Data/IDS_Item.cs" Line="1" Column="1" />
+      <File FileName="Data/IDS_Map.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="mir-remake-ios-server" expanded="True">
             <Node name="mir-remake-ios-server" expanded="True">
-              <Node name="Data" expanded="True" />
-              <Node name="DataEntity" expanded="True" />
-              <Node name="DynamicData" expanded="True">
-                <Node name="IDDS_Impl.cs" selected="True" />
+              <Node name="Data" expanded="True">
+                <Node name="IDS_Mission.cs" selected="True" />
               </Node>
+              <Node name="DataEntity" expanded="True" />
+              <Node name="DynamicData" expanded="True" />
               <Node name="Entity" expanded="True">
                 <Node name="ActorUnit" expanded="True" />
                 <Node name="Item" expanded="True" />
@@ -38,9 +34,7 @@
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/tianduyingcai/Desktop/GIT/Legend/mir-remake-ios-server/DynamicData/IDDS_Impl.cs" relfile="DynamicData/IDDS_Impl.cs" line="242" column="1" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
