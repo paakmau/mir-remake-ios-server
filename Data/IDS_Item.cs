@@ -40,7 +40,7 @@ namespace MirRemakeBackend.Data {
                 for(int m = 0; m < s_equipmentDatas[i]["AttributeAttachArray"].Count; m++) {
                     equipment.m_equipmentAttributeArr[m] = new ValueTuple<ActorUnitConcreteAttributeType, int>
                         ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType),s_equipmentDatas[i]["AttributeAttachArray"][m].ToString().Split(' ')[0]),
-                        int.Parse(s_equipmentDatas[i]["AttributeAttachArray"][m].ToString().Split(' ').ToString()));
+                        int.Parse(s_equipmentDatas[i]["AttributeAttachArray"][m].ToString().Split(' ')[1]));
                 }
                 equipments[i] = equipment;
                 
@@ -61,10 +61,10 @@ namespace MirRemakeBackend.Data {
                 effect.m_deltaMp = int.Parse(s_consumableDatas[i]["EffectDeltaMP"].ToString());
                 effect.m_statusIdAndValueAndTimeArr = new ValueTuple<short,float,float>[s_consumableDatas[i]["StatusAttachArray"].Count];
                 for(int mm = 0; mm < s_consumableDatas[i]["StatusAttachArray"].Count; mm++) {
-                    effect.m_statusIdAndValueAndTimeArr[i] = new ValueTuple<short, float, float>
-                        (short.Parse(s_consumableDatas[i]["StatusAttachArray"]["StatusID"].ToString()),
-                        float.Parse(s_consumableDatas[i]["StatusAttachArray"]["Value"].ToString()),
-                        float.Parse(s_consumableDatas[i]["StatusAttachArray"]["LastingTime"].ToString()));
+                    effect.m_statusIdAndValueAndTimeArr[mm] = new ValueTuple<short, float, float>
+                        (short.Parse(s_consumableDatas[i]["StatusAttachArray"][mm]["StatusID"].ToString()),
+                        float.Parse(s_consumableDatas[i]["StatusAttachArray"][mm]["Value"].ToString()),
+                        float.Parse(s_consumableDatas[i]["StatusAttachArray"][mm]["LastingTime"].ToString()));
                 }
                 consumable.m_effect = effect;
                 consumables[i] = consumable;

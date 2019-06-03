@@ -11,7 +11,7 @@ namespace MirRemakeBackend.Data {
         private JsonData s_missionDatas;
         public DO_Mission[] GetAllMission()
         {
-            string jsonFile = File.ReadAllText("Data/D_Character.json");
+            string jsonFile = File.ReadAllText("Data/D_Mission.json");
             s_missionDatas = JsonMapper.ToObject(jsonFile);
 
             DO_Mission[] missionStructs = new DO_Mission[s_missionDatas.Count];
@@ -44,14 +44,16 @@ namespace MirRemakeBackend.Data {
             mission.m_bonusCoin = int.Parse(s_missionDatas[ID]["BonusMoney"].ToString());
             mission.m_bonusExperience = int.Parse(s_missionDatas[ID]["BonusExperience"].ToString());
             mission.m_levelInNeed = short.Parse(s_missionDatas[ID]["LevelInNeed"].ToString());
-            mission.m_fatherMissionIdArr = new int[tempData.Count];
             tempData = s_missionDatas[ID]["FatherMissionList"];
+            mission.m_fatherMissionIdArr = new int[tempData.Count];
+            
             for (int i = 0; i < tempData.Count; i++)
             {
                 mission.m_fatherMissionIdArr[i]=(int.Parse(tempData[i].ToString()));
             }
+            tempData = s_missionDatas[ID]["ChildrenMissionList"];
             mission.m_childrenMissions = new int[tempData.Count];
-            tempData = s_missionDatas[ID]["FatherMissionList"];
+            
             for (int i = 0; i < tempData.Count; i++)
             {
                 mission.m_childrenMissions[i] = (int.Parse(tempData[i].ToString()));
@@ -69,8 +71,9 @@ namespace MirRemakeBackend.Data {
 
 
             }
-            mission.m_bonusItemIdAndNumArr = new ValueTuple<short,short>[tempData.Count];
             tempData = s_missionDatas[ID]["BonusItems"];
+            mission.m_bonusItemIdAndNumArr = new ValueTuple<short,short>[tempData.Count];
+            
             for (int i = 0; i < tempData.Count; i++)
             {
                 mission.m_bonusItemIdAndNumArr[i]=(short.Parse(tempData[i].ToString().Split(' ')[0]), short.Parse(tempData[i].ToString().Split(' ')[1]));

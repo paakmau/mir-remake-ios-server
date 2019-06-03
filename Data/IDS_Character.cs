@@ -41,17 +41,19 @@ namespace MirRemakeBackend.Data
                     character.m_mainAttributeArr = new ValueTuple<ActorUnitMainAttributeType, int>[s_characterDatas[i]["MainAttributionTable"].Count];
                     for (int durex = 0; durex < s_characterDatas[i]["MainAttributionTable"].Count; durex++)
                     {
-                        character.m_mainAttributeArr[i] = new ValueTuple<ActorUnitMainAttributeType, int>
+                        character.m_mainAttributeArr[durex] = new ValueTuple<ActorUnitMainAttributeType, int>
                             ((ActorUnitMainAttributeType)Enum.Parse(typeof(ActorUnitMainAttributeType), s_characterDatas[i]["MainAttributionTable"][durex].ToString().Split(' ')[0]), int.Parse(s_characterDatas[i]["MainAttributionTable"][durex].ToString().Split(' ')[1]));
                     }
                     character.m_concreteAttributeArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_characterDatas[i]["ConcreteAttributionTable"].Count];
                     for (int durex = 0; durex < s_characterDatas[i]["ConcreteAttributionTable"].Count; durex++)
                     {
-                        character.m_concreteAttributeArr[i] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                            ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[0]), int.Parse(s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[1]));
+                        character.m_concreteAttributeArr[durex] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                            ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[0]), (int)float.Parse(s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[1]));
+                            
                     }
                     character.m_mainAttrPointNumber = short.Parse(s_characterDatas[i]["GiftPointNumber"].ToString());
-                    res[occupation][level] = character;
+                    Console.WriteLine(occupation+" "+level);
+                    res[occupation][level-1] = character;
                 }
             }
 

@@ -40,7 +40,7 @@ namespace MirRemakeBackend.EntityManager {
                     resSkill = skill;
                     return true;
                 }
-            resSkill = default;
+            resSkill = null;
             return false;
         }
         public E_MonsterSkill[] GetRawSkillArr (int netId) {

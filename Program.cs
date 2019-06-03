@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading;
 using LiteNetLib;
+using System.IO;
 using LiteNetLib.Utils;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
@@ -13,10 +14,16 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend {
     class Program {
+
         private const float c_networkFrameTime = 0.1f;
         private static NetworkService s_networkService;
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
+            if (Test() == 1) {
+                Console.WriteLine("Modle Succeed");
+
+                return;
+            }
             s_networkService = new NetworkService ();
             InitEntityManager ();
             InitGameLogic ();
@@ -93,6 +100,11 @@ namespace MirRemakeBackend {
                 GL_Skill.s_instance,
                 GL_Status.s_instance
             };
+        }
+        static int Test() {
+            IDS_StatusImpl status=new IDS_StatusImpl();
+            DO_Status[] statuss=status.GetAllStatus();
+            return 1;
         }
     }
 }

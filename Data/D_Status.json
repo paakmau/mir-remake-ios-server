@@ -204,7 +204,7 @@
     "AttributeAttachArray": [],
     "Type": "DEBUFF",
     "Value": 1,
-    "SpecialAttributes": [ "IMMBOILE" ]
+    "SpecialAttributes": [ "IMMOBILE" ]
   },
   {
     "StatusID": 23,

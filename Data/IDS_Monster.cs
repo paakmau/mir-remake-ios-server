@@ -27,7 +27,7 @@ namespace MirRemakeBackend.Data {
                 for (int i = 0; i < monster.m_skillIdAndLevelArr.Length; i++)
                 {
                     monster.m_skillIdAndLevelArr[i] = new ValueTuple<short, short>
-                        (short.Parse(s_monsterDatas[durex]["SkillList"].ToString().Split(' ')[0]), short.Parse(s_monsterDatas[durex]["SkillList"].ToString().Split(' ')[1]));
+                        (short.Parse(s_monsterDatas[durex]["SkillList"][i].ToString().Split(' ')[0]), short.Parse(s_monsterDatas[durex]["SkillList"][i].ToString().Split(' ')[1]));
                 }
                 monster.m_attrArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_monsterDatas[durex]["ConcreteAttributionTable"].Count];
                 for (int x = 0; x < s_monsterDatas[durex]["ConcreteAttributionTable"].Count; x++)

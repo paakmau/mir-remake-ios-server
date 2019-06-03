@@ -109,7 +109,7 @@ namespace MirRemakeBackend {
         DODGE_RATE, // 闪避 /100
         LIFE_STEAL, // 吸取生命值 /100
         HP_DAMAGE_PER_SECOND_PHYSICS,
-        HP_DAMAGE_PER_SECOND_MAIGC,
+        HP_DAMAGE_PER_SECOND_MAGIC,
         SHIELD,
         PHYSICS_VULERNABILITY, // 物理易伤
         MAGIC_VULERNABILITY, // 魔法易伤

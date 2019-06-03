@@ -141,7 +141,7 @@
     "Effect": {
       "EffectDeltaHP": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
       "EffectDeltaMP": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "EffectDeltaHPType": "RESTORAGE",
+      "EffectDeltaHPType": "MAGIC",
       "EffectDeltaMPType": "MAGIC",
       "HitRate": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
       "CriticalRate": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
@@ -1433,7 +1433,7 @@
     "Effect": {
       "EffectDeltaHP": [ 1000, 5000, 15000, 25000, 35000, 45000, 62500, 80000, 105000, 140000 ],
       "EffectDeltaMP": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-      "EffectDeltaHPType": "RESTORAGE",
+      "EffectDeltaHPType": "MAGIC",
       "EffectDeltaMPType": "MAGIC",
       "HitRate": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
       "CriticalRate": [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],

@@ -1,17 +1,12 @@
 ﻿<Properties StartupConfiguration="{EA1992AE-08E1-4BA3-802D-963CE5CF0F6F}|Default">
   <MonoDevelop.Ide.ItemProperties.mir-remake-ios-server PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Data/IDS_Item.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Data/IDS_Character.cs">
     <Files>
-      <File FileName="Data/IDS_Mission.cs" Line="1" Column="1" />
-      <File FileName="Data/DataObjects.cs" Line="76" Column="12" />
-      <File FileName="Data/D_Material.json" Line="1" Column="1" />
-      <File FileName="Data/IDS_Character.cs" Line="23" Column="13" />
-      <File FileName="Data/IDS_Item.cs" Line="66" Column="75" />
-      <File FileName="Data/IDS_Map.cs" Line="1" Column="1" />
-      <File FileName="DynamicData/IDDS_Impl.cs" Line="11" Column="24" />
+      <File FileName="Data/IDS_Mission.cs" Line="14" Column="73" />
+      <File FileName="Program.cs" Line="105" Column="67" />
+      <File FileName="Data/D_Character.json" Line="1" Column="1" />
+      <File FileName="Data/IDS_Character.cs" Line="50" Column="1" />
       <File FileName="Data/IDS_Monster.cs" Line="18" Column="17" />
-      <File FileName="Data/D_Monster.json" Line="373" Column="2" />
-      <File FileName="Data/D_Gem.json" Line="17" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,7 +14,7 @@
           <Node name="mir-remake-ios-server" expanded="True">
             <Node name="mir-remake-ios-server" expanded="True">
               <Node name="Data" expanded="True">
-                <Node name="IDS_Item.cs" selected="True" />
+                <Node name="IDS_Character.cs" selected="True" />
               </Node>
               <Node name="DataEntity" expanded="True" />
               <Node name="DynamicData" expanded="True" />
@@ -40,6 +35,7 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/tianduyingcai/Desktop/GIT/Legend/mir-remake-ios-server/Data/IDS_Mission.cs" relfile="Data/IDS_Mission.cs" line="3" column="1" />
+      <Breakpoint file="/Users/tianduyingcai/Desktop/GIT/Legend/mir-remake-ios-server/Program.cs" relfile="Program.cs" line="107" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
