@@ -11,6 +11,8 @@ namespace MirRemakeBackend.DynamicData {
             sqlConfig = new SqlConfig();
             sqlConfig.username="root";
             sqlConfig.pwd="root";
+            sqlConfig.database="legend";
+            sqlConfig.server="localhost";
             pool = new SQLPool(sqlConfig);
         }
         public List<DDO_Item> GetBagByCharacterId(int charId)
@@ -226,10 +228,10 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             DataRowCollection dataRowCollection;
-            cmd = "select * from character where characterid=" + characterId + ";";
+            cmd = "select * from `character` where characterid=" + characterId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["character"];
+            dt = ds.Tables[0];
             dataRowCollection = dt.Rows;
             DataRow dr = dataRowCollection[0];
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
@@ -253,7 +255,7 @@ namespace MirRemakeBackend.DynamicData {
                 charObj.m_distributedMainAttrPointArr[1].Item2.ToString() + "," +
                 charObj.m_distributedMainAttrPointArr[2].Item2.ToString() + "," +
                 charObj.m_distributedMainAttrPointArr[3].Item2.ToString() + "\"" ;
-            cmd = "update character set characterid=" + charObj.m_characterId + ",occupation=\"" +charObj.m_occupation.ToString()+"\",level=" + charObj.m_level+",expericence="
+            cmd = "update `character` set characterid=" + charObj.m_characterId + ",occupation=\"" +charObj.m_occupation.ToString()+"\",level=" + charObj.m_level+",expericence="
                 +charObj.m_experience+",currency="+currencyArr+",giftpoints="+giftPoints+" where characterid="+charObj.m_characterId+";";
             string database = "legend";
             pool.ExecuteSql(database, cmd);

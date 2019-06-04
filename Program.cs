@@ -14,6 +14,7 @@ using MirRemakeBackend.Util;
 using MySql.Data;
 using System.Data;
 using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 
 namespace MirRemakeBackend {
     class Program {
@@ -105,16 +106,7 @@ namespace MirRemakeBackend {
             };
         }
         static int Test() {
-            DataSet ds=new DataSet();
-            String connstr="server=localhost;user id=root;password=root;database=legend";
-            MySqlConnection conn=new MySqlConnection(connstr);
-            conn.Open();
-            String cmdstr="select * from `character`;";
-            MySqlCommand cmd=new MySqlCommand(cmdstr,conn);
-            MySqlDataAdapter ad=new MySqlDataAdapter();
-            ad.SelectCommand=cmd;
-            ad.Fill(ds);
-            
+            IDDS_Impl impl=new IDDS_Impl();
             return 1;
         }
     }
