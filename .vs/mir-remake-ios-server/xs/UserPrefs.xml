@@ -2,33 +2,12 @@
   <MonoDevelop.Ide.ItemProperties.mir-remake-ios-server PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Data/IDS_Character.cs">
     <Files>
-      <File FileName="Data/IDS_Mission.cs" Line="14" Column="73" />
-      <File FileName="Program.cs" Line="105" Column="67" />
+      <File FileName="Data/IDS_Mission.cs" Line="14" Column="71" />
+      <File FileName="Program.cs" Line="105" Column="15" />
       <File FileName="Data/D_Character.json" Line="1" Column="1" />
-      <File FileName="Data/IDS_Character.cs" Line="50" Column="1" />
+      <File FileName="Data/IDS_Character.cs" Line="55" Column="61" />
       <File FileName="Data/IDS_Monster.cs" Line="18" Column="17" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="mir-remake-ios-server" expanded="True">
-            <Node name="mir-remake-ios-server" expanded="True">
-              <Node name="Data" expanded="True">
-                <Node name="IDS_Character.cs" selected="True" />
-              </Node>
-              <Node name="DataEntity" expanded="True" />
-              <Node name="DynamicData" expanded="True" />
-              <Node name="Entity" expanded="True">
-                <Node name="ActorUnit" expanded="True" />
-                <Node name="Item" expanded="True" />
-              </Node>
-              <Node name="EntityManager" expanded="True" />
-              <Node name="GameLogic" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
