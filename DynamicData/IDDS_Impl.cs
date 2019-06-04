@@ -20,21 +20,18 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from `item` where charid=" + charId + " and place=\"bag\";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables[0];
-            dataRowCollection = dt.Rows;
             List<DDO_Item> res = new List<DDO_Item>();
-            for (int i = 0; i < dataRowCollection.Count; i++)
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataRow dr = dataRowCollection[i];
-                short realid = short.Parse(dr["realid"].ToString());
-                short itemid = short.Parse(dr["itemid"].ToString());
-                short num = short.Parse(dr["num"].ToString());
+                short realid = short.Parse(dt.Rows[i]["realid"].ToString());
+                short itemid = short.Parse(dt.Rows[i]["itemid"].ToString());
+                short num = short.Parse(dt.Rows[i]["num"].ToString());
                 ItemPlace place = ItemPlace.BAG;
-                int pos = int.Parse(dr["position"].ToString());
+                int pos = int.Parse(dt.Rows[i]["position"].ToString());
                 res.Add(new DDO_Item(realid,itemid,charId,num,place,pos));
             }
             return res;
@@ -44,21 +41,18 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from `item` where charid=" + charId + " and place=\"STORE_HOUSE\";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables[0];
-            dataRowCollection = dt.Rows;
             List<DDO_Item> res = new List<DDO_Item>();
-            for (int i = 0; i < dataRowCollection.Count; i++)
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataRow dr = dataRowCollection[i];
-                short realid = short.Parse(dr["realid"].ToString());
-                short itemid = short.Parse(dr["itemid"].ToString());
-                short num = short.Parse(dr["num"].ToString());
+                short realid = short.Parse(dt.Rows[i]["realid"].ToString());
+                short itemid = short.Parse(dt.Rows[i]["itemid"].ToString());
+                short num = short.Parse(dt.Rows[i]["num"].ToString());
                 ItemPlace place = ItemPlace.STORE_HOUSE;
-                int pos = int.Parse(dr["position"].ToString());
+                int pos = int.Parse(dt.Rows[i]["position"].ToString());
                 res.Add(new DDO_Item(realid, itemid, charId, num, place, pos));
             }
             return res;
@@ -68,21 +62,18 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from `item` where charid=" + charId + " and pos=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables[0];
-            dataRowCollection = dt.Rows;
             List<DDO_Item> res = new List<DDO_Item>();
-            for (int i = 0; i < dataRowCollection.Count; i++)
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataRow dr = dataRowCollection[i];
-                short realid = short.Parse(dr["realid"].ToString());
-                short itemid = short.Parse(dr["itemid"].ToString());
-                short num = short.Parse(dr["num"].ToString());
+                short realid = short.Parse(dt.Rows[i]["realid"].ToString());
+                short itemid = short.Parse(dt.Rows[i]["itemid"].ToString());
+                short num = short.Parse(dt.Rows[i]["num"].ToString());
                 ItemPlace place = ItemPlace.STORE_HOUSE;
-                int pos = int.Parse(dr["position"].ToString());
+                int pos = int.Parse(dt.Rows[i]["position"].ToString());
                 res.Add(new DDO_Item(realid, itemid, charId, num, place, pos));
             }
             return res;
@@ -92,20 +83,18 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt;
-            DataRowCollection dataRowCollection;
             cmd = "select * from `equipment` where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables["equipment"];
-            dataRowCollection = dt.Rows;
             List<DDO_EquipmentInfo> res = new List<DDO_EquipmentInfo>();
-            for (int i = 0; i < dataRowCollection.Count; i++)
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
                 DDO_EquipmentInfo equipment = new DDO_EquipmentInfo();
-                equipment.m_strengthNum = byte.Parse(dataRowCollection[i]["strengthnum"].ToString());
-                equipment.m_holeNum = short.Parse(dataRowCollection[i]["holenum"].ToString());
-                equipment.m_realId = short.Parse(dataRowCollection[i]["realid"].ToString());
-                string gems = dataRowCollection[i]["gemlist"].ToString();
+                equipment.m_strengthNum = byte.Parse(dt.Rows[i]["strengthnum"].ToString());
+                equipment.m_holeNum = short.Parse(dt.Rows[i]["holenum"].ToString());
+                equipment.m_realId = short.Parse(dt.Rows[i]["realid"].ToString());
+                string gems = dt.Rows[i]["gemlist"].ToString();
                 equipment.m_inlaidGemIdList = new List<short>();
                 if (gems.Length != 0)
                 {
@@ -114,7 +103,7 @@ namespace MirRemakeBackend.DynamicData {
                         equipment.m_inlaidGemIdList.Add(short.Parse(gems.Split(' ')[j]));
                     }
                 }
-                JsonData attr = JsonMapper.ToObject(dataRowCollection[i]["enchantattr"].ToString());
+                JsonData attr = JsonMapper.ToObject(dt.Rows[i]["enchantattr"].ToString());
                 equipment.m_enchantAttr = GetAttr(attr);
                 res.Add(equipment);
             }
@@ -138,7 +127,7 @@ namespace MirRemakeBackend.DynamicData {
             cmd = "insert into `item` values(null,"+item.m_itemId+","+item.m_characterId+","+item.m_num+",\""+item.m_place.ToString()+"\","+item.m_position+");select last_insert_id()";
             string database = "legend";
             pool.ExecuteSql(database, cmd,ds);
-            return int.Parse(ds.Tables["item"].Rows[0]["realid"].ToString());
+            return int.Parse(ds.Tables[0].Rows[0]["realid"].ToString());
         }
         public void InsertEquipmentInfo(DDO_EquipmentInfo eq) {
             string cmd;
@@ -155,7 +144,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString(eq.m_enchantAttr);
-            cmd = "insert into `equipment` valus(null,"+eq.m_characterId+","+eq.m_strengthNum+","+gems+","+enchantAttr+","+eq.m_holeNum+";";
+            cmd = "insert into `equipment` valus(null,"+eq.m_characterId+","+eq.m_strengthNum+","+gems+","+enchantAttr+","+eq.m_holeNum+");";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
@@ -166,20 +155,17 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from skill where userid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["skill"];
-            dataRowCollection = dt.Rows;
+            dt = ds.Tables[0];
             List<DDO_Skill> res = new List<DDO_Skill>();
-            for (int i = 0; i < dataRowCollection.Count; i++)
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataRow dr = dataRowCollection[i];
                 DDO_Skill skill = new DDO_Skill();
-                skill.m_skillId = short.Parse(dr["skillid"].ToString());
-                skill.m_masterly = int.Parse(dr["masterly"].ToString());
-                skill.m_skillLevel = short.Parse(dr["level"].ToString());
+                skill.m_skillId = short.Parse(dt.Rows[i]["skillid"].ToString());
+                skill.m_masterly = int.Parse(dt.Rows[i]["masterly"].ToString());
+                skill.m_skillLevel = short.Parse(dt.Rows[i]["level"].ToString());
                 res.Add(skill);
             }
             return res;
@@ -190,19 +176,17 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from skill where userid=" + charId + " and skillid=" + ddo.m_skillId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["skill"];
-            dataRowCollection = dt.Rows;
-            if (dataRowCollection.Count != 0)
+            dt = ds.Tables[0];
+            if (dt.Rows.Count != 0)
             {
                 cmd = "update skill set masterly=" + ddo.m_masterly + ", level=" + ddo.m_skillLevel + " where userid=" + charId + " and skillid=" + ddo.m_skillId + ";";
             }
             else
             {
-                cmd = "insert into skill values(null," + ddo.m_skillId + "," + charId + "," + ddo.m_masterly + "," + ddo.m_skillLevel;
+                cmd = "insert into skill values(null," + ddo.m_skillId + "," + charId + "," + ddo.m_masterly + "," + ddo.m_skillLevel+")";
             }
             pool.ExecuteSql(database, cmd);
         }
@@ -213,13 +197,11 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
-            cmd = "insert into character values (null," + occupation.ToString() + ",1,0,\"0 0\",\"0 0 0 0\";select max(characterid)";
+            cmd = "insert into character values (null," + occupation.ToString() + ",1,0,\"0 0\",\"0 0 0 0\");select max(characterid)";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["character"];
-            dataRowCollection = dt.Rows;
-            return int.Parse(dataRowCollection[0]["characterid"].ToString());
+            dt = ds.Tables["0"];
+            return int.Parse(dt.Rows[0]["max(characterid)"].ToString());
         }
         public DDO_Character GetCharacterById(int characterId)
         {
@@ -227,25 +209,22 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from `character` where characterid=" + characterId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables[0];
-            dataRowCollection = dt.Rows;
-            DataRow dr = dataRowCollection[0];
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
-            character.m_currencyArr[0] = new ValueTuple<CurrencyType, long>(CurrencyType.CHARGE,long.Parse(dr["currency"].ToString().Split(' ')[0]));
-            character.m_currencyArr[1] = new ValueTuple<CurrencyType, long>(CurrencyType.VIRTUAL, long.Parse(dr["currency"].ToString().Split(' ')[1]));
+            character.m_currencyArr[0] = new ValueTuple<CurrencyType, long>(CurrencyType.CHARGE,long.Parse(dt.Rows[i]["currency"].ToString().Split(' ')[0]));
+            character.m_currencyArr[1] = new ValueTuple<CurrencyType, long>(CurrencyType.VIRTUAL, long.Parse(dt.Rows[i]["currency"].ToString().Split(' ')[1]));
             character.m_distributedMainAttrPointArr = new ValueTuple<ActorUnitMainAttributeType, short>[4];
-            character.m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType,short>(ActorUnitMainAttributeType.STRENGTH,short.Parse(dr["giftpoints"].ToString().Split(' ')[0]));
-            character.m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short>(ActorUnitMainAttributeType.AGILITY, short.Parse(dr["giftpoints"].ToString().Split(' ')[1]));
-            character.m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short>(ActorUnitMainAttributeType.INTELLIGENCE, short.Parse(dr["giftpoints"].ToString().Split(' ')[2]));
-            character.m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short>(ActorUnitMainAttributeType.SPIRIT, short.Parse(dr["giftpoints"].ToString().Split(' ')[3]));
-            character.m_level = short.Parse(dr["level"].ToString());
-            character.m_occupation = (OccupationType)Enum.Parse(typeof(OccupationType), dr["occupation"].ToString());
-            character.m_experience = int.Parse(dr["experience"].ToString());
-            character.m_characterId = int.Parse(dr["characterid"].ToString());
+            character.m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType,short>(ActorUnitMainAttributeType.STRENGTH,short.Parse(dt.Rows[i]["giftpoints"].ToString().Split(' ')[0]));
+            character.m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short>(ActorUnitMainAttributeType.AGILITY, short.Parse(dt.Rows[i]["giftpoints"].ToString().Split(' ')[1]));
+            character.m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short>(ActorUnitMainAttributeType.INTELLIGENCE, short.Parse(dt.Rows[i]["giftpoints"].ToString().Split(' ')[2]));
+            character.m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short>(ActorUnitMainAttributeType.SPIRIT, short.Parse(dt.Rows[i]["giftpoints"].ToString().Split(' ')[3]));
+            character.m_level = short.Parse(dt.Rows[0]["level"].ToString());
+            character.m_occupation = (OccupationType)Enum.Parse(typeof(OccupationType), dt.Rows[0]["occupation"].ToString());
+            character.m_experience = int.Parse(dt.Rows[0]["experience"].ToString());
+            character.m_characterId = int.Parse(dt.Rows[0]["characterid"].ToString());
             return character;
         }
         public void UpdateCharacter(DDO_Character charObj) {
@@ -267,18 +246,16 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
-            DataRowCollection dataRowCollection;
             cmd = "select * from mission where userid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["mission"];
-            dataRowCollection = dt.Rows;
+            dt = ds.Tables[0];
             List<DDO_Mission> missions = new List<DDO_Mission>();
-            for(int i = 0; i < dataRowCollection.Count; i++) {
+            for(int i = 0; i < dt.Rows.Count; i++) {
                 DDO_Mission mission = new DDO_Mission();
-                mission.m_missionId = short.Parse(dataRowCollection[i]["missionid"].ToString());
+                mission.m_missionId = short.Parse(dt.Rows[i]["missionid"].ToString());
                 mission.m_missionTargetProgressList = new List<int>();
-                string[] targets = dataRowCollection[i]["targets"].ToString().Split(' ');
+                string[] targets = dt.Rows[i]["targets"].ToString().Split(' ');
                 for(int j = 0; j < targets.Length; j++) {
                     mission.m_missionTargetProgressList.Add(int.Parse(targets[j]));
                 }
@@ -293,7 +270,7 @@ namespace MirRemakeBackend.DynamicData {
             {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString();
             }
-            cmd = "insert into mission values(null,"+ddo.m_missionId+",\""+target+"\","+charId+";";
+            cmd = "insert into mission values(null,"+ddo.m_missionId+",\""+target+"\","+charId+");";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
