@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text;
 using MySql.Data;
+using MySql.Data.MySqlClient;
 namespace MirRemakeBackend.DynamicData
 {
     class SQLPool
@@ -26,13 +27,13 @@ namespace MirRemakeBackend.DynamicData
             /// <summary>
             /// 所有的链接
             /// </summary>
-            private readonly ConcurrentQueue<SqlConnection> conns = new ConcurrentQueue<SqlConnection>();
+            private readonly ConcurrentQueue<MySqlConnection> conns = new ConcurrentQueue<MySqlConnection>();
 
             public ConnectionPool(SqlConfig config)
             {
                 this.itemCount = config.cacheCount;
-                this.connstr = string.Format("Data Source={0},{1};user id={2};pwd={3};initial catalog=",
-                                             config.host, config.port, config.username, config.pwd);
+                this.connstr = string.Format("server={0};user id={1};password={2};database=",
+                                             config.server,config.username, config.pwd);
             }
 
             /// <summary>
@@ -40,9 +41,9 @@ namespace MirRemakeBackend.DynamicData
             /// </summary>
             /// <param name="dbbase"></param>
             /// <returns></returns>
-            public SqlConnection GetConnection(string dbbase)
+            public MySqlConnection GetConnection(string dbbase)
             {
-                SqlConnection conn;
+                MySqlConnection conn;
                 if (conns.TryDequeue(out conn))
                 {
                     if (conn.State == ConnectionState.Closed)
@@ -60,14 +61,14 @@ namespace MirRemakeBackend.DynamicData
                         return conn;
                 }
                 Console.WriteLine("创建一链接!" + conns.Count);
-                return new SqlConnection(this.connstr + dbbase);
+                return new MySqlConnection(this.connstr + dbbase);
             }
 
             /// <summary>
             /// 放入一个连接
             /// </summary>
             /// <param name="conn"></param>
-            public void Push(SqlConnection conn)
+            public void Push(MySqlConnection conn)
             {
                 Task.Factory.StartNew(
                         () => {
@@ -90,11 +91,11 @@ namespace MirRemakeBackend.DynamicData
         }
         public void ExecuteSql(string dbbase, string sql, DataSet ds = null)
         {
-            SqlCommand cmd = new SqlCommand(sql, ConnPool.GetConnection(dbbase));
+            MySqlCommand cmd = new MySqlCommand(sql, ConnPool.GetConnection(dbbase));
             cmd.CommandType = CommandType.Text;
             Execute(cmd, ds);
         }
-        private void Execute(SqlCommand cmd, DataSet ds = null)
+        private void Execute(MySqlCommand cmd, DataSet ds = null)
         {
             if (cmd.Connection.State == ConnectionState.Closed)
                 cmd.Connection.Open();
@@ -102,7 +103,7 @@ namespace MirRemakeBackend.DynamicData
                 cmd.ExecuteNonQuery();
             else
             {
-                SqlDataAdapter sda = new SqlDataAdapter();
+                MySqlDataAdapter sda = new MySqlDataAdapter();
                 sda.SelectCommand = cmd;
                 sda.Fill(ds);   //调用会自动执行 ExecuteNonQuery();    不要重复调用,很容易出错!
                 sda.Dispose();  //一定要关闭,不然下次执行报错;
@@ -136,6 +137,8 @@ namespace MirRemakeBackend.DynamicData
         /// 缓存链接数量
         /// </summary>
         public int cacheCount = 100;
+        public String server;
+        public String database;
     }
     public class SqlProdureParameter
     {
@@ -150,18 +153,22 @@ namespace MirRemakeBackend.DynamicData
             get;
             private set;
         }
-
+        public MySqlCommand mysqlcommand
+        {
+            get;
+            private set;
+        }
         private SqlProdureParameter() { }
 
         internal SqlProdureParameter(SqlCommand sqlcommand)
         {
             this.sqlcommand = sqlcommand;
         }
-        /*
+        
                 internal SqlProdureParameter(MySqlCommand mysqlcommand) {
                     this.mysqlcommand = mysqlcommand;
                 }
-        */
+        
         /// <summary>
         /// 释放
         /// </summary>

@@ -11,6 +11,10 @@ using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
+using MySql.Data;
+using System.Data;
+using MySql.Data.MySqlClient;
+using System.Data.SqlClient;
 
 namespace MirRemakeBackend {
     class Program {
@@ -102,8 +106,7 @@ namespace MirRemakeBackend {
             };
         }
         static int Test() {
-            IDS_StatusImpl status=new IDS_StatusImpl();
-            DO_Status[] statuss=status.GetAllStatus();
+            IDDS_Impl impl=new IDDS_Impl();
             return 1;
         }
     }
