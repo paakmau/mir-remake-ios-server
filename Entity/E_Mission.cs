@@ -5,8 +5,9 @@ using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
     class E_Mission {
-        public DE_Mission m_dataEntity;
+        private DE_Mission m_dataEntity;
         public ValueTuple<int, int>[] m_missionTargetProgressArr;
+        public IReadOnlyList<short> m_ChildrenIdList { get { return m_dataEntity.m_childrenIdList; } }
         public bool m_IsFinished {
             get {
                 foreach (var mt in m_missionTargetProgressArr)

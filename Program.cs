@@ -19,11 +19,11 @@ namespace MirRemakeBackend {
         private static NetworkService s_networkService;
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
-            if (Test() == 1) {
-                Console.WriteLine("Modle Succeed");
+            // if (Test() == 1) {
+            //     Console.WriteLine("Modle Succeed");
 
-                return;
-            }
+            //     return;
+            // }
             s_networkService = new NetworkService ();
             InitEntityManager ();
             InitGameLogic ();

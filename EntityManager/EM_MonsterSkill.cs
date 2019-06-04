@@ -8,7 +8,6 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.EntityManager {
     /// <summary>
-    /// 索引Character的所学技能  
     /// 索引Monster的技能  
     /// </summary>
     class EM_MonsterSkill : EntityManagerBase {

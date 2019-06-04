@@ -94,8 +94,8 @@ namespace MirRemakeBackend.Data {
         public short m_id;
         public OccupationType m_missionOccupation;
         public short m_levelInNeed;
-        public int[] m_fatherMissionIdArr;
-        public int[] m_childrenMissions;
+        public short[] m_fatherMissionIdArr;
+        public short[] m_childrenMissionArr;
         public int m_acceptingNPCID;
         public int m_deliveringNPCID;
         /// <summary>

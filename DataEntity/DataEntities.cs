@@ -152,12 +152,14 @@ namespace MirRemakeBackend.DataEntity {
     }
     class DE_Mission {
         public readonly short m_id;
+        public readonly IReadOnlyList<short> m_childrenIdList;
         public readonly IReadOnlyList<ValueTuple<MissionTargetType, short, int>> m_targetAndParamList;
         public readonly int m_bonusCoin;
         public readonly int m_bonusExperience;
         public readonly IReadOnlyList<ValueTuple<short, short>> m_bonusItemIdAndNumList;
         public DE_Mission (DO_Mission mDo) {
             m_id = mDo.m_id;
+            m_childrenIdList = new List<short> (mDo.m_childrenMissionArr);
             m_targetAndParamList = new List<ValueTuple<MissionTargetType, short, int>> (mDo.m_missionTargetArr);
             m_bonusCoin = mDo.m_bonusCoin;
             m_bonusExperience = mDo.m_bonusExperience;
