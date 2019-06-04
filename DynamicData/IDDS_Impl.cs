@@ -21,10 +21,10 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             DataRowCollection dataRowCollection;
-            cmd = "select * from item where charid=" + charId + " and place=\"bag\";";
+            cmd = "select * from `item` where charid=" + charId + " and place=\"bag\";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["item"];
+            dt = ds.Tables[0];
             dataRowCollection = dt.Rows;
             List<DDO_Item> res = new List<DDO_Item>();
             for (int i = 0; i < dataRowCollection.Count; i++)
@@ -45,10 +45,10 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             DataRowCollection dataRowCollection;
-            cmd = "select * from item where charid=" + charId + " and place=\"STORE_HOUSE\";";
+            cmd = "select * from `item` where charid=" + charId + " and place=\"STORE_HOUSE\";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["item"];
+            dt = ds.Tables[0];
             dataRowCollection = dt.Rows;
             List<DDO_Item> res = new List<DDO_Item>();
             for (int i = 0; i < dataRowCollection.Count; i++)
@@ -69,10 +69,10 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             DataRowCollection dataRowCollection;
-            cmd = "select * from item where charid=" + charId + " and pos=\"BAG\";";
+            cmd = "select * from `item` where charid=" + charId + " and pos=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
-            dt = ds.Tables["item"];
+            dt = ds.Tables[0];
             dataRowCollection = dt.Rows;
             List<DDO_Item> res = new List<DDO_Item>();
             for (int i = 0; i < dataRowCollection.Count; i++)
@@ -93,7 +93,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet();
             DataTable dt;
             DataRowCollection dataRowCollection;
-            cmd = "select * from equipment where charid=" + charId + ";";
+            cmd = "select * from `equipment` where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables["equipment"];
@@ -122,20 +122,20 @@ namespace MirRemakeBackend.DynamicData {
         }
         public void UpdateItem(DDO_Item item) {
             string cmd;
-            cmd = "update item set num="+item.m_num+",place="+item.m_place.ToString()+",position="+item.m_position+" where itemid="+item.m_itemId+" and realid="+item.m_realId+";";
+            cmd = "update `item` set num="+item.m_num+",place="+item.m_place.ToString()+",position="+item.m_position+" where itemid="+item.m_itemId+" and realid="+item.m_realId+";";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
         public void DeleteItemByRealId(long realId) {
             string cmd;
-            cmd = "delete from item where realid=" + realId + ";";
+            cmd = "delete from `item` where realid=" + realId + ";";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
         public long InsertItem(DDO_Item item) {
             string cmd;
             DataSet ds = new DataSet();
-            cmd = "insert into item values(null,"+item.m_itemId+","+item.m_characterId+","+item.m_num+",\""+item.m_place.ToString()+"\","+item.m_position+");select last_insert_id()";
+            cmd = "insert into `item` values(null,"+item.m_itemId+","+item.m_characterId+","+item.m_num+",\""+item.m_place.ToString()+"\","+item.m_position+");select last_insert_id()";
             string database = "legend";
             pool.ExecuteSql(database, cmd,ds);
             return int.Parse(ds.Tables["item"].Rows[0]["realid"].ToString());
@@ -155,7 +155,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString(eq.m_enchantAttr);
-            cmd = "insert into equipment valuse(null,"+eq.m_characterId+","+eq.m_strengthNum+","+gems+","+enchantAttr+","+eq.m_holeNum+";";
+            cmd = "insert into `equipment` valus(null,"+eq.m_characterId+","+eq.m_strengthNum+","+gems+","+enchantAttr+","+eq.m_holeNum+";";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
@@ -214,7 +214,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             DataRowCollection dataRowCollection;
-            cmd = "insert into character values (null," + occupation.ToString() + ",1,0,\"0 0\",\"0 0 0 0\";select last_insert_id()";
+            cmd = "insert into character values (null," + occupation.ToString() + ",1,0,\"0 0\",\"0 0 0 0\";select max(characterid)";
             string database = "legend";
             pool.ExecuteSql(database, cmd, ds);
             dt = ds.Tables["character"];

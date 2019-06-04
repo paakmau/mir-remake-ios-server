@@ -45,18 +45,18 @@ namespace MirRemakeBackend.Data {
             mission.m_bonusExperience = int.Parse(s_missionDatas[ID]["BonusExperience"].ToString());
             mission.m_levelInNeed = short.Parse(s_missionDatas[ID]["LevelInNeed"].ToString());
             tempData = s_missionDatas[ID]["FatherMissionList"];
-            mission.m_fatherMissionIdArr = new int[tempData.Count];
+            mission.m_fatherMissionIdArr = new short[tempData.Count];
             
             for (int i = 0; i < tempData.Count; i++)
             {
-                mission.m_fatherMissionIdArr[i]=(int.Parse(tempData[i].ToString()));
+                mission.m_fatherMissionIdArr[i]=(short.Parse(tempData[i].ToString()));
             }
             tempData = s_missionDatas[ID]["ChildrenMissionList"];
-            mission.m_childrenMissions = new int[tempData.Count];
+            mission.m_childrenMissionArr = new short[tempData.Count];
             
             for (int i = 0; i < tempData.Count; i++)
             {
-                mission.m_childrenMissions[i] = (int.Parse(tempData[i].ToString()));
+                mission.m_childrenMissionArr[i] = (short.Parse(tempData[i].ToString()));
             }
             tempData = s_missionDatas[ID]["MissionTarget"];
             mission.m_missionTargetArr = new ValueTuple<MissionTargetType, short, int>[tempData.Count];
