@@ -28,7 +28,7 @@ namespace MirRemakeBackend.DataEntity {
             m_monsterIdAndRespawnPositionList = new List<ValueTuple<short, Vector2>> (respawnPosArr);
         }
         public bool GetCharacterByOccupationAndLevel (OccupationType occupation, short level, out ValueTuple<DE_ActorUnit, DE_CharacterData> res) {
-            res = default;
+            res = new ValueTuple<DE_ActorUnit,DE_CharacterData>();//
             ValueTuple<DE_ActorUnit, DE_CharacterData>[] charAllLv = null;
             if (!m_characterDict.TryGetValue (occupation, out charAllLv))
                 return false;

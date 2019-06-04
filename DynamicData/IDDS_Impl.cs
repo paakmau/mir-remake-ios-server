@@ -9,6 +9,8 @@ namespace MirRemakeBackend.DynamicData {
         private SQLPool pool;
         public IDDS_Impl() {
             sqlConfig = new SqlConfig();
+            sqlConfig.username="root";
+            sqlConfig.pwd="root";
             pool = new SQLPool(sqlConfig);
         }
         public List<DDO_Item> GetBagByCharacterId(int charId)

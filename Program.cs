@@ -11,6 +11,9 @@ using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
+using MySql.Data;
+using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace MirRemakeBackend {
     class Program {
@@ -102,8 +105,16 @@ namespace MirRemakeBackend {
             };
         }
         static int Test() {
-            IDS_StatusImpl status=new IDS_StatusImpl();
-            DO_Status[] statuss=status.GetAllStatus();
+            DataSet ds=new DataSet();
+            String connstr="server=localhost;user id=root;password=root;database=legend";
+            MySqlConnection conn=new MySqlConnection(connstr);
+            conn.Open();
+            String cmdstr="select * from `character`;";
+            MySqlCommand cmd=new MySqlCommand(cmdstr,conn);
+            MySqlDataAdapter ad=new MySqlDataAdapter();
+            ad.SelectCommand=cmd;
+            ad.Fill(ds);
+            
             return 1;
         }
     }
