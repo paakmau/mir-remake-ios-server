@@ -67,7 +67,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             // 发送到Client
             m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
-                EM_Sight.s_instance.GetCharacterInSightNetworkId(target.m_networkId, true),
+                EM_Sight.s_instance.GetCharacterInSightNetworkId (target.m_networkId, true),
                 target.m_networkId,
                 effect.GetNo ()));
         }
@@ -80,7 +80,12 @@ namespace MirRemakeBackend.GameLogic {
             var sAttrList = status.m_dataEntity.m_specialAttributeList;
             for (int i = 0; i < sAttrList.Count; i++)
                 unit.AddSpAttr (sAttrList[i], k);
-            // TODO: 通知Client
+            // 通知Client
+            m_networkService.SendServerCommand (SC_ApplyAllStatus.Instance (
+                EM_Sight.s_instance.GetCharacterInSightNetworkId (unit.m_networkId, true),
+                unit.m_networkId,
+                status.GetNo (),
+                k == 1));
         }
         struct Effect {
             private DE_Effect m_de;

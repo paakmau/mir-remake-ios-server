@@ -58,8 +58,8 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_InitSelfSkill s_instance = new SC_InitSelfSkill ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SKILL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private (short, short, int)[] m_skillIdAndLvAndMasterlys;
-        public static SC_InitSelfSkill Instance (IReadOnlyList<int> toClientList, (short, short, int)[] skillIdAndLvAndMasterlys) {
+        private (short, short, int) [] m_skillIdAndLvAndMasterlys;
+        public static SC_InitSelfSkill Instance (IReadOnlyList<int> toClientList, (short, short, int) [] skillIdAndLvAndMasterlys) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_skillIdAndLvAndMasterlys = skillIdAndLvAndMasterlys;
             return s_instance;
@@ -150,6 +150,27 @@ namespace MirRemakeBackend.Network {
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_targetNetId);
             writer.Put (m_effect);
+        }
+    }
+    class SC_ApplyAllStatus : ServerCommandBase {
+        private static SC_ApplyAllStatus s_instance = new SC_ApplyAllStatus ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_STATUS; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_targetNetId;
+        private NO_Status m_statusNo;
+        private bool m_isAttach;
+        public static SC_ApplyAllStatus Instance (IReadOnlyList<int> toClientList, int targetNetId, NO_Status statusNo, bool isAttach) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_targetNetId = targetNetId;
+            s_instance.m_statusNo = statusNo;
+            s_instance.m_isAttach = isAttach;
+            return s_instance;
+        }
+        private SC_ApplyAllStatus () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_targetNetId);
+            writer.Put (m_statusNo);
+            writer.Put (m_isAttach);
         }
     }
 }

@@ -1,4 +1,3 @@
-
 namespace MirRemakeBackend.Network {
     enum NetworkToClientDataType : byte {
         INIT_SELF_NETWORK_ID,
@@ -12,6 +11,7 @@ namespace MirRemakeBackend.Network {
         APPLY_OTHER_CAST_SKILL_BEGIN,
         APPLY_OTHER_CAST_SKILL_SING_CANCEL,
         APPLY_ALL_EFFECT,
+        APPLY_ALL_STATUS,
         APPLY_ALL_DEAD,
         APPLY_SELF_UPDATE_ITEM_IN_BAG,
         APPLY_SELF_UPDATE_ITEM_IN_STORE_HOUSE,
@@ -21,7 +21,9 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_DELIVER_MISSION,
         APPLY_SELF_CANCEL_MISSION,
         APPLY_SELF_SET_MISSION_PROGRESS,
-        APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY
+        APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
+        APPLY_SHOPPING_MALL_ACTION_TYPE_LIST,
+        APPLY_SHOPPING_MALL_COMMIDITIES_LIST
     }
     enum NetworkToServerDataType : byte {
         INIT_CHARACTER_ID,
