@@ -22,7 +22,7 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < statusEn.Current.Value.Count; i++) {
                     if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {
                         t_intList.Add (i);
-                        StatusToAttr (unit, statusEn.Current.Value[i], -1);
+                        StatusAttachOrRemove (unit, statusEn.Current.Value[i], -1);
                     }
                 }
                 EM_Status.s_instance.RemoveOrderedStatus (netId, t_intList);
@@ -49,8 +49,29 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandRemoveCharacter (int netId) {
             EM_Status.s_instance.RemoveCharacterStatus (netId);
         }
-
-        private void StatusToAttr (E_ActorUnit unit, E_Status status, int k) {
+        /// <summary>
+        /// 对目标的属性添加影响
+        /// </summary>
+        /// <param name="target"></param>
+        public void NotifyApplyEffect (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
+            Effect effect = new Effect ();
+            effect.InitWithCasterAndTarget (effectDe, caster, target);
+            if (effect.m_hit) {
+                // Hp Mp
+                target.m_CurHp += effect.m_deltaHp;
+                target.m_CurMp += effect.m_deltaMp;
+                // 添加状态
+                var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
+                for (int i = 0; i < statusList.Count; i++)
+                    StatusAttachOrRemove (target, statusList[i], 1);
+            }
+            // 发送到Client
+            m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
+                EM_Sight.s_instance.GetCharacterInSightNetworkId(target.m_networkId, true),
+                target.m_networkId,
+                effect.GetNo ()));
+        }
+        private void StatusAttachOrRemove (E_ActorUnit unit, E_Status status, int k) {
             // 处理具体属性
             var cAttrList = status.m_dataEntity.m_affectAttributeList;
             for (int i = 0; i < cAttrList.Count; i++)
@@ -62,12 +83,14 @@ namespace MirRemakeBackend.GameLogic {
             // TODO: 通知Client
         }
         struct Effect {
+            private DE_Effect m_de;
             public bool m_hit;
             public bool m_critical;
             public int m_deltaHp;
             public int m_deltaMp;
             public ValueTuple<short, float, float, int>[] m_statusIdAndValueAndTimeAndCasterNetIdArr;
             public void InitWithCasterAndTarget (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
+                m_de = effectDe;
                 // 处理命中
                 float hitRate = effectDe.m_hitRate * caster.m_HitRate / target.m_DodgeRate;
                 m_hit = MyRandom.NextInt (1, 101) >= hitRate;
@@ -99,21 +122,8 @@ namespace MirRemakeBackend.GameLogic {
                     }
                 }
             }
-        }
-        /// <summary>
-        /// 对目标的属性添加影响
-        /// </summary>
-        /// <param name="target"></param>
-        public void NotifyApplyEffect (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
-            Effect effect = new Effect ();
-            effect.InitWithCasterAndTarget (effectDe, caster, target);
-            if (effect.m_hit) {
-                target.m_CurHp += effect.m_deltaHp;
-                target.m_CurMp += effect.m_deltaMp;
-                // 通知状态
-                var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
-                for (int i = 0; i < statusList.Count; i++)
-                    StatusToAttr (target, statusList[i], 1);
+            public NO_Effect GetNo () {
+                return new NO_Effect (m_de.m_animId, m_hit, m_critical, m_deltaHp, m_deltaMp);
             }
         }
     }

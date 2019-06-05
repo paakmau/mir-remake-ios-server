@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Xml.Linq;
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend.Network {
@@ -20,6 +21,20 @@ namespace MirRemakeBackend.Network {
             m_id = id;
             m_value = value;
             m_time = time;
+        }
+    }
+    struct NO_Effect {
+        public short m_animId;
+        public bool m_hit;
+        public bool m_isCritical;
+        public int m_deltaHp;
+        public int m_deltaMp;
+        public NO_Effect (short animId, bool hit, bool isCritical, int dHp, int dMp) {
+            m_animId = animId;
+            m_hit = hit;
+            m_isCritical = isCritical;
+            m_deltaHp = dHp;
+            m_deltaMp = dMp;
         }
     }
     static class NetworkObjectExtensions {
@@ -48,6 +63,21 @@ namespace MirRemakeBackend.Network {
             int value = reader.GetInt ();
             float time = reader.GetFloat ();
             return new NO_Status (statusId, value, time);
+        }
+        public static void Put (this NetDataWriter writer, NO_Effect effect) {
+            writer.Put (effect.m_animId);
+            writer.Put (effect.m_hit);
+            writer.Put (effect.m_isCritical);
+            writer.Put (effect.m_deltaHp);
+            writer.Put (effect.m_deltaMp);
+        }
+        public static NO_Effect GetEffect (this NetDataReader reader) {
+            short animId = reader.GetShort ();
+            bool isHit = reader.GetBool ();
+            bool isCritical = reader.GetBool ();
+            int dHp = reader.GetInt ();
+            int dMp = reader.GetInt ();
+            return new NO_Effect (animId, isHit, isCritical, dHp, dMp);
         }
     }
 }

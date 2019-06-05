@@ -134,4 +134,22 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_casterNetId);
         }
     }
+    class SC_ApplyAllEffect : ServerCommandBase {
+        private static SC_ApplyAllEffect s_instance = new SC_ApplyAllEffect ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_EFFECT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_targetNetId;
+        private NO_Effect m_effect;
+        public static SC_ApplyAllEffect Instance (IReadOnlyList<int> toClientList, int targetNetId, NO_Effect effectNo) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_targetNetId = targetNetId;
+            s_instance.m_effect = effectNo;
+            return s_instance;
+        }
+        private SC_ApplyAllEffect () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_targetNetId);
+            writer.Put (m_effect);
+        }
+    }
 }
