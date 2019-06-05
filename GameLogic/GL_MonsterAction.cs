@@ -26,8 +26,12 @@ namespace MirRemakeBackend.GameLogic {
                 mfsmEn.Current.Value.Tick (dT);
         }
         public override void NetworkTick () { }
-        public void MFSMCastSkillBegin (int netId, E_MonsterSkill skill) {
-            // TODO: 通知Client
+        public void MFSMCastSkillBegin (int netId, E_MonsterSkill skill, SkillParam sp) {
+            m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (
+                EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false),
+                netId,
+                skill.m_skillId,
+                sp.GetNo ()));
         }
         public void MFSMSkillSettle (E_Monster monster, E_MonsterSkill skill, SkillParam sp) {
             GL_BattleSettle.s_instance.NotifySkillSettle (monster, skill, sp);

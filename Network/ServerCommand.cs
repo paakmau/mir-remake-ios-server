@@ -211,28 +211,56 @@ namespace MirRemakeBackend.Network {
             }
         }
     }
-    class SC_ApplyOtherActorUnitInSight : ServerCommandBase {
-        // TODO: 修改为, 当视野变化的时候才会发送, 且只发送新增与离开的单位, 并发送新增单位的初始信息(FSM, HP, MP, Level, Status)
-        // TODO: 区分玩家与怪物的接口(因为玩家需要得到装备)
-        // TODO: 视野需要有上限
-        private static SC_ApplyOtherActorUnitInSight s_instance = new SC_ApplyOtherActorUnitInSight ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_IN_SIGHT; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
-        private ActorUnitType m_actorUnitType;
-        private List<int> m_otherNetIdList;
-        public static SC_ApplyOtherActorUnitInSight Instance (IReadOnlyList<int> toClientList, ActorUnitType actorUnitType, List<int> otherNetIdList) {
+    class SC_ApplyOtherMonsterInSight : ServerCommandBase {
+        private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private NO_Monster[] m_monArr;
+        public static SC_ApplyOtherMonsterInSight Instance (IReadOnlyList<int> toClientList, NO_Monster[] newMonArr) {
             s_instance.m_toClientList = toClientList;
-            s_instance.m_actorUnitType = actorUnitType;
-            s_instance.m_otherNetIdList = otherNetIdList;
+            s_instance.m_monArr = newMonArr;
             return s_instance;
         }
-        private SC_ApplyOtherActorUnitInSight () { }
+        private SC_ApplyOtherMonsterInSight () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_actorUnitType);
-            writer.Put ((byte) m_otherNetIdList.Count);
-            for (int i = 0; i < m_otherNetIdList.Count; i++) {
-                writer.Put (m_otherNetIdList[i]);
-            }
+            writer.Put ((byte) m_monArr.Length);
+            for (int i = 0; i < m_monArr.Length; i++)
+                writer.Put (m_monArr[i]);
+        }
+    }
+    class SC_ApplyOtherCharacterInSight : ServerCommandBase {
+        private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private NO_Character[] m_charArr;
+        public static SC_ApplyOtherCharacterInSight Instance (IReadOnlyList<int> toClientList, NO_Character[] newCharArr) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_charArr = newCharArr;
+            return s_instance;
+        }
+        private SC_ApplyOtherCharacterInSight () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_charArr.Length);
+            for (int i = 0; i < m_charArr.Length; i++)
+                writer.Put (m_charArr[i]);
+        }
+    }
+    /// <summary>
+    /// 需要在视野中移除的单位
+    /// </summary>
+    class SC_ApplyOtherActorUnitOutOfSight : ServerCommandBase {
+        private static SC_ApplyOtherActorUnitOutOfSight s_instance = new SC_ApplyOtherActorUnitOutOfSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int[] m_unitIdArr;
+        public static SC_ApplyOtherActorUnitOutOfSight Instance (IReadOnlyList<int> toClientList, int[] unitIdArr) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_unitIdArr = unitIdArr;
+            return s_instance;
+        }
+        private SC_ApplyOtherActorUnitOutOfSight () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.PutArray (m_unitIdArr);
         }
     }
     class SC_ApplyAllChangeEquipment : ServerCommandBase {

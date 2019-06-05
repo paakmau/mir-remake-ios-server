@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using LiteNetLib.Utils;
 
@@ -35,6 +36,30 @@ namespace MirRemakeBackend.Network {
             m_isCritical = isCritical;
             m_deltaHp = dHp;
             m_deltaMp = dMp;
+        }
+    }
+    struct NO_Monster {
+        public int m_netId;
+        public Vector2 m_position;
+        public short m_monsterId;
+        public NO_Monster (int netId, Vector2 pos, short monId) {
+            m_netId = netId;
+            m_position = pos;
+            m_monsterId = monId;
+        }
+    }
+    struct NO_Character {
+        public int m_netId;
+        public Vector2 m_position;
+        public OccupationType m_occupation;
+        public short m_level;
+        public short[] m_equipmentItemIdArr;
+        public NO_Character (int netId, Vector2 pos, OccupationType ocp, short lv, short[] equipIdArr) {
+            m_netId = netId;
+            m_position = pos;
+            m_occupation = ocp;
+            m_level = lv;
+            m_equipmentItemIdArr = equipIdArr;
         }
     }
     static class NetworkObjectExtensions {
@@ -78,6 +103,32 @@ namespace MirRemakeBackend.Network {
             int dHp = reader.GetInt ();
             int dMp = reader.GetInt ();
             return new NO_Effect (animId, isHit, isCritical, dHp, dMp);
+        }
+        public static void Put (this NetDataWriter writer, NO_Monster monNo) {
+            writer.Put (monNo.m_netId);
+            writer.Put (monNo.m_position);
+            writer.Put (monNo.m_monsterId);
+        }
+        public static NO_Monster GetMonster (this NetDataReader reader) {
+            int netId = reader.GetInt ();
+            Vector2 pos = reader.GetVector2 ();
+            short monsterId = reader.GetShort ();
+            return new NO_Monster (netId, pos, monsterId);
+        }
+        public static void Put (this NetDataWriter writer, NO_Character charNo) {
+            writer.Put (charNo.m_netId);
+            writer.Put (charNo.m_position);
+            writer.Put ((byte) charNo.m_occupation);
+            writer.Put (charNo.m_level);
+            writer.PutArray (charNo.m_equipmentItemIdArr);
+        }
+        public static NO_Character GetCharacter (this NetDataReader reader) {
+            int netId = reader.GetInt ();
+            Vector2 pos = reader.GetVector2 ();
+            OccupationType ocp = (OccupationType) reader.GetByte ();
+            short lv = reader.GetShort ();
+            short[] equipIdArr = reader.GetShortArray ();
+            return new NO_Character (netId, pos, ocp, lv, equipIdArr);
         }
     }
 }

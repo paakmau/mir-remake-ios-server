@@ -28,6 +28,8 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
         }
-        public override void NetworkTick () { }
+        public override void NetworkTick () {
+            
+        }
     }
 }

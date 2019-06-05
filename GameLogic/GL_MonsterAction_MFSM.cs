@@ -142,7 +142,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_timer = skill.m_SingAndCastFrontTime;
             }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
-                GL_MonsterAction.s_instance.MFSMCastSkillBegin (self.m_networkId, m_skill);
+                GL_MonsterAction.s_instance.MFSMCastSkillBegin (self.m_networkId, m_skill, m_skillParam);
             }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
