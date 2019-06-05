@@ -51,7 +51,10 @@ namespace MirRemakeBackend.GameLogic {
             if (oriLv != skill.m_skillLevel) {
                 m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
                 m_characterDds.UpdateCharacter (charObj.GetDdo ());
-                // TODO: 发给Client
+                t_intList.Clear ();
+                t_intList.Add (netId);
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
+                    t_intList, skill.m_skillId, skill.m_skillLevel, skill.m_masterly));
             }
         }
     }

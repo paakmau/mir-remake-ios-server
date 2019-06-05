@@ -281,6 +281,7 @@ namespace MirRemakeBackend.Network {
             s_instance.m_itemId = itemId;
             return s_instance;
         }
+        private SC_ApplyAllChangeEquipment () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_itemId);
         }
@@ -295,8 +296,29 @@ namespace MirRemakeBackend.Network {
             s_instance.m_itemRealId = itemRealId;
             return s_instance;
         }
+        private SC_ApplySelfUseEquipmentItem () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_itemRealId);
+        }
+    }
+    class SC_ApplySelfUpdateSkillLevelAndMasterly : ServerCommandBase {
+        private static SC_ApplySelfUpdateSkillLevelAndMasterly s_instance = new SC_ApplySelfUpdateSkillLevelAndMasterly ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_skillId;
+        private short m_skillLv;
+        private int m_masterly;
+        public static SC_ApplySelfUpdateSkillLevelAndMasterly Instance (IReadOnlyList<int> toClientList, short skillId, short skillLv, int masterly) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_skillId = skillId;
+            s_instance.m_skillLv = skillLv;
+            s_instance.m_masterly = masterly;
+            return s_instance;
+        }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_skillId);
+            writer.Put (m_skillLv);
+            writer.Put (m_masterly);
         }
     }
 }
