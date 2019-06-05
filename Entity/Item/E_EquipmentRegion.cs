@@ -6,7 +6,7 @@ namespace MirRemakeBackend.Entity {
         public void Reset (E_Item[] itemArr) {
             m_equipPositionAndEquipmentDict.Clear ();
             foreach (var item in itemArr)
-                m_equipPositionAndEquipmentDict.Add (((E_EquipmentItem)item).m_EquipmentPosition, (E_EquipmentItem)item);
+                m_equipPositionAndEquipmentDict.Add (((E_EquipmentItem) item).m_EquipmentPosition, (E_EquipmentItem) item);
         }
         public List<E_Item> GetAllItemList () {
             List<E_Item> res = new List<E_Item> ();
@@ -14,6 +14,9 @@ namespace MirRemakeBackend.Entity {
             while (equipmentEn.MoveNext ())
                 res.Add (equipmentEn.Current);
             return res;
+        }
+        public Dictionary<EquipmentPosition, E_EquipmentItem>.Enumerator GetEquipedEn () {
+            return m_equipPositionAndEquipmentDict.GetEnumerator ();
         }
         public E_EquipmentItem GetEquipmentByEquipPosition (EquipmentPosition ePos) {
             E_EquipmentItem res = null;

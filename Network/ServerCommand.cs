@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -79,9 +80,9 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_SetAllHPAndMP s_instance = new SC_SetAllHPAndMP ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_HP_AND_MP; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
-        List<int> m_allNetIdList;
-        List < (int, int, int, int) > m_hpAndMaxHpAndMpAndMaxMpList;
-        public static SC_SetAllHPAndMP Instance (IReadOnlyList<int> toClientList, List<int> allNetIdList, List < (int, int, int, int) > hpAndMaxHpAndMpAndMaxMpList) {
+        IReadOnlyList<int> m_allNetIdList;
+        IReadOnlyList < (int, int, int, int) > m_hpAndMaxHpAndMpAndMaxMpList;
+        public static SC_SetAllHPAndMP Instance (IReadOnlyList<int> toClientList, IReadOnlyList<int> allNetIdList, IReadOnlyList < (int, int, int, int) > hpAndMaxHpAndMpAndMaxMpList) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_allNetIdList = allNetIdList;
             s_instance.m_hpAndMaxHpAndMpAndMaxMpList = hpAndMaxHpAndMpAndMaxMpList;
@@ -196,8 +197,8 @@ namespace MirRemakeBackend.Network {
         private static SC_SetOtherPosition s_instance = new SC_SetOtherPosition ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
-        List < (int, Vector2) > m_otherNetIdAndPosList;
-        public static SC_SetOtherPosition Instance (IReadOnlyList<int> toClientList, List < (int, Vector2) > otherNetIdAndPosList) {
+        IReadOnlyList < (int, Vector2) > m_otherNetIdAndPosList;
+        public static SC_SetOtherPosition Instance (IReadOnlyList<int> toClientList, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_otherNetIdAndPosList = otherNetIdAndPosList;
             return s_instance;
@@ -215,34 +216,41 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private NO_Monster[] m_monArr;
-        public static SC_ApplyOtherMonsterInSight Instance (IReadOnlyList<int> toClientList, NO_Monster[] newMonArr) {
+        private IReadOnlyList<NO_Monster> m_monList;
+        public static SC_ApplyOtherMonsterInSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Monster> newMonList) {
             s_instance.m_toClientList = toClientList;
-            s_instance.m_monArr = newMonArr;
+            s_instance.m_monList = newMonList;
             return s_instance;
         }
         private SC_ApplyOtherMonsterInSight () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_monArr.Length);
-            for (int i = 0; i < m_monArr.Length; i++)
-                writer.Put (m_monArr[i]);
+            writer.Put ((byte) m_monList.Count);
+            for (int i = 0; i < m_monList.Count; i++)
+                writer.Put (m_monList[i]);
         }
     }
     class SC_ApplyOtherCharacterInSight : ServerCommandBase {
         private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private NO_Character[] m_charArr;
-        public static SC_ApplyOtherCharacterInSight Instance (IReadOnlyList<int> toClientList, NO_Character[] newCharArr) {
+        private IReadOnlyList < (NO_Character, IReadOnlyList<short>) > m_charAndEquipedIdList;
+        public static SC_ApplyOtherCharacterInSight Instance (
+            IReadOnlyList<int> toClientList,
+            IReadOnlyList < (NO_Character, IReadOnlyList<short>) > newCharAndEquipedIdList
+        ) {
             s_instance.m_toClientList = toClientList;
-            s_instance.m_charArr = newCharArr;
+            s_instance.m_charAndEquipedIdList = newCharAndEquipedIdList;
             return s_instance;
         }
         private SC_ApplyOtherCharacterInSight () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_charArr.Length);
-            for (int i = 0; i < m_charArr.Length; i++)
-                writer.Put (m_charArr[i]);
+            writer.Put ((byte) m_charAndEquipedIdList.Count);
+            for (int i = 0; i < m_charAndEquipedIdList.Count; i++) {
+                writer.Put (m_charAndEquipedIdList[i].Item1);
+                writer.Put ((byte) m_charAndEquipedIdList[i].Item2.Count);
+                for (int j = 0; j < m_charAndEquipedIdList[i].Item2.Count; j++)
+                    writer.Put (m_charAndEquipedIdList[i].Item2[j]);
+            }
         }
     }
     /// <summary>
@@ -252,15 +260,15 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyOtherActorUnitOutOfSight s_instance = new SC_ApplyOtherActorUnitOutOfSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private int[] m_unitIdArr;
-        public static SC_ApplyOtherActorUnitOutOfSight Instance (IReadOnlyList<int> toClientList, int[] unitIdArr) {
+        private IReadOnlyList<int> m_unitIdList;
+        public static SC_ApplyOtherActorUnitOutOfSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<int> unitIdList) {
             s_instance.m_toClientList = toClientList;
-            s_instance.m_unitIdArr = unitIdArr;
+            s_instance.m_unitIdList = unitIdList;
             return s_instance;
         }
         private SC_ApplyOtherActorUnitOutOfSight () { }
         public override void PutData (NetDataWriter writer) {
-            writer.PutArray (m_unitIdArr);
+            writer.PutArray (m_unitIdList.ToArray ());
         }
     }
     class SC_ApplyAllChangeEquipment : ServerCommandBase {

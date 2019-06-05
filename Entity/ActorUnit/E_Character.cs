@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     class E_Character : E_ActorUnit {
@@ -56,6 +57,9 @@ namespace MirRemakeBackend.Entity {
             pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);
             pointArr[3] = (ActorUnitMainAttributeType.SPIRIT, m_Spirit);
             return new DDO_Character (m_characterId, m_level, m_occupation, m_experience, currencyArr, pointArr);
+        }
+        public NO_Character GetNo () {
+            return new NO_Character (m_networkId, m_position, m_occupation, m_level);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Util;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     class E_Monster : E_ActorUnit {
@@ -21,6 +22,9 @@ namespace MirRemakeBackend.Entity {
             m_position = pos;
             m_respawnPosition = pos;
             m_level = mDe.m_level;
+        }
+        public NO_Monster GetNo () {
+            return new NO_Monster (m_networkId, m_position, m_MonsterId);
         }
     }
 }

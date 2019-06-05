@@ -17,6 +17,7 @@ namespace MirRemakeBackend.EntityManager {
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         public EM_Item (DEM_Item dem) { m_dem = dem; }
+        private List<short> t_shortList = new List<short> ();
         public E_Item GetItemByRealId (long realId) {
             E_Item res = null;
             m_realIdAndItemDict.TryGetValue (realId, out res);
@@ -25,17 +26,27 @@ namespace MirRemakeBackend.EntityManager {
         public DE_GemData GetGemById (short itemId) {
             return m_dem.GetGemById (itemId);
         }
-        public E_EquipmentRegion GetEquipedByNetworkId (int netId) {
+        public E_EquipmentRegion GetEquiped (int netId) {
             E_EquipmentRegion er = null;
             m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out er);
             return er;
         }
-        public E_Repository GetBagByNetworkId (int netId) {
+        public List<short> GetEquipedItemIdList (int netId) {
+            var res = t_shortList;
+            res.Clear ();
+            var equips = GetEquiped (netId);
+            if (equips == null) return null;
+            var en = equips.GetEquipedEn ();
+            while (en.MoveNext ())
+                res.Add (en.Current.Value.m_itemId);
+            return res;
+        }
+        public E_Repository GetBag (int netId) {
             E_Repository res = null;
             m_networkIdAndBagDict.TryGetValue (netId, out res);
             return res;
         }
-        public E_Repository GetStoreHouseByNetworkId (int netId) {
+        public E_Repository GetStoreHouse (int netId) {
             E_Repository res = null;
             m_networkIdAndStoreHouseDict.TryGetValue (netId, out res);
             return res;
@@ -122,15 +133,15 @@ namespace MirRemakeBackend.EntityManager {
             s_entityPool.m_repositoryPool.RecycleInstance (bag);
             s_entityPool.m_repositoryPool.RecycleInstance (storeHouse);
             s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);
-            UnloadItemByItemList (bag.m_ItemList);
-            UnloadItemByItemList (storeHouse.m_ItemList);
-            UnloadItemByItemList (equiped.GetAllItemList ());
+            UnloadItemList (bag.m_ItemList);
+            UnloadItemList (storeHouse.m_ItemList);
+            UnloadItemList (equiped.GetAllItemList ());
         }
         public void UnloadItem (E_Item item) {
             m_realIdAndItemDict.Remove (item.m_realId);
             s_entityPool.RecycleItem (item);
         }
-        public void UnloadItemByItemList (List<E_Item> itemList) {
+        public void UnloadItemList (List<E_Item> itemList) {
             for (int i = 0; i < itemList.Count; i++)
                 UnloadItem (itemList[i]);
         }

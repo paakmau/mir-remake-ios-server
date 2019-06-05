@@ -31,7 +31,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_ConsumableItem item = EM_Item.s_instance.GetItemByRealId (realId) as E_ConsumableItem;
-            E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
+            E_Repository bag = EM_Item.s_instance.GetBag (netId);
             E_Character unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
             if (item == null || bag == null || unit == null) return;
             // 移除一个该物品
@@ -50,8 +50,8 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
             E_Character charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
             E_EquipmentItem equipment = EM_Item.s_instance.GetItemByRealId (realId) as E_EquipmentItem;
-            E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquipedByNetworkId (netId);
-            E_Repository bag = EM_Item.s_instance.GetBagByNetworkId (netId);
+            E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquiped (netId);
+            E_Repository bag = EM_Item.s_instance.GetBag (netId);
             if (equipment == null || eqRegion == null || bag == null) return;
             // 若背包中找不到该物品
             if (bag.GetItemPosition (realId) == -1) return;

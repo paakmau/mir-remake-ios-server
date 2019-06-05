@@ -1,6 +1,5 @@
+using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend.Network {
@@ -53,13 +52,11 @@ namespace MirRemakeBackend.Network {
         public Vector2 m_position;
         public OccupationType m_occupation;
         public short m_level;
-        public short[] m_equipmentItemIdArr;
-        public NO_Character (int netId, Vector2 pos, OccupationType ocp, short lv, short[] equipIdArr) {
+        public NO_Character (int netId, Vector2 pos, OccupationType ocp, short lv) {
             m_netId = netId;
             m_position = pos;
             m_occupation = ocp;
             m_level = lv;
-            m_equipmentItemIdArr = equipIdArr;
         }
     }
     static class NetworkObjectExtensions {
@@ -120,15 +117,14 @@ namespace MirRemakeBackend.Network {
             writer.Put (charNo.m_position);
             writer.Put ((byte) charNo.m_occupation);
             writer.Put (charNo.m_level);
-            writer.PutArray (charNo.m_equipmentItemIdArr);
         }
         public static NO_Character GetCharacter (this NetDataReader reader) {
             int netId = reader.GetInt ();
             Vector2 pos = reader.GetVector2 ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
             short lv = reader.GetShort ();
-            short[] equipIdArr = reader.GetShortArray ();
-            return new NO_Character (netId, pos, ocp, lv, equipIdArr);
+            short equipNum = reader.GetByte ();
+            return new NO_Character (netId, pos, ocp, lv);
         }
     }
 }

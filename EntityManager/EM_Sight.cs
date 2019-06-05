@@ -12,19 +12,22 @@ namespace MirRemakeBackend.EntityManager {
         /// <summary>
         /// 每个角色视野中的单位 (包括自身)
         /// </summary>
-        private Dictionary<int, List<E_ActorUnit>> m_networkIdAndActorUnitListInSightDict = new Dictionary<int, List<E_ActorUnit>> ();
+        private Dictionary<int, List<E_ActorUnit>> m_characterSightDict = new Dictionary<int, List<E_ActorUnit>> ();
         private List<int> t_intList = new List<int> ();
         /// <summary>
         /// 根据NetId获取角色视野内的单位 (包括自身)  
         /// 可以对其视野进行读写  
         /// </summary>
-        public List<E_ActorUnit> GetRawCharacterSight (int netId) {
+        public List<E_ActorUnit> GetCharacterRawSight (int netId) {
             List<E_ActorUnit> res = null;
-            m_networkIdAndActorUnitListInSightDict.TryGetValue (netId, out res);
+            m_characterSightDict.TryGetValue (netId, out res);
             return res;
         }
+        /// <summary>
+        /// 获取一个角色视野内的角色的netId
+        /// </summary>
         public List<int> GetCharacterInSightNetworkId (int netId, bool includeSelf) {
-            var units = GetRawCharacterSight (netId);
+            var units = GetCharacterRawSight (netId);
             if (units == null) return null;
             t_intList.Clear ();
             for (int i=0; i<units.Count; i++) {
@@ -56,14 +59,14 @@ namespace MirRemakeBackend.EntityManager {
         /// 为角色初始化视野, 并加入可视单位
         /// </summary>
         public void InitCharacter (E_Character charObj) {
-            m_networkIdAndActorUnitListInSightDict.Add (charObj.m_networkId, new List<E_ActorUnit> ());
+            m_characterSightDict.Add (charObj.m_networkId, new List<E_ActorUnit> ());
             m_networkIdAndActorUnitVisibleDict.Add (charObj.m_networkId, charObj);
         }
         /// <summary>
         /// 移除一个角色的视野信息, 并移除可视单位
         /// </summary>
         public void RemoveCharacter (int netId) {
-            m_networkIdAndActorUnitListInSightDict.Remove (netId);
+            m_characterSightDict.Remove (netId);
             m_networkIdAndActorUnitVisibleDict.Remove (netId);
         }
     }
