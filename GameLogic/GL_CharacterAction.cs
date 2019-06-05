@@ -50,7 +50,7 @@ namespace MirRemakeBackend.GameLogic {
             m_skillToCastList.Add (new ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam> (castTime, charObj, skill, skillParam));
             // 向Client发送CastBegin事件
             var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillBegin (otherList, netId, skillId, parmNo));
+            m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
         }
         /// <summary>
         /// client角色取消技能读条  
@@ -58,13 +58,13 @@ namespace MirRemakeBackend.GameLogic {
         /// 通知视野内其他client播放动画  
         /// </summary>
         public void CommandApplyCastSkillSingCancel (int netId) {
-            for (int i=0; i<m_skillToCastList.Count; i++)
+            for (int i = 0; i < m_skillToCastList.Count; i++)
                 if (m_skillToCastList[i].Item2.m_networkId == netId) {
-                    m_skillToCastList.RemoveAt(i);
+                    m_skillToCastList.RemoveAt (i);
                     break;
                 }
             var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
-            m_networkService.SendServerCommand (new SC_ApplyOtherCastSkillSingCancel (otherList, netId));
+            m_networkService.SendServerCommand (SC_ApplyOtherCastSkillSingCancel.Instance (otherList, netId));
         }
     }
 }

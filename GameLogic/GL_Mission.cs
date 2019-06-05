@@ -7,7 +7,7 @@ namespace MirRemakeBackend.GameLogic {
     partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;
         private IDDS_Mission m_missionDds;
-        private Dictionary<int, HashSet<short>> m_acceptableMissionSet = new Dictionary<int, HashSet<short>> ();
+        private Dictionary<int, HashSet<short>> m_acceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         public GL_Mission (INetworkService ns, IDDS_Mission mDds) : base (ns) {
             m_missionDds = mDds;
         }
@@ -19,10 +19,11 @@ namespace MirRemakeBackend.GameLogic {
             // 载入EM
             var mList = EM_Mission.s_instance.InitCharacterMission (netId, charId, ddsList);
             // 得到角色可接的任务
-            // var acceptableMissionSet = new HashSet<short> ();
-            // m_acceptableMissionSet.Add (netId, acceptableMissionSet);
-            // for (int i = 0; i < mList.Count; i++)
-            //     for (int j=0; j<mList[i].m_ChildrenIdList.Count; j++)
+            var acceptableMissionSet = new HashSet<short> ();
+            m_acceptableMissionDict.Add (netId, acceptableMissionSet);
+            for (int i = 0; i < mList.Count; i++)
+                for (int j=0; j<mList[i].m_ChildrenIdList.Count; j++)
+                    acceptableMissionSet.Add (mList[i].m_ChildrenIdList[i]);
 
         }
         public void CommandRemoveCharacter (int netId) {

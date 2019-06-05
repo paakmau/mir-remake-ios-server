@@ -9,8 +9,8 @@ namespace MirRemakeBackend.Network {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         public IReadOnlyList<int> m_ToClientList { get; }
-        List<ValueTuple<int, Vector2>> m_otherNetIdAndPosList;
-        public SC_SetOtherPosition (IReadOnlyList<int> toClientList, List<ValueTuple<int, Vector2>> otherNetIdAndPosList) {
+        List<(int, Vector2)> m_otherNetIdAndPosList;
+        public SC_SetOtherPosition (IReadOnlyList<int> toClientList, List<(int, Vector2)> otherNetIdAndPosList) {
             m_ToClientList = toClientList;
             m_otherNetIdAndPosList = otherNetIdAndPosList;
         }

@@ -81,7 +81,6 @@ namespace MirRemakeBackend {
             IDDS_Item itemDds = null;
             IDDS_Skill skillDds = null;
             // 实例化GL层
-            GL_ActorUnit.s_instance = new GL_ActorUnit (s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
@@ -90,10 +89,8 @@ namespace MirRemakeBackend {
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
             GL_Sight.s_instance = new GL_Sight (s_networkService);
             GL_Skill.s_instance = new GL_Skill (skillDds, charDds, s_networkService);
-            GL_Status.s_instance = new GL_Status (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
-                GL_ActorUnit.s_instance,
                 GL_BattleSettle.s_instance,
                 GL_Character.s_instance,
                 GL_CharacterAction.s_instance,
@@ -101,8 +98,7 @@ namespace MirRemakeBackend {
                 GL_Item.s_instance,
                 GL_MonsterAction.s_instance,
                 GL_Sight.s_instance,
-                GL_Skill.s_instance,
-                GL_Status.s_instance
+                GL_Skill.s_instance
             };
         }
         static int Test() {

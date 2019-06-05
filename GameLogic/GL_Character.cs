@@ -28,9 +28,8 @@ namespace MirRemakeBackend.GameLogic {
             E_Character newChar = EM_ActorUnit.s_instance.InitCharacter (netId, charId, m_characterDds.GetCharacterById (charId));
             EM_Sight.s_instance.InitCharacter (newChar);
             EM_Status.s_instance.InitCharacterStatus (netId);
-
-            // 向客户端发送角色信息 TODO: 分开发
-            m_networkService.SendServerCommand (new SC_InitSelfInfo (new List<int> { netId }, newChar.m_level, newChar.m_experience, null, null, null));
+            // 发送初始角色信息
+            m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (new List<int> { netId }, newChar.m_level, newChar.m_experience, newChar.m_Strength, newChar.m_Intelligence, newChar.m_Agility, newChar.m_Spirit));
         }
         public void CommandRemoveCharacter (int netId) {
             EM_ActorUnit.s_instance.RemoveCharacter (netId);
