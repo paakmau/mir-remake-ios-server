@@ -3,7 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend.Network {
-    class SC_ApplySelfDeliverMission : IServerCommand {
+    class SC_ApplySelfDeliverMission {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DELIVER_MISSION; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public IReadOnlyList<int> m_ToClientList { get; }

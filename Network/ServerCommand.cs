@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Numerics;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -171,6 +172,95 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_targetNetId);
             writer.Put (m_statusNo);
             writer.Put (m_isAttach);
+        }
+    }
+    class SC_ApplyAllDead : ServerCommandBase {
+        private static SC_ApplyAllDead s_instance = new SC_ApplyAllDead ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_DEAD; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_killerNetId;
+        private int m_deadNetId;
+        public static SC_ApplyAllDead Instance (IReadOnlyList<int> toClientList, int killNetId, int deadNetId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_killerNetId = killNetId;
+            s_instance.m_deadNetId = deadNetId;
+            return s_instance;
+        }
+        private SC_ApplyAllDead () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_killerNetId);
+            writer.Put (m_deadNetId);
+        }
+    }
+    class SC_SetOtherPosition : ServerCommandBase {
+        private static SC_SetOtherPosition s_instance = new SC_SetOtherPosition ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        List < (int, Vector2) > m_otherNetIdAndPosList;
+        public static SC_SetOtherPosition Instance (IReadOnlyList<int> toClientList, List < (int, Vector2) > otherNetIdAndPosList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_otherNetIdAndPosList = otherNetIdAndPosList;
+            return s_instance;
+        }
+        private SC_SetOtherPosition () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_otherNetIdAndPosList.Count);
+            for (int i = 0; i < m_otherNetIdAndPosList.Count; i++) {
+                writer.Put (m_otherNetIdAndPosList[i].Item1);
+                writer.Put (m_otherNetIdAndPosList[i].Item2);
+            }
+        }
+    }
+    class SC_ApplyOtherActorUnitInSight : ServerCommandBase {
+        // TODO: 修改为, 当视野变化的时候才会发送, 且只发送新增与离开的单位, 并发送新增单位的初始信息(FSM, HP, MP, Level, Status)
+        // TODO: 区分玩家与怪物的接口(因为玩家需要得到装备)
+        // TODO: 视野需要有上限
+        private static SC_ApplyOtherActorUnitInSight s_instance = new SC_ApplyOtherActorUnitInSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_IN_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        private ActorUnitType m_actorUnitType;
+        private List<int> m_otherNetIdList;
+        public static SC_ApplyOtherActorUnitInSight Instance (IReadOnlyList<int> toClientList, ActorUnitType actorUnitType, List<int> otherNetIdList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_actorUnitType = actorUnitType;
+            s_instance.m_otherNetIdList = otherNetIdList;
+            return s_instance;
+        }
+        private SC_ApplyOtherActorUnitInSight () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_actorUnitType);
+            writer.Put ((byte) m_otherNetIdList.Count);
+            for (int i = 0; i < m_otherNetIdList.Count; i++) {
+                writer.Put (m_otherNetIdList[i]);
+            }
+        }
+    }
+    class SC_ApplyAllChangeEquipment : ServerCommandBase {
+        private static SC_ApplyAllChangeEquipment s_instance = new SC_ApplyAllChangeEquipment ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_CHANGE_EQUIPMENT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_itemId;
+        public static SC_ApplyAllChangeEquipment Instance (IReadOnlyList<int> toClientList, short itemId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_itemId = itemId;
+            return s_instance;
+        }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_itemId);
+        }
+    }
+    class SC_ApplySelfUseEquipmentItem : ServerCommandBase {
+        private static SC_ApplySelfUseEquipmentItem s_instance = new SC_ApplySelfUseEquipmentItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_USE_EQUIPMENT_ITEM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_itemRealId;
+        public static SC_ApplySelfUseEquipmentItem Instance (IReadOnlyList<int> toClientList, int itemRealId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_itemRealId = itemRealId;
+            return s_instance;
+        }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_itemRealId);
         }
     }
 }

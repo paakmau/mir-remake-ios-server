@@ -3,7 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend.Network {
-    class SC_ApplySelfTalkToMissionNpc : IServerCommand {
+    class SC_ApplySelfTalkToMissionNpc {
         public NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SET_MISSION_PROGRESS; } }
         public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public IReadOnlyList<int> m_ToClientList { get; }
