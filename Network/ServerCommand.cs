@@ -364,18 +364,87 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_GAIN_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_Item> m_itemList;
-        public static SC_ApplySelfGainItem Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Item> gainedItemList) {
+        private IReadOnlyList<ItemPlace> m_itemPlaceList;
+        private IReadOnlyList<byte> m_itemPositionList;
+        public static SC_ApplySelfGainItem Instance (
+            IReadOnlyList<int> toClientList,
+            IReadOnlyList<NO_Item> gainedItemList,
+            IReadOnlyList<ItemPlace> placeList,
+            IReadOnlyList<byte> posList
+        ) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_itemList = gainedItemList;
+            s_instance.m_itemPlaceList = placeList;
+            s_instance.m_itemPositionList = posList;
             return s_instance;
         }
         private SC_ApplySelfGainItem () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte)m_itemList.Count);
-            for (int i=0; i<m_itemList.Count; i++)
+            writer.Put ((byte) m_itemList.Count);
+            for (int i = 0; i < m_itemList.Count; i++)
                 writer.Put (m_itemList[i]);
+            for (int i = 0; i < m_itemList.Count; i++)
+                writer.Put ((byte) m_itemPlaceList[i]);
+            for (int i = 0; i < m_itemList.Count; i++)
+                writer.Put (m_itemPositionList[i]);
         }
     }
+    /// <summary>
+    /// 更新物品数量  
+    /// 数量为0则为丢弃
+    /// </summary>
+    class SC_ApplySelfUpdateItemNum : ServerCommandBase {
+        private static SC_ApplySelfUpdateItemNum s_instance = new SC_ApplySelfUpdateItemNum ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_ITEM_NUM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<long> m_itemRealIdList;
+        private IReadOnlyList<short> m_itemNumList;
+        public static SC_ApplySelfUpdateItemNum Instance (
+            IReadOnlyList<int> toClientList,
+            IReadOnlyList<long> itemRealIdList,
+            IReadOnlyList<short> itemNumList
+        ) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_itemRealIdList = itemRealIdList;
+            s_instance.m_itemNumList = itemNumList;
+            return s_instance;
+        }
+        private SC_ApplySelfUpdateItemNum () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_itemRealIdList.Count);
+            for (int i = 0; i < m_itemRealIdList.Count; i++)
+                writer.Put (m_itemRealIdList[i]);
+            for (int i = 0; i < m_itemRealIdList.Count; i++)
+                writer.Put (m_itemNumList[i]);
+        }
+    }
+    /// <summary>
+    /// 交换物品位置
+    /// </summary>
+    class SC_ApplySelfMoveItem : ServerCommandBase {
+        private static SC_ApplySelfMoveItem s_instance = new SC_ApplySelfMoveItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MOVE_ITEM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<byte> m_oriPosList;
+        private IReadOnlyList<byte> m_newPosList;
+        public static SC_ApplySelfMoveItem Instance (IReadOnlyList<int> toClientList, IReadOnlyList<byte> oriPosList, IReadOnlyList<byte> m_newPosList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_oriPosList = oriPosList;
+            s_instance.m_newPosList = m_newPosList;
+            return s_instance;
+        }
+        private SC_ApplySelfMoveItem () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_oriPosList.Count);
+            for (int i = 0; i < m_oriPosList.Count; i++)
+                writer.Put (m_oriPosList[i]);
+            for (int i = 0; i < m_oriPosList.Count; i++)
+                writer.Put (m_newPosList[i]);
+        }
+    }
+    /// <summary>
+    /// 修改技能等级与熟练度
+    /// </summary>
     class SC_ApplySelfUpdateSkillLevelAndMasterly : ServerCommandBase {
         private static SC_ApplySelfUpdateSkillLevelAndMasterly s_instance = new SC_ApplySelfUpdateSkillLevelAndMasterly ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY; } }
