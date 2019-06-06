@@ -59,6 +59,39 @@ namespace MirRemakeBackend.Network {
             m_level = lv;
         }
     }
+    struct NO_Item {
+        public long m_realId;
+        public short m_itemId;
+        public NO_Item (long realId, short itemId) {
+            m_realId = realId;
+            m_itemId = itemId;
+        }
+    }
+    struct NO_EquipmentItemInfo {
+        public long m_realId;
+        public byte m_strengthNum;
+        public IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList;
+        public IReadOnlyList<short> m_inlaidGemIdList;
+        public NO_EquipmentItemInfo (
+            long realId,
+            byte strengthNum,
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > enchantAttrList,
+            IReadOnlyList<short> gemIdList
+        ) {
+            m_realId = realId;
+            m_strengthNum = strengthNum;
+            m_enchantAttrList = enchantAttrList;
+            m_inlaidGemIdList = gemIdList;
+        }
+    }
+    struct NO_Repository {
+        public IReadOnlyList<NO_Item> m_itemList;
+        public IReadOnlyList<NO_EquipmentItemInfo> m_equipmentInfoList;
+        public NO_Repository (IReadOnlyList<NO_Item> itemList, IReadOnlyList<NO_EquipmentItemInfo> equipsList) {
+            m_itemList = itemList;
+            m_equipmentInfoList = equipsList;
+        }
+    }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.X);
@@ -125,6 +158,62 @@ namespace MirRemakeBackend.Network {
             short lv = reader.GetShort ();
             short equipNum = reader.GetByte ();
             return new NO_Character (netId, pos, ocp, lv);
+        }
+        public static void Put (this NetDataWriter writer, NO_Item item) {
+            writer.Put (item.m_realId);
+            writer.Put (item.m_itemId);
+        }
+        public static NO_Item GetItem (this NetDataReader reader) {
+            long realId = reader.GetLong ();
+            short itemId = reader.GetShort ();
+            return new NO_Item (realId, itemId);
+        }
+        public static void Put (this NetDataWriter writer, NO_EquipmentItemInfo equipInfo) {
+            writer.Put (equipInfo.m_realId);
+            writer.Put (equipInfo.m_strengthNum);
+            writer.Put ((byte) equipInfo.m_enchantAttrList.Count);
+            for (int i = 0; i < equipInfo.m_enchantAttrList.Count; i++) {
+                writer.Put ((byte) equipInfo.m_enchantAttrList[i].Item1);
+                writer.Put (equipInfo.m_enchantAttrList[i].Item2);
+            }
+            writer.Put ((byte) equipInfo.m_inlaidGemIdList.Count);
+            for (int i = 0; i < equipInfo.m_inlaidGemIdList.Count; i++)
+                writer.Put (equipInfo.m_inlaidGemIdList[i]);
+        }
+        public static NO_EquipmentItemInfo GetEquipmentItemInfo (this NetDataReader reader) {
+            long realId = reader.GetLong ();
+            byte strengthNum = reader.GetByte ();
+            byte enchantAttrNum = reader.GetByte ();
+            var enchantAttrList = new List < (ActorUnitConcreteAttributeType, int) > (enchantAttrNum);
+            for (int i = 0; i < enchantAttrNum; i++) {
+                ActorUnitConcreteAttributeType attrType = (ActorUnitConcreteAttributeType) reader.GetByte ();
+                int attrValue = reader.GetInt ();
+                enchantAttrList.Add ((attrType, attrValue));
+            }
+            byte gemNum = reader.GetByte ();
+            var gemIdList = new List<short> (gemNum);
+            for (int i = 0; i < gemNum; i++)
+                gemIdList.Add (reader.GetShort ());
+            return new NO_EquipmentItemInfo (realId, strengthNum, enchantAttrList, gemIdList);
+        }
+        public static void Put (this NetDataWriter writer, NO_Repository repo) {
+            writer.Put ((byte) repo.m_itemList.Count);
+            for (int i = 0; i < repo.m_itemList.Count; i++)
+                writer.Put (repo.m_itemList[i]);
+            writer.Put ((byte) repo.m_equipmentInfoList.Count);
+            for (int i = 0; i < repo.m_equipmentInfoList.Count; i++)
+                writer.Put (repo.m_equipmentInfoList[i]);
+        }
+        public static NO_Repository GetRepository (this NetDataReader reader) {
+            byte itemNum = reader.GetByte ();
+            var itemList = new List<NO_Item> ();
+            for (int i = 0; i < itemNum; i++)
+                itemList.Add (reader.GetItem ());
+            byte equipNum = reader.GetByte ();
+            var equipList = new List<NO_EquipmentItemInfo> ();
+            for (int i = 0; i < equipNum; i++)
+                equipList.Add (reader.GetEquipmentItemInfo ());
+            return new NO_Repository (itemList, equipList);
         }
     }
 }

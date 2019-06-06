@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     abstract class E_Item {
@@ -38,6 +39,9 @@ namespace MirRemakeBackend.Entity {
         }
         public DDO_Item GetDdo (int charId, ItemPlace place, int pos) {
             return new DDO_Item (m_realId, m_itemId, charId, m_num, place, pos);
+        }
+        public NO_Item GetItemNo () {
+            return new NO_Item (m_realId, m_itemId);
         }
     }
 }

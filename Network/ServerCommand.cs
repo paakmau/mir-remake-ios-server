@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -10,6 +9,21 @@ namespace MirRemakeBackend.Network {
         public abstract DeliveryMethod m_DeliveryMethod { get; }
         public IReadOnlyList<int> m_toClientList;
         public abstract void PutData (NetDataWriter writer);
+    }
+    class SC_InitSelfNetworkId : ServerCommandBase {
+        private static readonly SC_InitSelfNetworkId s_instance = new SC_InitSelfNetworkId ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_networkId;
+        public static SC_InitSelfNetworkId Instance (IReadOnlyList<int> toClientList, int netId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_networkId = netId;
+            return s_instance;
+        }
+        private SC_InitSelfNetworkId () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_networkId);
+        }
     }
     class SC_InitSelfAttribute : ServerCommandBase {
         private static readonly SC_InitSelfAttribute s_instance = new SC_InitSelfAttribute ();
@@ -41,21 +55,6 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_spirit);
         }
     }
-    class SC_InitSelfNetworkId : ServerCommandBase {
-        private static readonly SC_InitSelfNetworkId s_instance = new SC_InitSelfNetworkId ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private int m_networkId;
-        public static SC_InitSelfNetworkId Instance (IReadOnlyList<int> toClientList, int netId) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_networkId = netId;
-            return s_instance;
-        }
-        private SC_InitSelfNetworkId () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put (m_networkId);
-        }
-    }
     class SC_InitSelfSkill : ServerCommandBase {
         private static readonly SC_InitSelfSkill s_instance = new SC_InitSelfSkill ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SKILL; } }
@@ -74,6 +73,32 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_skillIdAndLvAndMasterlys[i].Item2);
                 writer.Put (m_skillIdAndLvAndMasterlys[i].Item3);
             }
+        }
+    }
+    class SC_InitSelfItem : ServerCommandBase {
+        private static readonly SC_InitSelfItem s_instance = new SC_InitSelfItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ITEM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private NO_Repository m_bag;
+        private NO_Repository m_storeHouse;
+        private NO_Repository m_equipmentRegion;
+        public static SC_InitSelfItem Instance (
+            IReadOnlyList<int> toClientList,
+            NO_Repository bag,
+            NO_Repository storeHouse,
+            NO_Repository equips
+        ) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_bag = bag;
+            s_instance.m_storeHouse = storeHouse;
+            s_instance.m_equipmentRegion = equips;
+            return s_instance;
+        }
+        private SC_InitSelfItem () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_bag);
+            writer.Put (m_storeHouse);
+            writer.Put (m_equipmentRegion);
         }
     }
     class SC_SetAllHPAndMP : ServerCommandBase {
@@ -268,7 +293,9 @@ namespace MirRemakeBackend.Network {
         }
         private SC_ApplyOtherActorUnitOutOfSight () { }
         public override void PutData (NetDataWriter writer) {
-            writer.PutArray (m_unitIdList.ToArray ());
+            writer.Put ((byte) m_unitIdList.Count);
+            for (int i = 0; i < m_unitIdList.Count; i++)
+                writer.Put (m_unitIdList[i]);
         }
     }
     class SC_ApplyAllChangeEquipment : ServerCommandBase {

@@ -96,15 +96,24 @@ namespace MirRemakeBackend.EntityManager {
         /// <param name="storeHouseDdo"></param>
         /// <param name="equipedDdo"></param>
         /// <param name="allEquipmentDdoList"></param>
-        public void InitCharacterItem (int netId, List<DDO_Item> bagDdo, List<DDO_Item> storeHouseDdo, List<DDO_Item> equipedDdo, List<DDO_EquipmentInfo> allEquipmentDdoList) {
+        public void InitCharacterItem (
+            int netId,
+            List<DDO_Item> bagDdo,
+            List<DDO_Item> storeHouseDdo,
+            List<DDO_Item> equipedDdo,
+            List<DDO_EquipmentInfo> allEquipmentDdoList,
+            out E_Repository bag,
+            out E_Repository storeHouse,
+            out E_EquipmentRegion eqRegion
+        ) {
             // 索引角色的所有装备
             Dictionary<long, DDO_EquipmentInfo> eqDdoDict = new Dictionary<long, DDO_EquipmentInfo> ();
             for (int i = 0; i < allEquipmentDdoList.Count; i++)
                 eqDdoDict.Add (allEquipmentDdoList[i].m_realId, allEquipmentDdoList[i]);
             // 初始化背包, 仓库, 装备区
-            E_Repository bag = s_entityPool.m_repositoryPool.GetInstance ();
-            E_Repository storeHouse = s_entityPool.m_repositoryPool.GetInstance ();
-            E_EquipmentRegion eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
+            bag = s_entityPool.m_repositoryPool.GetInstance ();
+            storeHouse = s_entityPool.m_repositoryPool.GetInstance ();
+            eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
             E_Item[] itemInBag = new E_Item[bagDdo.Count];
             E_Item[] itemInStoreHouse = new E_Item[storeHouseDdo.Count];
             E_Item[] itemEquiped = new E_Item[equipedDdo.Count];

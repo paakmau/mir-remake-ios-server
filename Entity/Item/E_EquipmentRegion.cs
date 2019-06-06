@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     class E_EquipmentRegion {
@@ -7,6 +8,16 @@ namespace MirRemakeBackend.Entity {
             m_equipPositionAndEquipmentDict.Clear ();
             foreach (var item in itemArr)
                 m_equipPositionAndEquipmentDict.Add (((E_EquipmentItem) item).m_EquipmentPosition, (E_EquipmentItem) item);
+        }
+        public NO_Repository GetNo () {
+            List<NO_Item> itemList = new List<NO_Item> (m_equipPositionAndEquipmentDict.Count);
+            List<NO_EquipmentItemInfo> eqInfoList = new List<NO_EquipmentItemInfo> (m_equipPositionAndEquipmentDict.Count);
+            var en = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
+            while (en.MoveNext ()) {
+                itemList.Add (en.Current.GetItemNo ());
+                eqInfoList.Add (en.Current.GetEquipmentInfoNo ());
+            }
+            return new NO_Repository (itemList, eqInfoList);
         }
         public List<E_Item> GetAllItemList () {
             List<E_Item> res = new List<E_Item> ();

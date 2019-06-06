@@ -13,6 +13,7 @@ namespace MirRemakeBackend.GameLogic {
     class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
         private IDDS_Item m_itemDds;
+        private List<int> t_intList;
         public GL_Item (IDDS_Item itemDds, INetworkService netService) : base (netService) {
             m_itemDds = itemDds;
         }
@@ -23,8 +24,13 @@ namespace MirRemakeBackend.GameLogic {
             var storeHouseDdo = m_itemDds.GetStoreHouseByCharacterId (charId);
             var eqRegionDdo = m_itemDds.GetEquipmentRegionByCharacterId (charId);
             var equipmentDdo = m_itemDds.GetAllEquipmentByCharacterId (charId);
-            EM_Item.s_instance.InitCharacterItem (netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo);
-            // TODO: 把bag, storeHouse, equiped道具, 发送给Client
+            E_Repository bag, storeHouse;
+            E_EquipmentRegion eqRegion;
+            EM_Item.s_instance.InitCharacterItem (netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo, out bag, out storeHouse, out eqRegion);
+            // 把bag, storeHouse, equiped, 发送给Client
+            t_intList.Clear ();
+            t_intList.Add (netId);
+            m_networkService.SendServerCommand (SC_InitSelfItem.Instance (t_intList, bag.GetNo(), storeHouse.GetNo (), eqRegion.GetNo ()));
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacterItem (netId);

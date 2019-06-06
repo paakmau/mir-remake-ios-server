@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     class E_Repository {
@@ -10,6 +11,16 @@ namespace MirRemakeBackend.Entity {
             m_itemList.Clear ();
             foreach (var item in itemArr)
                 m_itemList.Add (item);
+        }
+        public NO_Repository GetNo () {
+            var itemNoList = new List<NO_Item> (m_itemList.Count);
+            var equipInfoNoList = new List<NO_EquipmentItemInfo> ();
+            for (int i=0; i<m_itemList.Count; i++) {
+                itemNoList.Add (m_itemList[i].GetItemNo ());
+                if (m_itemList[i].m_Type == ItemType.EQUIPMENT)
+                    equipInfoNoList.Add (((E_EquipmentItem)m_itemList[i]).GetEquipmentInfoNo ());
+            }
+            return new NO_Repository ();
         }
         /// <summary>
         /// 根据RealId获取该物品所在的位置  
