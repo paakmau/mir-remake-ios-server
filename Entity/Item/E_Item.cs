@@ -41,7 +41,7 @@ namespace MirRemakeBackend.Entity {
             return new DDO_Item (m_realId, m_itemId, charId, m_num, place, pos);
         }
         public NO_Item GetItemNo () {
-            return new NO_Item (m_realId, m_itemId);
+            return new NO_Item (m_realId, m_itemId, m_num);
         }
     }
 }

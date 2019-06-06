@@ -22,9 +22,9 @@ namespace MirRemakeBackend.Network {
         APPLY_ALL_STATUS,
         APPLY_ALL_DEAD,
         // 持有的物品
-        APPLY_REMOVE_ITEM,
-        APPLY_GAIN_ITEM,
-        APPLY_MOVE_ITEM,
+        APPLY_SELF_REMOVE_ITEM,
+        APPLY_SELF_GAIN_ITEM,
+        APPLY_SELF_MOVE_ITEM,
         // 地面物品
         APPLY_GROUND_ITEM_SHOW,
         APPLY_GROUND_ITEM_DISAPPEAR,

@@ -62,9 +62,11 @@ namespace MirRemakeBackend.Network {
     struct NO_Item {
         public long m_realId;
         public short m_itemId;
-        public NO_Item (long realId, short itemId) {
+        public short m_num;
+        public NO_Item (long realId, short itemId, short num) {
             m_realId = realId;
             m_itemId = itemId;
+            m_num = num;
         }
     }
     struct NO_EquipmentItemInfo {
@@ -162,11 +164,13 @@ namespace MirRemakeBackend.Network {
         public static void Put (this NetDataWriter writer, NO_Item item) {
             writer.Put (item.m_realId);
             writer.Put (item.m_itemId);
+            writer.Put (item.m_num);
         }
         public static NO_Item GetItem (this NetDataReader reader) {
             long realId = reader.GetLong ();
             short itemId = reader.GetShort ();
-            return new NO_Item (realId, itemId);
+            short num = reader.GetShort ();
+            return new NO_Item (realId, itemId, num);
         }
         public static void Put (this NetDataWriter writer, NO_EquipmentItemInfo equipInfo) {
             writer.Put (equipInfo.m_realId);

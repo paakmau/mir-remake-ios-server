@@ -10,6 +10,10 @@ namespace MirRemakeBackend.Network {
         public IReadOnlyList<int> m_toClientList;
         public abstract void PutData (NetDataWriter writer);
     }
+
+    /// <summary>
+    /// 初始化NetId
+    /// </summary>
     class SC_InitSelfNetworkId : ServerCommandBase {
         private static readonly SC_InitSelfNetworkId s_instance = new SC_InitSelfNetworkId ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
@@ -25,6 +29,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_networkId);
         }
     }
+    /// <summary>
+    /// 初始化属性点与等级
+    /// </summary>
     class SC_InitSelfAttribute : ServerCommandBase {
         private static readonly SC_InitSelfAttribute s_instance = new SC_InitSelfAttribute ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ATTRIBUTE; } }
@@ -55,6 +62,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_spirit);
         }
     }
+    /// <summary>
+    /// 初始化习得技能
+    /// </summary>
     class SC_InitSelfSkill : ServerCommandBase {
         private static readonly SC_InitSelfSkill s_instance = new SC_InitSelfSkill ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SKILL; } }
@@ -75,6 +85,9 @@ namespace MirRemakeBackend.Network {
             }
         }
     }
+    /// <summary>
+    /// 初始化所持道具
+    /// </summary>
     class SC_InitSelfItem : ServerCommandBase {
         private static readonly SC_InitSelfItem s_instance = new SC_InitSelfItem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ITEM; } }
@@ -101,6 +114,31 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_equipmentRegion);
         }
     }
+    /// <summary>
+    /// 同步其他单位位置
+    /// </summary>
+    class SC_SetOtherPosition : ServerCommandBase {
+        private static SC_SetOtherPosition s_instance = new SC_SetOtherPosition ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        IReadOnlyList < (int, Vector2) > m_otherNetIdAndPosList;
+        public static SC_SetOtherPosition Instance (IReadOnlyList<int> toClientList, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_otherNetIdAndPosList = otherNetIdAndPosList;
+            return s_instance;
+        }
+        private SC_SetOtherPosition () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_otherNetIdAndPosList.Count);
+            for (int i = 0; i < m_otherNetIdAndPosList.Count; i++) {
+                writer.Put (m_otherNetIdAndPosList[i].Item1);
+                writer.Put (m_otherNetIdAndPosList[i].Item2);
+            }
+        }
+    }
+    /// <summary>
+    /// 同步所有角色Hp与Mp
+    /// </summary>
     class SC_SetAllHPAndMP : ServerCommandBase {
         private static readonly SC_SetAllHPAndMP s_instance = new SC_SetAllHPAndMP ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_HP_AND_MP; } }
@@ -125,6 +163,9 @@ namespace MirRemakeBackend.Network {
             }
         }
     }
+    /// <summary>
+    /// 其他单位开始释放技能
+    /// </summary>
     class SC_ApplyOtherCastSkillBegin : ServerCommandBase {
         private static readonly SC_ApplyOtherCastSkillBegin s_instance = new SC_ApplyOtherCastSkillBegin ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_BEGIN; } }
@@ -146,6 +187,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_parm);
         }
     }
+    /// <summary>
+    /// 其他单位中断技能吟唱
+    /// </summary>
     class SC_ApplyOtherCastSkillSingCancel : ServerCommandBase {
         public static SC_ApplyOtherCastSkillSingCancel s_instance = new SC_ApplyOtherCastSkillSingCancel ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_SING_CANCEL; } }
@@ -161,6 +205,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_casterNetId);
         }
     }
+    /// <summary>
+    /// 所有单位施加Effect
+    /// </summary>
     class SC_ApplyAllEffect : ServerCommandBase {
         private static SC_ApplyAllEffect s_instance = new SC_ApplyAllEffect ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_EFFECT; } }
@@ -179,6 +226,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_effect);
         }
     }
+    /// <summary>
+    /// 所有单位状态改变
+    /// </summary>
     class SC_ApplyAllStatus : ServerCommandBase {
         private static SC_ApplyAllStatus s_instance = new SC_ApplyAllStatus ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_STATUS; } }
@@ -200,6 +250,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_isAttach);
         }
     }
+    /// <summary>
+    /// 所有单位死亡信息
+    /// </summary>
     class SC_ApplyAllDead : ServerCommandBase {
         private static SC_ApplyAllDead s_instance = new SC_ApplyAllDead ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_DEAD; } }
@@ -218,25 +271,9 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_deadNetId);
         }
     }
-    class SC_SetOtherPosition : ServerCommandBase {
-        private static SC_SetOtherPosition s_instance = new SC_SetOtherPosition ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
-        IReadOnlyList < (int, Vector2) > m_otherNetIdAndPosList;
-        public static SC_SetOtherPosition Instance (IReadOnlyList<int> toClientList, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_otherNetIdAndPosList = otherNetIdAndPosList;
-            return s_instance;
-        }
-        private SC_SetOtherPosition () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_otherNetIdAndPosList.Count);
-            for (int i = 0; i < m_otherNetIdAndPosList.Count; i++) {
-                writer.Put (m_otherNetIdAndPosList[i].Item1);
-                writer.Put (m_otherNetIdAndPosList[i].Item2);
-            }
-        }
-    }
+    /// <summary>
+    /// 怪物视野
+    /// </summary>
     class SC_ApplyOtherMonsterInSight : ServerCommandBase {
         private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
@@ -254,6 +291,9 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_monList[i]);
         }
     }
+    /// <summary>
+    /// 其他角色视野
+    /// </summary>
     class SC_ApplyOtherCharacterInSight : ServerCommandBase {
         private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
@@ -298,6 +338,9 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_unitIdList[i]);
         }
     }
+    /// <summary>
+    /// 所有单位更换装备外观
+    /// </summary>
     class SC_ApplyAllChangeEquipment : ServerCommandBase {
         private static SC_ApplyAllChangeEquipment s_instance = new SC_ApplyAllChangeEquipment ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_CHANGE_EQUIPMENT; } }
@@ -313,19 +356,24 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_itemId);
         }
     }
-    class SC_ApplySelfUseEquipmentItem : ServerCommandBase {
-        private static SC_ApplySelfUseEquipmentItem s_instance = new SC_ApplySelfUseEquipmentItem ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_USE_EQUIPMENT_ITEM; } }
+    /// <summary>
+    /// 获得物品
+    /// </summary>
+    class SC_ApplySelfGainItem : ServerCommandBase {
+        private static SC_ApplySelfGainItem s_instance = new SC_ApplySelfGainItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_GAIN_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private int m_itemRealId;
-        public static SC_ApplySelfUseEquipmentItem Instance (IReadOnlyList<int> toClientList, int itemRealId) {
+        private IReadOnlyList<NO_Item> m_itemList;
+        public static SC_ApplySelfGainItem Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Item> gainedItemList) {
             s_instance.m_toClientList = toClientList;
-            s_instance.m_itemRealId = itemRealId;
+            s_instance.m_itemList = gainedItemList;
             return s_instance;
         }
-        private SC_ApplySelfUseEquipmentItem () { }
+        private SC_ApplySelfGainItem () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put (m_itemRealId);
+            writer.Put ((byte)m_itemList.Count);
+            for (int i=0; i<m_itemList.Count; i++)
+                writer.Put (m_itemList[i]);
         }
     }
     class SC_ApplySelfUpdateSkillLevelAndMasterly : ServerCommandBase {
