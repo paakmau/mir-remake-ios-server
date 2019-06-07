@@ -18,7 +18,6 @@ using System.Data.SqlClient;
 
 namespace MirRemakeBackend {
     class Program {
-
         private const float c_networkFrameTime = 0.1f;
         private static NetworkService s_networkService;
         private static GameLogicBase[] s_gameLogicArr;
@@ -55,7 +54,7 @@ namespace MirRemakeBackend {
             }
         }
         static void InitEntityManager () {
-            // TODO: 实例化IDataService接口的实现
+            // 实例化DataService
             IDS_Map mapDs = new DS_MapImpl ();
             IDS_Character charDs = new DS_CharacterImpl ();
             IDS_Monster monsterDs = new DS_MonsterImpl ();
@@ -76,11 +75,12 @@ namespace MirRemakeBackend {
             EM_Item.s_instance = new EM_Item (itemDem);
         }
         static void InitGameLogic () {
-            // TODO: 实例化IDynamicDataService接口的实现
-            IDDS_Character charDds = null;
-            IDDS_Item itemDds = null;
-            IDDS_Skill skillDds = null;
-            // 实例化GL层
+            // 实例化DynamicDataService
+            var ddsImpl = new DynamicDataServiceImpl ();
+            IDDS_Character charDds = ddsImpl;
+            IDDS_Item itemDds = ddsImpl;
+            IDDS_Skill skillDds = ddsImpl;
+            // 实例化GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
@@ -102,7 +102,7 @@ namespace MirRemakeBackend {
             };
         }
         static int Test() {
-            IDDS_Impl impl=new IDDS_Impl();
+            DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
             return 1;
         }
     }

@@ -4,10 +4,10 @@ using System.Net;
 using LitJson;
 using System.Collections.Generic;
 namespace MirRemakeBackend.DynamicData { 
-    class IDDS_Impl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character {
         private SqlConfig sqlConfig;
         private SQLPool pool;
-        public IDDS_Impl() {
+        public DynamicDataServiceImpl() {
             sqlConfig = new SqlConfig();
             sqlConfig.username="root";
             sqlConfig.pwd="root";
