@@ -9,7 +9,7 @@ namespace MirRemakeBackend.Data
     {
         DO_Status[] GetAllStatus();//done
     }
-    class IDS_StatusImpl : IDS_Status
+    class DS_StatusImpl : IDS_Status
     {
         private static JsonData s_statusDatas;
         private DO_Status[] res;

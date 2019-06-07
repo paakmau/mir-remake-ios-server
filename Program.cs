@@ -56,12 +56,12 @@ namespace MirRemakeBackend {
         }
         static void InitEntityManager () {
             // TODO: 实例化IDataService接口的实现
-            IDS_Map mapDs = null;
-            IDS_Character charDs = null;
-            IDS_Monster monsterDs = null;
-            IDS_Status statusDs = null;
-            IDS_Skill skillDs = null;
-            IDS_Item itemDs = null;
+            IDS_Map mapDs = new DS_MapImpl ();
+            IDS_Character charDs = new DS_CharacterImpl ();
+            IDS_Monster monsterDs = new DS_MonsterImpl ();
+            IDS_Status statusDs = new DS_StatusImpl ();
+            IDS_Skill skillDs = new DS_SkillImpl ();
+            IDS_Item itemDs = new DS_ItemImpl ();
             // 实例化DataEntity
             DEM_ActorUnit actorUnitDem = new DEM_ActorUnit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);

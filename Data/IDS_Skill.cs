@@ -10,7 +10,7 @@ namespace MirRemakeBackend.Data {
         /// <returns></returns>
         DO_Skill[] GetAllSkill ();
     }
-    class IDS_SkillImpl:IDS_Skill{
+    class DS_SkillImpl:IDS_Skill{
         private static JsonData s_skillDatas;
         private DO_Skill[] res;
         public DO_Skill[] GetAllSkill() {

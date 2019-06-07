@@ -6,7 +6,7 @@ namespace MirRemakeBackend.Data {
     interface IDS_Monster {
         DO_Monster[] GetAllMonster ();//done
     }
-    class IDS_MonsterImpl : IDS_Monster {
+    class DS_MonsterImpl : IDS_Monster {
         private static JsonData s_monsterDatas;
         private static DO_Monster[] res;
         public DO_Monster[] GetAllMonster() {

@@ -10,7 +10,7 @@ namespace MirRemakeBackend.Data {
         DO_Consumable[] GetAllConsumable ();
         DO_Gem[] GetAllGem ();
     }
-    class IDS_ItemImpl {
+    class DS_ItemImpl : IDS_Item {
         private DO_Item[] items=null;
         private DO_Equipment[] equipments;
         private DO_Consumable[] consumables;
@@ -48,7 +48,7 @@ namespace MirRemakeBackend.Data {
             }
             return equipments;
         }
-        public DO_Consumable[] GetAllConsumables() {
+        public DO_Consumable[] GetAllConsumable() {
             string jsonFile = File.ReadAllText("Data/D_Consumable.json");
             s_consumableDatas = JsonMapper.ToObject(jsonFile);
             consumables = new DO_Consumable[s_consumableDatas.Count];

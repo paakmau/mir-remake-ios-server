@@ -14,7 +14,7 @@ namespace MirRemakeBackend.Data
         /// <returns></returns>
         DO_Character[][] GetAllCharacter();//done
     }
-    class IDS_CharacterImpl : IDS_Character
+    class DS_CharacterImpl : IDS_Character
     {
         private static JsonData s_characterDatas;
         private DO_Character[][] res;
