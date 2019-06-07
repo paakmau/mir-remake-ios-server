@@ -442,6 +442,9 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_newPosList[i]);
         }
     }
+    /// <summary>
+    /// 地面道具出现
+    /// </summary>
     class SC_ApplyGroundItemShow : ServerCommandBase {
         private static SC_ApplyGroundItemShow s_instance = new SC_ApplyGroundItemShow ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_SHOW; } }
@@ -463,6 +466,28 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_posList[i]);
         }
     }
+    
+    /// <summary>
+    /// 地面道具消失
+    /// </summary>
+    class SC_ApplyGroundItemDisappear : ServerCommandBase {
+        private static SC_ApplyGroundItemDisappear s_instance = new SC_ApplyGroundItemDisappear ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_DISAPPEAR; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<long> m_realIdList;
+        public static SC_ApplyGroundItemDisappear Instance (IReadOnlyList<int> toClientList, IReadOnlyList<long> realIdList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_realIdList = realIdList;
+            return s_instance;
+        }
+        private SC_ApplyGroundItemDisappear () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_realIdList.Count);
+            for (int i = 0; i < m_realIdList.Count; i++)
+                writer.Put (m_realIdList[i]);
+        }
+    }
+    
     /// <summary>
     /// 修改技能等级与熟练度
     /// </summary>
