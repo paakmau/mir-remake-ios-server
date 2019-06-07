@@ -115,6 +115,73 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 怪物视野
+    /// </summary>
+    class SC_ApplyOtherMonsterInSight : ServerCommandBase {
+        private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<NO_Monster> m_monList;
+        public static SC_ApplyOtherMonsterInSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Monster> newMonList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_monList = newMonList;
+            return s_instance;
+        }
+        private SC_ApplyOtherMonsterInSight () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_monList.Count);
+            for (int i = 0; i < m_monList.Count; i++)
+                writer.Put (m_monList[i]);
+        }
+    }
+    /// <summary>
+    /// 其他角色视野
+    /// </summary>
+    class SC_ApplyOtherCharacterInSight : ServerCommandBase {
+        private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList < (NO_Character, IReadOnlyList<short>) > m_charAndEquipedIdList;
+        public static SC_ApplyOtherCharacterInSight Instance (
+            IReadOnlyList<int> toClientList,
+            IReadOnlyList < (NO_Character, IReadOnlyList<short>) > newCharAndEquipedIdList
+        ) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_charAndEquipedIdList = newCharAndEquipedIdList;
+            return s_instance;
+        }
+        private SC_ApplyOtherCharacterInSight () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_charAndEquipedIdList.Count);
+            for (int i = 0; i < m_charAndEquipedIdList.Count; i++) {
+                writer.Put (m_charAndEquipedIdList[i].Item1);
+                writer.Put ((byte) m_charAndEquipedIdList[i].Item2.Count);
+                for (int j = 0; j < m_charAndEquipedIdList[i].Item2.Count; j++)
+                    writer.Put (m_charAndEquipedIdList[i].Item2[j]);
+            }
+        }
+    }
+    /// <summary>
+    /// 需要在视野中移除的单位
+    /// </summary>
+    class SC_ApplyOtherActorUnitOutOfSight : ServerCommandBase {
+        private static SC_ApplyOtherActorUnitOutOfSight s_instance = new SC_ApplyOtherActorUnitOutOfSight ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<int> m_unitIdList;
+        public static SC_ApplyOtherActorUnitOutOfSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<int> unitIdList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_unitIdList = unitIdList;
+            return s_instance;
+        }
+        private SC_ApplyOtherActorUnitOutOfSight () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_unitIdList.Count);
+            for (int i = 0; i < m_unitIdList.Count; i++)
+                writer.Put (m_unitIdList[i]);
+        }
+    }
+    /// <summary>
     /// 同步其他单位位置
     /// </summary>
     class SC_SetOtherPosition : ServerCommandBase {
@@ -272,73 +339,6 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 怪物视野
-    /// </summary>
-    class SC_ApplyOtherMonsterInSight : ServerCommandBase {
-        private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList<NO_Monster> m_monList;
-        public static SC_ApplyOtherMonsterInSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Monster> newMonList) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_monList = newMonList;
-            return s_instance;
-        }
-        private SC_ApplyOtherMonsterInSight () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_monList.Count);
-            for (int i = 0; i < m_monList.Count; i++)
-                writer.Put (m_monList[i]);
-        }
-    }
-    /// <summary>
-    /// 其他角色视野
-    /// </summary>
-    class SC_ApplyOtherCharacterInSight : ServerCommandBase {
-        private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList < (NO_Character, IReadOnlyList<short>) > m_charAndEquipedIdList;
-        public static SC_ApplyOtherCharacterInSight Instance (
-            IReadOnlyList<int> toClientList,
-            IReadOnlyList < (NO_Character, IReadOnlyList<short>) > newCharAndEquipedIdList
-        ) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_charAndEquipedIdList = newCharAndEquipedIdList;
-            return s_instance;
-        }
-        private SC_ApplyOtherCharacterInSight () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_charAndEquipedIdList.Count);
-            for (int i = 0; i < m_charAndEquipedIdList.Count; i++) {
-                writer.Put (m_charAndEquipedIdList[i].Item1);
-                writer.Put ((byte) m_charAndEquipedIdList[i].Item2.Count);
-                for (int j = 0; j < m_charAndEquipedIdList[i].Item2.Count; j++)
-                    writer.Put (m_charAndEquipedIdList[i].Item2[j]);
-            }
-        }
-    }
-    /// <summary>
-    /// 需要在视野中移除的单位
-    /// </summary>
-    class SC_ApplyOtherActorUnitOutOfSight : ServerCommandBase {
-        private static SC_ApplyOtherActorUnitOutOfSight s_instance = new SC_ApplyOtherActorUnitOutOfSight ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList<int> m_unitIdList;
-        public static SC_ApplyOtherActorUnitOutOfSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<int> unitIdList) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_unitIdList = unitIdList;
-            return s_instance;
-        }
-        private SC_ApplyOtherActorUnitOutOfSight () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_unitIdList.Count);
-            for (int i = 0; i < m_unitIdList.Count; i++)
-                writer.Put (m_unitIdList[i]);
-        }
-    }
-    /// <summary>
     /// 所有单位更换装备外观
     /// </summary>
     class SC_ApplyAllChangeEquipment : ServerCommandBase {
@@ -427,10 +427,10 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<byte> m_oriPosList;
         private IReadOnlyList<byte> m_newPosList;
-        public static SC_ApplySelfMoveItem Instance (IReadOnlyList<int> toClientList, IReadOnlyList<byte> oriPosList, IReadOnlyList<byte> m_newPosList) {
+        public static SC_ApplySelfMoveItem Instance (IReadOnlyList<int> toClientList, IReadOnlyList<byte> oriPosList, IReadOnlyList<byte> newPosList) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_oriPosList = oriPosList;
-            s_instance.m_newPosList = m_newPosList;
+            s_instance.m_newPosList = newPosList;
             return s_instance;
         }
         private SC_ApplySelfMoveItem () { }
@@ -440,6 +440,27 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_oriPosList[i]);
             for (int i = 0; i < m_oriPosList.Count; i++)
                 writer.Put (m_newPosList[i]);
+        }
+    }
+    class SC_ApplyGroundItemShow : ServerCommandBase {
+        private static SC_ApplyGroundItemShow s_instance = new SC_ApplyGroundItemShow ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_SHOW; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<NO_Item> m_itemList;
+        private IReadOnlyList<Vector2> m_posList;
+        public static SC_ApplyGroundItemShow Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Item> itemList, IReadOnlyList<Vector2> posList) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_itemList = itemList;
+            s_instance.m_posList = posList;
+            return s_instance;
+        }
+        private SC_ApplyGroundItemShow () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_itemList.Count);
+            for (int i = 0; i < m_itemList.Count; i++)
+                writer.Put (m_itemList[i]);
+            for (int i = 0; i < m_itemList.Count; i++)
+                writer.Put (m_posList[i]);
         }
     }
     /// <summary>
