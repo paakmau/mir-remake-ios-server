@@ -14,7 +14,7 @@ namespace MirRemakeBackend.EntityManager {
         public static EM_MonsterSkill s_instance;
         // 每只怪物的技能
         private Dictionary<int, E_MonsterSkill[]> m_skillDict = new Dictionary<int, E_MonsterSkill[]> ();
-        public EM_MonsterSkill (DEM_Skill dem, DEM_ActorUnit unitDem) {
+        public EM_MonsterSkill (DEM_Skill dem, DEM_Unit unitDem) {
             // 实例化所有怪物技能
             var monEn = unitDem.GetAllMonsterEn ();
             while (monEn.MoveNext ()) {

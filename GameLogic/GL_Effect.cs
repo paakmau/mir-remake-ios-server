@@ -17,7 +17,7 @@ namespace MirRemakeBackend.GameLogic {
             var statusEn = EM_Status.s_instance.GetStatusEn ();
             while (statusEn.MoveNext ()) {
                 int netId = statusEn.Current.Key;
-                E_ActorUnit unit = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+                E_ActorUnit unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
                 t_intList.Clear ();
                 for (int i = 0; i < statusEn.Current.Value.Count; i++) {
                     if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {

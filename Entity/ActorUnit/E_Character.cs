@@ -34,7 +34,7 @@ namespace MirRemakeBackend.Entity {
         public short m_Spirit {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT]; }
         }
-        public void Reset (int netId, int charId, DE_ActorUnit auDe, DE_CharacterData charDe, DDO_Character charDdo) {
+        public void Reset (int netId, int charId, DE_Unit auDe, DE_CharacterData charDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_networkId = netId;

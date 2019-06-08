@@ -15,7 +15,7 @@ namespace MirRemakeBackend.Entity {
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public E_ActorUnit m_highestHatredTarget;
-        public void Reset (int networkId, Vector2 pos, DE_ActorUnit auDe, DE_MonsterData mDe) {
+        public void Reset (int networkId, Vector2 pos, DE_Unit auDe, DE_MonsterData mDe) {
             base.Reset (auDe);
             m_monsterDe = mDe;
             m_networkId = networkId;

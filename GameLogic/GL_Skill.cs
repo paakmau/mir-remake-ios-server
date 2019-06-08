@@ -38,7 +38,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetLv) {
             var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
-            var charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (skill == null || charObj == null) return;
             short oriLv = skill.m_skillLevel;
             while (skill.m_skillLevel < targetLv && skill.m_skillLevel < skill.m_skillDe.m_skillMaxLevel) {

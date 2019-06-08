@@ -14,7 +14,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_MonsterAction s_instance;
         private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
         public GL_MonsterAction (INetworkService netService) : base (netService) {
-            var monEn = EM_ActorUnit.s_instance.GetMonsterEn ();
+            var monEn = EM_Unit.s_instance.GetMonsterEn ();
             while (monEn.MoveNext ()) {
                 var mfsm = new MFSM (monEn.Current.Value);
                 m_mfsmDict.Add (monEn.Current.Key, mfsm);

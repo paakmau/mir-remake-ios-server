@@ -36,18 +36,18 @@ namespace MirRemakeBackend.EntityManager {
     /// 索引场景中所有的单位  
     /// 怪物不需要内存池因为每个怪物都需要Respawn且不会永久消失  
     /// </summary>
-    class EM_ActorUnit : EntityManagerBase {
-        public static EM_ActorUnit s_instance;
-        private DEM_ActorUnit m_dem;
+    class EM_Unit : EntityManagerBase {
+        public static EM_Unit s_instance;
+        private DEM_Unit m_dem;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
-        public EM_ActorUnit (DEM_ActorUnit dem) {
+        public EM_Unit (DEM_Unit dem) {
             m_dem = dem;
             // 实例化所有的怪物
             var idAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
             int[] netIdArr = NetworkIdManager.s_instance.AssignNetworkId (idAndPosList.Count);
             for (int i = 0; i < idAndPosList.Count; i++) {
-                ValueTuple<DE_ActorUnit, DE_MonsterData> deTuple;
+                ValueTuple<DE_Unit, DE_MonsterData> deTuple;
                 m_dem.GetMonsterById (idAndPosList[i].Item1, out deTuple);
                 E_Monster monster = new E_Monster ();
                 monster.Reset (netIdArr[i], idAndPosList[i].Item2, deTuple.Item1, deTuple.Item2);
@@ -67,7 +67,7 @@ namespace MirRemakeBackend.EntityManager {
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
             newChar = s_entityPool.m_characterPool.GetInstance ();
-            ValueTuple<DE_ActorUnit, DE_CharacterData> deTuple;
+            ValueTuple<DE_Unit, DE_CharacterData> deTuple;
             m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out deTuple);
             m_networkIdAndCharacterDict[netId] = newChar;
             newChar.Reset (netId, charId, deTuple.Item1, deTuple.Item2, charDdo);

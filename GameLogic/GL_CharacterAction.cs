@@ -28,7 +28,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () {
-            var charEn = EM_ActorUnit.s_instance.GetCharacterEnumerator ();
+            var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
             while (charEn.MoveNext ()) {
                 // 为角色发送他视野内的其他单位位置
                 var charObj = charEn.Current.Value;
@@ -45,7 +45,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void CommandSetPosition (int netId, Vector2 pos) {
-            E_Character charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             charObj.m_position = pos;
         }
@@ -56,7 +56,7 @@ namespace MirRemakeBackend.GameLogic {
         /// </summary>
         public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo) {
             // 获取释放者, 技能, 获取技能参数实例
-            E_Character charObj = EM_ActorUnit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             E_ActorUnit targetObj = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
             if (charObj == null || skill == null || targetObj == null) return;

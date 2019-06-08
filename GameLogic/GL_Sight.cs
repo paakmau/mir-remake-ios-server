@@ -18,7 +18,7 @@ namespace MirRemakeBackend.GameLogic {
         private List<int> t_intList2 = new List<int> ();
         public GL_Sight (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
-            var en = EM_ActorUnit.s_instance.GetCharacterEnumerator ();
+            var en = EM_Unit.s_instance.GetCharacterEnumerator ();
             while (en.MoveNext ()) {
                 // 得到当前视野
                 int charNetId = en.Current.Key;

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using MirRemakeBackend.Data;
 
 namespace MirRemakeBackend.DataEntity {
-    class DE_ActorUnit {
+    class DE_Unit {
         public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_concreteAttributeList;
-        private DE_ActorUnit (ValueTuple<ActorUnitConcreteAttributeType, int>[] attrArr) {
+        private DE_Unit (ValueTuple<ActorUnitConcreteAttributeType, int>[] attrArr) {
             m_concreteAttributeList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (attrArr);
         }
-        public DE_ActorUnit (DO_Monster monster) : this (monster.m_attrArr) { }
-        public DE_ActorUnit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }
+        public DE_Unit (DO_Monster monster) : this (monster.m_attrArr) { }
+        public DE_Unit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }
     }
     class DE_MonsterData {
         public readonly short m_monsterId;
