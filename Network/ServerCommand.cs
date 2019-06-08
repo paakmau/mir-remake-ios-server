@@ -115,7 +115,7 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 怪物视野
+    /// 视野中的怪物
     /// </summary>
     class SC_ApplyOtherMonsterInSight : ServerCommandBase {
         private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
@@ -135,7 +135,7 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 其他角色视野
+    /// 视野中的其他角色
     /// </summary>
     class SC_ApplyOtherCharacterInSight : ServerCommandBase {
         private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
