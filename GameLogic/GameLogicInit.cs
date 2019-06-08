@@ -82,7 +82,7 @@ namespace MirRemakeBackend.GameLogic {
 
             // 实例化任务
             var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
-            EM_Mission.s_instance.InitCharacterMission (netId, charId, ddsList);
+            EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_occupation, newChar.m_level, ddsList);
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);

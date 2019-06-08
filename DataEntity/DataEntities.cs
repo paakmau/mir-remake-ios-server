@@ -152,13 +152,23 @@ namespace MirRemakeBackend.DataEntity {
     }
     class DE_Mission {
         public readonly short m_id;
+        public readonly OccupationType m_occupation;
+        public readonly short m_levelInNeed;
         public readonly IReadOnlyList<short> m_childrenIdList;
-        public readonly IReadOnlyList<ValueTuple<MissionTargetType, short, int>> m_targetAndParamList;
+        /// <summary>
+        /// 一个任务有多个目标  
+        /// 一个目标由 目标类型, Id参数, 数值参数 三个变量描述  
+        /// 例: 与Npc交流 Id参数为NpcId 数值参数为1  
+        /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量  
+        /// </summary>
+        public readonly IReadOnlyList < (MissionTargetType, short, int) > m_targetAndParamList;
         public readonly int m_bonusCoin;
         public readonly int m_bonusExperience;
-        public readonly IReadOnlyList<ValueTuple<short, short>> m_bonusItemIdAndNumList;
+        public readonly IReadOnlyList < (short, short) > m_bonusItemIdAndNumList;
         public DE_Mission (DO_Mission mDo) {
             m_id = mDo.m_id;
+            m_occupation = mDo.m_missionOccupation;
+            m_levelInNeed = mDo.m_levelInNeed;
             m_childrenIdList = new List<short> (mDo.m_childrenMissionArr);
             m_targetAndParamList = new List<ValueTuple<MissionTargetType, short, int>> (mDo.m_missionTargetArr);
             m_bonusCoin = mDo.m_bonusCoin;

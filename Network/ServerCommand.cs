@@ -466,7 +466,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_posList[i]);
         }
     }
-    
+
     /// <summary>
     /// 地面道具消失
     /// </summary>
@@ -487,7 +487,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_realIdList[i]);
         }
     }
-    
+
     /// <summary>
     /// 修改技能等级与熟练度
     /// </summary>
@@ -505,10 +505,29 @@ namespace MirRemakeBackend.Network {
             s_instance.m_masterly = masterly;
             return s_instance;
         }
+        private SC_ApplySelfUpdateSkillLevelAndMasterly () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_skillId);
             writer.Put (m_skillLv);
             writer.Put (m_masterly);
+        }
+    }
+    /// <summary>
+    /// 接受任务
+    /// </summary>
+    class SC_ApplySelfAcceptMission : ServerCommandBase {
+        private static SC_ApplySelfAcceptMission s_instance = new SC_ApplySelfAcceptMission ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_ACCECPT_MISSION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        public static SC_ApplySelfAcceptMission Instance (IReadOnlyList<int> toClientList, short missionId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_missionId = missionId;
+            return s_instance;
+        }
+        private SC_ApplySelfAcceptMission () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
         }
     }
 }

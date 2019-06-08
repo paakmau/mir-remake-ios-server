@@ -101,8 +101,8 @@ namespace MirRemakeBackend.Data {
         /// <summary>
         /// 一个任务有多个目标  
         /// 一个目标由 目标类型, Id参数, 数值参数 三个变量描述  
-        /// 例: 与Npc交流 Id参数为NpcId 数值参数为1
-        /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量
+        /// 例: 与Npc交流 Id参数为NpcId 数值参数为1  
+        /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量  
         /// </summary>
         public ValueTuple<MissionTargetType, short, int>[] m_missionTargetArr;
         public int m_bonusCoin;
