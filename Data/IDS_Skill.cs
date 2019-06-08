@@ -35,37 +35,36 @@ namespace MirRemakeBackend.Data {
                 skill.m_skillAimType = (SkillAimType)Enum.Parse(typeof(SkillAimType), s_skillDatas[i]["SkillAimType"].ToString());
                 skill.m_targetCamp = (CampType)Enum.Parse(typeof(CampType), s_skillDatas[i]["CampType"].ToString());
                 skill.m_skillDataAllLevel = new DO_SkillData[skill.m_skillMaxLevel];
-                if (i != 40)
+                for (int j = 0; j < skill.m_skillMaxLevel; j++)
                 {
-                    for (int j = 0; j < skill.m_skillMaxLevel; j++)
+                    DO_SkillData skillData = new DO_SkillData();
+                    skillData.m_skillLevel = (short)(j + 1);
+                    skillData.m_upgradeCharacterLevelInNeed = (short)(10 * j + 1);
+                    if(i==40){
+                        skillData.m_upgradeMasterlyInNeed=0;
+                    }
+                    skillData.m_upgradeMoneyInNeed = GetMoney(j);
+                    skillData.m_upgradeMasterlyInNeed = 100 * (j + 1);
+                    skillData.m_mpCost = int.Parse(s_skillDatas[i]["ManaCost"][j].ToString());
+                    skillData.m_singTime = float.Parse(s_skillDatas[i]["SingTime"].ToString());
+                    skillData.m_castFrontTime = float.Parse(s_skillDatas[i]["CastFrontTime"].ToString());
+                    skillData.m_castBackTime = float.Parse(s_skillDatas[i]["CastBackTime"].ToString());
+                    skillData.m_coolDownTime = float.Parse(s_skillDatas[i]["CoolDownTime"].ToString());
+                    skillData.m_targetNumber = byte.Parse(s_skillDatas[i]["TargetNumber"].ToString());
+                    skillData.m_castRange = float.Parse(s_skillDatas[i]["CastRange"].ToString());                        skillData.m_damageParamArr = new ValueTuple<SkillAimParamType, float>[2];
+                    float parameter1 = float.Parse(s_skillDatas[i]["DamageRadian"].ToString());
+                    float parameter2 = float.Parse(s_skillDatas[i]["SecondParameter"].ToString());
+                    SkillAimType x = skill.m_skillAimType;
+                    if (x == SkillAimType.AIM_CIRCLE || x == SkillAimType.NOT_AIM_CIRCLE || x == SkillAimType.NOT_AIM_SELF_SECTOR
+                        || x == SkillAimType.AIM_SELF_SECTOR || x == SkillAimType.NOT_AIM_SELF_SECTOR)
                     {
-                        DO_SkillData skillData = new DO_SkillData();
-                        skillData.m_skillLevel = (short)(j + 1);
-                        skillData.m_upgradeCharacterLevelInNeed = (short)(10 * j + 1);
-                        skillData.m_upgradeMoneyInNeed = GetMoney(j);
-                        skillData.m_upgradeMasterlyInNeed = 100 * (j + 1);
-                        skillData.m_mpCost = int.Parse(s_skillDatas[i]["ManaCost"][j].ToString());
-                        skillData.m_singTime = float.Parse(s_skillDatas[i]["SingTime"].ToString());
-                        skillData.m_castFrontTime = float.Parse(s_skillDatas[i]["CastFrontTime"].ToString());
-                        skillData.m_castBackTime = float.Parse(s_skillDatas[i]["CastBackTime"].ToString());
-                        skillData.m_coolDownTime = float.Parse(s_skillDatas[i]["CoolDownTime"].ToString());
-                        skillData.m_targetNumber = byte.Parse(s_skillDatas[i]["TargetNumber"].ToString());
-                        skillData.m_castRange = float.Parse(s_skillDatas[i]["CastRange"].ToString());
-                        skillData.m_damageParamArr = new ValueTuple<SkillAimParamType, float>[2];
-                        float parameter1 = float.Parse(s_skillDatas[i]["DamageRadian"].ToString());
-                        float parameter2 = float.Parse(s_skillDatas[i]["SecondParameter"].ToString());
-                        SkillAimType x = skill.m_skillAimType;
-                        if (x == SkillAimType.AIM_CIRCLE || x == SkillAimType.NOT_AIM_CIRCLE || x == SkillAimType.NOT_AIM_SELF_SECTOR
-                            || x == SkillAimType.AIM_SELF_SECTOR || x == SkillAimType.NOT_AIM_SELF_SECTOR)
-                        {
-                            skillData.m_damageParamArr[0] = new ValueTuple<SkillAimParamType, float>
-                                (SkillAimParamType.RADIUS, parameter1);
-
-                            skillData.m_damageParamArr[1] = new ValueTuple<SkillAimParamType, float>
+                        skillData.m_damageParamArr[0] = new ValueTuple<SkillAimParamType, float>
+                            (SkillAimParamType.RADIUS, parameter1);
+                        skillData.m_damageParamArr[1] = new ValueTuple<SkillAimParamType, float>
                                 (SkillAimParamType.RADIAN, ((int)parameter2 == 0) ? 360 : parameter2);
-                        }
-                        else
-                        {
+                    }
+                    else
+                    {
                             skillData.m_damageParamArr[0] = new ValueTuple<SkillAimParamType, float>
                                 (SkillAimParamType.LENGTH, parameter1);
                             skillData.m_damageParamArr[1] = new ValueTuple<SkillAimParamType, float>
@@ -97,7 +96,7 @@ namespace MirRemakeBackend.Data {
                         skillData.m_skillEffect = effect;
                         skill.m_skillDataAllLevel[j] = skillData;
                     }
-                }
+                    
                 res[i] = skill;
             }
             return res;
