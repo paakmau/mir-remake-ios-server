@@ -52,7 +52,7 @@ namespace MirRemakeBackend.Data
                             
                     }
                     character.m_mainAttrPointNumber = short.Parse(s_characterDatas[i]["GiftPointNumber"].ToString());
-                    Console.WriteLine(occupation+" "+level);
+                    // Console.WriteLine(occupation+" "+level);
                     res[occupation][level-1] = character;
                 }
             }

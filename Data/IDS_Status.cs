@@ -26,7 +26,7 @@ namespace MirRemakeBackend.Data
                 status.m_specialAttributeArr = new ActorUnitSpecialAttributeType[s_statusDatas[i]["SpecialAttributes"].Count];
                 for (int m = 0; m < s_statusDatas[i]["SpecialAttributes"].Count; m++)
                 {   
-                    Console.WriteLine(s_statusDatas[i]["SpecialAttributes"][m].ToString());
+                    // Console.WriteLine(s_statusDatas[i]["SpecialAttributes"][m].ToString());
                     status.m_specialAttributeArr[m] = (ActorUnitSpecialAttributeType)Enum.Parse
                         (typeof(ActorUnitSpecialAttributeType), s_statusDatas[i]["SpecialAttributes"][m].ToString());
                 }
