@@ -23,16 +23,16 @@ namespace MirRemakeBackend.Data {
         public (DO_Item, DO_Equipment) [] GetAllEquipment () {
             string jsonFile = File.ReadAllText ("Data/D_Equipment.json");
             s_equipmentDatas = JsonMapper.ToObject (jsonFile);
-            (DO_Item,DO_Equipment)[] res=new (DO_Item,DO_Equipment)[s_equipmentDatas.Count];
+            (DO_Item, DO_Equipment) [] res = new (DO_Item, DO_Equipment) [s_equipmentDatas.Count];
             for (int i = 0; i < s_equipmentDatas.Count; i++) {
                 DO_Equipment equipment = new DO_Equipment ();
-                DO_Item item=new DO_Item();
-                item.m_itemId=short.Parse (s_equipmentDatas[i]["EquipmentID"].ToString ());
-                item.m_quality=(ItemQuality) Enum.Parse (
+                DO_Item item = new DO_Item ();
+                item.m_itemId = short.Parse (s_equipmentDatas[i]["EquipmentID"].ToString ());
+                item.m_quality = (ItemQuality) Enum.Parse (
                     typeof (ItemQuality), s_equipmentDatas[i]["Quality"].ToString ());
-                item.m_maxNum=1;
-                item.m_price=1000*int.Parse (s_equipmentDatas[i]["LevelInNeed"].ToString ());
-                item.m_type=ItemType.EQUIPMENT;
+                item.m_maxNum = 1;
+                item.m_price = 1000 * int.Parse (s_equipmentDatas[i]["LevelInNeed"].ToString ());
+                item.m_type = ItemType.EQUIPMENT;
                 equipment.m_itemId = short.Parse (s_equipmentDatas[i]["EquipmentID"].ToString ());
                 equipment.m_equipPosition = (EquipmentPosition) Enum.Parse (typeof (EquipmentPosition), s_equipmentDatas[i]["EquipmentPosition"].ToString ());
                 equipment.m_attrWave = float.Parse (s_equipmentDatas[i]["Wave"].ToString ());
@@ -46,23 +46,23 @@ namespace MirRemakeBackend.Data {
                         ((ActorUnitConcreteAttributeType) Enum.Parse (typeof (ActorUnitConcreteAttributeType), s_equipmentDatas[i]["AttributeAttachArray"][m].ToString ().Split (' ') [0]),
                             int.Parse (s_equipmentDatas[i]["AttributeAttachArray"][m].ToString ().Split (' ') [1]));
                 }
-                res[i]= new ValueTuple<DO_Item,DO_Equipment>(item,equipment);
+                res[i] = new ValueTuple<DO_Item, DO_Equipment> (item, equipment);
 
             }
             return res;
         }
-        public (DO_Item, DO_Consumable)[] GetAllConsumable () {
+        public (DO_Item, DO_Consumable) [] GetAllConsumable () {
             string jsonFile = File.ReadAllText ("Data/D_Consumable.json");
             s_consumableDatas = JsonMapper.ToObject (jsonFile);
-            (DO_Item,DO_Consumable)[] res=new (DO_Item,DO_Consumable)[s_consumableDatas.Count];
+            (DO_Item, DO_Consumable) [] res = new (DO_Item, DO_Consumable) [s_consumableDatas.Count];
             for (int i = 0; i < s_consumableDatas.Count; i++) {
                 DO_Consumable consumable = new DO_Consumable ();
-                DO_Item item=new DO_Item();
-                item.m_itemId=short.Parse (s_consumableDatas[i]["ID"].ToString ());
-                item.m_maxNum=short.Parse(s_consumableDatas[i]["MaxNum"].ToString());
-                item.m_price=long.Parse(s_consumableDatas[i]["Price"].ToString());
-                item.m_type=ItemType.CONSUMABLE;
-                item.m_quality=(ItemQuality) Enum.Parse (
+                DO_Item item = new DO_Item ();
+                item.m_itemId = short.Parse (s_consumableDatas[i]["ID"].ToString ());
+                item.m_maxNum = short.Parse (s_consumableDatas[i]["MaxNum"].ToString ());
+                item.m_price = long.Parse (s_consumableDatas[i]["Price"].ToString ());
+                item.m_type = ItemType.CONSUMABLE;
+                item.m_quality = (ItemQuality) Enum.Parse (
                     typeof (ItemQuality), s_consumableDatas[i]["Quality"].ToString ());
                 consumable.m_itemId = short.Parse (s_consumableDatas[i]["ID"].ToString ());
                 DO_Effect effect = new DO_Effect ();
@@ -77,23 +77,23 @@ namespace MirRemakeBackend.Data {
                             float.Parse (s_consumableDatas[i]["StatusAttachArray"][mm]["LastingTime"].ToString ()));
                 }
                 consumable.m_effect = effect;
-                res[i]=new ValueTuple<DO_Item,DO_Consumable>();
+                res[i] = new ValueTuple<DO_Item, DO_Consumable> (item, consumable);
 
             }
             return res;
         }
-        public (DO_Item,DO_Gem)[] GetAllGem () {
+        public (DO_Item, DO_Gem) [] GetAllGem () {
             string jsonFile = File.ReadAllText ("Data/D_Gem.json");
             s_gemDatas = JsonMapper.ToObject (jsonFile);
-            (DO_Item,DO_Gem)[] res=new (DO_Item,DO_Gem)[s_gemDatas.Count];
+            (DO_Item, DO_Gem) [] res = new (DO_Item, DO_Gem) [s_gemDatas.Count];
             for (short i = 0; i < s_gemDatas.Count; i++) {
-                DO_Gem gem=new DO_Gem();
-                DO_Item item=new DO_Item();
-                item.m_itemId=short.Parse (s_gemDatas[i]["ID"].ToString ());
-                item.m_maxNum=10;
-                item.m_price=10000L;
-                item.m_type=ItemType.GEM;
-                item.m_quality=(ItemQuality) Enum.Parse (
+                DO_Gem gem = new DO_Gem ();
+                DO_Item item = new DO_Item ();
+                item.m_itemId = short.Parse (s_gemDatas[i]["ID"].ToString ());
+                item.m_maxNum = 10;
+                item.m_price = 10000L;
+                item.m_type = ItemType.GEM;
+                item.m_quality = (ItemQuality) Enum.Parse (
                     typeof (ItemQuality), s_gemDatas[i]["Quality"].ToString ());
                 gem.m_itemId = (short) (short.Parse (s_gemDatas[i]["ID"].ToString ()));
                 gem.m_equipmentAttributeArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_gemDatas[i]["ConcreteAttributionTable"].Count];
