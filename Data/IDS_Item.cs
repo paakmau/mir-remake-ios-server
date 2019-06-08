@@ -101,6 +101,7 @@ namespace MirRemakeBackend.Data {
                     gem.m_equipmentAttributeArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
                         ((ActorUnitConcreteAttributeType) Enum.Parse (typeof (ActorUnitConcreteAttributeType), s_gemDatas[i]["ConcreteAttributionTable"][x].ToString ().Split (' ') [0]), int.Parse (s_gemDatas[i]["ConcreteAttributionTable"][x].ToString ().Split (' ') [1]));
                 }
+                res[i] = (item, gem);
             }
             return res;
         }

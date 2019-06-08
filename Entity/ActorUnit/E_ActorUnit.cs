@@ -86,6 +86,11 @@ namespace MirRemakeBackend.Entity {
             m_actorUnitDe = de;
             for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
                 m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Item1, de.m_concreteAttributeList[i].Item2);
+            m_CurHp = m_MaxHp;
+            m_CurMp = m_MaxMp;
+            m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;
+            m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
+            m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;
         }
         public void AddConAttr (ActorUnitConcreteAttributeType type, int value) {
             m_concreteAttributeDict[type] += value;
