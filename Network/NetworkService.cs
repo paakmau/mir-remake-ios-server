@@ -81,8 +81,8 @@ namespace MirRemakeBackend.Network {
             m_networkIdAndPeerIdDict.Remove (netId);
             // 移除角色
             GameLogicInit.s_instance.CommandRemoveCharacter (netId);
-            GL_Effect.s_instance.CommandRemoveCharacter (netId);
-            GL_Mission.s_instance.CommandRemoveCharacter (netId);
+            // GL_Effect.s_instance.CommandRemoveCharacter (netId);
+            // GL_Mission.s_instance.CommandRemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
     }
