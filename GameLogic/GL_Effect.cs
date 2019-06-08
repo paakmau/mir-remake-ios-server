@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
-using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
 
@@ -43,12 +42,12 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () { }
-        public void CommandInitCharacterId (int netId, int charId) {
-            EM_Status.s_instance.InitCharacterStatus (netId);
-        }
-        public void CommandRemoveCharacter (int netId) {
-            EM_Status.s_instance.RemoveCharacterStatus (netId);
-        }
+        // public void CommandInitCharacterId (int netId, int charId) {
+        //     EM_Status.s_instance.InitCharacterStatus (netId);
+        // }
+        // public void CommandRemoveCharacter (int netId) {
+        //     EM_Status.s_instance.RemoveCharacterStatus (netId);
+        // }
         /// <summary>
         /// 对目标的属性添加影响
         /// </summary>

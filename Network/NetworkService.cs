@@ -9,7 +9,6 @@ using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
     interface INetworkService {
-        void AssignNetworkId (int netId);
         void SendServerCommand (ServerCommandBase command);
     }
     class NetworkService : INetEventListener, INetworkService {
@@ -20,7 +19,6 @@ namespace MirRemakeBackend.Network {
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_networkIdAndPeerIdDict = new Dictionary<int, int> ();
         private Dictionary<NetworkToServerDataType, IClientCommand> m_clientCommandDict = new Dictionary<NetworkToServerDataType, IClientCommand> ();
-        private Stack<NetPeer> m_peerWaitForNetworkIdStack = new Stack<NetPeer> ();
         private NetDataWriter m_writer = new NetDataWriter ();
         public NetworkService () {
             // 初始化LiteNet
@@ -49,18 +47,6 @@ namespace MirRemakeBackend.Network {
                 m_netIdAndPeerDict[command.m_toClientList[i]].Send (m_writer, command.m_DeliveryMethod);
             m_writer.Reset ();
         }
-        public void AssignNetworkId (int netId) {
-            NetPeer peer;
-            if (!m_peerWaitForNetworkIdStack.TryPop (out peer))
-                return;
-            m_peerIdAndNetworkIdDict[peer.Id] = netId;
-            m_networkIdAndPeerIdDict[netId] = peer.Id;
-            // 保存peer
-            m_netIdAndPeerDict[netId] = peer;
-            // 发送NetId
-            SendServerCommand (SC_InitSelfNetworkId.Instance (new List<int> { netId }, netId));
-            Console.WriteLine (peer.Id + "连接成功");
-        }
         public void OnConnectionRequest (ConnectionRequest request) {
             request.AcceptIfKey ("client");
         }
@@ -78,9 +64,15 @@ namespace MirRemakeBackend.Network {
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
             // 分配NetId
-            // TODO: 写到CC里
-            GL_Character.s_instance.CommandAssignNetworkId ();
-            m_peerWaitForNetworkIdStack.Push (peer);
+            int netId = GameLogicInit.s_instance.AssignNetworkId ();
+
+            // 索引并保存peer
+            m_peerIdAndNetworkIdDict[peer.Id] = netId;
+            m_networkIdAndPeerIdDict[netId] = peer.Id;
+            m_netIdAndPeerDict[netId] = peer;
+            // 发送NetId
+            SendServerCommand (SC_InitSelfNetworkId.Instance (new List<int> { netId }, netId));
+            Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
             var netId = m_peerIdAndNetworkIdDict[peer.Id];
@@ -88,10 +80,7 @@ namespace MirRemakeBackend.Network {
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
             // 移除角色
-            // TODO: 写到CC里
-            GL_Character.s_instance.CommandRemoveCharacter (netId);
-            GL_Skill.s_instance.CommandRemoveCharacter (netId);
-            GL_Item.s_instance.CommandRemoveCharacter (netId);
+            GameLogicInit.s_instance.CommandRemoveCharacter (netId);
             GL_Effect.s_instance.CommandRemoveCharacter (netId);
             GL_Mission.s_instance.CommandRemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);

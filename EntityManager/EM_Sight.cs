@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using MirRemakeBackend.Entity;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 管理场景中Character的视野信息  
     /// 存放场景中所有能够显示的单位  
@@ -30,7 +29,7 @@ namespace MirRemakeBackend.EntityManager {
             var units = GetCharacterRawSight (netId);
             if (units == null) return null;
             t_intList.Clear ();
-            for (int i=0; i<units.Count; i++) {
+            for (int i = 0; i < units.Count; i++) {
                 // 移除非玩家
                 if (units[i].m_ActorUnitType != ActorUnitType.PLAYER)
                     continue;

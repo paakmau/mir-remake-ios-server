@@ -4,7 +4,6 @@ using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
-using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {

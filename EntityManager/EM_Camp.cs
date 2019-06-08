@@ -1,6 +1,5 @@
-using MirRemakeBackend.Entity;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 处理阵营信息, 组队
     /// </summary>

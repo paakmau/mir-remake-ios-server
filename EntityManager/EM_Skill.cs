@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Entity;
 using MirRemakeBackend.Util;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引Character的所学技能  
     /// 索引Monster的技能  
@@ -18,7 +17,7 @@ namespace MirRemakeBackend.EntityManager {
         public EM_Skill (DEM_Skill dem) {
             m_dem = dem;
         }
-        public E_Skill[] InitCharacterSkill (int netId, int charId, List<DDO_Skill> ddoList) {
+        public E_Skill[] InitCharacter (int netId, int charId, List<DDO_Skill> ddoList) {
             E_Skill[] res = new E_Skill[ddoList.Count];
             Dictionary<short, E_Skill> charSkillDict = new Dictionary<short, E_Skill> ();
             for (int i = 0; i < ddoList.Count; i++) {
@@ -33,7 +32,7 @@ namespace MirRemakeBackend.EntityManager {
             m_networkIdAndCharacterSkillDict[netId] = charSkillDict;
             return res;
         }
-        public void RemoveCharacterSkill (int netId) {
+        public void RemoveCharacter (int netId) {
             Dictionary<short, E_Skill> skills = null;
             m_networkIdAndCharacterSkillDict.TryGetValue (netId, out skills);
             if (skills == null) return;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
+using MirRemakeBackend.Entity;
 
 namespace MirRemakeBackend.GameLogic {
     partial class GL_Mission : GameLogicBase {
@@ -13,22 +13,22 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
-        public void CommandInitCharacterId (int netId, int charId) {
-            // 读取任务信息
-            var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
-            // 载入EM
-            var mList = EM_Mission.s_instance.InitCharacterMission (netId, charId, ddsList);
-            // 得到角色可接的任务
-            var acceptableMissionSet = new HashSet<short> ();
-            m_acceptableMissionDict.Add (netId, acceptableMissionSet);
-            for (int i = 0; i < mList.Count; i++)
-                for (int j=0; j<mList[i].m_ChildrenIdList.Count; j++)
-                    acceptableMissionSet.Add (mList[i].m_ChildrenIdList[i]);
+        // public void CommandInitCharacterId (int netId, int charId) {
+        //     // 读取任务信息
+        //     var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
+        //     // 载入EM
+        //     var mList = EM_Mission.s_instance.InitCharacterMission (netId, charId, ddsList);
+        //     // 得到角色可接的任务
+        //     var acceptableMissionSet = new HashSet<short> ();
+        //     m_acceptableMissionDict.Add (netId, acceptableMissionSet);
+        //     for (int i = 0; i < mList.Count; i++)
+        //         for (int j=0; j<mList[i].m_ChildrenIdList.Count; j++)
+        //             acceptableMissionSet.Add (mList[i].m_ChildrenIdList[i]);
 
-        }
-        public void CommandRemoveCharacter (int netId) {
-            EM_Mission.s_instance.RemoveCharacter (netId);
-        }
+        // }
+        // public void CommandRemoveCharacter (int netId) {
+        //     EM_Mission.s_instance.RemoveCharacter (netId);
+        // }
         public void CommandApplyTalkToNpc (int netId, short npcId, short missionId) {
 
         }

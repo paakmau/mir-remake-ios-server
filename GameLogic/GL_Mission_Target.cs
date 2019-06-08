@@ -1,5 +1,4 @@
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.EntityManager;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {

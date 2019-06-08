@@ -7,7 +7,7 @@ using LiteNetLib.Utils;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.EntityManager;
+using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;

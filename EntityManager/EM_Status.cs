@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
-using MirRemakeBackend.Entity;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     class EM_Status : EntityManagerBase {
         public static EM_Status s_instance;
         private DEM_Status m_dem;

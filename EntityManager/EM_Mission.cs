@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Entity;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引所有Character的任务
     /// </summary>

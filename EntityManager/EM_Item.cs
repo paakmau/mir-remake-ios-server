@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Entity;
 using MirRemakeBackend.Util;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 管理游戏场景中出现的所有道具
     /// 范围: 仓库, 背包, 地面
@@ -96,7 +95,7 @@ namespace MirRemakeBackend.EntityManager {
         /// <param name="storeHouseDdo"></param>
         /// <param name="equipedDdo"></param>
         /// <param name="allEquipmentDdoList"></param>
-        public void InitCharacterItem (
+        public void InitCharacter (
             int netId,
             List<DDO_Item> bagDdo,
             List<DDO_Item> storeHouseDdo,
@@ -132,7 +131,7 @@ namespace MirRemakeBackend.EntityManager {
             LoadItemArr (itemInStoreHouse);
             LoadItemArr (itemEquiped);
         }
-        public void RemoveCharacterItem (int netId) {
+        public void RemoveCharacter (int netId) {
             var bag = m_networkIdAndBagDict[netId];
             var storeHouse = m_networkIdAndStoreHouseDict[netId];
             var equiped = m_networkIdAndEquipmentRegionDict[netId];

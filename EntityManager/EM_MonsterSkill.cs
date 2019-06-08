@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Entity;
 using MirRemakeBackend.Util;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引Monster的技能  
     /// </summary>

@@ -1,7 +1,6 @@
-using MirRemakeBackend.Entity;
 using MirRemakeBackend.Util;
 
-namespace MirRemakeBackend.EntityManager {
+namespace MirRemakeBackend.Entity {
     class EntityManagerBase {
         protected static EntityPool s_entityPool = new EntityPool ();
     }
