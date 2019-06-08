@@ -11,8 +11,6 @@ namespace MirRemakeBackend.Network {
         public void Execute(NetDataReader reader, int netId) {
             int charId = reader.GetInt();
             GameLogicInit.s_instance.CommandInitCharacterId (netId, charId);
-            // GL_Effect.s_instance.CommandInitCharacterId (netId, charId);
-            // GL_Mission.s_instance.CommandInitCharacterId (netId, charId);
         }
     }
     class CC_SetPosition : IClientCommand {

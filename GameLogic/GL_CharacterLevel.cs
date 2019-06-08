@@ -8,7 +8,6 @@ using MirRemakeBackend.Util;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理角色升级
-    /// 以及具体属性等
     /// </summary>
     class GL_CharacterLevel : GameLogicBase {
         public static GL_Character s_instance;
