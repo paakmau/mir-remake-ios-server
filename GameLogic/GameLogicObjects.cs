@@ -13,10 +13,10 @@ namespace MirRemakeBackend.GameLogic {
         /// <summary>
         /// 技能的选定作用目标
         /// </summary>
-        public E_ActorUnit m_target;
+        public E_Unit m_target;
         public Vector2 m_direction;
         public Vector2 m_position;
-        public SkillParam (SkillAimType aimType, E_ActorUnit target, Vector2 direciton, Vector2 position) {
+        public SkillParam (SkillAimType aimType, E_Unit target, Vector2 direciton, Vector2 position) {
             m_aimType = aimType;
             m_target = target;
             m_direction = direciton;

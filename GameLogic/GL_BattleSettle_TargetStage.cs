@@ -34,9 +34,9 @@ namespace MirRemakeBackend.GameLogic {
             /// <summary>
             /// 将unitList进行排序, 并将距离最远的超过作用目标数量的单位剔除
             /// </summary>
-            private void GetNearestUnits (Vector2 center, byte num, List<E_ActorUnit> resList) {
+            private void GetNearestUnits (Vector2 center, byte num, List<E_Unit> resList) {
                 if (resList.Count <= num) return;
-                resList.Sort ((E_ActorUnit a, E_ActorUnit b) => {
+                resList.Sort ((E_Unit a, E_Unit b) => {
                     var disA = (a.m_position - center).LengthSquared ();
                     var disB = (b.m_position - center).LengthSquared ();
                     if (disA < disB) return -1;
@@ -45,7 +45,7 @@ namespace MirRemakeBackend.GameLogic {
                 });
                 resList.RemoveRange (num, resList.Count);
             }
-            protected void GetActorUnitsInCircleRange (E_ActorUnit self, Vector2 center, float radius, CampType targetCamp, byte unitNum, List<E_ActorUnit> resList) {
+            protected void GetActorUnitsInCircleRange (E_Unit self, Vector2 center, float radius, CampType targetCamp, byte unitNum, List<E_Unit> resList) {
                 resList.Clear ();
                 var unitInSightList = EM_Sight.s_instance.GetCharacterRawSight (self.m_networkId);
                 for (int i = 0; i < unitInSightList.Count; i++) {
@@ -61,7 +61,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_targetCamp = targetCamp;
                 m_targetNumber = targetNum;
             }
-            public abstract void GetEffectTargets (E_ActorUnit self, SkillParam parm, List<E_ActorUnit> resList);
+            public abstract void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList);
         }
         /// <summary>
         /// 指向性圆形溅射
@@ -74,7 +74,7 @@ namespace MirRemakeBackend.GameLogic {
                 base.Reset (targetCamp, targetNum, parmList);
                 TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
             }
-            public override void GetEffectTargets (E_ActorUnit self, SkillParam parm, List<E_ActorUnit> resList) {
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
                 if (m_targetNumber == 1) {
                     resList.Clear ();
                     resList.Add (parm.m_target);
@@ -94,19 +94,19 @@ namespace MirRemakeBackend.GameLogic {
                 base.Reset (targetCamp, targetNum, parmList);
                 TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
             }
-            public override void GetEffectTargets (E_ActorUnit self, SkillParam parm, List<E_ActorUnit> resList) {
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
                 GetActorUnitsInCircleRange (self, self.m_position, m_radius, m_targetCamp, m_targetNumber, resList);
             }
         }
         private class TargetStage {
             private Dictionary<SkillAimType, EffectTargetChooserBase> m_targetChooserDict = new Dictionary<SkillAimType, EffectTargetChooserBase> ();
-            private List<E_ActorUnit> m_targetList = new List<E_ActorUnit> ();
+            private List<E_Unit> m_targetList = new List<E_Unit> ();
             public TargetStage () {
                 // TODO: 用反射, 并全部写完
                 m_targetChooserDict.Add (SkillAimType.AIM_CIRCLE, new ETC_AimCircle ());
                 m_targetChooserDict.Add (SkillAimType.NOT_AIM_SELF_CIRCLE, new ETC_NotAimSelfCircle ());
             }
-            public IReadOnlyList<E_ActorUnit> GetTargetList (E_ActorUnit self, E_MonsterSkill skill, SkillParam skillParm) {
+            public IReadOnlyList<E_Unit> GetTargetList (E_Unit self, E_MonsterSkill skill, SkillParam skillParm) {
                 EffectTargetChooserBase targetChooser = m_targetChooserDict[skill.m_AimType];
                 targetChooser.Reset (skill.m_TargetCamp, skill.m_TargetNumber, skill.m_DamageParamList);
                 targetChooser.GetEffectTargets (self, skillParm, m_targetList);

@@ -7,14 +7,14 @@ using MirRemakeBackend.Util;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
-    class E_Monster : E_ActorUnit {
+    class E_Monster : E_Unit {
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.MONSTER; } }
         public DE_MonsterData m_monsterDe;
         public short m_MonsterId { get { return m_monsterDe.m_monsterId; } }
         public Vector2 m_respawnPosition;
         // 怪物仇恨度哈希表
         private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
-        public E_ActorUnit m_highestHatredTarget;
+        public E_Unit m_highestHatredTarget;
         public void Reset (int networkId, Vector2 pos, DE_Unit auDe, DE_MonsterData mDe) {
             base.Reset (auDe);
             m_monsterDe = mDe;

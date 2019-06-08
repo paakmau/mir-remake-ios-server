@@ -5,7 +5,7 @@ using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
-    class E_Character : E_ActorUnit {
+    class E_Character : E_Unit {
         private DE_CharacterData m_characterDe;
         public override ActorUnitType m_ActorUnitType { get { return ActorUnitType.PLAYER; } }
         public OccupationType m_occupation;

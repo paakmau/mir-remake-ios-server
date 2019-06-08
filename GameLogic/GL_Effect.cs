@@ -17,7 +17,7 @@ namespace MirRemakeBackend.GameLogic {
             var statusEn = EM_Status.s_instance.GetStatusEn ();
             while (statusEn.MoveNext ()) {
                 int netId = statusEn.Current.Key;
-                E_ActorUnit unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+                E_Unit unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
                 t_intList.Clear ();
                 for (int i = 0; i < statusEn.Current.Value.Count; i++) {
                     if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {
@@ -53,7 +53,7 @@ namespace MirRemakeBackend.GameLogic {
         /// 对目标的属性添加影响
         /// </summary>
         /// <param name="target"></param>
-        public void NotifyApplyEffect (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
+        public void NotifyApplyEffect (DE_Effect effectDe, E_Unit caster, E_Unit target) {
             Effect effect = new Effect ();
             effect.InitWithCasterAndTarget (effectDe, caster, target);
             if (effect.m_hit) {
@@ -71,7 +71,7 @@ namespace MirRemakeBackend.GameLogic {
                 target.m_networkId,
                 effect.GetNo ()));
         }
-        private void StatusAttachOrRemove (E_ActorUnit unit, E_Status status, int k) {
+        private void StatusAttachOrRemove (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
             var cAttrList = status.m_dataEntity.m_affectAttributeList;
             for (int i = 0; i < cAttrList.Count; i++)
@@ -94,7 +94,7 @@ namespace MirRemakeBackend.GameLogic {
             public int m_deltaHp;
             public int m_deltaMp;
             public ValueTuple<short, float, float, int>[] m_statusIdAndValueAndTimeAndCasterNetIdArr;
-            public void InitWithCasterAndTarget (DE_Effect effectDe, E_ActorUnit caster, E_ActorUnit target) {
+            public void InitWithCasterAndTarget (DE_Effect effectDe, E_Unit caster, E_Unit target) {
                 m_de = effectDe;
                 // 处理命中
                 float hitRate = effectDe.m_hitRate * caster.m_HitRate / target.m_DodgeRate;

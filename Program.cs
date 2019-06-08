@@ -62,12 +62,12 @@ namespace MirRemakeBackend {
             IDS_Skill skillDs = new DS_SkillImpl ();
             IDS_Item itemDs = new DS_ItemImpl ();
             // 实例化DataEntity
-            DEM_ActorUnit actorUnitDem = new DEM_ActorUnit (monsterDs, charDs, mapDs);
+            DEM_Unit actorUnitDem = new DEM_Unit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
             DEM_Item itemDem = new DEM_Item (itemDs);
             // 实例化EntityManager
-            EM_ActorUnit.s_instance = new EM_ActorUnit (actorUnitDem);
+            EM_Unit.s_instance = new EM_Unit (actorUnitDem);
             EM_Status.s_instance = new EM_Status (statusDem);
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem);

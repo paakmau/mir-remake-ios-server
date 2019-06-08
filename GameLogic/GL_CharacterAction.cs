@@ -14,7 +14,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_CharacterAction : GameLogicBase {
         public static GL_CharacterAction s_instance;
-        private List<ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam>> m_skillToCastList = new List < (MyTimer.Time, E_ActorUnit, E_Skill, SkillParam) > ();
+        private List<ValueTuple<MyTimer.Time, E_Unit, E_Skill, SkillParam>> m_skillToCastList = new List < (MyTimer.Time, E_Unit, E_Skill, SkillParam) > ();
         public GL_CharacterAction (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 判断角色技能吟唱与前摇结束并释放
@@ -58,12 +58,12 @@ namespace MirRemakeBackend.GameLogic {
             // 获取释放者, 技能, 获取技能参数实例
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
-            E_ActorUnit targetObj = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
+            E_Unit targetObj = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
             if (charObj == null || skill == null || targetObj == null) return;
             MyTimer.Time castTime = MyTimer.s_CurTime.Ticked (skill.m_SingAndCastFrontTime);
             SkillParam skillParam = new SkillParam (skill.m_AimType, targetObj, parmNo.m_direction, parmNo.m_position);
             // 添加到技能待释放列表
-            m_skillToCastList.Add (new ValueTuple<MyTimer.Time, E_ActorUnit, E_Skill, SkillParam> (castTime, charObj, skill, skillParam));
+            m_skillToCastList.Add (new ValueTuple<MyTimer.Time, E_Unit, E_Skill, SkillParam> (castTime, charObj, skill, skillParam));
             // 向Client发送CastBegin事件
             var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (otherList, netId, skillId, parmNo));

@@ -8,18 +8,18 @@ namespace MirRemakeBackend.EntityManager {
     /// </summary>
     class EM_Sight : EntityManagerBase {
         public static EM_Sight s_instance;
-        private Dictionary<int, E_ActorUnit> m_networkIdAndActorUnitVisibleDict = new Dictionary<int, E_ActorUnit> ();
+        private Dictionary<int, E_Unit> m_networkIdAndActorUnitVisibleDict = new Dictionary<int, E_Unit> ();
         /// <summary>
         /// 每个角色视野中的单位 (包括自身)
         /// </summary>
-        private Dictionary<int, List<E_ActorUnit>> m_characterSightDict = new Dictionary<int, List<E_ActorUnit>> ();
+        private Dictionary<int, List<E_Unit>> m_characterSightDict = new Dictionary<int, List<E_Unit>> ();
         private List<int> t_intList = new List<int> ();
         /// <summary>
         /// 根据NetId获取角色视野内的单位 (包括自身)  
         /// 可以对其视野进行读写  
         /// </summary>
-        public List<E_ActorUnit> GetCharacterRawSight (int netId) {
-            List<E_ActorUnit> res = null;
+        public List<E_Unit> GetCharacterRawSight (int netId) {
+            List<E_Unit> res = null;
             m_characterSightDict.TryGetValue (netId, out res);
             return res;
         }
@@ -44,22 +44,22 @@ namespace MirRemakeBackend.EntityManager {
         /// <summary>
         /// 根据NetId获取可视单位
         /// </summary>
-        public E_ActorUnit GetActorUnitVisibleByNetworkId (int netId) {
-            E_ActorUnit res = null;
+        public E_Unit GetActorUnitVisibleByNetworkId (int netId) {
+            E_Unit res = null;
             m_networkIdAndActorUnitVisibleDict.TryGetValue (netId, out res);
             return res;
         }
         /// <summary>
         /// 获取所有可视单位的迭代器
         /// </summary>
-        public Dictionary<int, E_ActorUnit>.ValueCollection.Enumerator GetActorUnitVisibleEnumerator () {
+        public Dictionary<int, E_Unit>.ValueCollection.Enumerator GetActorUnitVisibleEnumerator () {
             return m_networkIdAndActorUnitVisibleDict.Values.GetEnumerator ();
         }
         /// <summary>
         /// 为角色初始化视野, 并加入可视单位
         /// </summary>
         public void InitCharacter (E_Character charObj) {
-            m_characterSightDict.Add (charObj.m_networkId, new List<E_ActorUnit> ());
+            m_characterSightDict.Add (charObj.m_networkId, new List<E_Unit> ());
             m_networkIdAndActorUnitVisibleDict.Add (charObj.m_networkId, charObj);
         }
         /// <summary>

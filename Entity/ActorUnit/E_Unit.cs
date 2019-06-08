@@ -6,7 +6,7 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
-    abstract class E_ActorUnit {
+    abstract class E_Unit {
         protected DE_Unit m_actorUnitDe;
         public abstract ActorUnitType m_ActorUnitType { get; }
         public int m_networkId;

@@ -11,7 +11,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_Sight s_instance;
         private const float c_sightRadius = 100f;
         private const int c_maxUnitNumInSight = 50;
-        private List<E_ActorUnit> t_unitList = new List<E_ActorUnit> ();
+        private List<E_Unit> t_unitList = new List<E_Unit> ();
         private List<NO_Monster> t_monNoList = new List<NO_Monster> ();
         private List < (NO_Character, IReadOnlyList<short>) > t_charNoAndShortListList = new List < (NO_Character, IReadOnlyList<short>) > ();
         private List<int> t_intList = new List<int> ();
