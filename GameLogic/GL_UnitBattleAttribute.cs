@@ -49,7 +49,10 @@ namespace MirRemakeBackend.GameLogic {
             // xjb计算仇恨
             float hatredTime = (float)(-dHp - dMp) / (float)target.m_MaxHp * 10;
             if (hatredTime < 0)return;
-            // target.m_hatredRefreshDict.
+            MyTimer.Time oriHatred;
+            if (!target.m_hatredRefreshDict.TryGetValue (target.m_networkId, out oriHatred))
+                oriHatred = MyTimer.s_CurTime;
+            target.m_hatredRefreshDict[target.m_networkId] = oriHatred.Ticked (hatredTime);
         }
         public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
             var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, statusIdAndValueAndTimeAndCasterNetIdArr);

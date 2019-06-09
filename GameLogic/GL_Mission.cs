@@ -7,7 +7,7 @@ namespace MirRemakeBackend.GameLogic {
     partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;
         private IDDS_Mission m_misDds;
-        public GL_Mission (INetworkService ns, IDDS_Mission mDds) : base (ns) {
+        public GL_Mission (IDDS_Mission mDds, INetworkService ns) : base (ns) {
             m_misDds = mDds;
         }
         public override void Tick (float dT) { }
