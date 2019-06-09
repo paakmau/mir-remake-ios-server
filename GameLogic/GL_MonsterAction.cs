@@ -250,8 +250,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         abstract class SkillParamGeneratorBase {
-            public static Dictionary<SkillAimType, SkillParamGeneratorBase> s_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> () { { SkillAimType.AIM_CIRCLE, new SPG_AimCircle () }
-            };
+            public static Dictionary<SkillAimType, SkillParamGeneratorBase> s_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> () { { SkillAimType.AIM_CIRCLE, new SPG_AimCircle () } };
             public abstract SkillAimType m_AimType { get; }
             public virtual bool InCastRange (E_Unit self, float castRange, E_Unit aimedTarget) {
                 return (self.m_position - aimedTarget.m_position).LengthSquared () <= castRange * castRange;
