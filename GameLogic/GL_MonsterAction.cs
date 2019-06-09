@@ -23,10 +23,22 @@ namespace MirRemakeBackend.GameLogic {
 
         class MFSM {
             public MFSMStateBase m_curState;
+            public MFSMS_AutoMove m_autoMove;
+            public MFSMS_AutoBattle m_autoBattle;
+            public MFSMS_CastFront m_castFront;
+            public MFSMS_CastBack m_castBack;
+            public MFSMS_Faint m_faint;
+            public MFSMS_Dead m_dead;
             private E_Monster m_monster;
             public MFSM (E_Monster monster) {
                 m_monster = monster;
-                m_curState = new MFSMS_Dead ();
+                m_autoMove = new MFSMS_AutoMove (this);
+                m_autoBattle = new MFSMS_AutoBattle (this);
+                m_castFront = new MFSMS_CastFront (this);
+                m_castBack = new MFSMS_CastBack (this);
+                m_faint = new MFSMS_Faint (this);
+                m_dead = new MFSMS_Dead (this);
+                m_curState = m_dead;
             }
             public void Tick (float dT) {
                 m_curState.OnTick (m_monster, dT);
@@ -43,8 +55,12 @@ namespace MirRemakeBackend.GameLogic {
         abstract class MFSMStateBase {
             /// <summary>
             /// 状态的类别
-            /// /// </summary>
+            /// </summary>
             public abstract MFSMStateType m_Type { get; }
+            public MFSM m_mfsm;
+            public MFSMStateBase (MFSM mfsm) {
+                m_mfsm = mfsm;
+            }
             public abstract void OnEnter (E_Monster self, MFSMStateType prevType);
             /// <summary>
             /// 每帧调用, 可对unit施加影响
@@ -67,6 +83,7 @@ namespace MirRemakeBackend.GameLogic {
             public override MFSMStateType m_Type { get { return MFSMStateType.AUTO_MOVE; } }
             private float m_moveTimeLeft;
             private Vector2 m_targetPos;
+            public MFSMS_AutoMove (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
                 m_moveTimeLeft = 0f;
                 m_targetPos = self.m_position;
@@ -87,12 +104,10 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
             public override MFSMStateBase GetNextState (E_Monster self) {
-                if (self.m_IsDead)
-                    return new MFSMS_Dead ();
-                if (self.m_IsFaint)
-                    return new MFSMS_Faint ();
-                if (self.m_highestHatredTarget != null)
-                    return new MFSMS_AutoBattle ();
+                if (self.m_IsDead) return m_mfsm.m_dead;
+                if (self.m_IsFaint) return m_mfsm.m_faint;
+                if (self.m_highestHatredTargetNetId != -1)
+                    return m_mfsm.m_autoBattle;
                 return null;
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) { }
@@ -100,32 +115,41 @@ namespace MirRemakeBackend.GameLogic {
 
         class MFSMS_AutoBattle : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.AUTO_BATTLE; } }
+            public MFSMS_AutoBattle (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) { }
             public override void OnTick (E_Monster self, float dT) {
-                if (self.m_highestHatredTarget != null) {
-                    var dir = self.m_highestHatredTarget.m_position - self.m_position;
-                    var deltaP = Vector2.Normalize (dir) * self.m_Speed * dT / 100f;
-                    if (deltaP.LengthSquared () >= dir.LengthSquared ())
-                        deltaP = dir;
-                    self.m_position = self.m_position + deltaP;
+                if (self.m_highestHatredTargetNetId == -1)
+                    return;
+                var unit = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (self.m_highestHatredTargetNetId);
+                if (unit == null) {
+                    self.m_highestHatredTargetNetId = -1;
+                    return;
                 }
+                var dir = unit.m_position - self.m_position;
+                var deltaP = Vector2.Normalize (dir) * self.m_Speed * dT / 100f;
+                if (deltaP.LengthSquared () >= dir.LengthSquared ())
+                    deltaP = dir;
+                self.m_position = self.m_position + deltaP;
             }
             public override MFSMStateBase GetNextState (E_Monster self) {
-                if (self.m_IsDead)
-                    return new MFSMS_Dead ();
-                if (self.m_IsFaint)
-                    return new MFSMS_Faint ();
-                if (self.m_highestHatredTarget == null)
-                    return new MFSMS_AutoMove ();
+                if (self.m_IsDead) return m_mfsm.m_dead;
+                if (self.m_IsFaint) return m_mfsm.m_faint;
+                if (self.m_highestHatredTargetNetId == -1)
+                    return m_mfsm.m_autoMove;
                 if (self.m_IsSilent)
                     return null;
+                var unit = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (self.m_highestHatredTargetNetId);
+                if (unit == null) {
+                    self.m_highestHatredTargetNetId = -1;
+                    return m_mfsm.m_autoMove;
+                }
                 // 尝试对仇恨最高的目标释放技能
                 E_MonsterSkill skill;
-                if (EM_MonsterSkill.s_instance.GetRandomValidSkill(self.m_networkId, self.m_MonsterId, out skill)) {
+                if (EM_MonsterSkill.s_instance.GetRandomValidSkill (self.m_networkId, self.m_MonsterId, out skill)) {
                     var spg = SkillParamGeneratorBase.s_spgDict[skill.m_AimType];
-                    if (spg.InCastRange (self, skill.m_CastRange, self.m_highestHatredTarget)) {
-                        SkillParam sp = spg.GetSkillParam (self, self.m_highestHatredTarget);
-                        var castState = new MFSMS_CastFront ();
+                    if (spg.InCastRange (self, skill.m_CastRange, unit)) {
+                        SkillParam sp = spg.GetSkillParam (self, unit);
+                        var castState = m_mfsm.m_castFront;
                         castState.Reset (skill, sp);
                         return castState;
                     }
@@ -139,6 +163,7 @@ namespace MirRemakeBackend.GameLogic {
             private E_MonsterSkill m_skill;
             private SkillParam m_skillParam;
             private float m_timer;
+            public MFSMS_CastFront (MFSM mfsm) : base (mfsm) { }
             public void Reset (E_MonsterSkill skill, SkillParam parm) {
                 m_skill = skill;
                 m_skillParam = parm;
@@ -151,19 +176,17 @@ namespace MirRemakeBackend.GameLogic {
                 m_timer -= dT;
             }
             public override MFSMStateBase GetNextState (E_Monster self) {
-                if (self.m_IsDead)
-                    return new MFSMS_Dead ();
-                if (self.m_IsFaint)
-                    return new MFSMS_Faint ();
+                if (self.m_IsDead) return m_mfsm.m_dead;
+                if (self.m_IsFaint) return m_mfsm.m_faint;
                 // 咏唱结束
                 if (m_timer <= 0f) {
-                    var castBackState = new MFSMS_CastBack ();
+                    var castBackState = m_mfsm.m_castBack;
                     castBackState.Reset (m_skill.m_CastBackTime);
                     return castBackState;
                 }
                 // 被沉默
                 if (self.m_IsSilent)
-                    return new MFSMS_AutoBattle ();
+                    return m_mfsm.m_autoBattle;
                 return null;
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
@@ -175,19 +198,18 @@ namespace MirRemakeBackend.GameLogic {
         class MFSMS_CastBack : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.CAST_BACK; } }
             private float m_timer;
+            public MFSMS_CastBack (MFSM mfsm) : base (mfsm) { }
             public void Reset (float backTime) { m_timer = backTime; }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) { }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
             }
             public override MFSMStateBase GetNextState (E_Monster self) {
-                if (self.m_IsDead)
-                    return new MFSMS_Dead ();
-                if (self.m_IsFaint)
-                    return new MFSMS_Faint ();
+                if (self.m_IsDead) return m_mfsm.m_dead;
+                if (self.m_IsFaint) return m_mfsm.m_faint;
                 // 后摇结束
                 if (m_timer <= 0)
-                    return new MFSMS_AutoBattle ();
+                    return m_mfsm.m_autoBattle;
                 return null;
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) { }
@@ -196,11 +218,10 @@ namespace MirRemakeBackend.GameLogic {
             public override MFSMStateType m_Type { get { return MFSMStateType.FAINT; } }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) { }
             public override void OnTick (E_Monster self, float dT) { }
+            public MFSMS_Faint (MFSM mfsm) : base (mfsm) { }
             public override MFSMStateBase GetNextState (E_Monster self) {
-                if (self.m_IsDead)
-                    return new MFSMS_Dead ();
-                if (self.m_IsFaint)
-                    return new MFSMS_Faint ();
+                if (self.m_IsDead) return m_mfsm.m_dead;
+                if (!self.m_IsFaint) return m_mfsm.m_autoBattle;
                 return null;
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) { }
@@ -210,6 +231,7 @@ namespace MirRemakeBackend.GameLogic {
             private const float c_respawnTimeMin = 10f;
             private const float c_respawnTimeMax = 15f;
             private float m_timer;
+            public MFSMS_Dead (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
                 m_timer = MyRandom.NextFloat (c_respawnTimeMin, c_respawnTimeMax);
                 GL_MonsterAction.s_instance.MFSMDead (self);
@@ -219,7 +241,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override MFSMStateBase GetNextState (E_Monster self) {
                 if (m_timer <= 0)
-                    return new MFSMS_AutoMove ();
+                    return m_mfsm.m_autoMove;
                 return null;
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
@@ -228,8 +250,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         abstract class SkillParamGeneratorBase {
-            public static Dictionary<SkillAimType, SkillParamGeneratorBase> s_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> () {
-                {SkillAimType.AIM_CIRCLE, new SPG_AimCircle ()}
+            public static Dictionary<SkillAimType, SkillParamGeneratorBase> s_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> () { { SkillAimType.AIM_CIRCLE, new SPG_AimCircle () }
             };
             public abstract SkillAimType m_AimType { get; }
             public virtual bool InCastRange (E_Unit self, float castRange, E_Unit aimedTarget) {

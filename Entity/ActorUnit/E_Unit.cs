@@ -14,6 +14,7 @@ namespace MirRemakeBackend.Entity {
         public Vector2 m_position;
         public Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         public Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
+        public int m_finalAttackerNetId;
         public int m_MaxHp {
             get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP] = value; }
