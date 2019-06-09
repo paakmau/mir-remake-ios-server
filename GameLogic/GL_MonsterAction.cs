@@ -15,7 +15,7 @@ namespace MirRemakeBackend.GameLogic {
         enum MFSMStateType : byte {
             AUTO_MOVE,
             AUTO_BATTLE,
-            CAST_SING_AND_FRONT,
+            CAST_FRONT,
             CAST_BACK,
             FAINT,
             DEAD
@@ -125,7 +125,7 @@ namespace MirRemakeBackend.GameLogic {
                     var spg = SkillParamGeneratorBase.s_spgDict[skill.m_AimType];
                     if (spg.InCastRange (self, skill.m_CastRange, self.m_highestHatredTarget)) {
                         SkillParam sp = spg.GetSkillParam (self, self.m_highestHatredTarget);
-                        var castState = new MFSMS_CastSingAndFront ();
+                        var castState = new MFSMS_CastFront ();
                         castState.Reset (skill, sp);
                         return castState;
                     }
@@ -134,15 +134,15 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) { }
         }
-        class MFSMS_CastSingAndFront : MFSMStateBase {
-            public override MFSMStateType m_Type { get { return MFSMStateType.CAST_SING_AND_FRONT; } }
+        class MFSMS_CastFront : MFSMStateBase {
+            public override MFSMStateType m_Type { get { return MFSMStateType.CAST_FRONT; } }
             private E_MonsterSkill m_skill;
             private SkillParam m_skillParam;
             private float m_timer;
             public void Reset (E_MonsterSkill skill, SkillParam parm) {
                 m_skill = skill;
                 m_skillParam = parm;
-                m_timer = skill.m_SingAndCastFrontTime;
+                m_timer = skill.m_CastFrontTime;
             }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
                 GL_MonsterAction.s_instance.MFSMCastSkillBegin (self.m_networkId, m_skill, m_skillParam);

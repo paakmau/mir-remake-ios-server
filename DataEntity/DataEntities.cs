@@ -38,6 +38,7 @@ namespace MirRemakeBackend.DataEntity {
         public readonly long m_upgradeMoneyInNeed;
         public readonly int m_upgradeMasterlyInNeed;
         public readonly int m_mpCost;
+        [Obsolete ("传奇没有吟唱")]
         public readonly float m_singTime;
         public readonly float m_castFrontTime;
         public readonly float m_castBackTime;

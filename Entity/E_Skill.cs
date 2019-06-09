@@ -13,7 +13,7 @@ namespace MirRemakeBackend.Entity {
         public MyTimer.Time m_lastCastTime;
         public CampType m_TargetCamp { get { return m_skillDe.m_targetCamp; } }
         public byte m_TargetNumber { get { return m_skillDataDe.m_targetNumber; } }
-        public float m_SingAndCastFrontTime { get { return m_skillDataDe.m_singTime + m_skillDataDe.m_castFrontTime; } }
+        public float m_CastFrontTime { get { return m_skillDataDe.m_castFrontTime; } }
         public float m_CastBackTime { get { return m_skillDataDe.m_castBackTime; } }
         public SkillAimType m_AimType { get { return m_skillDe.m_skillAimType; } }
         public float m_CastRange { get { return m_skillDataDe.m_castRange; } }

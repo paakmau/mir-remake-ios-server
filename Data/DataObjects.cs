@@ -38,6 +38,7 @@ namespace MirRemakeBackend.Data {
         public long m_upgradeMoneyInNeed;
         public int m_upgradeMasterlyInNeed;
         public int m_mpCost;
+        [Obsolete ("传奇没有吟唱")]
         public float m_singTime;
         public float m_castFrontTime;
         public float m_castBackTime;
