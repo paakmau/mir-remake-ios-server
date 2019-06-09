@@ -17,7 +17,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.SET_POSITION; } }
         public void Execute (NetDataReader reader, int netId) {
             var pos = reader.GetVector2 ();
-            GL_CharacterAction.s_instance.CommandSetPosition (netId, pos);
+            GL_Character.s_instance.CommandSetPosition (netId, pos);
         }
     }
     class CC_ApplyUseEquipmentItem : IClientCommand {
@@ -47,7 +47,7 @@ namespace MirRemakeBackend.Network {
         public void Execute(NetDataReader reader, int netId) {
             short skillId = reader.GetShort ();
             NO_SkillParam skillParm = reader.GetSkillParam ();
-            GL_CharacterAction.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm);
+            GL_Character.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm);
         }
     }
     class CC_ApplyAcceptMission : IClientCommand {

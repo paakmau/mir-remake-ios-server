@@ -83,7 +83,6 @@ namespace MirRemakeBackend {
             // 实例化GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
-            GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_Effect.s_instance = new GL_Effect (s_networkService);
             GL_Item.s_instance = new GL_Item (itemDds, s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
@@ -93,7 +92,6 @@ namespace MirRemakeBackend {
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
                 GL_Character.s_instance,
-                GL_CharacterAction.s_instance,
                 GL_Effect.s_instance,
                 GL_Item.s_instance,
                 GL_MonsterAction.s_instance,
