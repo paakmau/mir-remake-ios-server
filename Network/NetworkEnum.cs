@@ -21,10 +21,11 @@ namespace MirRemakeBackend.Network {
         APPLY_ALL_EFFECT,
         APPLY_ALL_STATUS,
         APPLY_ALL_DEAD,
-        // 持有的物品
+        // 持有的物品 货币
         APPLY_SELF_UPDATE_ITEM_NUM,
         APPLY_SELF_GAIN_ITEM,
         APPLY_SELF_MOVE_ITEM,
+        APPLY_SELF_CURRENCY,
         // 地面物品
         APPLY_GROUND_ITEM_SHOW,
         APPLY_GROUND_ITEM_DISAPPEAR,

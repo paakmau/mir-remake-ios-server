@@ -17,20 +17,23 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
             charObj.m_currencyDict[type] += dC;
             m_charDds.UpdateCharacter (charObj.GetDdo ());
-            // TODO: 通知Client
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
+                charObj.m_networkId, charObj.m_VirtualCurrency, charObj.m_ChargeCurrency));
         }
         public void NotifyLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
             long realId = item.m_realId;
             short curNum = item.m_num;
+            // 实例 与 数据
             if (runOut) {
                 repo.RemoveItemByRealId (item.m_realId);
                 m_itemDds.DeleteItemByRealId (item.m_realId);
                 EM_Item.s_instance.UnloadItem (item);
             } else
                 m_itemDds.UpdateItem (item.GetDdo (charObj.m_characterId, ItemPlace.BAG, pos));
-            // 通知Client物品变化
+            // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                 new List<int> { charObj.m_networkId }, new List<long> { realId }, new List<short> { curNum }));
         }
@@ -41,6 +44,8 @@ namespace MirRemakeBackend.GameLogic {
                 new List<int> { charObj.m_networkId }, srcRepo.m_repositoryPlace, srcPos, tarRepo.m_repositoryPlace, tarPos));
         }
         public void NotifyGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
+            // m_itemDds.InsertItem
+            // EM_Item.s_instance.InitItemList (itemIdAndNumList); 
             // TODO: 处理报酬结算 GL_Property 发送到Client
         }
     }

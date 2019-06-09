@@ -16,76 +16,6 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         public EM_Item (DEM_Item dem) { m_dem = dem; }
-        public E_Item GetItemByRealId (long realId) {
-            E_Item res = null;
-            m_realIdAndItemDict.TryGetValue (realId, out res);
-            return res;
-        }
-        public DE_GemData GetGemById (short itemId) {
-            return m_dem.GetGemById (itemId);
-        }
-        public E_EquipmentRegion GetEquiped (int netId) {
-            E_EquipmentRegion er = null;
-            m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out er);
-            return er;
-        }
-        public List<short> GetEquipedItemIdList (int netId) {
-            var res = new List<short> ();
-            res.Clear ();
-            var equips = GetEquiped (netId);
-            if (equips == null) return null;
-            var en = equips.GetEquipedEn ();
-            while (en.MoveNext ())
-                res.Add (en.Current.Value.m_itemId);
-            return res;
-        }
-        public E_Repository GetBag (int netId) {
-            E_Repository res = null;
-            m_networkIdAndBagDict.TryGetValue (netId, out res);
-            return res;
-        }
-        public E_Repository GetStoreHouse (int netId) {
-            E_Repository res = null;
-            m_networkIdAndStoreHouseDict.TryGetValue (netId, out res);
-            return res;
-        }
-        /// <summary>
-        /// 根据ddoList写入itemArr  
-        /// itemArr的空间需要足够  
-        /// </summary>
-        private void GetItemEntityArrByDdo (List<DDO_Item> ddoList, Dictionary<long, DDO_EquipmentInfo> eqDdoDict, E_Item[] itemArr) {
-            for (int i = 0; i < ddoList.Count; i++) {
-                DDO_Item itemDdo = ddoList[i];
-                short itemId = itemDdo.m_itemId;
-                long realId = itemDdo.m_realId;
-                DE_Item itemDe = m_dem.GetItemById (itemId);
-                E_Item item = null;
-                switch (itemDe.m_type) {
-                    case ItemType.CONSUMABLE:
-                        item = s_entityPool.m_consumableItemPool.GetInstance ();
-                        DE_ConsumableData cDe = m_dem.GetConsumableById (itemId);
-                        ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo);
-                        break;
-                    case ItemType.EQUIPMENT:
-                        item = s_entityPool.m_equipmentItemPool.GetInstance ();
-                        DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
-                        DDO_EquipmentInfo eqDdo = eqDdoDict[realId];
-                        ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
-                        break;
-                    case ItemType.MATERIAL:
-                        item = s_entityPool.m_materialItemPool.GetInstance ();
-                        ((E_MaterialItem) item).Reset (itemDe, itemDdo);
-                        break;
-                    case ItemType.GEM:
-                        item = s_entityPool.m_gemItemPool.GetInstance ();
-                        DE_GemData gDe = m_dem.GetGemById (itemId);
-                        ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
-                        break;
-
-                }
-                itemArr[i] = item;
-            }
-        }
         /// <summary>
         /// 初始化新的角色的所有物品
         /// </summary>
@@ -144,6 +74,52 @@ namespace MirRemakeBackend.Entity {
             UnloadItemList (storeHouse.m_ItemList);
             UnloadItemList (equiped.GetAllItemList ());
         }
+        /// <summary>
+        /// 实例化Item列表  
+        /// </summary>
+        public List<E_Item> InitItemList (IReadOnlyList < (short, short) > itemIdAndNumList, IReadOnlyList<long> realIdList) {
+            var res = new List<E_Item> ();
+            for (int i = 0; i < itemIdAndNumList.Count; i++) {
+                var idAndNum = itemIdAndNumList[i];
+                DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
+                E_Item itemEnt = GenerateItemEntity (itemDe);
+                res.Add 
+            }
+            return res;
+        }
+        public E_Item GetItemByRealId (long realId) {
+            E_Item res = null;
+            m_realIdAndItemDict.TryGetValue (realId, out res);
+            return res;
+        }
+        public DE_GemData GetGemById (short itemId) {
+            return m_dem.GetGemById (itemId);
+        }
+        public E_EquipmentRegion GetEquiped (int netId) {
+            E_EquipmentRegion er = null;
+            m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out er);
+            return er;
+        }
+        public List<short> GetEquipedItemIdList (int netId) {
+            var res = new List<short> ();
+            res.Clear ();
+            var equips = GetEquiped (netId);
+            if (equips == null) return null;
+            var en = equips.GetEquipedEn ();
+            while (en.MoveNext ())
+                res.Add (en.Current.Value.m_itemId);
+            return res;
+        }
+        public E_Repository GetBag (int netId) {
+            E_Repository res = null;
+            m_networkIdAndBagDict.TryGetValue (netId, out res);
+            return res;
+        }
+        public E_Repository GetStoreHouse (int netId) {
+            E_Repository res = null;
+            m_networkIdAndStoreHouseDict.TryGetValue (netId, out res);
+            return res;
+        }
         public void UnloadItem (E_Item item) {
             m_realIdAndItemDict.Remove (item.m_realId);
             s_entityPool.RecycleItem (item);
@@ -151,6 +127,57 @@ namespace MirRemakeBackend.Entity {
         public void UnloadItemList (List<E_Item> itemList) {
             for (int i = 0; i < itemList.Count; i++)
                 UnloadItem (itemList[i]);
+        }
+        /// <summary>
+        /// 根据ddoList写入itemArr  
+        /// itemArr的空间需要足够  
+        /// </summary>
+        private void GetItemEntityArrByDdo (List<DDO_Item> ddoList, Dictionary<long, DDO_EquipmentInfo> eqDdoDict, E_Item[] resItemArr) {
+            for (int i = 0; i < ddoList.Count; i++) {
+                DDO_Item itemDdo = ddoList[i];
+                short itemId = itemDdo.m_itemId;
+                long realId = itemDdo.m_realId;
+                DE_Item itemDe = m_dem.GetItemById (itemId);
+                E_Item item = null;
+                switch (itemDe.m_type) {
+                    case ItemType.CONSUMABLE:
+                        item = s_entityPool.m_consumableItemPool.GetInstance ();
+                        DE_ConsumableData cDe = m_dem.GetConsumableById (itemId);
+                        ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo);
+                        break;
+                    case ItemType.EQUIPMENT:
+                        item = s_entityPool.m_equipmentItemPool.GetInstance ();
+                        DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
+                        DDO_EquipmentInfo eqDdo = eqDdoDict[realId];
+                        ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
+                        break;
+                    case ItemType.MATERIAL:
+                        item = s_entityPool.m_materialItemPool.GetInstance ();
+                        ((E_MaterialItem) item).Reset (itemDe, itemDdo);
+                        break;
+                    case ItemType.GEM:
+                        item = s_entityPool.m_gemItemPool.GetInstance ();
+                        DE_GemData gDe = m_dem.GetGemById (itemId);
+                        ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
+                        break;
+
+                }
+                resItemArr[i] = item;
+            }
+        }
+        /// <summary>
+        /// 产生一件物品
+        /// </summary>
+        private E_Item GenerateItemEntity (DE_Item itemDe) {
+            E_Item res = E_Item.s_emptyItem;
+            switch (itemDe.m_type) {
+                case ItemType.CONSUMABLE:
+                    res = s_entityPool.m_consumableItemPool.GetInstance ();
+                    DE_ConsumableData conDe = m_dem.GetConsumableById (itemDe.m_id);
+                    ((E_ConsumableItem) res).Reset (itemDe, conDe, );
+                    break;
+            }
+            return res;
         }
         private void LoadItemArr (E_Item[] itemArr) {
             foreach (var item in itemArr) {

@@ -446,6 +446,28 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_tarPosition);
         }
     }
+    
+    /// <summary>
+    /// 更新所持货币
+    /// </summary>
+    class SC_ApplySelfCurrency : ServerCommandBase {
+        private static SC_ApplySelfCurrency s_instance = new SC_ApplySelfCurrency ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CURRENCY; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private long m_virtualCy;
+        private long m_chargeCy;
+        public static SC_ApplySelfCurrency Instance (int netId, long virtualCy, long chargeCy) {
+            s_instance.m_toClientList = new List<int> (netId);
+            s_instance.m_virtualCy = virtualCy;
+            s_instance.m_chargeCy = chargeCy;
+            return s_instance;
+        }
+        private SC_ApplySelfCurrency () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_virtualCy);
+            writer.Put (m_chargeCy);
+        }
+    }
     /// <summary>
     /// 地面道具出现
     /// </summary>

@@ -34,5 +34,9 @@ namespace MirRemakeBackend.DynamicData {
         /// </summary>
         /// <param name="eq"></param>
         void InsertEquipmentInfo (DDO_EquipmentInfo eq);
+        /// <summary>
+        /// 删除一件装备
+        /// </summary>
+        void DeleteEquipmentInfoByRealId (long realId);
     }
 }

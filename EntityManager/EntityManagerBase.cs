@@ -29,16 +29,16 @@ namespace MirRemakeBackend.Entity {
         public void RecycleItem (E_Item item) {
             switch (item.m_Type) {
                 case ItemType.CONSUMABLE:
-                    m_consumableItemPool.RecycleInstance ((E_ConsumableItem) item);
+                    m_consumableItemPool.RecycleInstance (item as E_ConsumableItem);
                     break;
                 case ItemType.EQUIPMENT:
-                    m_equipmentItemPool.RecycleInstance ((E_EquipmentItem) item);
+                    m_equipmentItemPool.RecycleInstance (item as E_EquipmentItem);
                     break;
                 case ItemType.GEM:
-                    m_gemItemPool.RecycleInstance ((E_GemItem) item);
+                    m_gemItemPool.RecycleInstance (item as E_GemItem);
                     break;
                 case ItemType.MATERIAL:
-                    m_materialItemPool.RecycleInstance ((E_MaterialItem) item);
+                    m_materialItemPool.RecycleInstance (item as E_MaterialItem);
                     break;
             }
         }

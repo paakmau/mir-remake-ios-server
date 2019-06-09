@@ -109,7 +109,7 @@ namespace MirRemakeBackend {
         DODGE_RATE, // 闪避 /100
         LIFE_STEAL, // 吸取生命值 /100
         HP_DAMAGE_PER_SECOND_PHYSICS,
-        HP_DAMAGE_PER_SECOND_MAGIC,
+        HP_DAMAGE_PER_SECOND_MAIGC,
         SHIELD,
         PHYSICS_VULERNABILITY, // 物理易伤
         MAGIC_VULERNABILITY, // 魔法易伤
@@ -125,7 +125,7 @@ namespace MirRemakeBackend {
         MONSTER,
         NPC
     }
-    enum ItemType : byte {
+    public enum ItemType : byte {
         EMPTY,
         CONSUMABLE,
         MATERIAL,
@@ -258,14 +258,15 @@ namespace MirRemakeBackend {
         ONE_PRESS_RECYCLE
     }
     public enum DirectionType : byte {
-        NORTH,
-        NORTH_EAST,
-        EAST,
-        SOUTH_EAST,
-        SOUTH,
-        SOUTH_WEST,
-        WEST,
-        NORTH_WEST
+        NORTH = 0,
+        NORTH_EAST = 1,
+        EAST = 2,
+        SOUTH_EAST = 3,
+        SOUTH = 4,
+        SOUTH_WEST = 5,
+        WEST = 6,
+        NORTH_WEST = 7,
+        NONE = 8
     }
     /// <summary>
     /// 人物状态特效类型
@@ -307,7 +308,7 @@ namespace MirRemakeBackend {
         /// <summary>
         /// 无
         /// </summary>
-        NORMAL,
+        NONE,
         /// <summary>
         /// 普通的角色名
         /// </summary>
@@ -357,5 +358,20 @@ namespace MirRemakeBackend {
         /// 火烧
         /// </summary>
         FIRING,
+    }
+    public enum GenderType : byte {
+        MALE,
+        FEMALE
+    }
+    public enum OutLookAnimType : byte {
+        STAND = 0,
+        WALK = 1,
+        HIT_0 = 2,
+        HIT_1 = 8,//暂时用不到
+        HIT_2 = 3,
+        RAISE = 4,
+        PICK = 5,
+        BEEN_HIT = 6,
+        DIE = 7,
     }
 }
