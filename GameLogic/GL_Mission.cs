@@ -19,7 +19,7 @@ namespace MirRemakeBackend.GameLogic {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             var mis = EM_Mission.s_instance.AcceptMission (netId, misId);
             if (charObj == null || mis == null) return;
-            m_misDds.InsertMission (mis.GetDdo (charObj.m_characterId), charObj.m_characterId);
+            m_misDds.InsertMission (mis.GetDdo (charObj.m_characterId));
             m_networkService.SendServerCommand (SC_ApplySelfAcceptMission.Instance (new List<int> (netId), misId));
         }
         public void CommandApplyDeliveryMission (int netId, short misId) {
