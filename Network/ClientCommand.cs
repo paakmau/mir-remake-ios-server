@@ -42,18 +42,41 @@ namespace MirRemakeBackend.Network {
             GL_Skill.s_instance.CommandUpdateSkillLevel (netId, skillId, targetSkillLevel);
         }
     }
-    class CC_ApplyCastSkillSingCancel : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CAST_SKILL_SING_CANCEL; } }
-        public void Execute (NetDataReader reader, int netId) {
-            GL_CharacterAction.s_instance.CommandApplyCastSkillSingCancel (netId);
-        }
-    }
     class CC_ApplyCastSkillBegin : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CAST_SKILL_BEGIN; } }
         public void Execute(NetDataReader reader, int netId) {
             short skillId = reader.GetShort ();
             NO_SkillParam skillParm = reader.GetSkillParam ();
             GL_CharacterAction.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm);
+        }
+    }
+    class CC_ApplyAcceptMission : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ACCEPT_MISSION; } }
+        public void Execute(NetDataReader reader, int netId) {
+            short missionId = reader.GetShort ();
+            GL_Mission.s_instance.CommandApplyAcceptMission (netId, missionId);
+        }
+    }
+    class CC_ApplyCancelMission : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CANCEL_MISSION; } }
+        public void Execute(NetDataReader reader, int netId) {
+            short missionId = reader.GetShort ();
+            GL_Mission.s_instance.CommandCancelMission (netId, missionId);
+        }
+    }
+    class CC_ApplyDeliverMission : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DELIVER_MISSION; } }
+        public void Execute(NetDataReader reader, int netId) {
+            short missionId = reader.GetShort ();
+            GL_Mission.s_instance.CommandApplyDeliveryMission (netId, missionId);
+        }
+    }
+    class CC_ApplyTalkToMissionNpc : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_TALK_TO_MISSION_NPC; } }
+        public void Execute(NetDataReader reader, int netId) {
+            short npcId = reader.GetShort ();
+            short missionId = reader.GetShort ();
+            GL_Mission.s_instance.CommandApplyTalkToNpc (netId, npcId, missionId);
         }
     }
 }

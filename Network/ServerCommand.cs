@@ -255,24 +255,6 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 其他单位中断技能吟唱
-    /// </summary>
-    class SC_ApplyOtherCastSkillSingCancel : ServerCommandBase {
-        public static SC_ApplyOtherCastSkillSingCancel s_instance = new SC_ApplyOtherCastSkillSingCancel ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_SING_CANCEL; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private int m_casterNetId;
-        public static SC_ApplyOtherCastSkillSingCancel Instance (IReadOnlyList<int> toClientList, int casterNetId) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_casterNetId = casterNetId;
-            return s_instance;
-        }
-        private SC_ApplyOtherCastSkillSingCancel () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put (m_casterNetId);
-        }
-    }
-    /// <summary>
     /// 所有单位施加Effect
     /// </summary>
     class SC_ApplyAllEffect : ServerCommandBase {

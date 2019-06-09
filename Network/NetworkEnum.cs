@@ -1,3 +1,4 @@
+using System;
 namespace MirRemakeBackend.Network {
     enum NetworkToClientDataType : byte {
         // 初始化相关
@@ -17,7 +18,6 @@ namespace MirRemakeBackend.Network {
         SET_SELF_CONCRETE_AND_SPECIAL_ATTRIBUTE,
         // 战斗状态与动画
         APPLY_OTHER_CAST_SKILL_BEGIN,
-        APPLY_OTHER_CAST_SKILL_SING_CANCEL,
         APPLY_ALL_EFFECT,
         APPLY_ALL_STATUS,
         APPLY_ALL_DEAD,
@@ -45,7 +45,6 @@ namespace MirRemakeBackend.Network {
         INIT_CHARACTER_ID,
         SET_POSITION,
         APPLY_CAST_SKILL_BEGIN,
-        APPLY_CAST_SKILL_SING_CANCEL,
         APPLY_BUILD_EQUIPMENT,
         APPLY_PICK_UP_ITEM_ON_GROUND,
         APPLY_DROP_ITEM_ONTO_GROUND,
