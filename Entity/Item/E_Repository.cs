@@ -7,9 +7,18 @@ namespace MirRemakeBackend.Entity {
     abstract class E_RepositoryBase {
         public abstract void Reset (E_Item[] itemArr);
         public abstract NO_Repository GetNo ();
-        public abstract bool RemoveItem (long realId);
-        public abstract bool StorePiledItem (E_Item item, out List<ValueTuple<int, E_Item>> posAndChangedItemList);
-        public abstract int StoreSingleItem (E_Item item);
+        public abstract E_Item GetItemByRealId (long realId);
+        public abstract E_Item GetItemByPosition (int pos);
+        /// <summary>
+        /// 直接在Pos位置覆盖放置item  
+        /// 不考虑原有道具
+        /// </summary>
+        public abstract void SetItem (E_Item item, int pos);
+        /// <summary>
+        /// 从背包移除整格物品  
+        /// 成功返回true
+        /// </summary>
+        public abstract bool RemoveItemByRealId (long realId);
     }
     class E_Repository : E_RepositoryBase {
         private List<E_Item> m_itemList = new List<E_Item> ();
@@ -30,27 +39,46 @@ namespace MirRemakeBackend.Entity {
             }
             return new NO_Repository ();
         }
-        /// <summary>
-        /// 根据RealId获取该物品所在的位置  
-        /// 若找不到返回-1
-        /// </summary>
-        public int GetItemPosition (long realId) {
+        public override E_Item GetItemByRealId (long realId) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId)
-                    return i;
-            return -1;
+                    return m_itemList[i];
+            return null;
         }
-        /// <summary>
-        /// 从背包移除整格物品  
-        /// 成功返回true
-        /// </summary>
-        public override bool RemoveItem (long realId) {
+        public override E_Item GetItemByPosition (int pos) {
+            if (m_itemList.Count <= pos)
+                return null;
+            return m_itemList[pos];
+        }
+        public E_Item GetItemByRealId (long realId, out int resPos) {
+            for (int i = 0; i < m_itemList.Count; i++)
+                if (m_itemList[i].m_realId == realId) {
+                    resPos = i;
+                    return m_itemList[i];
+                }
+            resPos = -1;
+            return null;
+        }
+        public override bool RemoveItemByRealId (long realId) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId) {
                     m_itemList[i] = E_Item.s_emptyItem;
                     return true;
                 }
             return false;
+        }
+        public override void SetItem (E_Item item, int pos) {
+            if (m_itemList.Count <= pos)
+                return;
+            m_itemList[pos] = item;
+        }
+        public bool RemoveItemByPosition (int pos) {
+            if (m_itemList.Count <= pos)
+                return false;
+            if (m_itemList[pos].m_IsEmpty)
+                return false;
+            m_itemList[pos] = E_Item.s_emptyItem;
+            return true;
         }
         /// <summary>
         /// 存储可堆叠Item  
@@ -61,7 +89,7 @@ namespace MirRemakeBackend.Entity {
         /// 背包内的因为插入而被修改的物品列表
         /// </param>
         /// <returns></returns>
-        public override bool StorePiledItem (E_Item item, out List<ValueTuple<int, E_Item>> posAndChangedItemList) {
+        public bool AutoStorePiledItem (E_Item item, out List<ValueTuple<int, E_Item>> posAndChangedItemList) {
             posAndChangedItemList = t_intItemList;
             posAndChangedItemList.Clear ();
             short res = item.m_num;
@@ -87,7 +115,7 @@ namespace MirRemakeBackend.Entity {
         /// 成功返回位置  
         /// 失败返回-1
         /// </summary>
-        public override int StoreSingleItem (E_Item item) {
+        public int AutoStoreSingleItem (E_Item item) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_IsEmpty) {
                     m_itemList[i] = item;
@@ -114,6 +142,34 @@ namespace MirRemakeBackend.Entity {
             }
             return new NO_Repository (itemList, eqInfoList);
         }
+        public override E_Item GetItemByRealId (long realId) {
+            var en = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
+            while (en.MoveNext ()) {
+                if (en.Current.m_realId == realId)
+                    return en.Current;
+            }
+            return null;
+        }
+        public override E_Item GetItemByPosition (int pos) {
+            E_EquipmentItem res = null;
+            EquipmentPosition eqPos = (EquipmentPosition) pos;
+            m_equipPositionAndEquipmentDict.TryGetValue (eqPos, out res);
+            return res;
+        }
+        public override void SetItem (E_Item item, int pos) {
+            EquipmentPosition eqPos = (EquipmentPosition) pos;
+            m_equipPositionAndEquipmentDict[eqPos] = item as E_EquipmentItem;
+        }
+        public override bool RemoveItemByRealId (long realId) {
+            var en = m_equipPositionAndEquipmentDict.GetEnumerator ();
+            while (en.MoveNext ()) {
+                if (en.Current.Value.m_realId == realId) {
+                    m_equipPositionAndEquipmentDict.Remove (en.Current.Key);
+                    return true;
+                }
+            }
+            return false;
+        }
         public List<E_Item> GetAllItemList () {
             List<E_Item> res = new List<E_Item> ();
             var equipmentEn = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
@@ -128,27 +184,6 @@ namespace MirRemakeBackend.Entity {
             E_EquipmentItem res = null;
             m_equipPositionAndEquipmentDict.TryGetValue (ePos, out res);
             return res;
-        }
-        public override bool RemoveItem (long realId) {
-            var en = m_equipPositionAndEquipmentDict.GetEnumerator ();
-            while (en.MoveNext ()) {
-                if (en.Current.Value.m_realId == realId) {
-                    m_equipPositionAndEquipmentDict.Remove (en.Current.Key);
-                    return true;
-                }
-            }
-            return false;
-        }
-        public override bool StorePiledItem (E_Item item, out List < (int, E_Item) > posAndChangedItemList) {
-            posAndChangedItemList = null;
-            return false;
-        }
-        public override int StoreSingleItem (E_Item item) {
-            E_EquipmentItem eq = item as E_EquipmentItem;
-            if (m_equipPositionAndEquipmentDict.TryAdd (eq.m_EquipmentPosition, eq))
-                return (int) eq.m_EquipmentPosition;
-            else
-                return -1;
         }
         public E_EquipmentItem PutOnEquipment (E_EquipmentItem eq) {
             E_EquipmentItem res = GetEquipmentByEquipPosition (eq.m_EquipmentPosition);

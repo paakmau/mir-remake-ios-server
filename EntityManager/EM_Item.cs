@@ -16,7 +16,6 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         public EM_Item (DEM_Item dem) { m_dem = dem; }
-        private List<short> t_shortList = new List<short> ();
         public E_Item GetItemByRealId (long realId) {
             E_Item res = null;
             m_realIdAndItemDict.TryGetValue (realId, out res);
@@ -31,7 +30,7 @@ namespace MirRemakeBackend.Entity {
             return er;
         }
         public List<short> GetEquipedItemIdList (int netId) {
-            var res = t_shortList;
+            var res = new List<short> ();
             res.Clear ();
             var equips = GetEquiped (netId);
             if (equips == null) return null;

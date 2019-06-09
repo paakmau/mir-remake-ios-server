@@ -68,5 +68,8 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < statusList.Count; i++)
                 StatusAttachOrRemove (target, statusList[i], 1);
         }
+        public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
+
+        }
     }
 }

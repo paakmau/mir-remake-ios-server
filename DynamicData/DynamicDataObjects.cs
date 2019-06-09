@@ -40,6 +40,7 @@ namespace MirRemakeBackend.DynamicData {
         /// <summary>
         /// 目前已经打的孔的数量
         /// </summary>
+        [Obsolete("已经弃用")]
         public short m_holeNum;
     }
     struct DDO_Item {

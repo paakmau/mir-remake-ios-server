@@ -18,64 +18,52 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
-            E_ConsumableItem item = EM_Item.s_instance.GetItemByRealId (realId) as E_ConsumableItem;
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBag (netId);
-            E_Character unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            if (item == null || bag == null || unit == null) return;
-            // 移除一个该物品
-            bool runOut = item.RemoveNum (1);
-            if (runOut) {
-                bag.RemoveItem (item.m_realId);
-                m_itemDds.DeleteItemByRealId (item.m_realId);
-                EM_Item.s_instance.UnloadItem (item);
-            } else {
-                int pos = bag.GetItemPosition (item.m_realId);
-                m_itemDds.UpdateItem (item.GetDdo (unit.m_characterId, ItemPlace.BAG, pos));
-            }
-            GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, unit, unit);
-            // TODO: 向客户端发送道具消耗
+            if (bag == null || charObj == null) return;
+            int posInBag = -1;
+            E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
+            if (item == null) return;
+            GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, charObj, charObj);
+            GL_Property.s_instance.NotifyLostItem (charObj, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            E_EquipmentItem equipment = EM_Item.s_instance.GetItemByRealId (realId) as E_EquipmentItem;
             E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquiped (netId);
             E_Repository bag = EM_Item.s_instance.GetBag (netId);
-            if (equipment == null || eqRegion == null || bag == null) return;
-            // 若背包中找不到该物品
-            if (bag.GetItemPosition (realId) == -1) return;
-            // 从背包中移除该装备
-            bag.RemoveItem (realId);
-            // 穿上该装备, 并卸下该位置上原有装备(如果有)
-            E_EquipmentItem oriEq = eqRegion.PutOnEquipment (equipment);
-            m_itemDds.UpdateItem (equipment.GetDdo (charObj.m_characterId, ItemPlace.EQUIPMENT_REGION, -1));
-            // 如果有装备卸下, 存入背包
+            if (charObj == null || eqRegion == null || bag == null) return;
+            int posInBag = -1;
+            var eq = bag.GetItemByRealId (realId, out posInBag) as E_EquipmentItem;
+            if (eq == null) return;
+            // 通知战斗属性逻辑
+            // 该位置原有装备卸下
+            var oriEq = eqRegion.GetItemByPosition ((int) eq.m_EquipmentPosition) as E_EquipmentItem;
             if (oriEq != null) {
-                int pos = bag.StoreSingleItem (oriEq);
-                m_itemDds.UpdateItem (oriEq.GetDdo (charObj.m_characterId, ItemPlace.BAG, pos));
-                // 装备被卸下改变Attr
-                EquipmentToAttr (charObj, oriEq, -1);
+                GL_UnitBattleAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, -1));
             }
             // 装备穿上Attr
-            EquipmentToAttr (charObj, oriEq, 1);
-            // TODO: 向客户端发送装备更替
+            GL_UnitBattleAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
+            // 通知Property逻辑
+            GL_Property.s_instance.NotifySwapItemPlace (charObj, eqRegion, (int) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
-        private void EquipmentToAttr (E_Character unit, E_EquipmentItem eqObj, int k) {
-            if (unit == null) return;
-            // 处理基础属性与强化
+        private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
+            List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();
+            // 处理强化与基础属性
             var attrList = eqObj.m_equipmentDe.m_attrList;
             for (int i = 0; i < attrList.Count; i++)
-                unit.AddConAttr (attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2));
+                res.Add ((attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2)));
             // 处理附魔
             var enchantAttr = eqObj.m_enchantAttr;
             foreach (var attr in enchantAttr)
-                unit.AddConAttr (attr.Item1, k * attr.Item2);
+                res.Add ((attr.Item1, k * attr.Item2));
             // 处理镶嵌
             var gemIdList = eqObj.m_inlaidGemIdList;
             for (int i = 0; i < gemIdList.Count; i++) {
                 var gemDe = EM_Item.s_instance.GetGemById (gemIdList[i]);
                 for (int j = 0; j < gemDe.m_attrList.Count; j++)
-                    unit.AddConAttr (gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2);
+                    res.Add ((gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2));
             }
+            return res;
         }
     }
 }

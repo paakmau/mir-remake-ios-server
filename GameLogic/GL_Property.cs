@@ -18,7 +18,20 @@ namespace MirRemakeBackend.GameLogic {
             m_charDds.UpdateCharacter (charObj.GetDdo ());
             // TODO: 通知Client
         }
-        public void NotifyLostItem (int netId, ) { }
-        public void NotifyChangeItemPos (int netId, ) { }
+        public void NotifyLostItem (E_Character charObj, E_Item item, short num, int pos, E_RepositoryBase repo) {
+            // 移除num个该物品
+            bool runOut = item.RemoveNum (num);
+            if (runOut) {
+                repo.RemoveItemByRealId (item.m_realId);
+                m_itemDds.DeleteItemByRealId (item.m_realId);
+                EM_Item.s_instance.UnloadItem (item);
+            } else
+                m_itemDds.UpdateItem (item.GetDdo (charObj.m_characterId, ItemPlace.BAG, pos));
+            // TODO: 向客户端发送道具消耗
+        }
+        public void NotifySwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, int srcPos, E_Item srcItem, E_RepositoryBase tarRepo, int tarPos, E_Item tarItem) {
+            srcRepo.SetItem (tarItem, srcPos);
+            tarRepo.SetItem (srcItem, tarPos);
+        }
     }
 }
