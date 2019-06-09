@@ -7,5 +7,8 @@ namespace MirRemakeBackend.Entity {
         public new void Reset (DE_Item de, DDO_Item ddo) {
             base.Reset (de, ddo);
         }
+        public new void Reset (DE_Item de, long realId, short num) {
+            base.Reset (de, realId, num);
+        }
     }
 }

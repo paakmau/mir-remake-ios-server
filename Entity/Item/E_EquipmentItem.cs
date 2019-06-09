@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.DataEntity;
+using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
@@ -10,14 +10,24 @@ namespace MirRemakeBackend.Entity {
         public DE_EquipmentData m_equipmentDe;
         public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
         public byte m_strengthenNum;
-        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_enchantAttr;
+        public (ActorUnitConcreteAttributeType, int) [] m_enchantAttr;
         public List<short> m_inlaidGemIdList;
-        public void Reset (DE_Item itemDe, DE_EquipmentData equipmentDe, DDO_Item itemDdo, DDO_EquipmentInfo equipDdo) {
+        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, DDO_Item itemDdo, DDO_EquipmentInfo equipDdo) {
             base.Reset (itemDe, itemDdo);
-            m_equipmentDe = equipmentDe;
+            m_equipmentDe = eqDe;
             m_strengthenNum = equipDdo.m_strengthNum;
             m_enchantAttr = equipDdo.m_enchantAttr;
             m_inlaidGemIdList = equipDdo.m_inlaidGemIdList;
+        }
+        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, long realId) {
+            base.Reset (itemDe, realId, 1);
+            m_equipmentDe = eqDe;
+            m_strengthenNum = 0;
+            m_enchantAttr = new (ActorUnitConcreteAttributeType, int) [0];
+            m_inlaidGemIdList = new List<short> ();
+        }
+        public DDO_EquipmentInfo GetEquipmentInfoDdo (int charId) {
+            return new DDO_EquipmentInfo (m_realId, charId, m_strengthenNum, m_enchantAttr, m_inlaidGemIdList);
         }
         public NO_EquipmentItemInfo GetEquipmentInfoNo () {
             return new NO_EquipmentItemInfo (m_realId, m_strengthenNum, m_enchantAttr, m_inlaidGemIdList);

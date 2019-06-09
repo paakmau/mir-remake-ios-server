@@ -85,45 +85,36 @@ namespace MirRemakeBackend.Entity {
             return true;
         }
         /// <summary>
-        /// 存储可堆叠Item  
-        /// 若正常存储返回true  
-        /// 未能完全存入返回false  
+        /// 存储一个Item  
         /// </summary>
         /// <param name="posAndChangedItemList">
-        /// 背包内的因为插入而被修改的物品列表
+        /// 背包内的因为插入而被修改的物品 (pos, obj) 列表
         /// </param>
-        /// <returns></returns>
-        public bool AutoStorePiledItem (E_Item item, out List < (int, E_Item) > posAndChangedItemList) {
-            posAndChangedItemList = new List < (int, E_Item) > ();
-            short res = item.m_num;
+        /// <returns>
+        /// 若item占用了一个槽位返回 pos  
+        /// 若完全堆叠返回 0  
+        /// 未能完全存入返回 -1  
+        /// </returns>
+        public short AutoStoreItem (E_Item item, out List < (short, E_Item) > posAndChangedItemList) {
+            posAndChangedItemList = new List < (short, E_Item) > ();
+            // 堆叠
             for (int i = 0; i < m_itemList.Count; i++) {
                 var itemInRepo = m_itemList[i];
-                // 找到空的插槽
-                if (itemInRepo.m_IsEmpty) {
-                    itemInRepo = item;
-                    return true;
-                }
-                // 可以堆叠
                 if (itemInRepo.m_itemId == item.m_itemId && itemInRepo.m_num != item.m_MaxNum) {
-                    posAndChangedItemList.Add (new ValueTuple<int, E_Item> (i, itemInRepo));
+                    posAndChangedItemList.Add (((short) i, itemInRepo));
                     short added = itemInRepo.AddNum (item.m_num);
                     if (item.RemoveNum (added))
-                        return true;
+                        return 1;
                 }
             }
-            return false;
-        }
-        /// <summary>
-        /// 储存不可堆叠Item  
-        /// 成功返回位置  
-        /// 失败返回-1
-        /// </summary>
-        public int AutoStoreSingleItem (E_Item item) {
-            for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_IsEmpty) {
-                    m_itemList[i] = item;
-                    return i;
+            // 寻找空插槽
+            for (int i = 0; i < m_itemList.Count; i++) {
+                var itemInRepo = m_itemList[i];
+                if (itemInRepo.m_IsEmpty) {
+                    itemInRepo = item;
+                    return 0;
                 }
+            }
             return -1;
         }
     }

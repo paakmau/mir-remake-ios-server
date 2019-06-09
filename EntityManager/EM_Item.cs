@@ -82,8 +82,8 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
                 var idAndNum = itemIdAndNumList[i];
                 DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
-                E_Item itemEnt = GenerateItemEntity (itemDe);
-                res.Add 
+                E_Item item = GenerateItemEntity (itemDe, realIdList[i], idAndNum.Item2);
+                res.Add (item);
             }
             return res;
         }
@@ -168,13 +168,27 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 产生一件物品
         /// </summary>
-        private E_Item GenerateItemEntity (DE_Item itemDe) {
+        private E_Item GenerateItemEntity (DE_Item itemDe, long realId, short num) {
             E_Item res = E_Item.s_emptyItem;
             switch (itemDe.m_type) {
                 case ItemType.CONSUMABLE:
                     res = s_entityPool.m_consumableItemPool.GetInstance ();
                     DE_ConsumableData conDe = m_dem.GetConsumableById (itemDe.m_id);
-                    ((E_ConsumableItem) res).Reset (itemDe, conDe, );
+                    ((E_ConsumableItem) res).Reset (itemDe, conDe, realId, num);
+                    break;
+                case ItemType.MATERIAL:
+                    res = s_entityPool.m_materialItemPool.GetInstance ();
+                    ((E_MaterialItem) res).Reset (itemDe, realId, num);
+                    break;
+                case ItemType.GEM:
+                    res = s_entityPool.m_gemItemPool.GetInstance ();
+                    DE_GemData gemDe = m_dem.GetGemById (itemDe.m_id);
+                    ((E_GemItem) res).Reset (itemDe, gemDe, realId, num);
+                    break;
+                case ItemType.EQUIPMENT:
+                    res = s_entityPool.m_equipmentItemPool.GetInstance ();
+                    DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemDe.m_id);
+                    ((E_EquipmentItem) res).Reset (itemDe, eqDe, realId);
                     break;
             }
             return res;

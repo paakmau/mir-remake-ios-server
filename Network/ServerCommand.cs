@@ -367,13 +367,12 @@ namespace MirRemakeBackend.Network {
         private IReadOnlyList<ItemPlace> m_itemPlaceList;
         private IReadOnlyList<short> m_itemPositionList;
         public static SC_ApplySelfGainItem Instance (
-            IReadOnlyList<int> toClientList,
+            int netId,
             IReadOnlyList<NO_Item> gainedItemList,
             IReadOnlyList<ItemPlace> placeList,
             IReadOnlyList<short> posList
         ) {
-            // TODO: 这里的装备有问题
-            s_instance.m_toClientList = toClientList;
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_itemList = gainedItemList;
             s_instance.m_itemPlaceList = placeList;
             s_instance.m_itemPositionList = posList;
@@ -401,11 +400,11 @@ namespace MirRemakeBackend.Network {
         private IReadOnlyList<long> m_itemRealIdList;
         private IReadOnlyList<short> m_itemNumList;
         public static SC_ApplySelfUpdateItemNum Instance (
-            IReadOnlyList<int> toClientList,
+            int netId,
             IReadOnlyList<long> itemRealIdList,
             IReadOnlyList<short> itemNumList
         ) {
-            s_instance.m_toClientList = toClientList;
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_itemRealIdList = itemRealIdList;
             s_instance.m_itemNumList = itemNumList;
             return s_instance;
@@ -446,7 +445,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_tarPosition);
         }
     }
-    
+
     /// <summary>
     /// 更新所持货币
     /// </summary>
