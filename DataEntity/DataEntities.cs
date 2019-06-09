@@ -162,7 +162,7 @@ namespace MirRemakeBackend.DataEntity {
         /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量  
         /// </summary>
         public readonly IReadOnlyList < (MissionTargetType, short, int) > m_targetAndParamList;
-        public readonly int m_bonusCoin;
+        public readonly long m_bonusVirtualCurrency;
         public readonly int m_bonusExperience;
         public readonly IReadOnlyList < (short, short) > m_bonusItemIdAndNumList;
         public DE_Mission (DO_Mission mDo) {
@@ -171,7 +171,7 @@ namespace MirRemakeBackend.DataEntity {
             m_levelInNeed = mDo.m_levelInNeed;
             m_childrenIdList = new List<short> (mDo.m_childrenMissionArr);
             m_targetAndParamList = new List<ValueTuple<MissionTargetType, short, int>> (mDo.m_missionTargetArr);
-            m_bonusCoin = mDo.m_bonusCoin;
+            m_bonusVirtualCurrency = mDo.m_bonusMoney;
             m_bonusExperience = mDo.m_bonusExperience;
             m_bonusItemIdAndNumList = new List<ValueTuple<short, short>> (mDo.m_bonusItemIdAndNumArr);
         }

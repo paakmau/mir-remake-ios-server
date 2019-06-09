@@ -118,9 +118,9 @@ namespace MirRemakeBackend.Entity {
             GetItemEntityArrByDdo (bagDdo, eqDdoDict, itemInBag);
             GetItemEntityArrByDdo (storeHouseDdo, eqDdoDict, itemInStoreHouse);
             GetItemEntityArrByDdo (equipedDdo, eqDdoDict, itemEquiped);
-            bag.Reset (itemInBag);
-            storeHouse.Reset (itemInStoreHouse);
-            eqRegion.Reset (itemEquiped);
+            bag.Reset (ItemPlace.BAG, itemInBag);
+            storeHouse.Reset (ItemPlace.STORE_HOUSE, itemInStoreHouse);
+            eqRegion.Reset (ItemPlace.EQUIPMENT_REGION, itemEquiped);
             // 索引各区域
             m_networkIdAndBagDict[netId] = bag;
             m_networkIdAndStoreHouseDict[netId] = storeHouse;

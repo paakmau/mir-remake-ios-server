@@ -105,7 +105,7 @@ namespace MirRemakeBackend.Data {
         /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量  
         /// </summary>
         public ValueTuple<MissionTargetType, short, int>[] m_missionTargetArr;
-        public int m_bonusCoin;
+        public long m_bonusMoney;
         public int m_bonusExperience;
         public ValueTuple<short, short>[] m_bonusItemIdAndNumArr;
     }

@@ -55,8 +55,8 @@ namespace MirRemakeBackend.DynamicData {
         /// <summary>
         /// 该物品在地点中的位置 (第几格)
         /// </summary>
-        public int m_position;
-        public DDO_Item (long realId, short itemId, int charId, short num, ItemPlace place, int pos) {
+        public short m_position;
+        public DDO_Item (long realId, short itemId, int charId, short num, ItemPlace place, short pos) {
             m_realId = realId;
             m_itemId = itemId;
             m_characterId = charId;
@@ -79,7 +79,12 @@ namespace MirRemakeBackend.DynamicData {
     }
     struct DDO_Mission {
         public short m_missionId;
-        public short m_characterId;
+        public int m_characterId;
         public List<int> m_missionTargetProgressList;
+        public DDO_Mission (short misId, int charId, List<int> misProgList) {
+            m_missionId = misId;
+            m_characterId = charId;
+            m_missionTargetProgressList = misProgList;
+        }
     }
 }

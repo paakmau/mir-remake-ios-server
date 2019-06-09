@@ -365,13 +365,14 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_Item> m_itemList;
         private IReadOnlyList<ItemPlace> m_itemPlaceList;
-        private IReadOnlyList<byte> m_itemPositionList;
+        private IReadOnlyList<short> m_itemPositionList;
         public static SC_ApplySelfGainItem Instance (
             IReadOnlyList<int> toClientList,
             IReadOnlyList<NO_Item> gainedItemList,
             IReadOnlyList<ItemPlace> placeList,
-            IReadOnlyList<byte> posList
+            IReadOnlyList<short> posList
         ) {
+            // TODO: 这里的装备有问题
             s_instance.m_toClientList = toClientList;
             s_instance.m_itemList = gainedItemList;
             s_instance.m_itemPlaceList = placeList;
@@ -425,21 +426,24 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplySelfMoveItem s_instance = new SC_ApplySelfMoveItem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MOVE_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList<byte> m_oriPosList;
-        private IReadOnlyList<byte> m_newPosList;
-        public static SC_ApplySelfMoveItem Instance (IReadOnlyList<int> toClientList, IReadOnlyList<byte> oriPosList, IReadOnlyList<byte> newPosList) {
+        private ItemPlace m_srcPlace;
+        private short m_srcPosition;
+        private ItemPlace m_tarPlace;
+        private short m_tarPosition;
+        public static SC_ApplySelfMoveItem Instance (IReadOnlyList<int> toClientList, ItemPlace srcPlace, short srcPos, ItemPlace tarPlace, short tarPos) {
             s_instance.m_toClientList = toClientList;
-            s_instance.m_oriPosList = oriPosList;
-            s_instance.m_newPosList = newPosList;
+            s_instance.m_srcPlace = srcPlace;
+            s_instance.m_srcPosition = srcPos;
+            s_instance.m_tarPlace = tarPlace;
+            s_instance.m_tarPosition = tarPos;
             return s_instance;
         }
         private SC_ApplySelfMoveItem () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_oriPosList.Count);
-            for (int i = 0; i < m_oriPosList.Count; i++)
-                writer.Put (m_oriPosList[i]);
-            for (int i = 0; i < m_oriPosList.Count; i++)
-                writer.Put (m_newPosList[i]);
+            writer.Put ((byte) m_srcPlace);
+            writer.Put ( m_srcPosition);
+            writer.Put ((byte) m_tarPlace);
+            writer.Put ( m_tarPosition);
         }
     }
     /// <summary>

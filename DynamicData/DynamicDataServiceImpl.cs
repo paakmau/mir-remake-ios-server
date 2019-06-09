@@ -31,7 +31,7 @@ namespace MirRemakeBackend.DynamicData {
                 short itemid = short.Parse(dt.Rows[i]["itemid"].ToString());
                 short num = short.Parse(dt.Rows[i]["num"].ToString());
                 ItemPlace place = ItemPlace.BAG;
-                int pos = int.Parse(dt.Rows[i]["position"].ToString());
+                short pos = short.Parse(dt.Rows[i]["position"].ToString());
                 res.Add(new DDO_Item(realid,itemid,charId,num,place,pos));
             }
             return res;
@@ -52,7 +52,7 @@ namespace MirRemakeBackend.DynamicData {
                 short itemid = short.Parse(dt.Rows[i]["itemid"].ToString());
                 short num = short.Parse(dt.Rows[i]["num"].ToString());
                 ItemPlace place = ItemPlace.STORE_HOUSE;
-                int pos = int.Parse(dt.Rows[i]["position"].ToString());
+                short pos = short.Parse(dt.Rows[i]["position"].ToString());
                 res.Add(new DDO_Item(realid, itemid, charId, num, place, pos));
             }
             return res;
@@ -73,7 +73,7 @@ namespace MirRemakeBackend.DynamicData {
                 short itemid = short.Parse(dt.Rows[i]["itemid"].ToString());
                 short num = short.Parse(dt.Rows[i]["num"].ToString());
                 ItemPlace place = ItemPlace.STORE_HOUSE;
-                int pos = int.Parse(dt.Rows[i]["position"].ToString());
+                short pos = short.Parse(dt.Rows[i]["position"].ToString());
                 res.Add(new DDO_Item(realid, itemid, charId, num, place, pos));
             }
             return res;

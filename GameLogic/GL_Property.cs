@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
@@ -18,20 +19,29 @@ namespace MirRemakeBackend.GameLogic {
             m_charDds.UpdateCharacter (charObj.GetDdo ());
             // TODO: 通知Client
         }
-        public void NotifyLostItem (E_Character charObj, E_Item item, short num, int pos, E_RepositoryBase repo) {
+        public void NotifyLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
+            long realId = item.m_realId;
+            short curNum = item.m_num;
             if (runOut) {
                 repo.RemoveItemByRealId (item.m_realId);
                 m_itemDds.DeleteItemByRealId (item.m_realId);
                 EM_Item.s_instance.UnloadItem (item);
             } else
                 m_itemDds.UpdateItem (item.GetDdo (charObj.m_characterId, ItemPlace.BAG, pos));
-            // TODO: 向客户端发送道具消耗
+            // 通知Client物品变化
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
+                new List<int> { charObj.m_networkId }, new List<long> { realId }, new List<short> { curNum }));
         }
-        public void NotifySwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, int srcPos, E_Item srcItem, E_RepositoryBase tarRepo, int tarPos, E_Item tarItem) {
+        public void NotifySwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
             srcRepo.SetItem (tarItem, srcPos);
             tarRepo.SetItem (srcItem, tarPos);
+            m_networkService.SendServerCommand (SC_ApplySelfMoveItem.Instance (
+                new List<int> { charObj.m_networkId }, srcRepo.m_repositoryPlace, srcPos, tarRepo.m_repositoryPlace, tarPos));
+        }
+        public void NotifyGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
+            // TODO: 处理报酬结算 GL_Property 发送到Client
         }
     }
 }

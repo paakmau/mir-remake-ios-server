@@ -41,7 +41,7 @@ namespace MirRemakeBackend.Data {
             {
                 mission.m_conversationWhenDelivering[i] = tempData[i].ToString();
             }**/
-            mission.m_bonusCoin = int.Parse(s_missionDatas[ID]["BonusMoney"].ToString());
+            mission.m_bonusMoney = long.Parse(s_missionDatas[ID]["BonusMoney"].ToString());
             mission.m_bonusExperience = int.Parse(s_missionDatas[ID]["BonusExperience"].ToString());
             mission.m_levelInNeed = short.Parse(s_missionDatas[ID]["LevelInNeed"].ToString());
             tempData = s_missionDatas[ID]["FatherMissionList"];

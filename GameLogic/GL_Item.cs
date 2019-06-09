@@ -21,7 +21,7 @@ namespace MirRemakeBackend.GameLogic {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null || charObj == null) return;
-            int posInBag = -1;
+            short posInBag = -1;
             E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
             if (item == null) return;
             GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, charObj, charObj);
@@ -32,19 +32,19 @@ namespace MirRemakeBackend.GameLogic {
             E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquiped (netId);
             E_Repository bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || eqRegion == null || bag == null) return;
-            int posInBag = -1;
+            short posInBag = -1;
             var eq = bag.GetItemByRealId (realId, out posInBag) as E_EquipmentItem;
             if (eq == null) return;
             // 通知战斗属性逻辑
             // 该位置原有装备卸下
-            var oriEq = eqRegion.GetItemByPosition ((int) eq.m_EquipmentPosition) as E_EquipmentItem;
+            var oriEq = eqRegion.GetItemByPosition ((short) eq.m_EquipmentPosition) as E_EquipmentItem;
             if (oriEq != null) {
                 GL_UnitBattleAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, -1));
             }
             // 装备穿上Attr
             GL_UnitBattleAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
             // 通知Property逻辑
-            GL_Property.s_instance.NotifySwapItemPlace (charObj, eqRegion, (int) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
+            GL_Property.s_instance.NotifySwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();

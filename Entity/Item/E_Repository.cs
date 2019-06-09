@@ -5,15 +5,19 @@ using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     abstract class E_RepositoryBase {
-        public abstract void Reset (E_Item[] itemArr);
+        public ItemPlace m_repositoryPlace;
+        protected void Reset (ItemPlace place) {
+            m_repositoryPlace = place;
+        }
+        public abstract void Reset (ItemPlace place, E_Item[] itemArr);
         public abstract NO_Repository GetNo ();
         public abstract E_Item GetItemByRealId (long realId);
-        public abstract E_Item GetItemByPosition (int pos);
+        public abstract E_Item GetItemByPosition (short pos);
         /// <summary>
         /// 直接在Pos位置覆盖放置item  
         /// 不考虑原有道具
         /// </summary>
-        public abstract void SetItem (E_Item item, int pos);
+        public abstract void SetItem (E_Item item, short pos);
         /// <summary>
         /// 从背包移除整格物品  
         /// 成功返回true
@@ -23,8 +27,8 @@ namespace MirRemakeBackend.Entity {
     class E_Repository : E_RepositoryBase {
         private List<E_Item> m_itemList = new List<E_Item> ();
         public List<E_Item> m_ItemList { get { return m_itemList; } }
-        private List<ValueTuple<int, E_Item>> t_intItemList = new List < (int, E_Item) > ();
-        public override void Reset (E_Item[] itemArr) {
+        public override void Reset (ItemPlace place, E_Item[] itemArr) {
+            base.Reset (place);
             m_itemList.Clear ();
             foreach (var item in itemArr)
                 m_itemList.Add (item);
@@ -45,13 +49,13 @@ namespace MirRemakeBackend.Entity {
                     return m_itemList[i];
             return null;
         }
-        public override E_Item GetItemByPosition (int pos) {
+        public override E_Item GetItemByPosition (short pos) {
             if (m_itemList.Count <= pos)
                 return null;
             return m_itemList[pos];
         }
-        public E_Item GetItemByRealId (long realId, out int resPos) {
-            for (int i = 0; i < m_itemList.Count; i++)
+        public E_Item GetItemByRealId (long realId, out short resPos) {
+            for (short i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId) {
                     resPos = i;
                     return m_itemList[i];
@@ -67,7 +71,7 @@ namespace MirRemakeBackend.Entity {
                 }
             return false;
         }
-        public override void SetItem (E_Item item, int pos) {
+        public override void SetItem (E_Item item, short pos) {
             if (m_itemList.Count <= pos)
                 return;
             m_itemList[pos] = item;
@@ -89,9 +93,8 @@ namespace MirRemakeBackend.Entity {
         /// 背包内的因为插入而被修改的物品列表
         /// </param>
         /// <returns></returns>
-        public bool AutoStorePiledItem (E_Item item, out List<ValueTuple<int, E_Item>> posAndChangedItemList) {
-            posAndChangedItemList = t_intItemList;
-            posAndChangedItemList.Clear ();
+        public bool AutoStorePiledItem (E_Item item, out List < (int, E_Item) > posAndChangedItemList) {
+            posAndChangedItemList = new List < (int, E_Item) > ();
             short res = item.m_num;
             for (int i = 0; i < m_itemList.Count; i++) {
                 var itemInRepo = m_itemList[i];
@@ -127,7 +130,8 @@ namespace MirRemakeBackend.Entity {
 
     class E_EquipmentRegion : E_RepositoryBase {
         Dictionary<EquipmentPosition, E_EquipmentItem> m_equipPositionAndEquipmentDict = new Dictionary<EquipmentPosition, E_EquipmentItem> ();
-        public override void Reset (E_Item[] itemArr) {
+        public override void Reset (ItemPlace place, E_Item[] itemArr) {
+            base.Reset (place);
             m_equipPositionAndEquipmentDict.Clear ();
             foreach (var item in itemArr)
                 m_equipPositionAndEquipmentDict.Add (((E_EquipmentItem) item).m_EquipmentPosition, (E_EquipmentItem) item);
@@ -150,13 +154,13 @@ namespace MirRemakeBackend.Entity {
             }
             return null;
         }
-        public override E_Item GetItemByPosition (int pos) {
+        public override E_Item GetItemByPosition (short pos) {
             E_EquipmentItem res = null;
             EquipmentPosition eqPos = (EquipmentPosition) pos;
             m_equipPositionAndEquipmentDict.TryGetValue (eqPos, out res);
             return res;
         }
-        public override void SetItem (E_Item item, int pos) {
+        public override void SetItem (E_Item item, short pos) {
             EquipmentPosition eqPos = (EquipmentPosition) pos;
             m_equipPositionAndEquipmentDict[eqPos] = item as E_EquipmentItem;
         }
