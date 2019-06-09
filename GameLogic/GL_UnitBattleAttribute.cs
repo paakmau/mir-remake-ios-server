@@ -46,7 +46,10 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
             target.m_CurHp += dHp;
             target.m_CurMp += dMp;
-            // TODO: 处理caster
+            // xjb计算仇恨
+            float hatredTime = (float)(-dHp - dMp) / (float)target.m_MaxHp * 10;
+            if (hatredTime < 0)return;
+            // target.m_hatredRefreshDict.
         }
         public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
             var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, statusIdAndValueAndTimeAndCasterNetIdArr);
