@@ -12,9 +12,25 @@ namespace MirRemakeBackend.Entity {
         public int m_networkId;
         public short m_level;
         public Vector2 m_position;
-        public Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
-        public Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
+        private Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
+        private Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
         public int m_finalAttackerNetId;
+        // 仇恨度哈希表
+        public Dictionary<int, MyTimer.Time> m_hatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
+        public int m_HighestHatredTargetNetId {
+            get {
+                int res = -1;
+                MyTimer.Time resHighest = MyTimer.s_CurTime;
+                var en = m_hatredRefreshDict.GetEnumerator ();
+                while (en.MoveNext ()) {
+                    if (en.Current.Value >= resHighest) {
+                        res = en.Current.Key;
+                        resHighest = en.Current.Value;
+                    }
+                }
+                return res;
+            }
+        }
         public int m_MaxHp {
             get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_HP] = value; }

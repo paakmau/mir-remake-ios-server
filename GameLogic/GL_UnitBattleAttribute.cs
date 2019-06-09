@@ -48,14 +48,15 @@ namespace MirRemakeBackend.GameLogic {
             target.m_CurMp += dMp;
             // TODO: 处理caster
         }
-        public void NotifyAttachStatus (E_Unit target, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
+        public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
             var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, statusIdAndValueAndTimeAndCasterNetIdArr);
             for (int i = 0; i < statusList.Count; i++)
                 StatusToAttr (target, statusList[i], 1);
+            // TODO: 处理caster
         }
         public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
             for (int i=0; i<dAttr.Count; i++)
-                target.m_concreteAttributeDict[dAttr[i].Item1] += dAttr[i].Item2;
+                target.AddConAttr(dAttr[i].Item1, dAttr[i].Item2);
         }
         private void StatusToAttr (E_Unit unit, E_Status status, int k) {
             // 处理具体属性

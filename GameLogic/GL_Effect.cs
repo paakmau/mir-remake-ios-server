@@ -24,7 +24,7 @@ namespace MirRemakeBackend.GameLogic {
             if (effect.m_hit) {
                 // Hp Mp 状态
                 GL_UnitBattleAttribute.s_instance.NotifyHpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
-                GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
+                GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, caster, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
             }
             // 发送到Client
             m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
