@@ -13,8 +13,21 @@ namespace MirRemakeBackend.Entity {
         public short m_MonsterId { get { return m_monsterDe.m_monsterId; } }
         public Vector2 m_respawnPosition;
         // 怪物仇恨度哈希表
-        private Dictionary<int, MyTimer.Time> m_networkIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
-        public int m_highestHatredTargetNetId;
+        private Dictionary<int, MyTimer.Time> m_netIdAndHatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
+        public int m_HighestHatredTargetNetId {
+            get {
+                int res = -1;
+                MyTimer.Time resHighest = MyTimer.s_CurTime;
+                var en = m_netIdAndHatredRefreshDict.GetEnumerator ();
+                while (en.MoveNext ()) {
+                    if (en.Current.Value >= resHighest) {
+                        res = en.Current.Key;
+                        resHighest = en.Current.Value;
+                    }
+                }
+                return res;
+            }
+        }
         public void Reset (int networkId, Vector2 pos, DE_Unit auDe, DE_MonsterData mDe) {
             base.Reset (auDe);
             m_monsterDe = mDe;

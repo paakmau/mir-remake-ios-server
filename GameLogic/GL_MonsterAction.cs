@@ -20,7 +20,6 @@ namespace MirRemakeBackend.GameLogic {
             FAINT,
             DEAD
         }
-
         class MFSM {
             public MFSMStateBase m_curState;
             public MFSMS_AutoMove m_autoMove;
@@ -51,7 +50,6 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
         }
-
         abstract class MFSMStateBase {
             /// <summary>
             /// 状态的类别
@@ -78,7 +76,6 @@ namespace MirRemakeBackend.GameLogic {
             public abstract MFSMStateBase GetNextState (E_Monster self);
             public abstract void OnExit (E_Monster self, MFSMStateType nextType);
         }
-
         class MFSMS_AutoMove : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.AUTO_MOVE; } }
             private float m_moveTimeLeft;
@@ -106,25 +103,22 @@ namespace MirRemakeBackend.GameLogic {
             public override MFSMStateBase GetNextState (E_Monster self) {
                 if (self.m_IsDead) return m_mfsm.m_dead;
                 if (self.m_IsFaint) return m_mfsm.m_faint;
-                if (self.m_highestHatredTargetNetId != -1)
+                if (self.m_HighestHatredTargetNetId != -1)
                     return m_mfsm.m_autoBattle;
                 return null;
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) { }
         }
-
         class MFSMS_AutoBattle : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.AUTO_BATTLE; } }
             public MFSMS_AutoBattle (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) { }
             public override void OnTick (E_Monster self, float dT) {
-                if (self.m_highestHatredTargetNetId == -1)
+                if (self.m_HighestHatredTargetNetId == -1)
                     return;
-                var unit = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (self.m_highestHatredTargetNetId);
-                if (unit == null) {
-                    self.m_highestHatredTargetNetId = -1;
+                var unit = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (self.m_HighestHatredTargetNetId);
+                if (unit == null)
                     return;
-                }
                 var dir = unit.m_position - self.m_position;
                 var deltaP = Vector2.Normalize (dir) * self.m_Speed * dT / 100f;
                 if (deltaP.LengthSquared () >= dir.LengthSquared ())
@@ -134,15 +128,13 @@ namespace MirRemakeBackend.GameLogic {
             public override MFSMStateBase GetNextState (E_Monster self) {
                 if (self.m_IsDead) return m_mfsm.m_dead;
                 if (self.m_IsFaint) return m_mfsm.m_faint;
-                if (self.m_highestHatredTargetNetId == -1)
+                if (self.m_HighestHatredTargetNetId == -1)
                     return m_mfsm.m_autoMove;
                 if (self.m_IsSilent)
                     return null;
-                var unit = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (self.m_highestHatredTargetNetId);
-                if (unit == null) {
-                    self.m_highestHatredTargetNetId = -1;
-                    return m_mfsm.m_autoMove;
-                }
+                var unit = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (self.m_HighestHatredTargetNetId);
+                if (unit == null)
+                    return null;
                 // 尝试对仇恨最高的目标释放技能
                 E_MonsterSkill skill;
                 if (EM_MonsterSkill.s_instance.GetRandomValidSkill (self.m_networkId, self.m_MonsterId, out skill)) {
