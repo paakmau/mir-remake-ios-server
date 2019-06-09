@@ -441,9 +441,9 @@ namespace MirRemakeBackend.Network {
         private SC_ApplySelfMoveItem () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_srcPlace);
-            writer.Put ( m_srcPosition);
+            writer.Put (m_srcPosition);
             writer.Put ((byte) m_tarPlace);
-            writer.Put ( m_tarPosition);
+            writer.Put (m_tarPosition);
         }
     }
     /// <summary>
@@ -530,6 +530,36 @@ namespace MirRemakeBackend.Network {
             return s_instance;
         }
         private SC_ApplySelfAcceptMission () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
+        }
+    }
+    class SC_ApplySelfDeliverMission : ServerCommandBase {
+        private static SC_ApplySelfDeliverMission s_instance = new SC_ApplySelfDeliverMission ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DELIVER_MISSION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        public static SC_ApplySelfDeliverMission Instance (IReadOnlyList<int> toClientList, short missionId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_missionId = missionId;
+            return s_instance;
+        }
+        private SC_ApplySelfDeliverMission () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
+        }
+    }
+    class SC_ApplySelfCancelMission : ServerCommandBase {
+        private static SC_ApplySelfCancelMission s_instance = new SC_ApplySelfCancelMission ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CANCEL_MISSION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        public static SC_ApplySelfCancelMission Instance (IReadOnlyList<int> toClientList, short missionId) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_missionId = missionId;
+            return s_instance;
+        }
+        private SC_ApplySelfCancelMission () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_missionId);
         }

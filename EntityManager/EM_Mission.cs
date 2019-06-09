@@ -81,12 +81,23 @@ namespace MirRemakeBackend.Entity {
             Dictionary<short, E_Mission> acceptedDict = null;
             if (!m_acceptedMissionDict.TryGetValue (netId, out acceptedDict))
                 return;
-            // 交付任务
+            // 交付任务 并 回收实例
             acceptedDict.Remove (mis.m_MissionId);
-            // 回收实例
             s_entityPool.m_missionPool.RecycleInstance (mis);
             // 解锁后续任务
             DealWithUnlockedMission (mis, ocp, lv, acceptableSet, unacceptableSet);
+        }
+        public void CancelMission (int netId, E_Mission mis) {
+            HashSet<short> acceptableSet = null;
+            if (!m_acceptableMissionDict.TryGetValue (netId, out acceptableSet))
+                return;
+            Dictionary<short, E_Mission> acceptedDict = null;
+            if (!m_acceptedMissionDict.TryGetValue (netId, out acceptedDict))
+                return;
+            // 放弃任务 并 回收实例
+            acceptedDict.Remove (mis.m_MissionId);
+            s_entityPool.m_missionPool.RecycleInstance (mis);
+            acceptableSet.Add (mis.m_MissionId);
         }
         /// <summary>
         /// 处理任务完成后的解锁
