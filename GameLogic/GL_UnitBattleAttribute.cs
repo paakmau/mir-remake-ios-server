@@ -22,12 +22,12 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < statusEn.Current.Value.Count; i++) {
                     if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {
                         statusToRemoveList.Add (i);
-                        StatusAttachOrRemove (unit, statusEn.Current.Value[i], -1);
+                        StatusToAttr (unit, statusEn.Current.Value[i], -1);
                     }
                 }
                 EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
             }
-            // 根据状态处理具体属性的每秒变化
+            // 处理具体属性的每秒变化
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
@@ -43,7 +43,21 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () { }
-        private void StatusAttachOrRemove (E_Unit unit, E_Status status, int k) {
+        public void NotifyHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
+            target.m_CurHp += dHp;
+            target.m_CurMp += dMp;
+            // TODO: 处理caster
+        }
+        public void NotifyAttachStatus (E_Unit target, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
+            var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, statusIdAndValueAndTimeAndCasterNetIdArr);
+            for (int i = 0; i < statusList.Count; i++)
+                StatusToAttr (target, statusList[i], 1);
+        }
+        public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
+            for (int i=0; i<dAttr.Count; i++)
+                target.m_concreteAttributeDict[dAttr[i].Item1] += dAttr[i].Item2;
+        }
+        private void StatusToAttr (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
             var cAttrList = status.m_dataEntity.m_affectAttributeList;
             for (int i = 0; i < cAttrList.Count; i++)
@@ -58,18 +72,6 @@ namespace MirRemakeBackend.GameLogic {
                 unit.m_networkId,
                 status.GetNo (),
                 k == 1));
-        }
-        public void NotifyHpAndMpChange (E_Unit target, int dHp, int dMp) {
-            target.m_CurHp += dHp;
-            target.m_CurMp += dMp;
-        }
-        public void NotifyAttachStatus (E_Unit target, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
-            var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, statusIdAndValueAndTimeAndCasterNetIdArr);
-            for (int i = 0; i < statusList.Count; i++)
-                StatusAttachOrRemove (target, statusList[i], 1);
-        }
-        public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
-
         }
     }
 }
