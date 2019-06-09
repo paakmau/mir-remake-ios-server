@@ -257,8 +257,7 @@ namespace MirRemakeBackend.GameLogic {
                 return (self.m_position - aimedTarget.m_position).LengthSquared () <= castRange * castRange;
             }
             /// <summary>
-            /// 完善技能参数
-            /// 例如自动选择最近的目标等, 看甲方
+            /// 根据目标完善技能参数
             /// </summary>
             /// <returns></returns>
             public abstract SkillParam GetSkillParam (E_Unit self, E_Unit aimedTarget);
