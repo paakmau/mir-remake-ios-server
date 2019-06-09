@@ -7,8 +7,8 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     abstract class E_Unit {
-        protected DE_Unit m_actorUnitDe;
-        public abstract ActorUnitType m_ActorUnitType { get; }
+        protected DE_Unit m_unitDe;
+        public abstract ActorUnitType m_UnitType { get; }
         public int m_networkId;
         public short m_level;
         public Vector2 m_position;
@@ -84,7 +84,7 @@ namespace MirRemakeBackend.Entity {
         public bool m_IsImmobile { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] > 0; } }
         public bool m_IsDead { get { return m_CurHp <= 0; } }
         public virtual void Reset (DE_Unit de) {
-            m_actorUnitDe = de;
+            m_unitDe = de;
             for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
                 m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Item1, de.m_concreteAttributeList[i].Item2);
             m_CurHp = m_MaxHp;

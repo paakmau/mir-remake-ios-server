@@ -31,7 +31,7 @@ namespace MirRemakeBackend.GameLogic {
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
-                var en = EM_Sight.s_instance.GetActorUnitVisibleEnumerator ();
+                var en = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
                 while (en.MoveNext ()) {
                     if (en.Current.m_IsDead)
                         continue;

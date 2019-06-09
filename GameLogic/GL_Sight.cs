@@ -24,7 +24,7 @@ namespace MirRemakeBackend.GameLogic {
                 var charObj = en.Current.Value;
                 var charNowSight = t_unitList;
                 charNowSight.Clear ();
-                var unitEn = EM_Sight.s_instance.GetActorUnitVisibleEnumerator ();
+                var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
                     // 若在视野范围外
                     if ((charObj.m_position - unitEn.Current.m_position).LengthSquared () > c_sightRadius * c_sightRadius)
@@ -48,7 +48,7 @@ namespace MirRemakeBackend.GameLogic {
                             break;
                         }
                     if (!isNew) continue;
-                    switch (charNowSight[i].m_ActorUnitType) {
+                    switch (charNowSight[i].m_UnitType) {
                         case ActorUnitType.MONSTER:
                             newMonNoList.Add (((E_Monster) charNowSight[i]).GetNo ());
                             break;

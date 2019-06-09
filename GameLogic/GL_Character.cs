@@ -52,7 +52,7 @@ namespace MirRemakeBackend.GameLogic {
             // 获取释放者, 技能, 获取技能参数实例
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
-            E_Unit targetObj = EM_Sight.s_instance.GetActorUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
+            E_Unit targetObj = EM_Sight.s_instance.GetUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
             if (charObj == null || skill == null || targetObj == null) return;
             SkillParam skillParam = new SkillParam (skill.m_AimType, targetObj, parmNo.m_direction, parmNo.m_position);
             // 添加到技能待释放列表
