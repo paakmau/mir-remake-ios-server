@@ -262,7 +262,7 @@ namespace MirRemakeBackend.DynamicData {
             }
             return missions;
         }
-        public void InsertMission(DDO_Mission ddo, int charId)
+        public void InsertMission(DDO_Mission ddo)
         {
             string cmd;
             string target = ddo.m_missionTargetProgressList[0].ToString();
@@ -270,17 +270,17 @@ namespace MirRemakeBackend.DynamicData {
             {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString();
             }
-            cmd = "insert into mission values(null,"+ddo.m_missionId+",\""+target+"\","+charId+");";
+            cmd = "insert into mission values(null,"+ddo.m_missionId+",\""+target+"\","+ddo.m_characterId+");";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
-        public void UpdateMission(DDO_Mission ddo, int charId) {
+        public void UpdateMission(DDO_Mission ddo) {
             string cmd;
             string target=ddo.m_missionTargetProgressList[0].ToString();
             for(int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString();
             }
-            cmd = "update mission set targets=\""+target+"\" where userid="+charId+" and missionid="+ddo.m_missionId+";";
+            cmd = "update mission set targets=\""+target+"\" where userid="+ddo.m_characterId+" and missionid="+ddo.m_missionId+";";
             string database = "legend";
             pool.ExecuteSql(database, cmd);
         }
