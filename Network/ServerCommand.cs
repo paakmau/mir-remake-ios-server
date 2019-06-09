@@ -567,4 +567,25 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
+    class SC_ApplySelfMissionProgress : ServerCommandBase {
+        private static SC_ApplySelfMissionProgress s_instance = new SC_ApplySelfMissionProgress ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SET_MISSION_PROGRESS; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        private byte m_targetNum;
+        private short m_value;
+        public static SC_ApplySelfMissionProgress Instance (int netId, short missionId, byte targetNum, short value) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_missionId = missionId;
+            s_instance.m_targetNum = targetNum;
+            s_instance.m_value = value;
+            return s_instance;
+        }
+        private SC_ApplySelfMissionProgress () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
+            writer.Put (m_targetNum);
+            writer.Put (m_value);
+        }
+    }
 }
