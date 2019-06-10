@@ -111,6 +111,7 @@ namespace MirRemakeBackend {
             charDds.CreateCharacter (OccupationType.MAGE);
             charDds.CreateCharacter (OccupationType.WARRIOR);
             charDds.CreateCharacter (OccupationType.TAOIST);
+            Console.WriteLine("2");
         }
         static int Test() {
             DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
