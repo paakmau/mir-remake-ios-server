@@ -1,9 +1,10 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace MirRemakeBackend.DynamicData {
     class DynamicDataServiceTest : IDDS_Item {
         private long m_realIdCnt = 0;
+        private int m_charIdCnt = 0;
         public List<DDO_Item> GetBagByCharacterId (int charId) {
             Console.WriteLine ("GetBagByCharacterId charId = {0}", charId);
             return new List<DDO_Item> ();
@@ -40,5 +41,20 @@ namespace MirRemakeBackend.DynamicData {
         public void DeleteEquipmentInfoByRealId (long realId) {
             Console.WriteLine ("UpdateEquipmentInfo realId = {0}", realId);
         }
+        // public int CreateCharacter (OccupationType occupation) {
+        //     Console.WriteLine ("CreateCharacter occupation = {0}", occupation);
+        //     var charId = ++m_charIdCnt;
+        //     return charId;
+        // }
+        // DDO_Character GetCharacterById (int characterId) {
+        //     Console.WriteLine ("GetCharacterById charId = {0}", characterId);
+        //     return new DDO_Character (
+        //         characterId,
+        //         1,
+        //         OccupationType.MAGE,
+        //         0,
+        //         new (CurrencyType, long)[2] { });
+        // }
+        // void UpdateCharacter (DDO_Character charObj);
     }
 }
