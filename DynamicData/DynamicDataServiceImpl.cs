@@ -300,5 +300,12 @@ namespace MirRemakeBackend.DynamicData {
             res = res + "]";
             return res;
         }
+
+        public void InsertSkill(DDO_Skill skill){
+            string cmd;
+            cmd = "insert into skill values(null,"+skill.m_skillId+","+skill.m_characterId+","+skill.m_skillLevel+","+skill.m_skillLevel+");"; 
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
     }
 }
