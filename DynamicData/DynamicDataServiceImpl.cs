@@ -114,10 +114,10 @@ namespace MirRemakeBackend.DynamicData {
         public long InsertItem (DDO_Item item) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "insert into `item` values(null," + item.m_itemId + "," + item.m_characterId + "," + item.m_num + ",\"" + item.m_place.ToString () + "\"," + item.m_position + ");select last_insert_id()";
+            cmd = "insert into `item` values(null," + item.m_itemId + "," + item.m_characterId + "," + item.m_num + ",\"" + item.m_place.ToString () + "\"," + item.m_position + ");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            return int.Parse (ds.Tables[0].Rows[0]["realid"].ToString ());
+            return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
         public void UpdateEquipmentInfo (DDO_EquipmentInfo eq) {
             string cmd;
