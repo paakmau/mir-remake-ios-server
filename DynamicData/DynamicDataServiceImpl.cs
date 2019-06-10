@@ -114,10 +114,10 @@ namespace MirRemakeBackend.DynamicData {
         public long InsertItem (DDO_Item item) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "insert into `item` values(null," + item.m_itemId + "," + item.m_characterId + "," + item.m_num + ",\"" + item.m_place.ToString () + "\"," + item.m_position + ");select last_insert_id()";
+            cmd = "insert into `item` values(null," + item.m_itemId + "," + item.m_characterId + "," + item.m_num + ",\"" + item.m_place.ToString () + "\"," + item.m_position + ");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            return int.Parse (ds.Tables[0].Rows[0]["realid"].ToString ());
+            return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
         public void UpdateEquipmentInfo (DDO_EquipmentInfo eq) {
             string cmd;
@@ -196,11 +196,15 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
+<<<<<<< HEAD
             cmd = "insert into `character` values (null," + occupation.ToString () + ",1,0,\"0 0\",\"0 0 0 0\");select max(characterid) from `character`;";
+=======
+            cmd = "insert into `character` values (null," + occupation.ToString () + ",1,0,\"0 0\",\"0 0 0 0\");select last_insert_id();";
+>>>>>>> e4d82aa0b755b3c3457cb0574fb0507f8b13d08b
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables["0"];
-            return int.Parse (dt.Rows[0]["max(characterid)"].ToString ());
+            return int.Parse (dt.Rows[0]["last_insert_id()"].ToString ());
         }
         public DDO_Character GetCharacterById (int characterId) {
             DDO_Character character = new DDO_Character ();
