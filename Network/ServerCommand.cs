@@ -153,14 +153,12 @@ namespace MirRemakeBackend.Network {
         }
         private SC_ApplyOtherCharacterInSight () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_charAndEquipedIdList.Count);
             for (int i = 0; i < m_charAndEquipedIdList.Count; i++) {
                 writer.Put (m_charAndEquipedIdList[i].Item1);
                 writer.Put ((byte) m_charAndEquipedIdList[i].Item2.Count);
                 for (int j = 0; j < m_charAndEquipedIdList[i].Item2.Count; j++)
                     writer.Put (m_charAndEquipedIdList[i].Item2[j]);
             }
-            Console.WriteLine ("更新视野中的角色" + writer.Length);
         }
     }
     /// <summary>

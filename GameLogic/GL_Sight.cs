@@ -10,7 +10,6 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_Sight s_instance;
         private const float c_sightRadius = 100f;
         private const int c_maxUnitNumInSight = 50;
-        private List < (NO_Character, IReadOnlyList<short>) > t_charNoAndShortListList = new List < (NO_Character, IReadOnlyList<short>) > ();
         public GL_Sight (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             var en = EM_Unit.s_instance.GetCharacterEnumerator ();
@@ -29,6 +28,9 @@ namespace MirRemakeBackend.GameLogic {
                     // 若在视野范围外
                     if ((charObj.m_position - unitEn.Current.m_position).LengthSquared () > c_sightRadius * c_sightRadius)
                         continue;
+                    // 若为自己
+                    if (charNetId == unitEn.Current.m_networkId)
+                        continue;
                     charNowSight.Add (unitEn.Current);
                     if (charNowSight.Count >= c_maxUnitNumInSight)
                         break;
@@ -36,7 +38,7 @@ namespace MirRemakeBackend.GameLogic {
 
                 // 计算视野新增的怪物与角色
                 var newMonNoList = new List<NO_Monster> ();
-                var newCharNoAndEquipedIdList = t_charNoAndShortListList;
+                var newCharNoAndEquipedIdList = new List < (NO_Character, IReadOnlyList<short>) > ();
                 newMonNoList.Clear ();
                 newCharNoAndEquipedIdList.Clear ();
                 for (int i = 0; i < charNowSight.Count; i++) {
@@ -59,6 +61,7 @@ namespace MirRemakeBackend.GameLogic {
                             break;
                     }
                 }
+                // 计算视野中移除的单位
                 var outUnitNetIdList = new List<int> ();
                 for (int i = 0; i < charOriSight.Count; i++) {
                     bool isOut = true;
@@ -70,19 +73,18 @@ namespace MirRemakeBackend.GameLogic {
                     if (!isOut) continue;
                     outUnitNetIdList.Add (charOriSight[i].m_networkId);
                 }
+                // 设定新视野
+                charOriSight.Clear ();
+                for (int i=0; i<charNowSight.Count; i++)
+                    charOriSight.Add (charNowSight[i]);
+
                 // 发送给Client视野变化
-                m_networkService.SendServerCommand (SC_ApplyOtherMonsterInSight.Instance (
-                    charNetId,
-                    newMonNoList
-                ));
-                m_networkService.SendServerCommand (SC_ApplyOtherCharacterInSight.Instance (
-                    charNetId,
-                    newCharNoAndEquipedIdList
-                ));
-                m_networkService.SendServerCommand (SC_ApplyOtherActorUnitOutOfSight.Instance (
-                    charNetId,
-                    outUnitNetIdList
-                ));
+                if (newMonNoList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplyOtherMonsterInSight.Instance (charNetId, newMonNoList));
+                if (newCharNoAndEquipedIdList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplyOtherCharacterInSight.Instance (charNetId, newCharNoAndEquipedIdList));
+                if (outUnitNetIdList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplyOtherActorUnitOutOfSight.Instance (charNetId, outUnitNetIdList));
             }
         }
         public override void NetworkTick () { }
