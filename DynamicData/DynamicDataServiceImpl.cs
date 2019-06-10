@@ -18,11 +18,10 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_Item> GetBagByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from `item` where charid=" + charId + " and place=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             List<DDO_Item> res = new List<DDO_Item> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 short realid = short.Parse (dt.Rows[i]["realid"].ToString ());
@@ -37,11 +36,10 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_Item> GetStoreHouseByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from `item` where charid=" + charId + " and place=\"STORE_HOUSE\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             List<DDO_Item> res = new List<DDO_Item> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 short realid = short.Parse (dt.Rows[i]["realid"].ToString ());
@@ -56,11 +54,10 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_Item> GetEquipmentRegionByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from `item` where charid=" + charId + " and `position`=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             List<DDO_Item> res = new List<DDO_Item> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 short realid = short.Parse (dt.Rows[i]["realid"].ToString ());
@@ -75,11 +72,10 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_EquipmentInfo> GetAllEquipmentByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable();
             cmd = "select * from `equipment` where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             List<DDO_EquipmentInfo> res = new List<DDO_EquipmentInfo> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_EquipmentInfo equipment = new DDO_EquipmentInfo ();
@@ -160,11 +156,10 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_Skill> GetSkillListByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from skill where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             List<DDO_Skill> res = new List<DDO_Skill> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_Skill skill = new DDO_Skill ();
@@ -179,11 +174,10 @@ namespace MirRemakeBackend.DynamicData {
             int charId = ddo.m_characterId;
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from skill where charid=" + charId + " and skillid=" + ddo.m_skillId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             if (dt.Rows.Count != 0) {
                 cmd = "update skill set masterly=" + ddo.m_masterly + ", level=" + ddo.m_skillLevel + " where charid=" + charId + " and skillid=" + ddo.m_skillId + ";";
             } else {
@@ -206,11 +200,10 @@ namespace MirRemakeBackend.DynamicData {
             DDO_Character character = new DDO_Character ();
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from `character` where characterid=" + characterId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
             character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [0]));
             character.m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [1]));
@@ -241,11 +234,10 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_Mission> GetMissionListByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt = new DataTable ();
             cmd = "select * from mission where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables[0];
+            DataTable dt = ds.Tables[0];
             List<DDO_Mission> missions = new List<DDO_Mission> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_Mission mission = new DDO_Mission ();
