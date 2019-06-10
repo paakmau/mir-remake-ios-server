@@ -102,7 +102,7 @@ namespace MirRemakeBackend.Entity {
         public virtual void Reset (DE_Unit de) {
             m_unitDe = de;
             for (int i = 0; i < de.m_concreteAttributeList.Count; i++)
-                m_concreteAttributeDict.Add (de.m_concreteAttributeList[i].Item1, de.m_concreteAttributeList[i].Item2);
+                m_concreteAttributeDict[de.m_concreteAttributeList[i].Item1] = de.m_concreteAttributeList[i].Item2;
             m_CurHp = m_MaxHp;
             m_CurMp = m_MaxMp;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;

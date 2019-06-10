@@ -10,19 +10,19 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_Sight s_instance;
         private const float c_sightRadius = 100f;
         private const int c_maxUnitNumInSight = 50;
-        private List<E_Unit> t_unitList = new List<E_Unit> ();
-        private List<NO_Monster> t_monNoList = new List<NO_Monster> ();
         private List < (NO_Character, IReadOnlyList<short>) > t_charNoAndShortListList = new List < (NO_Character, IReadOnlyList<short>) > ();
-        private List<int> t_intList = new List<int> ();
-        private List<int> t_intList2 = new List<int> ();
         public GL_Sight (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             var en = EM_Unit.s_instance.GetCharacterEnumerator ();
             while (en.MoveNext ()) {
-                // 得到当前视野
                 int charNetId = en.Current.Key;
                 var charObj = en.Current.Value;
-                var charNowSight = t_unitList;
+                // 原本视野
+                var charOriSight = EM_Sight.s_instance.GetCharacterRawSight (charNetId);
+                if (charOriSight == null) continue;
+
+                // 计算当前视野
+                var charNowSight = new List<E_Unit> ();
                 charNowSight.Clear ();
                 var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
@@ -33,10 +33,9 @@ namespace MirRemakeBackend.GameLogic {
                     if (charNowSight.Count >= c_maxUnitNumInSight)
                         break;
                 }
-                var charOriSight = EM_Sight.s_instance.GetCharacterRawSight (charNetId);
 
                 // 计算视野新增的怪物与角色
-                var newMonNoList = t_monNoList;
+                var newMonNoList = new List<NO_Monster> ();
                 var newCharNoAndEquipedIdList = t_charNoAndShortListList;
                 newMonNoList.Clear ();
                 newCharNoAndEquipedIdList.Clear ();
@@ -60,7 +59,7 @@ namespace MirRemakeBackend.GameLogic {
                             break;
                     }
                 }
-                var outUnitNetIdList = t_intList;
+                var outUnitNetIdList = new List<int> ();
                 for (int i = 0; i < charOriSight.Count; i++) {
                     bool isOut = true;
                     for (int j = 0; j < charNowSight.Count; j++)
@@ -72,19 +71,16 @@ namespace MirRemakeBackend.GameLogic {
                     outUnitNetIdList.Add (charOriSight[i].m_networkId);
                 }
                 // 发送给Client视野变化
-                var toClientList = t_intList2;
-                toClientList.Clear ();
-                toClientList.Add (charNetId);
                 m_networkService.SendServerCommand (SC_ApplyOtherMonsterInSight.Instance (
-                    toClientList,
+                    charNetId,
                     newMonNoList
                 ));
                 m_networkService.SendServerCommand (SC_ApplyOtherCharacterInSight.Instance (
-                    toClientList,
+                    charNetId,
                     newCharNoAndEquipedIdList
                 ));
                 m_networkService.SendServerCommand (SC_ApplyOtherActorUnitOutOfSight.Instance (
-                    toClientList,
+                    charNetId,
                     outUnitNetIdList
                 ));
             }

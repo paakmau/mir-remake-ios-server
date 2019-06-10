@@ -85,11 +85,11 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);
-            EM_Unit.s_instance.RemoveCharacter (netId);
+            EM_Mission.s_instance.RemoveCharacter (netId);
             EM_Sight.s_instance.RemoveCharacter (netId);
             EM_Skill.s_instance.RemoveCharacter (netId);
             EM_Status.s_instance.RemoveCharacterStatus (netId);
-            EM_Mission.s_instance.RemoveCharacter (netId);
+            EM_Unit.s_instance.RemoveCharacter (netId);
             NetworkIdManager.RemoveNetworkId (netId);
         }
     }

@@ -123,8 +123,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_Monster> m_monList;
-        public static SC_ApplyOtherMonsterInSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Monster> newMonList) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_ApplyOtherMonsterInSight Instance (int netId, IReadOnlyList<NO_Monster> newMonList) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_monList = newMonList;
             return s_instance;
         }
@@ -144,10 +144,10 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList < (NO_Character, IReadOnlyList<short>) > m_charAndEquipedIdList;
         public static SC_ApplyOtherCharacterInSight Instance (
-            IReadOnlyList<int> toClientList,
+            int netId,
             IReadOnlyList < (NO_Character, IReadOnlyList<short>) > newCharAndEquipedIdList
         ) {
-            s_instance.m_toClientList = toClientList;
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_charAndEquipedIdList = newCharAndEquipedIdList;
             return s_instance;
         }
@@ -160,7 +160,7 @@ namespace MirRemakeBackend.Network {
                 for (int j = 0; j < m_charAndEquipedIdList[i].Item2.Count; j++)
                     writer.Put (m_charAndEquipedIdList[i].Item2[j]);
             }
-            Console.WriteLine("更新视野中的角色" + writer.Length);
+            Console.WriteLine ("更新视野中的角色" + writer.Length);
         }
     }
     /// <summary>
@@ -171,8 +171,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<int> m_unitIdList;
-        public static SC_ApplyOtherActorUnitOutOfSight Instance (IReadOnlyList<int> toClientList, IReadOnlyList<int> unitIdList) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_ApplyOtherActorUnitOutOfSight Instance (int netId, IReadOnlyList<int> unitIdList) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_unitIdList = unitIdList;
             return s_instance;
         }

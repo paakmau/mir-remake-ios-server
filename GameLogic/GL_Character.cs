@@ -29,6 +29,7 @@ namespace MirRemakeBackend.GameLogic {
                 List<int> selfNetIdList = new List<int> ();
                 selfNetIdList.Add (charObj.m_networkId);
                 var sightUnits = EM_Sight.s_instance.GetCharacterRawSight (charObj.m_networkId);
+                if (sightUnits == null) continue;
                 List < (int, Vector2) > sightNetIdPositionList = new List < (int, Vector2) > (sightUnits.Count);
                 for (int i = 0; i < sightUnits.Count; i++)
                     sightNetIdPositionList.Add ((sightUnits[i].m_networkId, sightUnits[i].m_position));

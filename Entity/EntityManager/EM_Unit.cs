@@ -53,8 +53,9 @@ namespace MirRemakeBackend.Entity {
         /// <param name="netId"></param>
         public void RemoveCharacter (int netId) {
             E_Character charObj = null;
-            if (m_networkIdAndCharacterDict.TryGetValue (netId, out charObj))
+            if (!m_networkIdAndCharacterDict.TryGetValue (netId, out charObj))
                 return;
+            m_networkIdAndCharacterDict.Remove (netId);
             s_entityPool.m_characterPool.RecycleInstance (charObj);
         }
         public E_Monster GetMonsterByNetworkId (int netId) {
