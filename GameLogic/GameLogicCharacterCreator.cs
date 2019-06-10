@@ -25,8 +25,8 @@ namespace MirRemakeBackend.GameLogic {
             for (int i=0; i<skillIdList.Count; i++)
                 m_skillDds.InsertSkill (new DDO_Skill (skillIdList[i], charId, 0, 0));
             // 背包和仓库 dds TODO: 写成配置文件
-            short bagSize = 20;
-            short storeHouseSize = 50;
+            short bagSize = 3;
+            short storeHouseSize = 6;
             for (short i=0; i<bagSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
             for (short i=0; i<storeHouseSize; i++)

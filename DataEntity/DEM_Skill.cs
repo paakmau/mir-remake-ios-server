@@ -13,10 +13,10 @@ namespace MirRemakeBackend.DataEntity {
             var skillDoArr = skillDs.GetAllSkill ();
             foreach (var skillDo in skillDoArr)
                 m_skillAllLevelDict.Add (skillDo.m_skillId, new DE_Skill (skillDo));
-            // TODO: 得到每种职业的所有技能, 当前为测试不考虑职业, 全部放入
+            // TODO: 得到每种职业的所有技能, 当前为测试不考虑职业, 放入前6个
             List<short> allSkillIdList = new List<short> ();
-            foreach (var skDo in skillDoArr)
-                allSkillIdList.Add (skDo.m_skillId);
+            for (int i=0; i<6; i++)
+                allSkillIdList.Add (skillDoArr[i].m_skillId);
             m_ocpSkillIdDict.Add (OccupationType.MAGE, allSkillIdList);
             m_ocpSkillIdDict.Add (OccupationType.ROGUE, allSkillIdList);
             m_ocpSkillIdDict.Add (OccupationType.TAOIST, allSkillIdList);

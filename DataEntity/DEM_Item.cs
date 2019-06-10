@@ -27,24 +27,25 @@ namespace MirRemakeBackend.DataEntity {
                 m_itemDict.Add (itemDo.Item1.m_itemId, new DE_Item (itemDo.Item1));
                 m_gemDict.Add (itemDo.Item1.m_itemId, new DE_GemData(itemDo.Item2));
             }
+            m_itemDict.Add (-1, new DE_Item());
         }
         public DE_Item GetItemById (short itemId) {
-            DE_Item res = null;
+            DE_Item res;
             m_itemDict.TryGetValue (itemId, out res);
             return res;
         }
         public DE_ConsumableData GetConsumableById (short itemId) {
-            DE_ConsumableData res = null;
+            DE_ConsumableData res;
             m_consumableDict.TryGetValue (itemId, out res);
             return res;
         }
         public DE_EquipmentData GetEquipmentById (short itemId) {
-            DE_EquipmentData res = null;
+            DE_EquipmentData res;
             m_equipmentDict.TryGetValue (itemId, out res);
             return res;
         }
         public DE_GemData GetGemById (short itemId) {
-            DE_GemData res = null;
+            DE_GemData res;
             m_gemDict.TryGetValue (itemId, out res);
             return res;
         }

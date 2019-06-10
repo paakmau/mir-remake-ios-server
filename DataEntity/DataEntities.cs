@@ -137,6 +137,13 @@ namespace MirRemakeBackend.DataEntity {
             m_quality = itemDo.m_quality;
             m_price = itemDo.m_price;
         }
+        public DE_Item () {
+            m_id = -1;
+            m_type = ItemType.EMPTY;
+            m_maxNum = 0;
+            m_quality = ItemQuality.POOR;
+            m_price = 0;
+        }
     }
     class DE_ConsumableData {
         public readonly DE_Effect m_itemEffect;
