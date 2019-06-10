@@ -428,6 +428,27 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 交换物品位置
+    /// </summary>
+    class SC_ApplySelfUpdateEquipment : ServerCommandBase {
+        private static SC_ApplySelfUpdateEquipment s_instance = new SC_ApplySelfUpdateEquipment ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_EQUIPMENT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private long m_realId;
+        private NO_EquipmentItemInfo m_eqInfo;
+        public static SC_ApplySelfUpdateEquipment Instance (int netId, long realId, NO_EquipmentItemInfo eqInfo) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_realId = realId;
+            s_instance.m_eqInfo = eqInfo;
+            return s_instance;
+        }
+        private SC_ApplySelfUpdateEquipment () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_realId);
+            writer.Put (m_eqInfo);
+        }
+    }
+    /// <summary>
     /// 更新所持货币
     /// </summary>
     class SC_ApplySelfCurrency : ServerCommandBase {

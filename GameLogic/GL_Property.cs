@@ -15,6 +15,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
+            // 实例 与 数据
             charObj.m_currencyDict[type] += dC;
             m_charDds.UpdateCharacter (charObj.GetDdo ());
             // client
@@ -72,7 +73,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                     charObj.m_networkId, changedRealIdList, changedPosList));
 
-                // 若该物品消失 (堆叠或无法放入) 数据删除
+                // 若该物品消失 (被堆叠或无法放入) 数据删除
                 if (storePos == 0 || storePos == -1) {
                     m_itemDds.DeleteItemByRealId (itemList[i].m_realId);
                     continue;

@@ -31,9 +31,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             if (oriLv != skill.m_skillLevel) {
                 m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
-                // TODO: 通知 GL_Property 扣钱 并让他发给Client
-                // charObj.m_VirtualCurrency -= costTotal;
-                // m_characterDds.UpdateCharacter (charObj.GetDdo ());
+                GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -costTotal);
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                     new List<int> { netId }, skill.m_skillId, skill.m_skillLevel, skill.m_masterly));
             }
