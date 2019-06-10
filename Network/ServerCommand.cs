@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using LiteNetLib;
@@ -159,6 +160,7 @@ namespace MirRemakeBackend.Network {
                 for (int j = 0; j < m_charAndEquipedIdList[i].Item2.Count; j++)
                     writer.Put (m_charAndEquipedIdList[i].Item2[j]);
             }
+            Console.WriteLine("更新视野中的角色" + writer.Length);
         }
     }
     /// <summary>
@@ -427,7 +429,6 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_tarPosition);
         }
     }
-
     /// <summary>
     /// 更新所持货币
     /// </summary>

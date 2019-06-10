@@ -158,7 +158,6 @@ namespace MirRemakeBackend.Network {
             Vector2 pos = reader.GetVector2 ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
             short lv = reader.GetShort ();
-            short equipNum = reader.GetByte ();
             return new NO_Character (netId, pos, ocp, lv);
         }
         public static void Put (this NetDataWriter writer, NO_Item item) {

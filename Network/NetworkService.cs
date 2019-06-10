@@ -13,7 +13,7 @@ namespace MirRemakeBackend.Network {
     }
     class NetworkService : INetEventListener, INetworkService {
         private const int c_serverPort = 23333;
-        private const int c_maxClientNum = 3000;
+        private const int c_maxClientNum = 500;
         private NetManager m_serverNetManager;
         private Dictionary<int, NetPeer> m_netIdAndPeerDict = new Dictionary<int, NetPeer> ();
         private Dictionary<int, int> m_peerIdAndNetworkIdDict = new Dictionary<int, int> ();
@@ -24,7 +24,7 @@ namespace MirRemakeBackend.Network {
             // 初始化LiteNet
             m_serverNetManager = new NetManager (this);
             m_serverNetManager.Start (c_serverPort);
-            // 实例化所有实现了ClientCommand接口的class
+            // 实例化所有ClientCommand接口的实现类
             var ccType = typeof (IClientCommand);
             var ccImplTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && ccType.IsAssignableFrom (p));
             foreach (var type in ccImplTypes) {
@@ -37,12 +37,13 @@ namespace MirRemakeBackend.Network {
         }
         private void ReceiveClientCommand (NetPacketReader reader, int clientNetId) {
             IClientCommand command = m_clientCommandDict[(NetworkToServerDataType) reader.GetByte ()];
+            Console.WriteLine ("CC: " + command.m_DataType);
             command.Execute (reader, clientNetId);
         }
         public void SendServerCommand (ServerCommandBase command) {
             m_writer.Put ((byte) command.m_DataType);
             command.PutData (m_writer);
-            Console.WriteLine (command.m_DataType);
+            Console.WriteLine ("SC: " + command.m_DataType);
             for (int i = 0; i < command.m_toClientList.Count; i++)
                 m_netIdAndPeerDict[command.m_toClientList[i]].Send (m_writer, command.m_DeliveryMethod);
             m_writer.Reset ();

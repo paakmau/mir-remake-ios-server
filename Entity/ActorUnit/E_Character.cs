@@ -48,10 +48,10 @@ namespace MirRemakeBackend.Entity {
                 m_mainAttrPointDict[mainP.Item1] = mainP.Item2;
         }
         public DDO_Character GetDdo () {
-            var currencyArr = new (CurrencyType, long)[2];
+            var currencyArr = new (CurrencyType, long) [2];
             currencyArr[0] = (CurrencyType.VIRTUAL, m_VirtualCurrency);
             currencyArr[1] = (CurrencyType.CHARGE, m_ChargeCurrency);
-            var pointArr = new (ActorUnitMainAttributeType, short)[4];
+            var pointArr = new (ActorUnitMainAttributeType, short) [4];
             pointArr[0] = (ActorUnitMainAttributeType.STRENGTH, m_Strength);
             pointArr[1] = (ActorUnitMainAttributeType.INTELLIGENCE, m_Intelligence);
             pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);

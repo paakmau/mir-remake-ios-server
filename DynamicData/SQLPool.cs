@@ -60,7 +60,7 @@ namespace MirRemakeBackend.DynamicData
                     if (conn != null)
                         return conn;
                 }
-                Console.WriteLine("创建一链接!" + conns.Count);
+                // Console.WriteLine("创建一链接!" + conns.Count);
                 return new MySqlConnection(this.connstr + dbbase);
             }
 
