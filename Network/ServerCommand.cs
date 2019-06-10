@@ -231,6 +231,63 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 同步自身所有属性
+    /// </summary>
+    class SC_SetSelfConcreteAndSpecialAttribute : ServerCommandBase {
+        private static readonly SC_SetSelfConcreteAndSpecialAttribute s_instance = new SC_SetSelfConcreteAndSpecialAttribute ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_SELF_CONCRETE_AND_SPECIAL_ATTRIBUTE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        int m_atk;
+        int m_def;
+        int m_mag;
+        int m_res;
+        short m_faint;
+        short m_silent;
+        short m_immobile;
+        public static SC_SetSelfConcreteAndSpecialAttribute Instance (int netId, int atk, int def, int mag, int res, short faint, short silent, short immobile) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_atk = atk;
+            s_instance.m_def = def;
+            s_instance.m_mag = mag;
+            s_instance.m_res = res;
+            s_instance.m_faint = faint;
+            s_instance.m_silent = silent;
+            s_instance.m_immobile = immobile;
+            return s_instance;
+        }
+        private SC_SetSelfConcreteAndSpecialAttribute () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_atk);
+            writer.Put (m_def);
+            writer.Put (m_mag);
+            writer.Put (m_res);
+            writer.Put (m_faint);
+            writer.Put (m_silent);
+            writer.Put (m_immobile);
+        }
+    }
+    /// <summary>
+    /// 更新自身等级与经验值
+    /// </summary>
+    class SC_ApplySelfLevelAndExp : ServerCommandBase {
+        private static readonly SC_ApplySelfLevelAndExp s_instance = new SC_ApplySelfLevelAndExp ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_LEVEL_AND_EXP; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        short m_lv;
+        int m_exp;
+        public static SC_ApplySelfLevelAndExp Instance (int netId, short lv, int exp) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_lv = lv;
+            s_instance.m_exp = exp;
+            return s_instance;
+        }
+        private SC_ApplySelfLevelAndExp () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_lv);
+            writer.Put (m_exp);
+        }
+    }
+    /// <summary>
     /// 其他单位开始释放技能
     /// </summary>
     class SC_ApplyOtherCastSkillBegin : ServerCommandBase {
