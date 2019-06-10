@@ -230,7 +230,7 @@ namespace MirRemakeBackend.DynamicData {
                 charObj.m_distributedMainAttrPointArr[1].Item2.ToString () + "," +
                 charObj.m_distributedMainAttrPointArr[2].Item2.ToString () + "," +
                 charObj.m_distributedMainAttrPointArr[3].Item2.ToString () + "\"";
-            cmd = "update `character` set characterid=" + charObj.m_characterId + ",occupation=\"" + charObj.m_occupation.ToString () + "\",level=" + charObj.m_level + ",expericence=" +
+            cmd = "update `character` set characterid=" + charObj.m_characterId + ",occupation=\"" + charObj.m_occupation.ToString () + "\",level=" + charObj.m_level + ",experience=" +
                 charObj.m_experience + ",currency=" + currencyArr + ",giftpoints=" + giftPoints + " where characterid=" + charObj.m_characterId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);

@@ -29,6 +29,7 @@ namespace MirRemakeBackend.DataEntity {
         public readonly IReadOnlyList<ValueTuple<ActorUnitMainAttributeType, int>> m_mainAttributeList;
         public readonly short m_mainAttributePointNum;
         public DE_CharacterData (DO_Character charDo) {
+            m_level = charDo.m_level;
             m_upgradeExperienceInNeed = charDo.m_upgradeExperienceInNeed;
             m_mainAttributeList = new List<ValueTuple<ActorUnitMainAttributeType, int>> (charDo.m_mainAttributeArr);
             m_mainAttributePointNum = charDo.m_mainAttrPointNumber;
