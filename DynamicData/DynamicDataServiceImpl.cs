@@ -75,7 +75,7 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_EquipmentInfo> GetAllEquipmentByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            DataTable dt;
+            DataTable dt = new DataTable();
             cmd = "select * from `equipment` where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
