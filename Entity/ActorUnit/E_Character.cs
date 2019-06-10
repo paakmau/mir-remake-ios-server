@@ -13,6 +13,7 @@ namespace MirRemakeBackend.Entity {
         public OccupationType m_Occupation { get { return m_characterDe.m_occupation; } }
         public override short m_Level { get { return m_characterDataDe.m_level; } }
         public short m_MaxLevel { get { return m_characterDe.m_characterMaxLevel; } }
+        public short m_TotalMainPoint { get { return m_characterDataDe.m_mainAttributePointNum; } }
         public int m_UpgradeExperienceInNeed { get { return m_characterDataDe.m_upgradeExperienceInNeed; } }
         public int m_experience;
         public Dictionary<CurrencyType, long> m_currencyDict = new Dictionary<CurrencyType, long> ();
@@ -27,15 +28,19 @@ namespace MirRemakeBackend.Entity {
         }
         public short m_Strength {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH]; }
+            set { m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH] = value; }
         }
         public short m_Intelligence {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.INTELLIGENCE]; }
+            set { m_mainAttrPointDict[ActorUnitMainAttributeType.INTELLIGENCE] = value; }
         }
         public short m_Agility {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.AGILITY]; }
+            set { m_mainAttrPointDict[ActorUnitMainAttributeType.AGILITY] = value; }
         }
         public short m_Spirit {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT]; }
+            set { m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT] = value; }
         }
         public void Reset (int netId, int charId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo) {
             base.Reset (auDe);
@@ -62,6 +67,12 @@ namespace MirRemakeBackend.Entity {
                 cnt++;
             }
             return cnt;
+        }
+        public void DistributePoints (short str, short intl, short agl, short spr) {
+            m_Strength = str;
+            m_Intelligence = intl;
+            m_Agility = agl;
+            m_Spirit = spr;
         }
         public DDO_Character GetDdo () {
             var currencyArr = new (CurrencyType, long) [2];

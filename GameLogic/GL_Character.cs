@@ -59,7 +59,9 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
         }
         public void CommandApplyDistributePoints (int netId, short str, short intl, short agl, short spr) {
-            // TODO: 
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            charObj.DistributePoints (str, intl, agl, spr);
         }
     }
 }

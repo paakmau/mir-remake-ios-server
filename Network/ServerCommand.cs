@@ -43,14 +43,16 @@ namespace MirRemakeBackend.Network {
         private short m_intelligence;
         private short m_agility;
         private short m_spirit;
-        public static SC_InitSelfAttribute Instance (IReadOnlyList<int> toClientList, short level, int exp, short strenth, short intelligence, short agility, short spirit) {
-            s_instance.m_toClientList = toClientList;
+        private short m_totalMainPoint;
+        public static SC_InitSelfAttribute Instance (int netId, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_level = level;
             s_instance.m_exp = exp;
             s_instance.m_strength = strenth;
             s_instance.m_intelligence = intelligence;
             s_instance.m_agility = agility;
             s_instance.m_spirit = spirit;
+            s_instance.m_totalMainPoint = m_totalMainPoint;
             return s_instance;
         }
         private SC_InitSelfAttribute () { }
@@ -61,6 +63,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_intelligence);
             writer.Put (m_agility);
             writer.Put (m_spirit);
+            writer.Put (m_totalMainPoint);
         }
     }
     /// <summary>
@@ -275,16 +278,19 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         short m_lv;
         int m_exp;
-        public static SC_ApplySelfLevelAndExp Instance (int netId, short lv, int exp) {
+        short m_totalMainPoint;
+        public static SC_ApplySelfLevelAndExp Instance (int netId, short lv, int exp, short totalMainPoint) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_lv = lv;
             s_instance.m_exp = exp;
+            s_instance.m_totalMainPoint = totalMainPoint;
             return s_instance;
         }
         private SC_ApplySelfLevelAndExp () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_lv);
             writer.Put (m_exp);
+            writer.Put (m_totalMainPoint);
         }
     }
     /// <summary>

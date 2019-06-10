@@ -115,6 +115,5 @@ namespace MirRemakeBackend.Entity {
         public void AddSpAttr (ActorUnitSpecialAttributeType type, int value) {
             m_specialAttributeDict[type] += value;
         }
-
     }
 }

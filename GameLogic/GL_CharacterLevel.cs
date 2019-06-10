@@ -25,7 +25,8 @@ namespace MirRemakeBackend.GameLogic {
             charObj.TryLevelUp ();
             // dds 与 client
             m_charDds.UpdateCharacter (charObj.GetDdo ());
-            m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (charObj.m_networkId, charObj.m_Level, charObj.m_experience));
+            m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
+                charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
     }
 }
