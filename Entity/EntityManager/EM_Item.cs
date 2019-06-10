@@ -132,7 +132,7 @@ namespace MirRemakeBackend.Entity {
                 short itemId = itemDdo.m_itemId;
                 long realId = itemDdo.m_realId;
                 DE_Item itemDe = m_dem.GetItemById (itemId);
-                E_Item item = null;
+                E_Item item = E_Item.s_emptyItem;
                 switch (itemDe.m_type) {
                     case ItemType.CONSUMABLE:
                         item = s_entityPool.m_consumableItemPool.GetInstance ();
@@ -154,7 +154,9 @@ namespace MirRemakeBackend.Entity {
                         DE_GemData gDe = m_dem.GetGemById (itemId);
                         ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
                         break;
-
+                    case ItemType.EMPTY:
+                        item = E_Item.s_emptyItem;
+                        break;
                 }
                 resItemArr[i] = item;
             }
