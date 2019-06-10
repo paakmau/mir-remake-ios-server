@@ -19,7 +19,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "select * from `item` where charid=" + charId + " and place=\"bag\";";
+            cmd = "select * from `item` where charid=" + charId + " and place=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables[0];
@@ -131,7 +131,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "update `equipment` set `userid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchantAttr=" + enchantAttr + "where realid="+eq.m_realId+ ";";
+            cmd = "update `equipment` set `userid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchantAttr=\"" + enchantAttr + "\" where realid="+eq.m_realId+ ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd); 
         }
@@ -152,7 +152,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "insert into `equipment` values(null," + eq.m_characterId + "," + eq.m_strengthNum + "," + gems + "," + enchantAttr + "," + eq.m_holeNum + ");";
+            cmd = "insert into `equipment` values(null," + eq.m_characterId + "," + eq.m_strengthNum + "," + gems + ",\"" + enchantAttr + "\"," + eq.m_holeNum + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -250,7 +250,7 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_Mission mission = new DDO_Mission ();
                 mission.m_missionId = short.Parse (dt.Rows[i]["missionid"].ToString ());
-                mission.m_missionTargetProgressList = new List<int> ();
+                mission.m_characterId=short.Parse(dt.Rows[i]["userid"].ToString());                mission.m_missionTargetProgressList = new List<int> ();
                 string[] targets = dt.Rows[i]["targets"].ToString ().Split (' ');
                 for (int j = 0; j < targets.Length; j++) {
                     mission.m_missionTargetProgressList.Add (int.Parse (targets[j]));
@@ -264,7 +264,7 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
             }
-            cmd = "insert into mission values(null," + ddo.m_missionId + ",\"" + target + "\"," + ddo.m_characterId + ");";
+            cmd = "insert into mission values(null," + ddo.m_missionId +","+ddo.m_characterId +",\"" + target + "\""  + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -280,7 +280,7 @@ namespace MirRemakeBackend.DynamicData {
         }
         public void DeleteMission (short missionId, int charId) {
             string cmd;
-            cmd = "delete from item where userid=" + charId + " and missionid=" + missionId + ";";
+            cmd = "delete from `item` where userid=" + charId + " and missionid=" + missionId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
 
