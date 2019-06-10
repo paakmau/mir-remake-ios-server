@@ -1,3 +1,6 @@
+create database legend;
+use legend;
+
 DROP TABLE IF EXISTS `character`;
 CREATE TABLE `character` (
   `characterid` int NOT NULL AUTO_INCREMENT,
@@ -16,7 +19,7 @@ create table `skill`(
   `masterly` int NOT NULL ,
   `level` int NOT NULL, 
    KEY(`realid`)
-);ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `item`;
 create table `item`(

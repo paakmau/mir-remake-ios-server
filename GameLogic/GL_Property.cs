@@ -30,7 +30,7 @@ namespace MirRemakeBackend.GameLogic {
             if (runOut) {
                 repo.RemoveItemByRealId (item.m_realId);
                 m_itemDds.DeleteItemByRealId (item.m_realId);
-                EM_Item.s_instance.UnloadItem (item);
+                EM_Item.s_instance.RecycleItem (item);
             } else
                 m_itemDds.UpdateItem (item.GetItemDdo (charObj.m_characterId, ItemPlace.BAG, pos));
             // Client

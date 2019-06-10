@@ -11,7 +11,6 @@ namespace MirRemakeBackend.Entity {
     class EM_Item : EntityManagerBase {
         public static EM_Item s_instance;
         private DEM_Item m_dem;
-        private Dictionary<long, E_Item> m_realIdAndItemDict = new Dictionary<long, E_Item> ();
         private Dictionary<int, E_Repository> m_networkIdAndBagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
@@ -55,24 +54,25 @@ namespace MirRemakeBackend.Entity {
             m_networkIdAndBagDict[netId] = bag;
             m_networkIdAndStoreHouseDict[netId] = storeHouse;
             m_networkIdAndEquipmentRegionDict[netId] = eqRegion;
-            // 索引所有道具
-            LoadItemArr (itemInBag);
-            LoadItemArr (itemInStoreHouse);
-            LoadItemArr (itemEquiped);
         }
         public void RemoveCharacter (int netId) {
-            var bag = m_networkIdAndBagDict[netId];
-            var storeHouse = m_networkIdAndStoreHouseDict[netId];
-            var equiped = m_networkIdAndEquipmentRegionDict[netId];
+            E_Repository bag;
+            m_networkIdAndBagDict.TryGetValue (netId, out bag);
+            E_Repository storeHouse;
+            m_networkIdAndStoreHouseDict.TryGetValue (netId, out storeHouse);
+            E_EquipmentRegion equiped;
+            m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out equiped);
+            if (bag == null || storeHouse == null || equiped == null)
+                return;
             m_networkIdAndBagDict.Remove (netId);
             m_networkIdAndStoreHouseDict.Remove (netId);
             m_networkIdAndEquipmentRegionDict.Remove (netId);
             s_entityPool.m_repositoryPool.RecycleInstance (bag);
             s_entityPool.m_repositoryPool.RecycleInstance (storeHouse);
             s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);
-            UnloadItemList (bag.m_ItemList);
-            UnloadItemList (storeHouse.m_ItemList);
-            UnloadItemList (equiped.GetAllItemList ());
+            RecycleItemList (bag.m_ItemList);
+            RecycleItemList (storeHouse.m_ItemList);
+            RecycleItemList (equiped.GetAllItemList ());
         }
         /// <summary>
         /// 实例化Item列表  
@@ -85,11 +85,6 @@ namespace MirRemakeBackend.Entity {
                 E_Item item = GenerateItemEntity (itemDe, realIdList[i], idAndNum.Item2);
                 res.Add (item);
             }
-            return res;
-        }
-        public E_Item GetItemByRealId (long realId) {
-            E_Item res = null;
-            m_realIdAndItemDict.TryGetValue (realId, out res);
             return res;
         }
         public DE_GemData GetGemById (short itemId) {
@@ -120,13 +115,12 @@ namespace MirRemakeBackend.Entity {
             m_networkIdAndStoreHouseDict.TryGetValue (netId, out res);
             return res;
         }
-        public void UnloadItem (E_Item item) {
-            m_realIdAndItemDict.Remove (item.m_realId);
+        public void RecycleItem (E_Item item) {
             s_entityPool.RecycleItem (item);
         }
-        public void UnloadItemList (List<E_Item> itemList) {
+        public void RecycleItemList (List<E_Item> itemList) {
             for (int i = 0; i < itemList.Count; i++)
-                UnloadItem (itemList[i]);
+                RecycleItem (itemList[i]);
         }
         /// <summary>
         /// 根据ddoList写入itemArr  
@@ -192,11 +186,6 @@ namespace MirRemakeBackend.Entity {
                     break;
             }
             return res;
-        }
-        private void LoadItemArr (E_Item[] itemArr) {
-            foreach (var item in itemArr) {
-                m_realIdAndItemDict.Add (item.m_realId, item);
-            }
         }
     }
 }
