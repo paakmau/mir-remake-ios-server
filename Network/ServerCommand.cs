@@ -394,10 +394,10 @@ namespace MirRemakeBackend.Network {
         private SC_ApplySelfUpdateItemNum () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_itemRealIdList.Count);
-            for (int i = 0; i < m_itemRealIdList.Count; i++)
+            for (int i = 0; i < m_itemRealIdList.Count; i++) {
                 writer.Put (m_itemRealIdList[i]);
-            for (int i = 0; i < m_itemRealIdList.Count; i++)
                 writer.Put (m_itemNumList[i]);
+            }
         }
     }
     /// <summary>

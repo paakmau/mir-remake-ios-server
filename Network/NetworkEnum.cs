@@ -46,7 +46,7 @@ namespace MirRemakeBackend.Network {
         INIT_CHARACTER_ID,
         // 同步位置
         SET_POSITION,
-        // 技能释放 
+        // 技能释放
         APPLY_CAST_SKILL_BEGIN,
         // 分配属性点
         APPLY_DISTRIBUTE_POINTS,
