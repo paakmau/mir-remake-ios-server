@@ -57,7 +57,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "select * from `item` where charid=" + charId + " and position=\"BAG\";";
+            cmd = "select * from `item` where charid=" + charId + " and `position`=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables[0];
@@ -101,7 +101,7 @@ namespace MirRemakeBackend.DynamicData {
         }
         public void UpdateItem (DDO_Item item) {
             string cmd;
-            cmd = "update `item` set num=" + item.m_num + ",place=" + item.m_place.ToString () + ",position=" + item.m_position + " where itemid=" + item.m_itemId + " and realid=" + item.m_realId + ";";
+            cmd = "update `item` set num=" + item.m_num + ",place=" + item.m_place.ToString () + ",`position`=" + item.m_position + " where itemid=" + item.m_itemId + " and realid=" + item.m_realId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
