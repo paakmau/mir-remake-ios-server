@@ -61,18 +61,22 @@ namespace MirRemakeBackend {
             IDS_Status statusDs = new DS_StatusImpl ();
             IDS_Skill skillDs = new DS_SkillImpl ();
             IDS_Item itemDs = new DS_ItemImpl ();
+            IDS_Mission misDs = new DS_MissionImpl ();
             // 实例化DataEntity
             DEM_Unit actorUnitDem = new DEM_Unit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
             DEM_Item itemDem = new DEM_Item (itemDs);
+            DEM_Mission misDem = new DEM_Mission (misDs);
             // 实例化EntityManager
-            EM_Unit.s_instance = new EM_Unit (actorUnitDem);
-            EM_Status.s_instance = new EM_Status (statusDem);
+            EM_Camp.s_instance = new EM_Camp ();
+            EM_Item.s_instance = new EM_Item (itemDem);
+            EM_Mission.s_instance = new EM_Mission (misDem);
+            EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem);
-            EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
-            EM_Item.s_instance = new EM_Item (itemDem);
+            EM_Status.s_instance = new EM_Status (statusDem);
+            EM_Unit.s_instance = new EM_Unit (actorUnitDem);
         }
         static void InitGameLogic () {
             // 实例化DynamicDataService

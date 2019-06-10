@@ -41,7 +41,7 @@ namespace MirRemakeBackend.Entity {
                 if (m_itemList[i].m_Type == ItemType.EQUIPMENT)
                     equipInfoNoList.Add (((E_EquipmentItem) m_itemList[i]).GetEquipmentInfoNo ());
             }
-            return new NO_Repository ();
+            return new NO_Repository (itemNoList, equipInfoNoList);
         }
         public override E_Item GetItemByRealId (long realId) {
             for (int i = 0; i < m_itemList.Count; i++)
