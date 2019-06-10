@@ -38,8 +38,8 @@ namespace MirRemakeBackend.Network {
         // 技能相关
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
         // 商城
-        APPLY_SHOPPING_MALL_ACTION_TYPE_LIST,
-        APPLY_SHOPPING_MALL_COMMIDITIES_LIST
+        SEND_SHOPPING_MALL_NORMAL,
+        SEND_SHOPPING_MALL_COMPAIGN
     }
     enum NetworkToServerDataType : byte {
         // 初始化
