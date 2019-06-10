@@ -5,7 +5,7 @@ using LitJson;
 using MySql.Data;
 namespace MirRemakeBackend.DynamicData {
     interface IDDS_Item {
-        List<DDO_Item> GetBagByCharacterId (int charId); //done
+        List<DDO_Item> GetBagByCharacterId (int charId);
         List<DDO_Item> GetStoreHouseByCharacterId (int charId);
         /// <summary>
         /// 获取角色身上的 (装备区内) 装备
