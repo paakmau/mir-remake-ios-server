@@ -54,7 +54,7 @@ namespace MirRemakeBackend.DynamicData {
         public List<DDO_Item> GetEquipmentRegionByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "select * from `item` where charid=" + charId + " and `position`=\"EQUIPMENT_REGION\";";
+            cmd = "select * from `item` where charid=" + charId + " and `place`=\"EQUIPMENT_REGION\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
