@@ -1,4 +1,4 @@
-create database legend;
+-- create database legend;
 use legend;
 
 DROP TABLE IF EXISTS `character`;
@@ -9,7 +9,7 @@ CREATE TABLE `character` (
   `experience` int DEFAULT NULL,
   `currency` varchar(255) NOT NULL,
   `giftpoints` varchar(255) NOT NULL,
-   KEY (`characterid`)
+   primary key (`characterid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `skill`;
@@ -18,7 +18,7 @@ create table `skill`(
   `skillid` int NOT NULL, userid int NOT NULL, 
   `masterly` int NOT NULL ,
   `level` int NOT NULL, 
-   KEY(`realid`)
+   primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `item`;
@@ -29,7 +29,7 @@ create table `item`(
   `num` int NOT NULL,
   `place` VARCHAR(45) NOT NULL,
   `position` int NOT NULL,
-   KEY(`realid`)
+   primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `equipment`;
@@ -39,7 +39,7 @@ CREATE table `equipment`(
   `strength_num` int not null,
   `gem_list` VARCHAR(255) NOT NULL,
   `enchant_attr` VARCHAR(255) NOT NULL,
-   KEY (`realid`)
+   primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `mission`;
@@ -48,5 +48,12 @@ create table `mission`(
   `missionid` int NOT NULL,
   `userid` int NOT NULL,
   `targets` VARCHAR(150) NOT NULL,
-   KEY(`realid`)
+   primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+
+
+

@@ -104,6 +104,13 @@ namespace MirRemakeBackend {
                 GL_Sight.s_instance,
                 GL_Skill.s_instance
             };
+            HbmTest (charDds);
+        }
+        static void HbmTest (IDDS_Character charDds) {
+            charDds.CreateCharacter (OccupationType.MAGE);
+            charDds.CreateCharacter (OccupationType.MAGE);
+            charDds.CreateCharacter (OccupationType.WARRIOR);
+            charDds.CreateCharacter (OccupationType.TAOIST);
         }
         static int Test() {
             DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
