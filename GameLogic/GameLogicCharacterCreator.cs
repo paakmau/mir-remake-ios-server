@@ -12,6 +12,9 @@ namespace MirRemakeBackend.GameLogic {
         private IDDS_Item m_itemDds;
         public GameLogicCharacterCreator (IDDS_Character charDds, IDDS_Skill skillDds, IDDS_Item itemDds, INetworkService ns) {
             m_netService = ns;
+            m_charDds = charDds;
+            m_skillDds = skillDds;
+            m_itemDds = itemDds;
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // TODO: 关联 playerId

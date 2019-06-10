@@ -23,6 +23,7 @@ namespace MirRemakeBackend.Data {
     struct DO_Skill {
         public short m_skillId;
         public short m_skillMaxLevel;
+        public OccupationType m_occupation;
         public short[] m_fatherIdArr;
         public short[] m_childrenIdArr;
         public SkillAimType m_skillAimType;
