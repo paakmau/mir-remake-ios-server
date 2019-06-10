@@ -87,6 +87,7 @@ namespace MirRemakeBackend {
             IDDS_Mission misDds = ddsImpl;
             // 实例化GameLogic
             GameLogicInit.s_instance = new GameLogicInit (charDds, skillDds, itemDds, misDds, s_networkService);
+            GameLogicCharacterCreator.s_instance = new GameLogicCharacterCreator (charDds, skillDds, itemDds, s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
             GL_CharacterLevel.s_instance = new GL_CharacterLevel (charDds, s_networkService);
@@ -108,13 +109,6 @@ namespace MirRemakeBackend {
                 GL_Sight.s_instance,
                 GL_Skill.s_instance
             };
-            // TODO:
-            // CreateCharacter (charDds);
-        }
-        static void CreateCharacter (IDDS_Character charDds) {
-            charDds.CreateCharacter (OccupationType.MAGE);
-            charDds.CreateCharacter (OccupationType.MAGE);
-            charDds.CreateCharacter (OccupationType.MAGE);
         }
         static int Test() {
             DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
