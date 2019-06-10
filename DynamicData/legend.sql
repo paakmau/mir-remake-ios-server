@@ -15,7 +15,8 @@ CREATE TABLE `character` (
 DROP TABLE IF EXISTS `skill`;
 create table `skill`( 
   `realid` int NOT NULL AUTO_INCREMENT,
-  `skillid` int NOT NULL, userid int NOT NULL, 
+  `skillid` int NOT NULL, 
+  `charid` int NOT NULL, 
   `masterly` int NOT NULL ,
   `level` int NOT NULL, 
    primary key (`realid`)
@@ -25,7 +26,7 @@ DROP TABLE IF EXISTS `item`;
 create table `item`(
   `realid` int NOT NULL AUTO_INCREMENT,
   `itemid` int NOT NULL,
-  `userid` int NOT NULL,
+  `charid` int NOT NULL,
   `num` int NOT NULL,
   `place` VARCHAR(45) NOT NULL,
   `pos` int NOT NULL,
@@ -35,7 +36,7 @@ create table `item`(
 DROP TABLE IF EXISTS `equipment`;
 CREATE table `equipment`(
   `realid` int not null AUTO_INCREMENT,
-  `userid` int not null,
+  `charid` int not null,
   `strength_num` int not null,
   `gem_list` VARCHAR(255) NOT NULL,
   `enchant_attr` VARCHAR(255) NOT NULL,
@@ -46,7 +47,7 @@ DROP TABLE IF EXISTS `mission`;
 create table `mission`(
   `realid` int NOT NULL AUTO_INCREMENT,
   `missionid` int NOT NULL,
-  `userid` int NOT NULL,
+  `charid` int NOT NULL,
   `targets` VARCHAR(150) NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
