@@ -62,21 +62,18 @@ namespace MirRemakeBackend.DataEntity {
         /// </summary>
         public readonly IReadOnlyList<ValueTuple<SkillAimParamType, float>> m_damageParamList;
         public readonly DE_Effect m_skillEffect;
-        public DE_SkillData (DO_SkillData dataObj) {
-            m_upgradeCharacterLevelInNeed = dataObj.m_upgradeCharacterLevelInNeed;
-            m_upgradeMoneyInNeed = dataObj.m_upgradeMoneyInNeed;
-            m_upgradeMasterlyInNeed = dataObj.m_upgradeMasterlyInNeed;
-            m_mpCost = dataObj.m_mpCost;
-            m_castFrontTime = dataObj.m_castFrontTime;
-            m_castBackTime = dataObj.m_castBackTime;
-            m_coolDownTime = dataObj.m_coolDownTime;
-            m_targetNumber = dataObj.m_targetNumber;
-            m_castRange = dataObj.m_castRange;
-            m_damageParamList = new List<ValueTuple<SkillAimParamType, float>> (dataObj.m_damageParamArr);
-            m_skillEffect = new DE_Effect (dataObj.m_skillEffect);
-        }
-        public DE_SkillData (short charLvInNeed) {
-            m_upgradeCharacterLevelInNeed = charLvInNeed;
+        public DE_SkillData (DO_SkillData curDo, DO_SkillData nextLvDo) {
+            m_upgradeCharacterLevelInNeed = nextLvDo.m_upgradeCharacterLevelInNeed;
+            m_upgradeMoneyInNeed = nextLvDo.m_upgradeMoneyInNeed;
+            m_upgradeMasterlyInNeed = nextLvDo.m_upgradeMasterlyInNeed;
+            m_mpCost = curDo.m_mpCost;
+            m_castFrontTime = curDo.m_castFrontTime;
+            m_castBackTime = curDo.m_castBackTime;
+            m_coolDownTime = curDo.m_coolDownTime;
+            m_targetNumber = curDo.m_targetNumber;
+            m_castRange = curDo.m_castRange;
+            m_damageParamList = new List<ValueTuple<SkillAimParamType, float>> (curDo.m_damageParamArr);
+            m_skillEffect = new DE_Effect (curDo.m_skillEffect);
         }
     }
     class DE_Skill {
@@ -95,11 +92,11 @@ namespace MirRemakeBackend.DataEntity {
             m_skillMaxLevel = skillDo.m_skillMaxLevel;
             m_skillAimType = skillDo.m_skillAimType;
             m_targetCamp = skillDo.m_targetCamp;
-            DE_SkillData[] dataArr = new DE_SkillData[skillDo.m_skillDataAllLevel.Length + 1];
-            // TODO: 解决技能升级对人物等级的需求
-            dataArr[0] = new DE_SkillData (1);
-            for (int i = 0; i < skillDo.m_skillDataAllLevel.Length; i++)
-                dataArr[i + 1] = new DE_SkillData (skillDo.m_skillDataAllLevel[i]);
+            DE_SkillData[] dataArr = new DE_SkillData[m_skillMaxLevel + 1];
+            dataArr[0] = new DE_SkillData (skillDo.m_skillDataAllLevel[0], skillDo.m_skillDataAllLevel[0]);
+            for (int i = 1; i <= m_skillMaxLevel - 1; i++)
+                dataArr[i] = new DE_SkillData (skillDo.m_skillDataAllLevel[i - 1], skillDo.m_skillDataAllLevel[i]);
+            dataArr[m_skillMaxLevel] = new DE_SkillData (skillDo.m_skillDataAllLevel[m_skillMaxLevel - 1], skillDo.m_skillDataAllLevel[m_skillMaxLevel - 1]);
             m_skillDataAllLevel = new List<DE_SkillData> (dataArr);
         }
     }
