@@ -225,10 +225,10 @@ namespace MirRemakeBackend.DynamicData {
         }
         public void UpdateCharacter (DDO_Character charObj) {
             string cmd;
-            string currencyArr = "\"" + charObj.m_currencyArr[0].Item2.ToString () + "," + charObj.m_currencyArr[1].Item2.ToString () + "\"";
-            string giftPoints = "\"" + charObj.m_distributedMainAttrPointArr[0].Item2.ToString () + "," +
-                charObj.m_distributedMainAttrPointArr[1].Item2.ToString () + "," +
-                charObj.m_distributedMainAttrPointArr[2].Item2.ToString () + "," +
+            string currencyArr = "\"" + charObj.m_currencyArr[0].Item2.ToString () + " " + charObj.m_currencyArr[1].Item2.ToString () + "\"";
+            string giftPoints = "\"" + charObj.m_distributedMainAttrPointArr[0].Item2.ToString () + " " +
+                charObj.m_distributedMainAttrPointArr[1].Item2.ToString () + " " +
+                charObj.m_distributedMainAttrPointArr[2].Item2.ToString () + " " +
                 charObj.m_distributedMainAttrPointArr[3].Item2.ToString () + "\"";
             cmd = "update `character` set characterid=" + charObj.m_characterId + ",occupation=\"" + charObj.m_occupation.ToString () + "\",level=" + charObj.m_level + ",experience=" +
                 charObj.m_experience + ",currency=" + currencyArr + ",giftpoints=" + giftPoints + " where characterid=" + charObj.m_characterId + ";";
