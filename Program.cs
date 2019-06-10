@@ -104,11 +104,12 @@ namespace MirRemakeBackend {
                 GL_Sight.s_instance,
                 GL_Skill.s_instance
             };
-            HbmTest (itemDds);
+            // CreateCharacter (charDds);
         }
-        static void HbmTest (IDDS_Item itemDds) {
-            
-            Console.WriteLine(5);
+        static void CreateCharacter (IDDS_Character charDds) {
+            charDds.CreateCharacter (OccupationType.MAGE);
+            charDds.CreateCharacter (OccupationType.MAGE);
+            charDds.CreateCharacter (OccupationType.MAGE);
         }
         static int Test() {
             DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
