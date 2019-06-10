@@ -66,7 +66,7 @@ namespace MirRemakeBackend.GameLogic {
                 // client
                 List<long> changedRealIdList = new List<long> (changedItemList.Count);
                 List<short> changedPosList = new List<short> (changedItemList.Count);
-                for (int j=0; j<changedItemList.Count; j++) {
+                for (int j = 0; j < changedItemList.Count; j++) {
                     changedRealIdList.Add (changedItemList[i].Item2.m_realId);
                     changedPosList.Add (changedItemList[i].Item1);
                 }
@@ -80,18 +80,21 @@ namespace MirRemakeBackend.GameLogic {
                 }
                 // 该物品单独占有一格
                 else {
-                    // 基础数据更新
+                    // 基础信息 dds 与 client
                     m_itemDds.UpdateItem (itemList[i].GetItemDdo (charObj.m_characterId, ItemPlace.BAG, storePos));
-                    // 基础数据 client
                     m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
                         charObj.m_networkId,
                         new List<NO_Item> { itemList[i].GetItemNo () },
                         new List<ItemPlace> { ItemPlace.BAG },
-                        new List<short> { storePos } ));
-                    // 附加数据 (装备等) TODO: client
+                        new List<short> { storePos }));
+                    // 附加信息 (装备等) dds 与 client
                     switch (itemList[i].m_Type) {
                         case ItemType.EQUIPMENT:
-                            m_itemDds.UpdateEquipmentInfo (((E_EquipmentItem)itemList[i]).GetEquipmentInfoDdo (charObj.m_characterId));
+                            m_itemDds.UpdateEquipmentInfo (((E_EquipmentItem) itemList[i]).GetEquipmentInfoDdo (charObj.m_characterId));
+                            m_networkService.SendServerCommand (
+                                SC_ApplySelfUpdateEquipment.Instance (
+                                    charObj.m_networkId, itemList[i].m_realId,
+                                    ((E_EquipmentItem)itemList[i]).GetEquipmentInfoNo ()));
                             break;
                     }
                 }
