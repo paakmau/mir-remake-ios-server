@@ -120,10 +120,25 @@ namespace MirRemakeBackend.DynamicData {
             return int.Parse (ds.Tables[0].Rows[0]["realid"].ToString ());
         }
         public void UpdateEquipmentInfo (DDO_EquipmentInfo eq) {
-            // TODO: 
+            string cmd;
+            string gems;
+            if (eq.m_inlaidGemIdList.Count != 0) {
+                gems = eq.m_inlaidGemIdList[0].ToString ();
+                for (int i = 0; i < eq.m_inlaidGemIdList.Count; i++) {
+                    gems = gems + " " + eq.m_inlaidGemIdList[i].ToString ();
+                }
+            } else {
+                gems = "";
+            }
+            string enchantAttr = GetString (eq.m_enchantAttr);
+            cmd = "update `equipment` set `userid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchantAttr=" + enchantAttr + "where realid="+eq.m_realId+ ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd); 
         }
         public void DeleteEquipmentInfoByRealId (long realId) {
-            // TODO: 
+            string cmd="delete from `equipment` where `realid`="+realId+";";
+            string database="legend";
+            pool.ExecuteSql(database,cmd); 
         }
         public void InsertEquipmentInfo (DDO_EquipmentInfo eq) {
             string cmd;
@@ -137,7 +152,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "insert into `equipment` valus(null," + eq.m_characterId + "," + eq.m_strengthNum + "," + gems + "," + enchantAttr + "," + eq.m_holeNum + ");";
+            cmd = "insert into `equipment` values(null," + eq.m_characterId + "," + eq.m_strengthNum + "," + gems + "," + enchantAttr + "," + eq.m_holeNum + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
