@@ -104,7 +104,7 @@ namespace MirRemakeBackend {
                 GL_Sight.s_instance,
                 GL_Skill.s_instance
             };
-            // CreateCharacter (charDds);
+            CreateCharacter (charDds);
         }
         static void CreateCharacter (IDDS_Character charDds) {
             charDds.CreateCharacter (OccupationType.MAGE);

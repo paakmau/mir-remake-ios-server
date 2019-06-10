@@ -12,8 +12,8 @@ namespace MirRemakeBackend.Entity {
         public int m_UpgradeExperienceInNeed { get { return m_characterDe.m_upgradeExperienceInNeed; } }
         public int m_characterId;
         public int m_experience;
-        public Dictionary<CurrencyType, long> m_currencyDict;
-        public Dictionary<ActorUnitMainAttributeType, short> m_mainAttrPointDict;
+        public Dictionary<CurrencyType, long> m_currencyDict = new Dictionary<CurrencyType, long> ();
+        public Dictionary<ActorUnitMainAttributeType, short> m_mainAttrPointDict = new Dictionary<ActorUnitMainAttributeType, short> ();
         public long m_VirtualCurrency {
             get { return m_currencyDict[CurrencyType.VIRTUAL]; }
             set { m_currencyDict[CurrencyType.VIRTUAL] = value; }

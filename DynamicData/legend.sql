@@ -25,17 +25,17 @@ DROP TABLE IF EXISTS `item`;
 create table `item`(
   `realid` int NOT NULL AUTO_INCREMENT,
   `itemid` int NOT NULL,
-  `userid` int NOT NULL,
+  `charid` int NOT NULL,
   `num` int NOT NULL,
   `place` VARCHAR(45) NOT NULL,
-  `position` int NOT NULL,
+  `pos` int NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `equipment`;
 CREATE table `equipment`(
   `realid` int not null AUTO_INCREMENT,
-  `userid` int not null,
+  `charid` int not null,
   `strength_num` int not null,
   `gem_list` VARCHAR(255) NOT NULL,
   `enchant_attr` VARCHAR(255) NOT NULL,
@@ -53,7 +53,7 @@ create table `mission`(
 
 
 
+use legend;
 
-
-
-
+select * from `character`;
+select * from item;
