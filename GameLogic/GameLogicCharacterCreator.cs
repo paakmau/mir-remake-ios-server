@@ -13,7 +13,8 @@ namespace MirRemakeBackend.GameLogic {
         public GameLogicCharacterCreator (IDDS_Character charDds, IDDS_Skill skillDds, IDDS_Item itemDds, INetworkService ns) {
             m_netService = ns;
         }
-        public void CommandCreateCharacter (OccupationType ocp) {
+        public void CommandCreateCharacter (int playerId, OccupationType ocp) {
+            // TODO: 关联 playerId
             // 角色 dds
             int charId = m_charDds.CreateCharacter (ocp);
             // 技能 dds

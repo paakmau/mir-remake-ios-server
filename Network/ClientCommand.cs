@@ -9,8 +9,9 @@ namespace MirRemakeBackend.Network {
     class CC_CreateCharacter : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CREATE_CHARACTER; } }
         public void Execute (NetDataReader reader, int netId) {
+            int playerId = reader.GetInt ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
-            GameLogicCharacterCreator.s_instance.CommandCreateCharacter (ocp);
+            GameLogicCharacterCreator.s_instance.CommandCreateCharacter (playerId, ocp);
         }
     }
     /// <summary>
