@@ -1661,7 +1661,7 @@
   {
     "SkillID": 40,
     "Name": "普通攻击",
-    "Details:": "发动一次普通攻击，对目标造成等同于物理攻击力的伤害。",
+    "Details": "发动一次普通攻击，对目标造成等同于物理攻击力的伤害。",
     "ManaCost": [ 0 ],
     "SingTime": 0,
     "CastFrontTime": 0,
