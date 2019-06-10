@@ -79,7 +79,7 @@ namespace MirRemakeBackend.DynamicData {
             cmd = "select * from `equipment` where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            dt = ds.Tables["equipment"];
+            dt = ds.Tables[0];
             List<DDO_EquipmentInfo> res = new List<DDO_EquipmentInfo> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_EquipmentInfo equipment = new DDO_EquipmentInfo ();
