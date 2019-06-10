@@ -60,6 +60,6 @@ namespace MirRemakeBackend.Network {
         APPLY_DISTRIBUTE_POINTS,
         REQUIRE_SHOPPING_MALL_ACTION_TYPE_LIST,
         REQUIRE_SHOPPING_MALL_COMMIDITIES,
-        ADD_AIM_MISSION
+        // ADD_AIM_MISSION
     }
 }
