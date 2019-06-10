@@ -19,15 +19,13 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifyGainExperience (E_Character charObj, int exp) {
-            if (charObj.m_level == c_maxLevel)
+            if (charObj.m_Level == c_maxLevel)
                 return;
             charObj.m_experience += exp;
-            if (charObj.m_UpgradeExperienceInNeed <= charObj.m_experience) {
-                charObj.m_experience -= charObj.m_UpgradeExperienceInNeed;
-                charObj.m_level ++;
-            }
+            charObj.TryLevelUp ();
+            // dds 与 client
             m_charDds.UpdateCharacter (charObj.GetDdo ());
-            m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (charObj.m_networkId, charObj.m_level, charObj.m_experience));
+            m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (charObj.m_networkId, charObj.m_Level, charObj.m_experience));
         }
     }
 }

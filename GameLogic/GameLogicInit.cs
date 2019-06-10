@@ -54,7 +54,7 @@ namespace MirRemakeBackend.GameLogic {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId, m_charDds.GetCharacterById (charId));
             EM_Sight.s_instance.InitCharacter (newChar);
             // 发送角色
-            m_netService.SendServerCommand (SC_InitSelfAttribute.Instance (new List<int> { netId }, newChar.m_level, newChar.m_experience, newChar.m_Strength, newChar.m_Intelligence, newChar.m_Agility, newChar.m_Spirit));
+            m_netService.SendServerCommand (SC_InitSelfAttribute.Instance (new List<int> { netId }, newChar.m_Level, newChar.m_experience, newChar.m_Strength, newChar.m_Intelligence, newChar.m_Agility, newChar.m_Spirit));
 
             // 实例化道具
             var bagDdo = m_itemDds.GetBagByCharacterId (charId);
@@ -81,7 +81,7 @@ namespace MirRemakeBackend.GameLogic {
 
             // 实例化任务
             var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
-            EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_occupation, newChar.m_level, ddsList);
+            EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_Occupation, newChar.m_Level, ddsList);
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);

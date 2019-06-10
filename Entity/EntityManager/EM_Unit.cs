@@ -41,10 +41,12 @@ namespace MirRemakeBackend.Entity {
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
             newChar = s_entityPool.m_characterPool.GetInstance ();
-            ValueTuple<DE_Unit, DE_CharacterData> deTuple;
-            m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out deTuple);
+            DE_Character charDe;
+            DE_Unit unitDe;
+            DE_CharacterData charDataDe;
+            m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out charDe, out unitDe, out charDataDe);
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charId, deTuple.Item1, deTuple.Item2, charDdo);
+            newChar.Reset (netId, charId, charDe, unitDe, charDataDe, charDdo);
             return newChar;
         }
         /// <summary>

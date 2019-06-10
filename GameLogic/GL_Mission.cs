@@ -33,7 +33,7 @@ namespace MirRemakeBackend.GameLogic {
             if (misObj == null) return;
             // 移除实例
             if (misObj.m_IsFinished)
-                EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_occupation, charObj.m_level);
+                EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_Occupation, charObj.m_Level);
             // 数据与client
             m_misDds.DeleteMission (misId, charObj.m_characterId);
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (new List<int> { netId }, misId));

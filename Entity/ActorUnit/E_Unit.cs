@@ -10,7 +10,7 @@ namespace MirRemakeBackend.Entity {
         protected DE_Unit m_unitDe;
         public abstract ActorUnitType m_UnitType { get; }
         public int m_networkId;
-        public short m_level;
+        public abstract short m_Level { get; }
         public Vector2 m_position;
         private Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         private Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();

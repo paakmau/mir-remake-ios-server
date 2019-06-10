@@ -24,6 +24,7 @@ namespace MirRemakeBackend.DataEntity {
         }
     }
     class DE_CharacterData {
+        public readonly short m_level;
         public readonly int m_upgradeExperienceInNeed;
         public readonly IReadOnlyList<ValueTuple<ActorUnitMainAttributeType, int>> m_mainAttributeList;
         public readonly int m_mainAttributePointNum;
@@ -31,6 +32,18 @@ namespace MirRemakeBackend.DataEntity {
             m_upgradeExperienceInNeed = charDo.m_upgradeExperienceInNeed;
             m_mainAttributeList = new List<ValueTuple<ActorUnitMainAttributeType, int>> (charDo.m_mainAttributeArr);
             m_mainAttributePointNum = charDo.m_mainAttrPointNumber;
+        }
+    }
+    class DE_Character {
+        public readonly OccupationType m_occupation;
+        public readonly short m_characterMaxLevel;
+        public readonly IReadOnlyList<DE_Unit> m_unitAllLevel;
+        public readonly IReadOnlyList<DE_CharacterData> m_characterDataAllLevel;
+        public DE_Character (OccupationType ocp, short mxLv, IReadOnlyList<DE_Unit> unitAllLv, IReadOnlyList<DE_CharacterData> charDataAllLv) {
+            m_occupation = ocp;
+            m_characterMaxLevel = mxLv;
+            m_unitAllLevel = unitAllLv;
+            m_characterDataAllLevel = charDataAllLv;
         }
     }
     class DE_SkillData {
