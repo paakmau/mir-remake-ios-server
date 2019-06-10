@@ -42,24 +42,36 @@ namespace MirRemakeBackend.Network {
         APPLY_SHOPPING_MALL_COMMIDITIES_LIST
     }
     enum NetworkToServerDataType : byte {
+        // 初始化
         INIT_CHARACTER_ID,
+        // 同步位置
         SET_POSITION,
+        // 技能释放 
         APPLY_CAST_SKILL_BEGIN,
-        APPLY_BUILD_EQUIPMENT,
+        // 分配属性点
+        APPLY_DISTRIBUTE_POINTS,
+        // 技能升级
+        APPLY_UPDATE_SKILL_LEVEL,
+        // 地面物品扔拾; 背包物品 使用, 交易
         APPLY_PICK_UP_ITEM_ON_GROUND,
         APPLY_DROP_ITEM_ONTO_GROUND,
         APPLY_USE_CONSUMABLE_ITEM,
         APPLY_USE_EQUIPMENT_ITEM,
         APPLY_SELL_ITEM_IN_BAG,
-        APPLY_BUY_ITEM,
+        APPLY_BUY_ITEM_INTO_BAG,
+        // 任务相关
         APPLY_ACCEPT_MISSION,
         APPLY_DELIVER_MISSION,
         APPLY_CANCEL_MISSION,
         APPLY_TALK_TO_MISSION_NPC,
-        APPLY_UPDATE_SKILL_LEVEL,
-        APPLY_DISTRIBUTE_POINTS,
-        REQUIRE_SHOPPING_MALL_ACTION_TYPE_LIST,
-        REQUIRE_SHOPPING_MALL_COMMIDITIES,
-        // ADD_AIM_MISSION
+        // 获取商城信息
+        /// <summary>
+        /// 通常商品
+        /// </summary>
+        REQUIRE_SHOPPING_MALL_NORMAL,
+        /// <summary>
+        /// 活动商品
+        /// </summary>
+        REQUIRE_SHOPPING_MALL_CAMPAIGN,
     }
 }
