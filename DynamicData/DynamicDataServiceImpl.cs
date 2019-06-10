@@ -196,11 +196,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-<<<<<<< HEAD
-            cmd = "insert into `character` values (null," + occupation.ToString () + ",1,0,\"0 0\",\"0 0 0 0\");select max(characterid) from `character`;";
-=======
             cmd = "insert into `character` values (null," + occupation.ToString () + ",1,0,\"0 0\",\"0 0 0 0\");select last_insert_id();";
->>>>>>> e4d82aa0b755b3c3457cb0574fb0507f8b13d08b
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables["0"];
