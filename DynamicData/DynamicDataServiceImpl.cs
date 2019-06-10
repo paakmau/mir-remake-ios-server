@@ -185,7 +185,12 @@ namespace MirRemakeBackend.DynamicData {
             }
             pool.ExecuteSql (database, cmd);
         }
-
+        public void InsertSkill(DDO_Skill skill){
+            string cmd;
+            cmd = "insert into skill values(null,"+skill.m_skillId+","+skill.m_characterId+","+skill.m_skillLevel+","+skill.m_skillLevel+");"; 
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
         public int CreateCharacter (OccupationType occupation) {
             string cmd;
             DataSet ds = new DataSet ();
@@ -277,7 +282,6 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
 
         }
-
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
@@ -299,13 +303,6 @@ namespace MirRemakeBackend.DynamicData {
 
             res = res + "]";
             return res;
-        }
-
-        public void InsertSkill(DDO_Skill skill){
-            string cmd;
-            cmd = "insert into skill values(null,"+skill.m_skillId+","+skill.m_characterId+","+skill.m_skillLevel+","+skill.m_skillLevel+");"; 
-            string database = "legend";
-            pool.ExecuteSql (database, cmd);
         }
     }
 }
