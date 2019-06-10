@@ -26,17 +26,13 @@ namespace MirRemakeBackend.GameLogic {
             while (charEn.MoveNext ()) {
                 // 为角色发送他视野内的其他单位位置
                 var charObj = charEn.Current.Value;
-                List<int> selfNetIdList = new List<int> ();
-                selfNetIdList.Add (charObj.m_networkId);
                 var sightUnits = EM_Sight.s_instance.GetCharacterRawSight (charObj.m_networkId);
                 if (sightUnits == null) continue;
                 List < (int, Vector2) > sightNetIdPositionList = new List < (int, Vector2) > (sightUnits.Count);
                 for (int i = 0; i < sightUnits.Count; i++)
                     sightNetIdPositionList.Add ((sightUnits[i].m_networkId, sightUnits[i].m_position));
-                m_networkService.SendServerCommand (SC_SetOtherPosition.Instance (
-                    selfNetIdList,
-                    sightNetIdPositionList
-                ));
+                if (sightNetIdPositionList.Count != 0)
+                    m_networkService.SendServerCommand (SC_SetOtherPosition.Instance (charObj.m_networkId, sightNetIdPositionList));
             }
         }
         public void CommandSetPosition (int netId, Vector2 pos) {

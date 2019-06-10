@@ -189,8 +189,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         IReadOnlyList < (int, Vector2) > m_otherNetIdAndPosList;
-        public static SC_SetOtherPosition Instance (IReadOnlyList<int> toClientList, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_SetOtherPosition Instance (int netId, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_otherNetIdAndPosList = otherNetIdAndPosList;
             return s_instance;
         }
