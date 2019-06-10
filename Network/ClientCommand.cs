@@ -6,6 +6,13 @@ namespace MirRemakeBackend.Network {
         NetworkToServerDataType m_DataType { get; }
         void Execute (NetDataReader reader, int netId);
     }
+    class CC_CreateCharacter : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CREATE_CHARACTER; } }
+        public void Execute (NetDataReader reader, int netId) {
+            OccupationType ocp = (OccupationType) reader.GetByte ();
+            GameLogicCharacterCreator.s_instance.CommandCreateCharacter (ocp);
+        }
+    }
     /// <summary>
     /// 初始传入CharacterId
     /// </summary>

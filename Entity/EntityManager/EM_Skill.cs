@@ -17,6 +17,9 @@ namespace MirRemakeBackend.Entity {
         public EM_Skill (DEM_Skill dem) {
             m_dem = dem;
         }
+        public IReadOnlyList<short> GetSkillIdListByOccupation (OccupationType ocp) {
+            return m_dem.GetSkillIdListByOccupation (ocp);
+        }
         public E_Skill[] InitCharacter (int netId, int charId, List<DDO_Skill> ddoList) {
             E_Skill[] res = new E_Skill[ddoList.Count];
             Dictionary<short, E_Skill> charSkillDict = new Dictionary<short, E_Skill> ();

@@ -43,6 +43,8 @@ namespace MirRemakeBackend.Network {
         SEND_SHOPPING_MALL_COMPAIGN
     }
     enum NetworkToServerDataType : byte {
+        // 创建角色
+        CREATE_CHARACTER,
         // 初始化
         INIT_CHARACTER_ID,
         // 同步位置
