@@ -196,11 +196,11 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "insert into character values (null," + occupation.ToString () + ",1,0,\"0 0\",\"0 0 0 0\");select max(characterid)";
+            cmd = "insert into character values (null," + occupation.ToString () + ",1,0,\"0 0\",\"0 0 0 0\");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables["0"];
-            return int.Parse (dt.Rows[0]["max(characterid)"].ToString ());
+            return int.Parse (dt.Rows[0]["last_insert_id()"].ToString ());
         }
         public DDO_Character GetCharacterById (int characterId) {
             DDO_Character character = new DDO_Character ();
