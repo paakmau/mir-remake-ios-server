@@ -57,7 +57,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "select * from `item` where charid=" + charId + " and pos=\"BAG\";";
+            cmd = "select * from `item` where charid=" + charId + " and position=\"BAG\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables[0];
