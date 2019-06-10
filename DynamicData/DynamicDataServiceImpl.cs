@@ -83,17 +83,17 @@ namespace MirRemakeBackend.DynamicData {
             List<DDO_EquipmentInfo> res = new List<DDO_EquipmentInfo> ();
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_EquipmentInfo equipment = new DDO_EquipmentInfo ();
-                equipment.m_strengthNum = byte.Parse (dt.Rows[i]["strengthnum"].ToString ());
-                equipment.m_holeNum = short.Parse (dt.Rows[i]["holenum"].ToString ());
+                equipment.m_strengthNum = byte.Parse (dt.Rows[i]["strength_num"].ToString ());
+                equipment.m_holeNum = short.Parse (dt.Rows[i]["hole_num"].ToString ());
                 equipment.m_realId = short.Parse (dt.Rows[i]["realid"].ToString ());
-                string gems = dt.Rows[i]["gemlist"].ToString ();
+                string gems = dt.Rows[i]["gem_list"].ToString ();
                 equipment.m_inlaidGemIdList = new List<short> ();
                 if (gems.Length != 0) {
                     for (int j = 0; j < gems.Split (' ').Length; j++) {
                         equipment.m_inlaidGemIdList.Add (short.Parse (gems.Split (' ') [j]));
                     }
                 }
-                JsonData attr = JsonMapper.ToObject (dt.Rows[i]["enchantattr"].ToString ());
+                JsonData attr = JsonMapper.ToObject (dt.Rows[i]["enchant_attr"].ToString ());
                 equipment.m_enchantAttr = GetAttr (attr);
                 res.Add (equipment);
             }
@@ -131,7 +131,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "update `equipment` set `userid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchantAttr=\"" + enchantAttr + "\" where realid="+eq.m_realId+ ";";
+            cmd = "update `equipment` set `userid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchant_attr=\"" + enchantAttr + "\" where realid="+eq.m_realId+ ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd); 
         }
