@@ -29,7 +29,7 @@ create table `item`(
   `charid` int NOT NULL,
   `num` int NOT NULL,
   `place` VARCHAR(45) NOT NULL,
-  `pos` int NOT NULL,
+  `position` int NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

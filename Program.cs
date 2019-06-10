@@ -105,7 +105,7 @@ namespace MirRemakeBackend {
                 GL_Skill.s_instance
             };
             // TODO:
-            CreateCharacter (charDds);
+            // CreateCharacter (charDds);
         }
         static void CreateCharacter (IDDS_Character charDds) {
             charDds.CreateCharacter (OccupationType.MAGE);
