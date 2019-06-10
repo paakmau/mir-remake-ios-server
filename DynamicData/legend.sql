@@ -1,4 +1,4 @@
--- create database legend;
+create database legend;
 use legend;
 
 DROP TABLE IF EXISTS `character`;
