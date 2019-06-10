@@ -13,7 +13,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandApplyTalkToNpc (int netId, short npcId, short missionId) {
-
+            // TODO:
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

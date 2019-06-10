@@ -55,11 +55,14 @@ namespace MirRemakeBackend.GameLogic {
             E_Unit targetObj = EM_Sight.s_instance.GetUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
             if (charObj == null || skill == null || targetObj == null) return;
             SkillParam skillParam = new SkillParam (skill.m_AimType, targetObj, parmNo.m_direction, parmNo.m_position);
-            // 添加到技能待释放列表
+            // 通知战斗结算
             GL_BattleSettle.s_instance.NotifySkillSettle (charObj, skill, skillParam);
             // 向Client发送CastBegin事件
             var otherList = EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false);
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
+        }
+        public void CommandApplyDistributePoints (int netId, short str, short intl, short agl, short spr) {
+            // TODO: 
         }
     }
 }
