@@ -51,8 +51,6 @@ namespace MirRemakeBackend.DataEntity {
         public readonly long m_upgradeMoneyInNeed;
         public readonly int m_upgradeMasterlyInNeed;
         public readonly int m_mpCost;
-        [Obsolete ("传奇没有吟唱")]
-        public readonly float m_singTime;
         public readonly float m_castFrontTime;
         public readonly float m_castBackTime;
         public readonly float m_coolDownTime;
@@ -68,7 +66,6 @@ namespace MirRemakeBackend.DataEntity {
             m_upgradeMoneyInNeed = dataObj.m_upgradeMoneyInNeed;
             m_upgradeMasterlyInNeed = dataObj.m_upgradeMasterlyInNeed;
             m_mpCost = dataObj.m_mpCost;
-            m_singTime = dataObj.m_singTime;
             m_castFrontTime = dataObj.m_castFrontTime;
             m_castBackTime = dataObj.m_castBackTime;
             m_coolDownTime = dataObj.m_coolDownTime;
@@ -76,6 +73,9 @@ namespace MirRemakeBackend.DataEntity {
             m_castRange = dataObj.m_castRange;
             m_damageParamList = new List<ValueTuple<SkillAimParamType, float>> (dataObj.m_damageParamArr);
             m_skillEffect = new DE_Effect (dataObj.m_skillEffect);
+        }
+        public DE_SkillData (short charLvInNeed) {
+            m_upgradeCharacterLevelInNeed = charLvInNeed;
         }
     }
     class DE_Skill {
@@ -85,14 +85,20 @@ namespace MirRemakeBackend.DataEntity {
         public readonly IReadOnlyList<short> m_childrenIdList;
         public readonly SkillAimType m_skillAimType;
         public readonly CampType m_targetCamp;
+        /// <summary>
+        /// 0级为未习得
+        /// </summary>
         public readonly IReadOnlyList<DE_SkillData> m_skillDataAllLevel;
         public DE_Skill (DO_Skill skillDo) {
+            m_skillId = skillDo.m_skillId;
             m_skillMaxLevel = skillDo.m_skillMaxLevel;
             m_skillAimType = skillDo.m_skillAimType;
             m_targetCamp = skillDo.m_targetCamp;
-            DE_SkillData[] dataArr = new DE_SkillData[skillDo.m_skillDataAllLevel.Length];
+            DE_SkillData[] dataArr = new DE_SkillData[skillDo.m_skillDataAllLevel.Length + 1];
+            // TODO: 解决技能升级对人物等级的需求
+            dataArr[0] = new DE_SkillData (1);
             for (int i = 0; i < skillDo.m_skillDataAllLevel.Length; i++)
-                dataArr[i] = new DE_SkillData (skillDo.m_skillDataAllLevel[i]);
+                dataArr[i + 1] = new DE_SkillData (skillDo.m_skillDataAllLevel[i]);
             m_skillDataAllLevel = new List<DE_SkillData> (dataArr);
         }
     }

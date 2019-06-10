@@ -31,6 +31,7 @@ namespace MirRemakeBackend.Entity {
                 E_Skill skillObj = s_entityPool.m_skillPool.GetInstance ();
                 skillObj.Reset (de, dataDe, ddoList[i]);
                 res[i] = skillObj;
+                charSkillDict.Add (skillObj.m_SkillId, skillObj);
             }
             m_networkIdAndCharacterSkillDict[netId] = charSkillDict;
             return res;

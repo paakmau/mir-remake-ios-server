@@ -81,7 +81,7 @@ namespace MirRemakeBackend.GameLogic {
             // 发送技能
             var skillIdAndLvAndMasterlyArr = new (short, short, int) [skillArr.Length];
             for (int i = 0; i < skillArr.Length; i++)
-                skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_skillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
+                skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
             m_netService.SendServerCommand (SC_InitSelfSkill.Instance (new List<int> () { netId }, skillIdAndLvAndMasterlyArr));
 
             // 初始化状态

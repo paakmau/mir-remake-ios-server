@@ -25,7 +25,7 @@ namespace MirRemakeBackend.Entity {
                     DE_SkillData skillDataDe;
                     if (!dem.GetSkillByIdAndLevel (skillIdAndLvList[i].Item1, skillIdAndLvList[i].Item2, out skillDe, out skillDataDe))
                         continue;
-                    monSkillArr[i] = new E_MonsterSkill (skillIdAndLvList[i].Item1, skillIdAndLvList[i].Item2, skillDe, skillDataDe);
+                    monSkillArr[i] = new E_MonsterSkill (skillIdAndLvList[i].Item2, skillDe, skillDataDe);
                 }
                 m_skillDict[monId] = monSkillArr;
             }

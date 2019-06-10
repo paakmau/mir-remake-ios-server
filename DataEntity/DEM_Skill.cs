@@ -34,7 +34,7 @@ namespace MirRemakeBackend.DataEntity {
                 return false;
             if (skill.m_skillDataAllLevel.Count < skillLv)
                 return false;
-            skillData = skill.m_skillDataAllLevel[skillLv - 1];
+            skillData = skill.m_skillDataAllLevel[skillLv];
             return true;
         }
     }

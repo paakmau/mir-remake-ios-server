@@ -299,7 +299,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (
                 EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false),
                 netId,
-                skill.m_skillId,
+                skill.m_SkillId,
                 sp.GetNo ()));
         }
         public void MFSMSkillSettle (E_Monster monster, E_MonsterSkill skill, SkillParam sp) {

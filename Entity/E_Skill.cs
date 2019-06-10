@@ -8,7 +8,7 @@ namespace MirRemakeBackend.Entity {
     class E_MonsterSkill {
         public DE_Skill m_skillDe;
         public DE_SkillData m_skillDataDe;
-        public short m_skillId;
+        public short m_SkillId { get { return m_skillDe.m_skillId; } }
         public short m_skillLevel;
         public MyTimer.Time m_lastCastTime;
         public CampType m_TargetCamp { get { return m_skillDe.m_targetCamp; } }
@@ -22,8 +22,7 @@ namespace MirRemakeBackend.Entity {
         public bool m_IsCoolingDown { get { return m_lastCastTime.Ticked (m_skillDataDe.m_coolDownTime) >= MyTimer.s_CurTime; } }
 
         public E_MonsterSkill () { }
-        public E_MonsterSkill (short skillId, short skillLv, DE_Skill de, DE_SkillData dataDe) {
-            m_skillId = skillId;
+        public E_MonsterSkill (short skillLv, DE_Skill de, DE_SkillData dataDe) {
             m_skillLevel = skillLv;
             m_skillDe = de;
             m_skillDataDe = dataDe;
@@ -39,7 +38,6 @@ namespace MirRemakeBackend.Entity {
         public void Reset (DE_Skill skillDe, DE_SkillData skillDataDe, DDO_Skill ddo) {
             m_skillDe = skillDe;
             m_skillDataDe = skillDataDe;
-            m_skillId = ddo.m_skillId;
             m_skillLevel = ddo.m_skillLevel;
             m_masterly = ddo.m_masterly;
         }
@@ -50,7 +48,7 @@ namespace MirRemakeBackend.Entity {
             m_skillDataDe = m_skillDe.m_skillDataAllLevel[m_skillLevel - 1];
         }
         public DDO_Skill GetDdo (int charId) {
-            return new DDO_Skill (m_skillId, charId, m_skillLevel, m_masterly);
+            return new DDO_Skill (m_SkillId, charId, m_skillLevel, m_masterly);
         }
     }
 }
