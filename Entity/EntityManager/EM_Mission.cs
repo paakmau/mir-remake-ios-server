@@ -25,24 +25,32 @@ namespace MirRemakeBackend.Entity {
             if (m_acceptedMissionDict.TryGetValue (netId, out oriAcceptedMisDict) && m_acceptableMissionDict.TryGetValue (netId, out oriAcceptableMisSet) && m_unacceptableMissionDict.TryGetValue (netId, out oriUnacceptableMisSet)) {
                 resAcceptedMisList = CollectionUtils.GetDictKeyList (oriAcceptedMisDict);
                 resAcceptableMisList = CollectionUtils.GetSetList (oriAcceptableMisSet);
-                resUnacceptableMisList = CollectionUtils.GetSetList(oriUnacceptableMisSet);
+                resUnacceptableMisList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
                 return;
             }
 
             // 读取已接任务
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
+                if (!ddoList[i].m_isAccepted) continue;
                 E_Mission mis = s_entityPool.m_missionPool.GetInstance ();
                 mis.Reset (m_dem.GetMissionById (ddoList[i].m_missionId), ddoList[i]);
                 acceptedMissionDict[ddoList[i].m_missionId] = mis;
             }
             m_acceptedMissionDict.Add (netId, acceptedMissionDict);
 
-            // 获取可接与不可接任务 TODO: 等yzj搞定任务
+            // 获取可接与不可接任务
             var acceptableMissionSet = new HashSet<short> ();
             var unacceptableMissionSet = new HashSet<short> ();
             m_acceptableMissionDict.Add (netId, acceptableMissionSet);
             m_unacceptableMissionDict.Add (netId, unacceptableMissionSet);
+            for (int i = 0; i < ddoList.Count; i++) {
+                var de = m_dem.GetMissionById (ddoList[i].m_missionId);
+                if (CanAccept (de, charLv))
+                    acceptableMissionSet.Add (de.m_id);
+                else
+                    unacceptableMissionSet.Add (de.m_id);
+            }
 
             // 返回
             resAcceptedMisList = CollectionUtils.GetDictKeyList (acceptedMissionDict);
@@ -99,8 +107,16 @@ namespace MirRemakeBackend.Entity {
             // 交付任务 并 回收实例
             acceptedDict.Remove (mis.m_MissionId);
             s_entityPool.m_missionPool.RecycleInstance (mis);
-            // 解锁后续任务
-            DealWithUnlockedAfterMisDelivered (mis, ocp, lv, acceptableSet, unacceptableSet);
+            // 后续任务解锁
+            for (int i = 0; i < mis.m_ChildrenIdList.Count; i++) {
+                var de = m_dem.GetMissionById (mis.m_ChildrenIdList[i]);
+                if (!CanUnlock (de, ocp))
+                    continue;
+                if (CanAccept (de, lv))
+                    acceptableSet.Add (de.m_id);
+                else
+                    unacceptableSet.Add (de.m_id);
+            }
         }
         public void CancelMission (int netId, E_Mission mis) {
             HashSet<short> acceptableSet = null;
@@ -114,24 +130,36 @@ namespace MirRemakeBackend.Entity {
             s_entityPool.m_missionPool.RecycleInstance (mis);
             acceptableSet.Add (mis.m_MissionId);
         }
-        public void RefreshUnlockedMission (int netId, short lv) {
-            
-        }
         /// <summary>
-        /// 处理任务完成后的解锁
+        /// 刷新已解锁任务中的可接任务
         /// </summary>
-        private void DealWithUnlockedAfterMisDelivered (E_Mission mis, OccupationType ocp, short lv, HashSet<short> resAcceptable, HashSet<short> resUnacceptable) {
-            for (int i = 0; i < mis.m_ChildrenIdList.Count; i++) {
-                var de = m_dem.GetMissionById (mis.m_ChildrenIdList[i]);
-                // 职业不匹配
-                if ((de.m_occupation & ocp) == 0)
-                    continue;
-                // 等级等其他条件是否满足
-                if (lv >= de.m_levelInNeed)
-                    resAcceptable.Add (mis.m_ChildrenIdList[i]);
-                else
-                    resUnacceptable.Add (mis.m_ChildrenIdList[i]);
+        public void RefreshUnlockedMission (int netId, short lv) {
+            HashSet<short> unaMisSet;
+            HashSet<short> acableMisSet;
+            if (!m_unacceptableMissionDict.TryGetValue (netId, out unaMisSet) ||
+                !m_acceptableMissionDict.TryGetValue (netId, out acableMisSet))
+                return;
+            var en = unaMisSet.GetEnumerator ();
+            var changedList = new List<short> (unaMisSet.Count);
+            while (en.MoveNext ()) {
+                var de = m_dem.GetMissionById (en.Current);
+                if (CanAccept (de, lv))
+                    changedList.Add (en.Current);
             }
+            for (int i = 0; i < changedList.Count; i++) {
+                unaMisSet.Remove (changedList[i]);
+                acableMisSet.Add (changedList[i]);
+            }
+        }
+        private bool CanUnlock (DE_Mission de, OccupationType ocp) {
+            if ((de.m_occupation & ocp) == 0)
+                return false;
+            return true;
+        }
+        private bool CanAccept (DE_Mission de, short lv) {
+            if (de.m_levelInNeed > lv)
+                return false;
+            return true;
         }
     }
 }

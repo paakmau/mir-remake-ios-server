@@ -24,8 +24,8 @@ namespace MirRemakeBackend.GameLogic {
             var skillIdList = EM_Skill.s_instance.GetSkillIdListByOccupation (ocp);
             for (int i=0; i<skillIdList.Count; i++)
                 m_skillDds.InsertSkill (new DDO_Skill (skillIdList[i], charId, 0, 0));
-            // 任务 dds TODO: 
-            // var misIdList = EM_Mission.s_instance.Get(ocp);
+            // 任务 dds
+            var misIdList = EM_Mission.s_instance.(ocp);
             // 背包和仓库 dds
             short bagSize = 3;
             short storeHouseSize = 6;
