@@ -7,6 +7,11 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.Entity {
     class E_EmptyItem : E_Item {
         public override ItemType m_Type { get { return ItemType.EMPTY; } }
+        public E_EmptyItem () {
+            m_itemDe = new DE_Item ();
+            m_realId = -1;
+            m_num = 0;
+        }
     }
     class E_MaterialItem : E_Item {
         public override ItemType m_Type { get { return ItemType.MATERIAL; } }

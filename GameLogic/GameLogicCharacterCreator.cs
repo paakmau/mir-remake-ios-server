@@ -28,9 +28,9 @@ namespace MirRemakeBackend.GameLogic {
             short bagSize = 3;
             short storeHouseSize = 6;
             for (short i=0; i<bagSize; i++)
-                m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
+                m_itemDds.InsertItem (E_Item.s_emptyItem.GetItemDdo (charId, ItemPlace.BAG, i));
             for (short i=0; i<storeHouseSize; i++)
-                m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.STORE_HOUSE, i));
+                m_itemDds.InsertItem (E_Item.s_emptyItem.GetItemDdo (charId, ItemPlace.STORE_HOUSE, i));
         }
     }
 }
