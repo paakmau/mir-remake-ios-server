@@ -521,7 +521,7 @@ namespace MirRemakeBackend.Network {
         private long m_virtualCy;
         private long m_chargeCy;
         public static SC_ApplySelfCurrency Instance (int netId, long virtualCy, long chargeCy) {
-            s_instance.m_toClientList = new List<int> (netId);
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_virtualCy = virtualCy;
             s_instance.m_chargeCy = chargeCy;
             return s_instance;
