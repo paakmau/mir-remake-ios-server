@@ -256,6 +256,7 @@ namespace MirRemakeBackend.DynamicData {
                     }
                 }
                 mission.m_isAccepted=int.Parse(dt.Rows[i]["status"].ToString())==1;
+                missions.Add (mission);
             }
             return missions;
         }
