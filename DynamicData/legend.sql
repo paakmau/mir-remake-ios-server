@@ -56,6 +56,6 @@ create table `mission`(
 
 
 use legend;
-
-select * from `character`;
+select * from mission;
 select * from item;
+select * from `character`;
