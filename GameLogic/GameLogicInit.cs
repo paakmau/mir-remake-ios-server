@@ -82,7 +82,7 @@ namespace MirRemakeBackend.GameLogic {
             var skillIdAndLvAndMasterlyArr = new (short, short, int) [skillArr.Length];
             for (int i = 0; i < skillArr.Length; i++)
                 skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
-            m_netService.SendServerCommand (SC_InitSelfSkill.Instance (new List<int> () { netId }, skillIdAndLvAndMasterlyArr));
+            m_netService.SendServerCommand (SC_InitSelfSkill.Instance (netId, skillIdAndLvAndMasterlyArr));
 
             // 初始化状态
             EM_Status.s_instance.InitCharacterStatus (netId);
@@ -91,7 +91,7 @@ namespace MirRemakeBackend.GameLogic {
             var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
             List<short> acceptedMis, acceptableMis, unacceptableMis;
             EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_Occupation, newChar.m_Level, ddsList, out acceptedMis, out acceptableMis, out unacceptableMis);
-            // TODO: client
+            m_netService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMis, acceptableMis, unacceptableMis));
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);

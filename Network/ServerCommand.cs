@@ -74,8 +74,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SKILL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private (short, short, int) [] m_skillIdAndLvAndMasterlys;
-        public static SC_InitSelfSkill Instance (IReadOnlyList<int> toClientList, (short, short, int) [] skillIdAndLvAndMasterlys) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_InitSelfSkill Instance (int netId, (short, short, int) [] skillIdAndLvAndMasterlys) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_skillIdAndLvAndMasterlys = skillIdAndLvAndMasterlys;
             return s_instance;
         }
@@ -87,6 +87,36 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_skillIdAndLvAndMasterlys[i].Item2);
                 writer.Put (m_skillIdAndLvAndMasterlys[i].Item3);
             }
+        }
+    }
+    /// <summary>
+    /// 初始化习得技能
+    /// </summary>
+    class SC_InitSelfMission : ServerCommandBase {
+        private static readonly SC_InitSelfMission s_instance = new SC_InitSelfMission ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_MISSION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        IReadOnlyList<short> m_acceptedMis;
+        IReadOnlyList<short> m_acceptableMis;
+        IReadOnlyList<short> m_unacceptableMis;
+        public static SC_InitSelfMission Instance (int netId, IReadOnlyList<short> acceptedMis, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_acceptedMis = acceptedMis;
+            s_instance.m_acceptableMis = acceptableMis;
+            s_instance.m_unacceptableMis = unacceptableMis;
+            return s_instance;
+        }
+        private SC_InitSelfMission () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_acceptedMis.Count);
+            for (int i=0; i<m_acceptedMis.Count; i++)
+                writer.Put(m_acceptedMis[i]);
+            writer.Put ((byte) m_acceptableMis.Count);
+            for (int i=0; i<m_acceptableMis.Count; i++)
+                writer.Put(m_acceptableMis[i]);
+            writer.Put ((byte) m_unacceptableMis.Count);
+            for (int i=0; i<m_unacceptableMis.Count; i++)
+                writer.Put(m_unacceptableMis[i]);
         }
     }
     /// <summary>
