@@ -22,6 +22,9 @@ namespace MirRemakeBackend.DataEntity {
                     skillIdList.Add (ocpSkDo.m_skillId);
                 ocpSkIdDict.Add (ocp, skillIdList);
             }
+            var en = ocpSkIdDict.GetEnumerator ();
+            while (en.MoveNext ())
+                m_ocpSkillIdDict.Add (en.Current.Key, en.Current.Value);
         }
         public IReadOnlyList<short> GetSkillIdListByOccupation (OccupationType ocp) {
             IReadOnlyList<short> res;

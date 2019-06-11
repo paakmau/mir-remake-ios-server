@@ -202,7 +202,7 @@ namespace MirRemakeBackend.Data {
                         skill.m_skillDataAllLevel[j] = skillData;
                     }
                     
-                res[i] = skill;
+                res[i - ssm] = skill;
             }
             return res;
         }
