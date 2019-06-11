@@ -38,15 +38,12 @@ namespace MirRemakeBackend.Entity {
             }
             m_acceptedMissionDict.Add (netId, acceptedMissionDict);
 
-            // 获取可接与不可接任务
+            // 获取可接与不可接任务 TODO: 等yzj搞定任务
             var acceptableMissionSet = new HashSet<short> ();
             var unacceptableMissionSet = new HashSet<short> ();
             m_acceptableMissionDict.Add (netId, acceptableMissionSet);
             m_unacceptableMissionDict.Add (netId, unacceptableMissionSet);
-            var mEn = acceptedMissionDict.Values.GetEnumerator ();
-            while (mEn.MoveNext ())
-                DealWithUnlockedMission (mEn.Current, charOcp, charLv, acceptableMissionSet, unacceptableMissionSet);
-            
+
             // 返回
             resAcceptedMisList = CollectionUtils.GetDictKeyList (acceptedMissionDict);
             resAcceptableMisList = CollectionUtils.GetSetList (acceptableMissionSet);
@@ -103,7 +100,7 @@ namespace MirRemakeBackend.Entity {
             acceptedDict.Remove (mis.m_MissionId);
             s_entityPool.m_missionPool.RecycleInstance (mis);
             // 解锁后续任务
-            DealWithUnlockedMission (mis, ocp, lv, acceptableSet, unacceptableSet);
+            DealWithUnlockedAfterMisDelivered (mis, ocp, lv, acceptableSet, unacceptableSet);
         }
         public void CancelMission (int netId, E_Mission mis) {
             HashSet<short> acceptableSet = null;
@@ -117,10 +114,13 @@ namespace MirRemakeBackend.Entity {
             s_entityPool.m_missionPool.RecycleInstance (mis);
             acceptableSet.Add (mis.m_MissionId);
         }
+        public void RefreshUnlockedMission (int netId, short lv) {
+            
+        }
         /// <summary>
         /// 处理任务完成后的解锁
         /// </summary>
-        private void DealWithUnlockedMission (E_Mission mis, OccupationType ocp, short lv, HashSet<short> resAcceptable, HashSet<short> resUnacceptable) {
+        private void DealWithUnlockedAfterMisDelivered (E_Mission mis, OccupationType ocp, short lv, HashSet<short> resAcceptable, HashSet<short> resUnacceptable) {
             for (int i = 0; i < mis.m_ChildrenIdList.Count; i++) {
                 var de = m_dem.GetMissionById (mis.m_ChildrenIdList[i]);
                 // 职业不匹配
