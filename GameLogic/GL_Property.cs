@@ -14,6 +14,19 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
+        public void CommandApplySellItemInBag (int netId, long realId, short num) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Repository bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null)
+                return;
+            short pos;
+            E_Item item = bag.GetItemByRealId (realId, out pos);
+            if (item == null)
+                return;
+            var virCy = item.m_Price * num;
+            NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
+            NotifyLostItem (charObj, item, num, pos, bag);
+        }
         public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
             // 实例 与 数据
             charObj.m_currencyDict[type] += dC;
@@ -29,6 +42,7 @@ namespace MirRemakeBackend.GameLogic {
             short curNum = item.m_num;
             // 实例 与 数据
             if (runOut) {
+                // 物品消失
                 repo.RemoveItemByRealId (item.m_realId);
                 m_itemDds.DeleteItemByRealId (item.m_realId);
                 EM_Item.s_instance.RecycleItem (item);

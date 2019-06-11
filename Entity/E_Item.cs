@@ -80,11 +80,12 @@ namespace MirRemakeBackend.Entity {
         public static E_Item s_emptyItem = new E_EmptyItem ();
         public long m_realId;
         public DE_Item m_itemDe;
+        public short m_num;
         public short m_ItemId { get { return m_itemDe.m_id; } }
         public virtual ItemType m_Type { get; }
-        public short m_num;
-        public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
         public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
+        public long m_Price { get { return m_itemDe.m_price; } }
+        public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
         protected void Reset (DE_Item de, long realId, short num) {
             m_itemDe = de;
             m_realId = realId;

@@ -97,7 +97,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            GL_Item.s_instance.CommandApplySellItemInBag (netId, realId, num);
+            GL_Property.s_instance.CommandApplySellItemInBag (netId, realId, num);
         }
     }
     /// <summary>

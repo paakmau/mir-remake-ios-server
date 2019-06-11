@@ -46,16 +46,6 @@ namespace MirRemakeBackend.GameLogic {
             // 通知Property逻辑
             GL_Property.s_instance.NotifySwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
-        public void CommandApplySellItemInBag (int netId, long realId, short num) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            E_Repository bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null)
-                return;
-            E_Item item = bag.GetItemByRealId (realId);
-            if (item == null)
-                return;
-            // TODO: 
-        }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();
             // 处理强化与基础属性
