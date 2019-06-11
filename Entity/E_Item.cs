@@ -28,8 +28,8 @@ namespace MirRemakeBackend.Entity {
             base.Reset (itemDe, ddo);
             m_gemDe = gemDe;
         }
-        public void Reset (DE_Item itemDe, DE_GemData gemDe, long realId, short num) {
-            base.Reset (itemDe, realId, num);
+        public void Reset (DE_Item itemDe, DE_GemData gemDe, long realId) {
+            base.Reset (itemDe, realId, 1);
             m_gemDe = gemDe;
         }
     }
@@ -77,7 +77,7 @@ namespace MirRemakeBackend.Entity {
         }
     }
     abstract class E_Item {
-        public static E_Item s_emptyItem = new E_EmptyItem ();
+        public static E_EmptyItem s_emptyItem = new E_EmptyItem ();
         public long m_realId;
         public DE_Item m_itemDe;
         public short m_num;
@@ -86,12 +86,12 @@ namespace MirRemakeBackend.Entity {
         public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
         public long m_Price { get { return m_itemDe.m_price; } }
         public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
-        protected void Reset (DE_Item de, long realId, short num) {
+        public void Reset (DE_Item de, long realId, short num) {
             m_itemDe = de;
             m_realId = realId;
             m_num = num;
         }
-        protected void Reset (DE_Item de, DDO_Item ddo) {
+        public void Reset (DE_Item de, DDO_Item ddo) {
             Reset (de, ddo.m_realId, ddo.m_num);
         }
         /// <summary>

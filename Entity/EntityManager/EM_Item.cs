@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Util;
@@ -9,12 +11,104 @@ namespace MirRemakeBackend.Entity {
     /// 范围: 仓库, 背包, 地面
     /// </summary>
     class EM_Item : EntityManagerBase {
+        private class ItemFactory {
+            private abstract class ItemInitializerBase {
+                public abstract ItemType m_ItemType { get; }
+                protected DEM_Item m_dem;
+                public ItemInitializerBase (DEM_Item dem) {
+                    m_dem = dem;
+                }
+                public virtual void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                    resItem.Reset (de, realId, num);
+                }
+            }
+            private class II_Material : ItemInitializerBase {
+                public override ItemType m_ItemType { get { return ItemType.MATERIAL; } }
+                public II_Material (DEM_Item dem) : base (dem) { }
+            }
+            private class II_Consumable : ItemInitializerBase {
+                public override ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
+                public II_Consumable (DEM_Item dem) : base (dem) { }
+                public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                    var conDe = m_dem.GetConsumableById (de.m_id);
+                    ((E_ConsumableItem) resItem).Reset (de, conDe, realId, num);
+                }
+            }
+            private class II_Equipment : ItemInitializerBase {
+                public override ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
+                public II_Equipment (DEM_Item dem) : base (dem) { }
+                public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                    var eqDe = m_dem.GetEquipmentById (de.m_id);
+                    ((E_EquipmentItem) resItem).Reset (de, eqDe, realId);
+                }
+            }
+            private class II_Gem : ItemInitializerBase {
+                public override ItemType m_ItemType { get { return ItemType.GEM; } }
+                public II_Gem (DEM_Item dem) : base (dem) { }
+                public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                    var gemDe = m_dem.GetGemById (de.m_id);
+                    ((E_GemItem) resItem).Reset (de, gemDe, realId);
+                }
+            }
+            private Dictionary<ItemType, ObjectPool> m_itemPoolDict = new Dictionary<ItemType, ObjectPool> ();
+            private Dictionary<ItemType, ItemInitializerBase> m_itemInitializer = new Dictionary<ItemType, ItemInitializerBase> ();
+            private const int c_materialItemPoolSize = 100000;
+            private const int c_consumableItemPoolSize = 100000;
+            private const int c_equipmentItemPoolSize = 100000;
+            private const int c_gemItemPoolSize = 100000;
+            public ItemFactory (DEM_Item dem) {
+                m_itemPoolDict.Add (ItemType.MATERIAL, new ObjectPool<E_MaterialItem> (c_materialItemPoolSize));
+                m_itemPoolDict.Add (ItemType.CONSUMABLE, new ObjectPool<E_ConsumableItem> (c_consumableItemPoolSize));
+                m_itemPoolDict.Add (ItemType.EQUIPMENT, new ObjectPool<E_EquipmentItem> (c_equipmentItemPoolSize));
+                m_itemPoolDict.Add (ItemType.GEM, new ObjectPool<E_GemItem> (c_gemItemPoolSize));
+                // 实例化所有 ItemInitializerBase 的子类
+                var ccType = typeof (ItemInitializerBase);
+                var ccImplTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && ccType.IsAssignableFrom (p));
+                foreach (var type in ccImplTypes) {
+                    ItemInitializerBase ii = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (new Object[] { dem }) as ItemInitializerBase;
+                    m_itemInitializer.Add (ii.m_ItemType, ii);
+                }
+            }
+            public E_MaterialItem GetMaterialInstance () {
+                return ((ObjectPool<E_MaterialItem>) m_itemPoolDict[ItemType.MATERIAL]).GetInstance ();
+            }
+            public E_ConsumableItem GetConsumableInstance () {
+                return ((ObjectPool<E_ConsumableItem>) m_itemPoolDict[ItemType.CONSUMABLE]).GetInstance ();
+            }
+            public E_EquipmentItem GetEquipmentInstance () {
+                return ((ObjectPool<E_EquipmentItem>) m_itemPoolDict[ItemType.EQUIPMENT]).GetInstance ();
+            }
+            public E_GemItem GetGemInstance () {
+                return ((ObjectPool<E_GemItem>) m_itemPoolDict[ItemType.GEM]).GetInstance ();
+            }
+            public void RecycleItem (E_Item item) {
+                if (item.m_Type == ItemType.EMPTY) return;
+                m_itemPoolDict[item.m_Type].RecycleInstance (item);
+            }
+            public E_Item GetInstance (ItemType type) {
+                if (type == ItemType.EMPTY)
+                    return E_Item.s_emptyItem;
+                return m_itemPoolDict[type].GetInstanceObj () as E_Item;
+            }
+            public E_Item GetAndResetInitInstance (DE_Item de, long realId, short num) {
+                if (de.m_type == ItemType.EMPTY)
+                    return E_Item.s_emptyItem;
+                var initializer = m_itemInitializer[de.m_type];
+                var res = GetInstance (de.m_type);
+                initializer.Initialize (res, de, realId, num);
+                return res;
+            }
+        }
         public static EM_Item s_instance;
         private DEM_Item m_dem;
+        private ItemFactory m_itemFactory;
         private Dictionary<int, E_Repository> m_networkIdAndBagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
-        public EM_Item (DEM_Item dem) { m_dem = dem; }
+        public EM_Item (DEM_Item dem) {
+            m_dem = dem;
+            m_itemFactory = new ItemFactory (m_dem);
+        }
         /// <summary>
         /// 初始化新的角色的所有物品
         /// </summary>
@@ -75,14 +169,17 @@ namespace MirRemakeBackend.Entity {
             RecycleItemList (equiped.GetAllItemList ());
         }
         /// <summary>
-        /// 实例化Item列表  
+        /// 根据itemId与num  
+        /// 初始化Item  
+        /// 返回Entity  
+        /// 不进入索引  
         /// </summary>
         public List<E_Item> InitItemList (IReadOnlyList < (short, short) > itemIdAndNumList, IReadOnlyList<long> realIdList) {
             var res = new List<E_Item> ();
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
                 var idAndNum = itemIdAndNumList[i];
                 DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
-                E_Item item = GenerateItemEntity (itemDe, realIdList[i], idAndNum.Item2);
+                E_Item item = m_itemFactory.GetAndResetInitInstance (itemDe, realIdList[i], idAndNum.Item2);
                 res.Add (item);
             }
             return res;
@@ -116,7 +213,7 @@ namespace MirRemakeBackend.Entity {
             return res;
         }
         public void RecycleItem (E_Item item) {
-            s_entityPool.RecycleItem (item);
+            m_itemFactory.RecycleItem (item);
         }
         public void RecycleItemList (List<E_Item> itemList) {
             for (int i = 0; i < itemList.Count; i++)
@@ -135,22 +232,22 @@ namespace MirRemakeBackend.Entity {
                 E_Item item = E_Item.s_emptyItem;
                 switch (itemDe.m_type) {
                     case ItemType.CONSUMABLE:
-                        item = s_entityPool.m_consumableItemPool.GetInstance ();
+                        item = m_itemFactory.GetConsumableInstance ();
                         DE_ConsumableData cDe = m_dem.GetConsumableById (itemId);
                         ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo);
                         break;
                     case ItemType.EQUIPMENT:
-                        item = s_entityPool.m_equipmentItemPool.GetInstance ();
+                        item = m_itemFactory.GetEquipmentInstance ();
                         DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
                         DDO_EquipmentInfo eqDdo = eqDdoDict[realId];
                         ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
                         break;
                     case ItemType.MATERIAL:
-                        item = s_entityPool.m_materialItemPool.GetInstance ();
+                        item = m_itemFactory.GetMaterialInstance ();
                         ((E_MaterialItem) item).Reset (itemDe, itemDdo);
                         break;
                     case ItemType.GEM:
-                        item = s_entityPool.m_gemItemPool.GetInstance ();
+                        item = m_itemFactory.GetGemInstance ();
                         DE_GemData gDe = m_dem.GetGemById (itemId);
                         ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
                         break;
@@ -160,34 +257,6 @@ namespace MirRemakeBackend.Entity {
                 }
                 resItemArr[i] = item;
             }
-        }
-        /// <summary>
-        /// 产生一件物品
-        /// </summary>
-        private E_Item GenerateItemEntity (DE_Item itemDe, long realId, short num) {
-            E_Item res = E_Item.s_emptyItem;
-            switch (itemDe.m_type) {
-                case ItemType.CONSUMABLE:
-                    res = s_entityPool.m_consumableItemPool.GetInstance ();
-                    DE_ConsumableData conDe = m_dem.GetConsumableById (itemDe.m_id);
-                    ((E_ConsumableItem) res).Reset (itemDe, conDe, realId, num);
-                    break;
-                case ItemType.MATERIAL:
-                    res = s_entityPool.m_materialItemPool.GetInstance ();
-                    ((E_MaterialItem) res).Reset (itemDe, realId, num);
-                    break;
-                case ItemType.GEM:
-                    res = s_entityPool.m_gemItemPool.GetInstance ();
-                    DE_GemData gemDe = m_dem.GetGemById (itemDe.m_id);
-                    ((E_GemItem) res).Reset (itemDe, gemDe, realId, num);
-                    break;
-                case ItemType.EQUIPMENT:
-                    res = s_entityPool.m_equipmentItemPool.GetInstance ();
-                    DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemDe.m_id);
-                    ((E_EquipmentItem) res).Reset (itemDe, eqDe, realId);
-                    break;
-            }
-            return res;
         }
     }
 }

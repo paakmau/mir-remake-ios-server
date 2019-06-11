@@ -92,8 +92,8 @@ namespace MirRemakeBackend.Entity {
         /// </param>
         /// <returns>
         /// 若item占用了一个槽位返回 pos  
-        /// 若完全堆叠返回 0  
-        /// 未能完全存入返回 -1  
+        /// 若完全堆叠返回 -1  
+        /// 未能完全存入返回 -2  
         /// </returns>
         public short AutoStoreItem (E_Item item, out List < (short, E_Item) > posAndChangedItemList) {
             posAndChangedItemList = new List < (short, E_Item) > ();
@@ -104,18 +104,18 @@ namespace MirRemakeBackend.Entity {
                     posAndChangedItemList.Add (((short) i, itemInRepo));
                     short added = itemInRepo.AddNum (item.m_num);
                     if (item.RemoveNum (added))
-                        return 1;
+                        return -1;
                 }
             }
             // 寻找空插槽
-            for (int i = 0; i < m_itemList.Count; i++) {
+            for (short i = 0; i < m_itemList.Count; i++) {
                 var itemInRepo = m_itemList[i];
                 if (itemInRepo.m_IsEmpty) {
                     itemInRepo = item;
-                    return 0;
+                    return i;
                 }
             }
-            return -1;
+            return -2;
         }
     }
 

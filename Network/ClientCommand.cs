@@ -177,9 +177,17 @@ namespace MirRemakeBackend.Network {
     class CC_TestGainCy : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
         public void Execute (NetDataReader reader, int netId) {
-            CurrencyType cyType = (CurrencyType)reader.GetByte ();
+            CurrencyType cyType = (CurrencyType) reader.GetByte ();
             long cy = reader.GetLong ();
             GL_Property.s_instance.CommandGainCurrency (netId, cyType, cy);
+        }
+    }
+    class CC_TestGainItem : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_ITEM; } }
+        public void Execute (NetDataReader reader, int netId) {
+            short itemId = reader.GetShort ();
+            short num = reader.GetShort ();
+            GL_Property.s_instance.CommandGainItem (netId, itemId, num);
         }
     }
 }

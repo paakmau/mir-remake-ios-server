@@ -74,6 +74,7 @@ namespace MirRemakeBackend.Network {
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,
-        TEST_GAIN_MASTERLY
+        TEST_GAIN_MASTERLY,
+        TEST_GAIN_ITEM
     }
 }

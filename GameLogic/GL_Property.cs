@@ -32,6 +32,13 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
+        public void CommandGainItem (int netId, short itemId, short num) {
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            NotifyGainItem (charObj, new List < (short, short) > {
+                (itemId, num)
+            });
+        }
         public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
             // 实例 与 数据
             charObj.m_currencyDict[type] += dC;
@@ -76,8 +83,8 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < itemList.Count; i++) {
                 List < (short, E_Item) > changedItemList;
                 short storePos = bag.AutoStoreItem (itemList[i], out changedItemList);
-                // 堆叠原有物品
-                // 数据更新
+                // 处理原有物品的堆叠
+                // dds 更新
                 for (int j = 0; j < changedItemList.Count; j++)
                     m_itemDds.UpdateItem (
                         changedItemList[j].Item2.GetItemDdo (
@@ -89,11 +96,12 @@ namespace MirRemakeBackend.GameLogic {
                     changedRealIdList.Add (changedItemList[i].Item2.m_realId);
                     changedPosList.Add (changedItemList[i].Item1);
                 }
-                m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
-                    charObj.m_networkId, changedRealIdList, changedPosList));
+                if (changedItemList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
+                        charObj.m_networkId, changedRealIdList, changedPosList));
 
                 // 若该物品消失 (被堆叠或无法放入) 数据删除
-                if (storePos == 0 || storePos == -1) {
+                if (storePos == -1 || storePos == -2) {
                     m_itemDds.DeleteItemByRealId (itemList[i].m_realId);
                     continue;
                 }
@@ -113,7 +121,7 @@ namespace MirRemakeBackend.GameLogic {
                             m_networkService.SendServerCommand (
                                 SC_ApplySelfUpdateEquipment.Instance (
                                     charObj.m_networkId, itemList[i].m_realId,
-                                    ((E_EquipmentItem)itemList[i]).GetEquipmentInfoNo ()));
+                                    ((E_EquipmentItem) itemList[i]).GetEquipmentInfoNo ()));
                             break;
                     }
                 }
@@ -121,4 +129,3 @@ namespace MirRemakeBackend.GameLogic {
         }
     }
 }
-
