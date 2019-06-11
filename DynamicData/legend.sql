@@ -49,6 +49,7 @@ create table `mission`(
   `missionid` int NOT NULL,
   `charid` int NOT NULL,
   `targets` VARCHAR(150) NOT NULL,
+  `status` int NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
