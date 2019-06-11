@@ -278,10 +278,15 @@ namespace MirRemakeBackend.DynamicData {
         }
         public void UpdateMission (DDO_Mission ddo) {
             string cmd;
-            string target = ddo.m_missionTargetProgressList[0].ToString ();
+            string target;
+            if(ddo.m_missionTargetProgressList.Count==0){
+                target="";
+            }
+            else{
+            target = ddo.m_missionTargetProgressList[0].ToString ();
             for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
-            }
+            }}
             int status=ddo.m_isAccepted?1:0;
             cmd = "update mission set targets=\"" + target + "\",`status`="+status+" where charid=" + ddo.m_characterId + " and missionid=" + ddo.m_missionId + ";";
             string database = "legend";
