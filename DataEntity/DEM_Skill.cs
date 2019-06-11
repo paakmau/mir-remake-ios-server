@@ -13,14 +13,15 @@ namespace MirRemakeBackend.DataEntity {
             var skillDoArr = skillDs.GetAllSkill ();
             foreach (var skillDo in skillDoArr)
                 m_skillAllLevelDict.Add (skillDo.m_skillId, new DE_Skill (skillDo));
-            // TODO: 得到每种职业的所有技能, 当前为测试不考虑职业, 放入前6个
-            List<short> allSkillIdList = new List<short> ();
-            for (int i=0; i<6; i++)
-                allSkillIdList.Add (skillDoArr[i].m_skillId);
-            m_ocpSkillIdDict.Add (OccupationType.MAGE, allSkillIdList);
-            m_ocpSkillIdDict.Add (OccupationType.ROGUE, allSkillIdList);
-            m_ocpSkillIdDict.Add (OccupationType.TAOIST, allSkillIdList);
-            m_ocpSkillIdDict.Add (OccupationType.WARRIOR, allSkillIdList);
+            OccupationType[] ocpArr = new OccupationType[] { OccupationType.MAGE, OccupationType.ROGUE, OccupationType.TAOIST, OccupationType.WARRIOR };
+            Dictionary<OccupationType, List<short>> ocpSkIdDict = new Dictionary<OccupationType, List<short>> ();
+            foreach (var ocp in ocpArr) {
+                var ocpSkills = skillDs.GetSkillsByOccupation (ocp);
+                var skillIdList = new List<short> (ocpSkills.Length);
+                foreach (var ocpSkDo in ocpSkills)
+                    skillIdList.Add (ocpSkDo.m_skillId);
+                ocpSkIdDict.Add (ocp, skillIdList);
+            }
         }
         public IReadOnlyList<short> GetSkillIdListByOccupation (OccupationType ocp) {
             IReadOnlyList<short> res;
