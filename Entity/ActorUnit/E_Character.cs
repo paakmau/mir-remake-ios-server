@@ -61,7 +61,7 @@ namespace MirRemakeBackend.Entity {
             if (m_Level == m_MaxLevel)
                 return 0;
             int cnt = 0;
-            while (m_experience < m_UpgradeExperienceInNeed) {
+            while (m_experience >= m_UpgradeExperienceInNeed) {
                 m_experience -= m_UpgradeExperienceInNeed;
                 m_characterDataDe = m_characterDe.m_characterDataAllLevel[m_Level + 1];
                 cnt++;
