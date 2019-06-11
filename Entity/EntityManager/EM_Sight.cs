@@ -58,8 +58,8 @@ namespace MirRemakeBackend.Entity {
         /// 为角色初始化视野, 并加入可视单位
         /// </summary>
         public void InitCharacter (E_Character charObj) {
-            m_characterSightDict.Add (charObj.m_networkId, new List<E_Unit> ());
-            m_netIdAndUnitVisibleDict.Add (charObj.m_networkId, charObj);
+            m_characterSightDict.TryAdd (charObj.m_networkId, new List<E_Unit> ());
+            m_netIdAndUnitVisibleDict.TryAdd (charObj.m_networkId, charObj);
         }
         /// <summary>
         /// 移除一个角色的视野信息, 并移除可视单位

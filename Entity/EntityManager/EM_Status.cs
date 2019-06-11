@@ -10,7 +10,7 @@ namespace MirRemakeBackend.Entity {
         private List<E_Status> t_statusList = new List<E_Status> ();
         public EM_Status (DEM_Status dem) { m_dem = dem; }
         public void InitCharacterStatus (int netId) {
-            m_networkIdAndStatusListDict.Add (netId, new List<E_Status> ());
+            m_networkIdAndStatusListDict.TryAdd (netId, new List<E_Status> ());
         }
         public void RemoveCharacterStatus (int netId) {
             List<E_Status> statusList = null;

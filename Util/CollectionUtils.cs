@@ -2,19 +2,26 @@ using System.Collections.Generic;
 
 namespace MirRemakeBackend.Util {
     class CollectionUtils {
-        // public static List<KeyValuePair<T, K>> DictionaryToList<T, K> (Dictionary<T, K> dict) {
-        //     List<KeyValuePair<T, K>> res = new List<KeyValuePair<T, K>> ();
-        //     var dictEn = dict.GetEnumerator ();
-        //     while (dictEn.MoveNext ()) 
-        //         res.Add (dictEn.Current);
-        //     return res;
-        // }
-        // public static List<K> DictionaryToValueList<T, K> (Dictionary<T, K> dict) {
-        //     List<K> res = new List<K> ();
-        //     var valueEn = dict.Values.GetEnumerator ();
-        //     while (valueEn.MoveNext ())
-        //         res.Add (valueEn.Current);
-        //     return res;
-        // }
+        public static List<T> GetDictKeyList<T, U> (Dictionary<T, U> dict) {
+            var res = new List<T> (dict.Count);
+            var en = dict.GetEnumerator ();
+            while (en.MoveNext ())
+                res.Add (en.Current.Key);
+            return res;
+        }
+        public static List<U> GetDictValueList<T, U> (Dictionary<T, U> dict) {
+            var res = new List<U> (dict.Count);
+            var en = dict.GetEnumerator ();
+            while (en.MoveNext ())
+                res.Add (en.Current.Value);
+            return res;
+        }
+        public static List<T> GetSetList<T> (HashSet<T> set) {
+            var res = new List<T> (set.Count);
+            var en = set.GetEnumerator ();
+            while (en.MoveNext ())
+                res.Add (en.Current);
+            return res;
+        }
     }
 }

@@ -53,7 +53,7 @@ namespace MirRemakeBackend.GameLogic {
             // 实例化角色
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId, m_charDds.GetCharacterById (charId));
             EM_Sight.s_instance.InitCharacter (newChar);
-            // 发送角色
+            // client 角色
             m_netService.SendServerCommand (SC_InitSelfAttribute.Instance (
                 netId,
                 newChar.m_Level,
@@ -72,13 +72,13 @@ namespace MirRemakeBackend.GameLogic {
             E_Repository bag, storeHouse;
             E_EquipmentRegion eqRegion;
             EM_Item.s_instance.InitCharacter (netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo, out bag, out storeHouse, out eqRegion);
-            // 发送bag, storeHouse, equiped
+            // client bag, storeHouse, equiped
             m_netService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
 
             // 实例化技能
             var skillDdoList = m_skillDds.GetSkillListByCharacterId (charId);
             E_Skill[] skillArr = EM_Skill.s_instance.InitCharacter (netId, charId, skillDdoList);
-            // 发送技能
+            // client 技能
             var skillIdAndLvAndMasterlyArr = new (short, short, int) [skillArr.Length];
             for (int i = 0; i < skillArr.Length; i++)
                 skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
@@ -89,7 +89,9 @@ namespace MirRemakeBackend.GameLogic {
 
             // 实例化任务
             var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
-            EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_Occupation, newChar.m_Level, ddsList);
+            List<short> acceptedMis, acceptableMis, unacceptableMis;
+            EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_Occupation, newChar.m_Level, ddsList, out acceptedMis, out acceptableMis, out unacceptableMis);
+            // TODO: client
         }
         public void CommandRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);

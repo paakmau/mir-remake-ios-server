@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
@@ -9,13 +10,25 @@ namespace MirRemakeBackend.Entity {
     class EM_Mission : EntityManagerBase {
         public static EM_Mission s_instance;
         private DEM_Mission m_dem;
+        /// <summary>已接任务</summary>
         private Dictionary<int, Dictionary<short, E_Mission>> m_acceptedMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         /// <summary>可接任务</summary>
         private Dictionary<int, HashSet<short>> m_acceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         public EM_Mission (DEM_Mission dem) { m_dem = dem; }
-        public void InitCharacter (int netId, int charId, OccupationType charOcp, short charLv, List<DDO_Mission> ddoList) {
+        public void InitCharacter (int netId, int charId, OccupationType charOcp, short charLv, List<DDO_Mission> ddoList, out List<short> resAcceptedMisList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
+            Dictionary<short, E_Mission> oriAcceptedMisDict;
+            HashSet<short> oriAcceptableMisSet;
+            HashSet<short> oriUnacceptableMisSet;
+            // 若角色已经加载
+            if (m_acceptedMissionDict.TryGetValue (netId, out oriAcceptedMisDict) && m_acceptableMissionDict.TryGetValue (netId, out oriAcceptableMisSet) && m_unacceptableMissionDict.TryGetValue (netId, out oriUnacceptableMisSet)) {
+                resAcceptedMisList = CollectionUtils.GetDictKeyList (oriAcceptedMisDict);
+                resAcceptableMisList = CollectionUtils.GetSetList (oriAcceptableMisSet);
+                resUnacceptableMisList = CollectionUtils.GetSetList(oriUnacceptableMisSet);
+                return;
+            }
+
             // 读取已接任务
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
@@ -33,6 +46,11 @@ namespace MirRemakeBackend.Entity {
             var mEn = acceptedMissionDict.Values.GetEnumerator ();
             while (mEn.MoveNext ())
                 DealWithUnlockedMission (mEn.Current, charOcp, charLv, acceptableMissionSet, unacceptableMissionSet);
+            
+            // 返回
+            resAcceptedMisList = CollectionUtils.GetDictKeyList (acceptedMissionDict);
+            resAcceptableMisList = CollectionUtils.GetSetList (acceptableMissionSet);
+            resUnacceptableMisList = CollectionUtils.GetSetList (unacceptableMissionSet);
         }
         public void RemoveCharacter (int netId) {
             m_acceptableMissionDict.Remove (netId);

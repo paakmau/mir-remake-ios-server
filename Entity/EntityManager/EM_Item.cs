@@ -102,9 +102,9 @@ namespace MirRemakeBackend.Entity {
         public static EM_Item s_instance;
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
-        private Dictionary<int, E_Repository> m_networkIdAndBagDict = new Dictionary<int, E_Repository> ();
-        private Dictionary<int, E_Repository> m_networkIdAndStoreHouseDict = new Dictionary<int, E_Repository> ();
-        private Dictionary<int, E_EquipmentRegion> m_networkIdAndEquipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
+        private Dictionary<int, E_Repository> m_bagDict = new Dictionary<int, E_Repository> ();
+        private Dictionary<int, E_Repository> m_storeHouseDict = new Dictionary<int, E_Repository> ();
+        private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         public EM_Item (DEM_Item dem) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (m_dem);
@@ -127,6 +127,14 @@ namespace MirRemakeBackend.Entity {
             out E_Repository storeHouse,
             out E_EquipmentRegion eqRegion
         ) {
+            // 若角色已经初始化
+            if (m_bagDict.ContainsKey (netId)) {
+                bag = GetBag (netId);
+                storeHouse = GetStoreHouse (netId);
+                eqRegion = GetEquiped (netId);
+                return;
+            }
+
             // 索引角色的所有装备
             Dictionary<long, DDO_EquipmentInfo> eqDdoDict = new Dictionary<long, DDO_EquipmentInfo> ();
             for (int i = 0; i < allEquipmentDdoList.Count; i++)
@@ -145,22 +153,22 @@ namespace MirRemakeBackend.Entity {
             storeHouse.Reset (ItemPlace.STORE_HOUSE, itemInStoreHouse);
             eqRegion.Reset (ItemPlace.EQUIPMENT_REGION, itemEquiped);
             // 索引各区域
-            m_networkIdAndBagDict[netId] = bag;
-            m_networkIdAndStoreHouseDict[netId] = storeHouse;
-            m_networkIdAndEquipmentRegionDict[netId] = eqRegion;
+            m_bagDict[netId] = bag;
+            m_storeHouseDict[netId] = storeHouse;
+            m_equipmentRegionDict[netId] = eqRegion;
         }
         public void RemoveCharacter (int netId) {
             E_Repository bag;
-            m_networkIdAndBagDict.TryGetValue (netId, out bag);
+            m_bagDict.TryGetValue (netId, out bag);
             E_Repository storeHouse;
-            m_networkIdAndStoreHouseDict.TryGetValue (netId, out storeHouse);
+            m_storeHouseDict.TryGetValue (netId, out storeHouse);
             E_EquipmentRegion equiped;
-            m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out equiped);
+            m_equipmentRegionDict.TryGetValue (netId, out equiped);
             if (bag == null || storeHouse == null || equiped == null)
                 return;
-            m_networkIdAndBagDict.Remove (netId);
-            m_networkIdAndStoreHouseDict.Remove (netId);
-            m_networkIdAndEquipmentRegionDict.Remove (netId);
+            m_bagDict.Remove (netId);
+            m_storeHouseDict.Remove (netId);
+            m_equipmentRegionDict.Remove (netId);
             s_entityPool.m_repositoryPool.RecycleInstance (bag);
             s_entityPool.m_repositoryPool.RecycleInstance (storeHouse);
             s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);
@@ -187,9 +195,12 @@ namespace MirRemakeBackend.Entity {
         public DE_GemData GetGemById (short itemId) {
             return m_dem.GetGemById (itemId);
         }
+        /// <summary>
+        /// 获取装备区
+        /// </summary>
         public E_EquipmentRegion GetEquiped (int netId) {
             E_EquipmentRegion er = null;
-            m_networkIdAndEquipmentRegionDict.TryGetValue (netId, out er);
+            m_equipmentRegionDict.TryGetValue (netId, out er);
             return er;
         }
         public List<short> GetEquipedItemIdList (int netId) {
@@ -204,12 +215,12 @@ namespace MirRemakeBackend.Entity {
         }
         public E_Repository GetBag (int netId) {
             E_Repository res = null;
-            m_networkIdAndBagDict.TryGetValue (netId, out res);
+            m_bagDict.TryGetValue (netId, out res);
             return res;
         }
         public E_Repository GetStoreHouse (int netId) {
             E_Repository res = null;
-            m_networkIdAndStoreHouseDict.TryGetValue (netId, out res);
+            m_storeHouseDict.TryGetValue (netId, out res);
             return res;
         }
         public void RecycleItem (E_Item item) {
