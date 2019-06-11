@@ -294,6 +294,33 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 更新自身主属性加点
+    /// </summary>
+    class SC_ApplySelfMainAttribute : ServerCommandBase {
+        private static readonly SC_ApplySelfMainAttribute s_instance = new SC_ApplySelfMainAttribute ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MAIN_ATTRIBUTE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        short m_str;
+        short m_intl;
+        short m_agl;
+        short m_spr;
+        public static SC_ApplySelfMainAttribute Instance (int netId, short str, short intl, short agl, short spr) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_str = str;
+            s_instance.m_intl = intl;
+            s_instance.m_agl = agl;
+            s_instance.m_spr = spr;
+            return s_instance;
+        }
+        private SC_ApplySelfMainAttribute () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_str);
+            writer.Put (m_intl);
+            writer.Put (m_agl);
+            writer.Put (m_spr);
+        }
+    }
+    /// <summary>
     /// 其他单位开始释放技能
     /// </summary>
     class SC_ApplyOtherCastSkillBegin : ServerCommandBase {

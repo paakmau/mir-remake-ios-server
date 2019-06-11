@@ -69,6 +69,8 @@ namespace MirRemakeBackend.Entity {
             return cnt;
         }
         public void DistributePoints (short str, short intl, short agl, short spr) {
+            if (str + intl + agl + spr > m_TotalMainPoint)
+                return;
             m_Strength = str;
             m_Intelligence = intl;
             m_Agility = agl;

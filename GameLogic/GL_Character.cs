@@ -62,6 +62,14 @@ namespace MirRemakeBackend.GameLogic {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             charObj.DistributePoints (str, intl, agl, spr);
+            // dds 与 client
+            m_charDds.UpdateCharacter (charObj.GetDdo ());
+            m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
+                netId,
+                charObj.m_Strength,
+                charObj.m_Intelligence,
+                charObj.m_Agility,
+                charObj.m_Spirit));
         }
     }
 }
