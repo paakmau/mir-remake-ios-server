@@ -667,8 +667,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_ACCECPT_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
-        public static SC_ApplySelfAcceptMission Instance (IReadOnlyList<int> toClientList, short missionId) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_ApplySelfAcceptMission Instance (int netId, short missionId) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_missionId = missionId;
             return s_instance;
         }

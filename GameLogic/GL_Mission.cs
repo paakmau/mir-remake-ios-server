@@ -23,7 +23,7 @@ namespace MirRemakeBackend.GameLogic {
             if (mis == null) return;
             // 数据与client
             m_misDds.UpdateMission (mis.GetDdo (charObj.m_characterId));
-            m_networkService.SendServerCommand (SC_ApplySelfAcceptMission.Instance (new List<int> (netId), misId));
+            m_networkService.SendServerCommand (SC_ApplySelfAcceptMission.Instance (netId, misId));
             // TODO: 处理任务条件监听
         }
         public void CommandApplyDeliveryMission (int netId, short misId) {
@@ -38,9 +38,9 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_Occupation, charObj.m_Level, out acableMis, out unaMis);
             // dds 与 client
             m_misDds.DeleteMission (misId, charObj.m_characterId);
-            for (int i=0; i<acableMis.Count; i++)
+            for (int i = 0; i < acableMis.Count; i++)
                 m_misDds.InsertMission (new DDO_Mission (acableMis[i], charObj.m_characterId, false, new List<int> ()));
-            for (int i=0; i<unaMis.Count; i++)
+            for (int i = 0; i < unaMis.Count; i++)
                 m_misDds.InsertMission (new DDO_Mission (unaMis[i], charObj.m_characterId, false, new List<int> ()));
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
