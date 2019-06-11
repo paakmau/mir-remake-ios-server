@@ -45,6 +45,7 @@ namespace MirRemakeBackend.Entity {
             m_acceptableMissionDict.Add (netId, acceptableMissionSet);
             m_unacceptableMissionDict.Add (netId, unacceptableMissionSet);
             for (int i = 0; i < ddoList.Count; i++) {
+                if (ddoList[i].m_isAccepted) continue;
                 var de = m_dem.GetMissionById (ddoList[i].m_missionId);
                 if (CanAccept (de, charLv))
                     acceptableMissionSet.Add (de.m_id);
