@@ -100,7 +100,7 @@ namespace MirRemakeBackend.Entity {
             // 堆叠
             for (int i = 0; i < m_itemList.Count; i++) {
                 var itemInRepo = m_itemList[i];
-                if (itemInRepo.m_itemId == item.m_itemId && itemInRepo.m_num != item.m_MaxNum) {
+                if (itemInRepo.m_ItemId == item.m_ItemId && itemInRepo.m_num != item.m_MaxNum) {
                     posAndChangedItemList.Add (((short) i, itemInRepo));
                     short added = itemInRepo.AddNum (item.m_num);
                     if (item.RemoveNum (added))

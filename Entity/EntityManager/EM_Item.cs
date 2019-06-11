@@ -102,7 +102,7 @@ namespace MirRemakeBackend.Entity {
             if (equips == null) return null;
             var en = equips.GetEquipedEn ();
             while (en.MoveNext ())
-                res.Add (en.Current.Value.m_itemId);
+                res.Add (en.Current.Value.m_ItemId);
             return res;
         }
         public E_Repository GetBag (int netId) {
