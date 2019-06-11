@@ -77,12 +77,12 @@ namespace MirRemakeBackend.Entity {
             acceptedDict.TryGetValue (misId, out res);
             return res;
         }
-        public IReadOnlyList<DE_Mission> GetAllInitUnlockMisDes (OccupationType ocp) {
-            var res = new List<DE_Mission> ();
+        public IReadOnlyList<short> GetAllInitUnlockMisDes (OccupationType ocp) {
+            var res = new List<short> ();
             var deList = m_dem.GetInitUnlockMisIdList ();
-            for (int i=0; i<deList.Count; i++)
+            for (int i = 0; i < deList.Count; i++)
                 if (CanUnlock (deList[i], ocp))
-                    res.Add (deList[i]);
+                    res.Add (deList[i].m_id);
             return res;
         }
         public E_Mission AcceptMission (int netId, short misId) {
@@ -103,7 +103,13 @@ namespace MirRemakeBackend.Entity {
             acceptedDict[misId] = mis;
             return mis;
         }
-        public void DeliveryMission (int netId, E_Mission mis, OccupationType ocp, short lv) {
+        /// <summary>
+        /// 交付一个任务  
+        /// 返回解锁任务的修改信息
+        /// </summary>
+        public void DeliveryMission (int netId, E_Mission mis, OccupationType ocp, short lv, out List<short> resNewAcceptableMis, out List<short> resNewUnacceptableMis) {
+            resNewAcceptableMis = null;
+            resNewUnacceptableMis = null;
             HashSet<short> acceptableSet = null;
             if (!m_acceptableMissionDict.TryGetValue (netId, out acceptableSet))
                 return;
@@ -117,14 +123,20 @@ namespace MirRemakeBackend.Entity {
             acceptedDict.Remove (mis.m_MissionId);
             s_entityPool.m_missionPool.RecycleInstance (mis);
             // 后续任务解锁
+            resNewAcceptableMis = new List<short> ();
+            resNewUnacceptableMis = new List<short> ();
             for (int i = 0; i < mis.m_ChildrenIdList.Count; i++) {
                 var de = m_dem.GetMissionById (mis.m_ChildrenIdList[i]);
                 if (!CanUnlock (de, ocp))
                     continue;
-                if (CanAccept (de, lv))
+                if (CanAccept (de, lv)) {
                     acceptableSet.Add (de.m_id);
-                else
+                    resNewAcceptableMis.Add (de.m_id);
+                }
+                else {
                     unacceptableSet.Add (de.m_id);
+                    resNewUnacceptableMis.Add (de.m_id);
+                }
             }
         }
         public void CancelMission (int netId, E_Mission mis) {

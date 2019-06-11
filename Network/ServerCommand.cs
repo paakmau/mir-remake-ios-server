@@ -109,14 +109,14 @@ namespace MirRemakeBackend.Network {
         private SC_InitSelfMission () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_acceptedMis.Count);
-            for (int i=0; i<m_acceptedMis.Count; i++)
-                writer.Put(m_acceptedMis[i]);
+            for (int i = 0; i < m_acceptedMis.Count; i++)
+                writer.Put (m_acceptedMis[i]);
             writer.Put ((byte) m_acceptableMis.Count);
-            for (int i=0; i<m_acceptableMis.Count; i++)
-                writer.Put(m_acceptableMis[i]);
+            for (int i = 0; i < m_acceptableMis.Count; i++)
+                writer.Put (m_acceptableMis[i]);
             writer.Put ((byte) m_unacceptableMis.Count);
-            for (int i=0; i<m_unacceptableMis.Count; i++)
-                writer.Put(m_unacceptableMis[i]);
+            for (int i = 0; i < m_unacceptableMis.Count; i++)
+                writer.Put (m_unacceptableMis[i]);
         }
     }
     /// <summary>
@@ -682,8 +682,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DELIVER_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
-        public static SC_ApplySelfDeliverMission Instance (IReadOnlyList<int> toClientList, short missionId) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_ApplySelfDeliverMission Instance (int netId, short missionId) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_missionId = missionId;
             return s_instance;
         }
@@ -697,8 +697,8 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CANCEL_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
-        public static SC_ApplySelfCancelMission Instance (IReadOnlyList<int> toClientList, short missionId) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_ApplySelfCancelMission Instance (int netId, short missionId) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_missionId = missionId;
             return s_instance;
         }
@@ -709,7 +709,7 @@ namespace MirRemakeBackend.Network {
     }
     class SC_ApplySelfMissionProgress : ServerCommandBase {
         private static SC_ApplySelfMissionProgress s_instance = new SC_ApplySelfMissionProgress ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SET_MISSION_PROGRESS; } }
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_PROGRESS; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
         private byte m_targetNum;
@@ -726,6 +726,45 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
             writer.Put (m_targetNum);
             writer.Put (m_value);
+        }
+    }
+    class SC_ApplySelfMissionUnlock : ServerCommandBase {
+        private static SC_ApplySelfMissionUnlock s_instance = new SC_ApplySelfMissionUnlock ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_UNLOCK; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<short> m_acceptableMis;
+        private IReadOnlyList<short> m_unacceptableMis;
+        public static SC_ApplySelfMissionUnlock Instance (int netId, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_acceptableMis = acceptableMis;
+            s_instance.m_unacceptableMis = unacceptableMis;
+            return s_instance;
+        }
+        private SC_ApplySelfMissionUnlock () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_acceptableMis.Count);
+            for (int i = 0; i < m_acceptableMis.Count; i++)
+                writer.Put (m_acceptableMis[i]);
+            writer.Put ((byte) m_unacceptableMis.Count);
+            for (int i = 0; i < m_unacceptableMis.Count; i++)
+                writer.Put (m_unacceptableMis[i]);
+        }
+    }
+    class SC_ApplySelfMissionAcceptable : ServerCommandBase {
+        private static SC_ApplySelfMissionAcceptable s_instance = new SC_ApplySelfMissionAcceptable ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_ACCEPTABLE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<short> m_acceptableMis;
+        public static SC_ApplySelfMissionAcceptable Instance (int netId, IReadOnlyList<short> acceptableMis) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_acceptableMis = acceptableMis;
+            return s_instance;
+        }
+        private SC_ApplySelfMissionAcceptable () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_acceptableMis.Count);
+            for (int i = 0; i < m_acceptableMis.Count; i++)
+                writer.Put (m_acceptableMis[i]);
         }
     }
 }

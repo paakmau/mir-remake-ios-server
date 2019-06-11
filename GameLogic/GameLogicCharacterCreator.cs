@@ -28,9 +28,9 @@ namespace MirRemakeBackend.GameLogic {
             for (int i=0; i<skillIdList.Count; i++)
                 m_skillDds.InsertSkill (new DDO_Skill (skillIdList[i], charId, 0, 0));
             // 任务 dds
-            var misDeList = EM_Mission.s_instance.GetAllInitUnlockMisDes(ocp);
-            for (int i=0; i<misDeList.Count; i++)
-                m_misDds.InsertMission (new DDO_Mission (misDeList[i].m_id, charId, false, new List<int> (misDeList[i].m_targetAndParamList.Count)));
+            var misIdList = EM_Mission.s_instance.GetAllInitUnlockMisDes(ocp);
+            for (int i=0; i<misIdList.Count; i++)
+                m_misDds.InsertMission (new DDO_Mission (misIdList[i], charId, false, new List<int> ()));
             // 背包和仓库 dds
             short bagSize = 3;
             short storeHouseSize = 6;

@@ -34,10 +34,16 @@ namespace MirRemakeBackend.GameLogic {
             if (!misObj.m_IsFinished)
                 return;
             // 移除实例
-            EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_Occupation, charObj.m_Level);
-            // 数据与client
+            List<short> acableMis, unaMis;
+            EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_Occupation, charObj.m_Level, out acableMis, out unaMis);
+            // dds 与 client
             m_misDds.DeleteMission (misId, charObj.m_characterId);
-            m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (new List<int> { netId }, misId));
+            for (int i=0; i<acableMis.Count; i++)
+                m_misDds.InsertMission (new DDO_Mission (acableMis[i], charObj.m_characterId, false, new List<int> ()));
+            for (int i=0; i<unaMis.Count; i++)
+                m_misDds.InsertMission (new DDO_Mission (unaMis[i], charObj.m_characterId, false, new List<int> ()));
+            m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
+            m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
             // TODO: 移除监听
             // 其他模块
             GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, misObj.m_BonusVirtualCurrency);
@@ -52,7 +58,7 @@ namespace MirRemakeBackend.GameLogic {
             // 移除实例 数据 client
             EM_Mission.s_instance.CancelMission (netId, misObj);
             m_misDds.UpdateMission (misObj.GetDdo (charId));
-            m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (new List<int> { netId }, misId));
+            m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
             // TODO: 移除监听
         }
     }
