@@ -14,7 +14,8 @@ namespace MirRemakeBackend.DataEntity {
             foreach (var mDo in doArr) {
                 var de = new DE_Mission (mDo);
                 m_missionDict.Add (mDo.m_id, de);
-                if (mDo.m_fatherMissionIdArr.Length == 0)
+                // TODO: 让yzj改为 0长度数组
+                if (mDo.m_fatherMissionIdArr.Length == 1 && mDo.m_fatherMissionIdArr[0] == -1)
                     m_initUnlockMisList.Add (de);
             }
         }
