@@ -70,6 +70,12 @@ namespace MirRemakeBackend.Entity {
             m_networkIdAndCharacterDict.TryGetValue (netId, out res);
             return res;
         }
+        public int GetCharIdByNetworkId (int netId) {
+            E_Character res = null;
+            if (m_networkIdAndCharacterDict.TryGetValue (netId, out res))
+                return res.m_characterId;
+            return -1;
+        }
         public Dictionary<int, E_Character>.Enumerator GetCharacterEnumerator () {
             return m_networkIdAndCharacterDict.GetEnumerator ();
         }

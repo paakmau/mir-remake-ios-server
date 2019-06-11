@@ -70,5 +70,9 @@ namespace MirRemakeBackend.Network {
         // 获取商城信息
         REQUIRE_SHOPPING_MALL_NORMAL,
         REQUIRE_SHOPPING_MALL_CAMPAIGN,
+        // 测试相关
+        TEST_GAIN_CY,
+        TEST_GAIN_EXP,
+        TEST_GAIN_MASTERLY
     }
 }

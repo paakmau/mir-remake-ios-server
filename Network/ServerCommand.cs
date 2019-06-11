@@ -588,8 +588,8 @@ namespace MirRemakeBackend.Network {
         private short m_skillId;
         private short m_skillLv;
         private int m_masterly;
-        public static SC_ApplySelfUpdateSkillLevelAndMasterly Instance (IReadOnlyList<int> toClientList, short skillId, short skillLv, int masterly) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_ApplySelfUpdateSkillLevelAndMasterly Instance (int netId, short skillId, short skillLv, int masterly) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_skillId = skillId;
             s_instance.m_skillLv = skillLv;
             s_instance.m_masterly = masterly;

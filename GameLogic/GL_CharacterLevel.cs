@@ -18,6 +18,11 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
+        public void CommandGainExperience (int netId, int exp) {
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            NotifyGainExperience (charObj, exp);
+        }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)
                 return;

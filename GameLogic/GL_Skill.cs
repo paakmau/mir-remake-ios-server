@@ -30,11 +30,22 @@ namespace MirRemakeBackend.GameLogic {
                 skill.Upgrade ();
             }
             if (oriLv != skill.m_skillLevel) {
-                m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
                 GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -costTotal);
+                // dds 与 client
+                m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
-                    new List<int> { netId }, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
+                    netId, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
             }
+        }
+        public void CommandGainMasterly (int netId, short skillId, int masterly) {
+            int charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
+            var skObj = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
+            if (charId == -1 || skObj == null) return;
+            skObj.m_masterly += masterly;
+            // dds 与 client
+            m_skillDds.UpdateSkill (skObj.GetDdo (charId));
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
+                netId, skObj.m_SkillId, skObj.m_skillLevel, skObj.m_masterly));
         }
     }
 }

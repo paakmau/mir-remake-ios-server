@@ -159,4 +159,27 @@ namespace MirRemakeBackend.Network {
             // TODO:
         }
     }
+    class CC_TestGainExp : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_EXP; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int exp = reader.GetInt ();
+            GL_CharacterLevel.s_instance.CommandGainExperience (netId, exp);
+        }
+    }
+    class CC_TestGainMasterly : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_MASTERLY; } }
+        public void Execute (NetDataReader reader, int netId) {
+            short skId = reader.GetShort ();
+            int masterly = reader.GetInt ();
+            GL_Skill.s_instance.CommandGainMasterly (netId, skId, masterly);
+        }
+    }
+    class CC_TestGainCy : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
+        public void Execute (NetDataReader reader, int netId) {
+            CurrencyType cyType = (CurrencyType)reader.GetByte ();
+            long cy = reader.GetLong ();
+            GL_Property.s_instance.CommandGainCurrency (netId, cyType, cy);
+        }
+    }
 }

@@ -27,6 +27,11 @@ namespace MirRemakeBackend.GameLogic {
             NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
             NotifyLostItem (charObj, item, num, pos, bag);
         }
+        public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            NotifyUpdateCurrency (charObj, type, dC);
+        }
         public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
             // 实例 与 数据
             charObj.m_currencyDict[type] += dC;
