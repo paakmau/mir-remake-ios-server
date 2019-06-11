@@ -210,8 +210,8 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
-            character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [0]));
-            character.m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [1]));
+            character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [0]));
+            character.m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [1]));
             character.m_distributedMainAttrPointArr = new ValueTuple<ActorUnitMainAttributeType, short>[4];
             character.m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.STRENGTH, short.Parse (dt.Rows[0]["giftpoints"].ToString ().Split (' ') [0]));
             character.m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.AGILITY, short.Parse (dt.Rows[0]["giftpoints"].ToString ().Split (' ') [1]));
