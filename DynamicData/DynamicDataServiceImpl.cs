@@ -294,7 +294,7 @@ namespace MirRemakeBackend.DynamicData {
         }
         public void DeleteMission (short missionId, int charId) {
             string cmd;
-            cmd = "delete from `item` where charid=" + charId + " and missionid=" + missionId + ";";
+            cmd = "delete from `mission` where charid=" + charId + " and missionid=" + missionId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
 
