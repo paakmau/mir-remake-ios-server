@@ -249,6 +249,7 @@ namespace MirRemakeBackend.DynamicData {
                 mission.m_missionId = short.Parse (dt.Rows[i]["missionid"].ToString ());
                 mission.m_characterId=short.Parse(dt.Rows[i]["charid"].ToString());                mission.m_missionTargetProgressList = new List<int> ();
                 string[] targets = dt.Rows[i]["targets"].ToString ().Split (' ');
+                mission.m_missionTargetProgressList=new List<int>();
                 if(targets[0]!=""){
                     for (int j = 0; j < targets.Length; j++) {
                         mission.m_missionTargetProgressList.Add (int.Parse (targets[j]));
