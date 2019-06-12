@@ -35,11 +35,11 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyKillUnit (E_Character killer, E_Unit dead) {
             var expGain = 0;
-            expGain += dead.m_Level * 60;
-            expGain += dead.m_Attack * 5;
-            expGain += dead.m_Magic * 5;
-            expGain += dead.m_Defence * 10;
-            expGain += dead.m_Resistance * 10;
+            expGain += dead.m_Level * 30;
+            expGain += dead.m_Attack * 2;
+            expGain += dead.m_Magic * 2;
+            expGain += dead.m_Defence * 3;
+            expGain += dead.m_Resistance * 3;
             NotifyGainExperience (killer, expGain);
         }
     }
