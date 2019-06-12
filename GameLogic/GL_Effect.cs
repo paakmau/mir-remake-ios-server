@@ -11,8 +11,7 @@ namespace MirRemakeBackend.GameLogic {
         private List<int> t_intList = new List<int> ();
         private float deltaTimeAfterLastSecond = 0f;
         public GL_Effect (INetworkService netService) : base (netService) { }
-        public override void Tick (float dT) {
-        }
+        public override void Tick (float dT) { }
         public override void NetworkTick () { }
         /// <summary>
         /// 对目标的属性添加影响
@@ -59,10 +58,10 @@ namespace MirRemakeBackend.GameLogic {
                             break;
                     }
                     // 处理暴击
-                    float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate / target.m_DodgeRate;
+                    float criticalRate = effectDe.m_criticalRate * 0.01f * caster.m_CriticalRate / target.m_DodgeRate;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
                     if (m_critical)
-                        m_deltaHp *= (int)((float)caster.m_CriticalBonus / 100f);
+                        m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f));
                     // 处理状态
                     m_statusIdAndValueAndTimeAndCasterNetIdArr = new ValueTuple<short, float, float, int>[effectDe.m_statusIdAndValueAndTimeList.Count];
                     for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
