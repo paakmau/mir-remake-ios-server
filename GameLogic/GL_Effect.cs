@@ -50,11 +50,11 @@ namespace MirRemakeBackend.GameLogic {
                     m_deltaMp = effectDe.m_deltaMp;
                     switch (effectDe.m_type) {
                         case EffectType.PHYSICS:
-                            m_deltaHp *= caster.m_Attack / target.m_Defence;
+                            m_deltaHp = (int) ((float) m_deltaHp * (float) caster.m_Attack / (float) target.m_Defence);
                             break;
                         case EffectType.MAGIC:
-                            m_deltaHp *= caster.m_Magic / target.m_Resistance;
-                            m_deltaMp *= caster.m_Magic / target.m_Resistance;
+                            m_deltaHp = (int) ((float) m_deltaHp * (float) caster.m_Magic / (float) target.m_Resistance);
+                            m_deltaMp = (int) ((float) m_deltaMp * (float) caster.m_Magic / (float) target.m_Resistance);
                             break;
                     }
                     // xjb计算暴击
