@@ -38,7 +38,7 @@ namespace MirRemakeBackend.Data {
                     break;
                 case(OccupationType.ALL):
                     ssm=0;
-                    faker=40;
+                    faker=s_skillDatas.Count;
                     break;
             }
             for (int i = ssm; i < faker+ssm; i++)
