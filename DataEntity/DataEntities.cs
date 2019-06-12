@@ -63,7 +63,7 @@ namespace MirRemakeBackend.DataEntity {
         /// <summary>
         /// 技能伤害判定的范围参数
         /// </summary>
-        public readonly IReadOnlyList<ValueTuple<SkillAimParamType, float>> m_damageParamList;
+        public readonly IReadOnlyList < (SkillAimParamType, float) > m_damageParamList;
         public readonly DE_Effect m_skillEffect;
         public DE_SkillData (DO_SkillData curDo, DO_SkillData nextLvDo) {
             m_upgradeCharacterLevelInNeed = nextLvDo.m_upgradeCharacterLevelInNeed;
@@ -75,7 +75,9 @@ namespace MirRemakeBackend.DataEntity {
             m_coolDownTime = curDo.m_coolDownTime;
             m_targetNumber = curDo.m_targetNumber;
             m_castRange = curDo.m_castRange;
-            m_damageParamList = new List<ValueTuple<SkillAimParamType, float>> (curDo.m_damageParamArr);
+            var damageParamList = new List < (SkillAimParamType, float) > (curDo.m_damageParamArr.Length);
+            for (int i=0; i<curDo.m_damageParamArr.Length; i++)
+                damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float)curDo.m_damageParamArr[i].Item2 * 0.01f));
             m_skillEffect = new DE_Effect (curDo.m_skillEffect);
         }
     }
