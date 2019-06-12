@@ -21,16 +21,17 @@ namespace MirRemakeBackend.GameLogic {
             if (target.m_IsDead) return;
             Effect effect = new Effect ();
             effect.InitWithCasterAndTarget (effectDe, caster, target);
+            // Client
+            m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
+                target.m_networkId,
+                effect.GetNo ()));
+            // 其他模块
             if (effect.m_hit) {
                 // Hp Mp 状态
                 GL_UnitBattleAttribute.s_instance.NotifyHpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
                 GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
             }
-            // 发送到Client
-            m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
-                EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
-                target.m_networkId,
-                effect.GetNo ()));
         }
         struct Effect {
             private DE_Effect m_de;

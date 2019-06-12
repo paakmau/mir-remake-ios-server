@@ -245,8 +245,8 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         IReadOnlyList<int> m_allNetIdList;
         IReadOnlyList < (int, int, int, int) > m_hpAndMaxHpAndMpAndMaxMpList;
-        public static SC_SetAllHPAndMP Instance (IReadOnlyList<int> toClientList, IReadOnlyList<int> allNetIdList, IReadOnlyList < (int, int, int, int) > hpAndMaxHpAndMpAndMaxMpList) {
-            s_instance.m_toClientList = toClientList;
+        public static SC_SetAllHPAndMP Instance (int netId, IReadOnlyList<int> allNetIdList, IReadOnlyList < (int, int, int, int) > hpAndMaxHpAndMpAndMaxMpList) {
+            s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_allNetIdList = allNetIdList;
             s_instance.m_hpAndMaxHpAndMpAndMaxMpList = hpAndMaxHpAndMpAndMaxMpList;
             return s_instance;
@@ -266,37 +266,28 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 同步自身所有属性
     /// </summary>
-    class SC_SetSelfConcreteAndSpecialAttribute : ServerCommandBase {
-        private static readonly SC_SetSelfConcreteAndSpecialAttribute s_instance = new SC_SetSelfConcreteAndSpecialAttribute ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_SELF_CONCRETE_AND_SPECIAL_ATTRIBUTE; } }
+    class SC_SetSelfConcreteAttribute : ServerCommandBase {
+        private static readonly SC_SetSelfConcreteAttribute s_instance = new SC_SetSelfConcreteAttribute ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_SELF_CONCRETE_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         int m_atk;
         int m_def;
         int m_mag;
         int m_res;
-        short m_faint;
-        short m_silent;
-        short m_immobile;
-        public static SC_SetSelfConcreteAndSpecialAttribute Instance (int netId, int atk, int def, int mag, int res, short faint, short silent, short immobile) {
+        public static SC_SetSelfConcreteAttribute Instance (int netId, int atk, int def, int mag, int res) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_atk = atk;
             s_instance.m_def = def;
             s_instance.m_mag = mag;
             s_instance.m_res = res;
-            s_instance.m_faint = faint;
-            s_instance.m_silent = silent;
-            s_instance.m_immobile = immobile;
             return s_instance;
         }
-        private SC_SetSelfConcreteAndSpecialAttribute () { }
+        private SC_SetSelfConcreteAttribute () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_atk);
             writer.Put (m_def);
             writer.Put (m_mag);
             writer.Put (m_res);
-            writer.Put (m_faint);
-            writer.Put (m_silent);
-            writer.Put (m_immobile);
         }
     }
     /// <summary>

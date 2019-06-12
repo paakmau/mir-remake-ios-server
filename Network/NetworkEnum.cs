@@ -15,7 +15,7 @@ namespace MirRemakeBackend.Network {
         SET_OTHER_POSITION,
         APPLY_ALL_CHANGE_EQUIPMENT,
         SET_ALL_HP_AND_MP,
-        SET_SELF_CONCRETE_AND_SPECIAL_ATTRIBUTE,
+        SET_SELF_CONCRETE_ATTRIBUTE,
         APPLY_SELF_LEVEL_AND_EXP,
         APPLY_SELF_MAIN_ATTRIBUTE,
         // 战斗状态与动画
