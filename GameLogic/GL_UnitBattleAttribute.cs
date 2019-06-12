@@ -27,24 +27,9 @@ namespace MirRemakeBackend.GameLogic {
                 }
                 EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
             }
-            // 处理具体属性的每秒变化
-            m_secondTimer += dT;
-            if (m_secondTimer >= 1.0f) {
-                m_secondTimer -= 1.0f;
-                var en = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
-                while (en.MoveNext ()) {
-                    if (en.Current.m_IsDead)
-                        continue;
-                    int newHP = en.Current.m_CurHp + en.Current.m_DeltaHpPerSecond;
-                    int newMP = en.Current.m_CurMp + en.Current.m_DeltaMpPerSecond;
-                    en.Current.m_CurHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
-                    en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
-                }
-            }
-            // 处理仇恨消
+            // 处理仇恨消失
             var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
             while (unitEn.MoveNext ()) {
-                // 处理仇恨消失
                 var hatredEn = unitEn.Current.m_hatredRefreshDict.GetEnumerator ();
                 var hTarRemoveList = new List<int> ();
                 while (hatredEn.MoveNext ()) {
@@ -63,6 +48,23 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < hTarRemoveList.Count; i++)
                     unitEn.Current.m_hatredRefreshDict.Remove (hTarRemoveList[i]);
             }
+            // 处理具体属性的每秒变化
+            m_secondTimer += dT;
+            if (m_secondTimer >= 1.0f) {
+                m_secondTimer -= 1.0f;
+                var en = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
+                while (en.MoveNext ()) {
+                    if (en.Current.m_IsDead)
+                        continue;
+                    int newHP = en.Current.m_CurHp + en.Current.m_DeltaHpPerSecond;
+                    int newMP = en.Current.m_CurMp + en.Current.m_DeltaMpPerSecond;
+                    en.Current.m_CurHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
+                    en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
+                    if (en.Current.m_IsDead)
+                        // 单位死亡
+                        UnitDead (en.Current.m_networkId, en.Current.m_HighestHatredTargetNetId);
+                }
+            }
         }
         public override void NetworkTick () { }
         public void NotifyHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
@@ -77,23 +79,26 @@ namespace MirRemakeBackend.GameLogic {
             target.m_hatredRefreshDict[target.m_networkId] = oriHatred.Ticked (hatredTime);
 
             // 若单位死亡
-            if (target.m_IsDead) {
-                m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
-                    EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
-                    caster.m_networkId,
-                    target.m_networkId
-                ));
-            }
+            if (target.m_IsDead)
+                UnitDead (target.m_networkId, caster.m_networkId);
         }
         public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float>[] statusIdAndValueAndTimeArr) {
             var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, caster.m_networkId, statusIdAndValueAndTimeArr);
             for (int i = 0; i < statusList.Count; i++)
                 StatusChanged (target, statusList[i], 1);
-            // TODO: 处理caster
         }
         public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
             for (int i=0; i<dAttr.Count; i++)
                 target.AddConAttr(dAttr[i].Item1, dAttr[i].Item2);
+        }
+        private void UnitDead (int deadNetId, int killerNetId) {
+
+            m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (deadNetId, true),
+                deadNetId,
+                killerNetId
+            ));
+            // TODO:
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
