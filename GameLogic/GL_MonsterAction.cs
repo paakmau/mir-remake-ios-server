@@ -306,7 +306,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void MFSMCastSkillBegin (int netId, E_MonsterSkill skill, SkillParam sp) {
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (
-                EM_Sight.s_instance.GetCharacterInSightNetworkId (netId, false),
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, false),
                 netId,
                 skill.m_SkillId,
                 sp.GetNo ()));

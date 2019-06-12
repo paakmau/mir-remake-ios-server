@@ -9,36 +9,42 @@ namespace MirRemakeBackend.Entity {
         public static EM_Sight s_instance;
         private Dictionary<int, E_Unit> m_netIdAndUnitVisibleDict = new Dictionary<int, E_Unit> ();
         /// <summary>
-        /// 每个角色视野中的单位 (包括自身)
+        /// 每个单位视野范围内的角色NetId (包括自身, 若为角色)
+        /// </summary>
+        private Dictionary<int, HashSet<int>> m_unitInSightCharacterDict = new Dictionary<int, HashSet<int>> ();
+        /// <summary>
+        /// 每个角色视野中的单位 (不包括自身)
         /// </summary>
         private Dictionary<int, List<E_Unit>> m_characterSightDict = new Dictionary<int, List<E_Unit>> ();
-        private List<int> t_intList = new List<int> ();
         /// <summary>
-        /// 根据NetId获取角色视野内的单位 (包括自身)  
-        /// 可以对其视野进行读写  
+        /// 获取角色视野内的单位 (不包括自身)  
+        /// 可读写  
         /// </summary>
         public List<E_Unit> GetCharacterRawSight (int netId) {
-            List<E_Unit> res = null;
+            List<E_Unit> res;
             m_characterSightDict.TryGetValue (netId, out res);
             return res;
         }
+        public HashSet<int> GetRawUnitInSightCharacter (int netId) {
+            HashSet<int> res;
+            m_unitInSightCharacterDict.TryGetValue (netId, out res);
+            return res;
+        }
         /// <summary>
-        /// 获取一个角色视野内的角色的netId
+        /// 获取一个单位视野内的角色的netId
         /// </summary>
-        public List<int> GetCharacterInSightNetworkId (int netId, bool includeSelf) {
-            var units = GetCharacterRawSight (netId);
+        public List<int> GetInSightCharacterNetworkId (int netId, bool includeSelf) {
+            var units = GetRawUnitInSightCharacter (netId);
             if (units == null) return null;
-            t_intList.Clear ();
-            for (int i = 0; i < units.Count; i++) {
-                // 移除非玩家
-                if (units[i].m_UnitType != ActorUnitType.PLAYER)
-                    continue;
+            var res = new List<int> ();
+            var en = units.GetEnumerator ();
+            while (en.MoveNext ()) {
                 // 检查是否包含自身
-                if (units[i].m_networkId == netId && !includeSelf)
+                if (en.Current == netId && !includeSelf)
                     continue;
-                t_intList.Add (units[i].m_networkId);
+                res.Add (en.Current);
             }
-            return t_intList;
+            return res;
         }
         /// <summary>
         /// 根据NetId获取可视单位
@@ -60,10 +66,13 @@ namespace MirRemakeBackend.Entity {
         public void InitCharacter (E_Character charObj) {
             m_characterSightDict.TryAdd (charObj.m_networkId, new List<E_Unit> ());
             m_netIdAndUnitVisibleDict.TryAdd (charObj.m_networkId, charObj);
+            m_unitInSightCharacterDict.TryAdd (charObj.m_networkId, new HashSet<int> { charObj.m_networkId });
         }
         public void InitAllMonster (E_Monster[] mons) {
-            foreach (var mon in mons)
+            foreach (var mon in mons) {
                 m_netIdAndUnitVisibleDict.Add (mon.m_networkId, mon);
+                m_unitInSightCharacterDict.TryAdd (mon.m_networkId, new HashSet<int> { });
+            }
         }
         /// <summary>
         /// 移除一个角色的视野信息, 并移除可视单位

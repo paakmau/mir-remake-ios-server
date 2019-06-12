@@ -28,7 +28,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             // 发送到Client
             m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
-                EM_Sight.s_instance.GetCharacterInSightNetworkId (target.m_networkId, true),
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
                 target.m_networkId,
                 effect.GetNo ()));
         }

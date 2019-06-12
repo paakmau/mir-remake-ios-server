@@ -75,7 +75,7 @@ namespace MirRemakeBackend.GameLogic {
                 unit.AddSpAttr (sAttrList[i], k);
             // 通知Client
             m_networkService.SendServerCommand (SC_ApplyAllStatus.Instance (
-                EM_Sight.s_instance.GetCharacterInSightNetworkId (unit.m_networkId, true),
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (unit.m_networkId, true),
                 unit.m_networkId,
                 status.GetNo (),
                 k == 1));

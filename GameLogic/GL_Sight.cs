@@ -74,8 +74,23 @@ namespace MirRemakeBackend.GameLogic {
                 }
                 // 设定新视野
                 charOriSight.Clear ();
-                for (int i=0; i<charNowSight.Count; i++)
+                for (int i = 0; i < charNowSight.Count; i++)
                     charOriSight.Add (charNowSight[i]);
+                for (int i = 0; i < newMonNoList.Count; i++) {
+                    var inSightCharSet = EM_Sight.s_instance.GetRawUnitInSightCharacter (newMonNoList[i].m_netId);
+                    if (inSightCharSet == null) continue;
+                    inSightCharSet.Add (charNetId);
+                }
+                for (int i = 0; i < newCharNoAndEquipedIdList.Count; i++) {
+                    var inSightCharSet = EM_Sight.s_instance.GetRawUnitInSightCharacter (newCharNoAndEquipedIdList[i].Item1.m_netId);
+                    if (inSightCharSet == null) continue;
+                    inSightCharSet.Add (charNetId);
+                }
+                for (int i = 0; i < outUnitNetIdList.Count; i++) {
+                    var inSightCharSet = EM_Sight.s_instance.GetRawUnitInSightCharacter (outUnitNetIdList[i]);
+                    if (inSightCharSet == null) continue;
+                    inSightCharSet.Remove (charNetId);
+                }
 
                 // 发送给Client视野变化
                 if (newMonNoList.Count != 0)
