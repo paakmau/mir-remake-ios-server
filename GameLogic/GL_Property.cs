@@ -78,8 +78,10 @@ namespace MirRemakeBackend.GameLogic {
             var itemList = EM_Item.s_instance.InitItemList (itemIdAndNumList);
             // 放入背包
             for (int i = 0; i < itemList.Count; i++) {
+                var realGainNum = 0;
                 List < (short, E_Item) > changedItemList;
-                short storePos = bag.AutoStoreItem (itemList[i], out changedItemList);
+                E_EmptyItem oriStoreSlot;
+                short storePos = bag.AutoStoreItem (itemList[i], out changedItemList, out realGainNum, out oriStoreSlot);
                 // 处理原有物品的堆叠
                 // dds 更新
                 for (int j = 0; j < changedItemList.Count; j++)
@@ -97,12 +99,10 @@ namespace MirRemakeBackend.GameLogic {
                     m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                         charObj.m_networkId, changedRealIdList, changedPosList));
 
-                // 若该物品消失 (被堆叠或无法放入)
-                if (storePos == -1 || storePos == -2)
-                    continue;
-
-                // 该物品单独占有一格
-                else {
+                // 若该物品单独占有一格
+                if (storePos != -1 && storePos != -2) {
+                    // 回收原有空插槽
+                    EM_Item.s_instance.RecycleItem (oriStoreSlot);
                     // 基础信息 dds 与 client
                     m_itemDds.UpdateItem (itemList[i].GetItemDdo (charObj.m_characterId, ItemPlace.BAG, storePos));
                     m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
@@ -110,7 +110,7 @@ namespace MirRemakeBackend.GameLogic {
                         new List<NO_Item> { itemList[i].GetItemNo () },
                         new List<ItemPlace> { ItemPlace.BAG },
                         new List<short> { storePos }));
-                    // 附加信息 (装备等) dds 与 client
+                    // 附加信息 (装备等) dds 与 client TODO: 考虑改模式
                     switch (itemList[i].m_Type) {
                         case ItemType.EQUIPMENT:
                             m_itemDds.UpdateEquipmentInfo (((E_EquipmentItem) itemList[i]).GetEquipmentInfoDdo (charObj.m_characterId));
