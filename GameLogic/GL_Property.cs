@@ -78,10 +78,10 @@ namespace MirRemakeBackend.GameLogic {
             var itemList = EM_Item.s_instance.InitItemList (itemIdAndNumList);
             // 放入背包
             for (int i = 0; i < itemList.Count; i++) {
-                var realGainNum = 0;
+                var realStoreNum = 0;
                 List < (short, E_Item) > changedItemList;
                 E_EmptyItem oriStoreSlot;
-                short storePos = bag.AutoStoreItem (itemList[i], out changedItemList, out realGainNum, out oriStoreSlot);
+                short storePos = bag.AutoStoreItem (itemList[i], out changedItemList, out realStoreNum, out oriStoreSlot);
                 // 处理原有物品的堆叠
                 // dds 更新
                 for (int j = 0; j < changedItemList.Count; j++)
@@ -121,6 +121,9 @@ namespace MirRemakeBackend.GameLogic {
                             break;
                     }
                 }
+
+                // 通知任务 TODO: 考虑任务
+                GL_Mission.s_instance.ListenMissionTarget (charObj, MissionTargetType.GAIN_ITEM, itemList[i].m_ItemId, realStoreNum);
             }
         }
     }
