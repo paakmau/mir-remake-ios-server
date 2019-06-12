@@ -127,7 +127,9 @@ namespace MirRemakeBackend.GameLogic {
             // 通知 Mission
             if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
                 GL_Mission.s_instance.ListenMissionTarget ((E_Character) killer, MissionTargetType.KILL_MONSTER, ((E_Monster) dead).m_MonsterId, 1);
-            // 通知 CharacterLevel TODO: 
+            // 通知 CharacterLevel
+            if (killer.m_UnitType == ActorUnitType.PLAYER)
+                GL_CharacterLevel.s_instance.NotifyKillUnit ((E_Character)killer, dead);
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性

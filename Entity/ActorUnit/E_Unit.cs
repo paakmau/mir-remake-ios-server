@@ -103,17 +103,16 @@ namespace MirRemakeBackend.Entity {
             m_unitDe = de;
             // TODO: 具体属性使用 类似 *1000 + 1, 2, 3 的方式设计
             var attrEn = de.m_concreteAttributeDict.Keys.GetEnumerator ();
-            while(attrEn.MoveNext ())
+            while (attrEn.MoveNext ())
                 m_concreteAttributeDict[attrEn.Current] = 0;
+            Respawn ();
+        }
+        public void Respawn () {
             m_CurHp = m_MaxHp;
             m_CurMp = m_MaxMp;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;
-        }
-        public void Respawn () {
-            m_CurHp = m_MaxHp;
-            m_CurMp = m_MaxMp;
         }
         public void AddConAttr (ActorUnitConcreteAttributeType type, int value) {
             m_concreteAttributeDict[type] += value;

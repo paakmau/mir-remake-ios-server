@@ -33,5 +33,13 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
+        public void NotifyKillUnit (E_Character killer, E_Unit dead) {
+            var expGain = 0;
+            expGain += dead.m_Level * 60;
+            expGain += dead.m_Attack * 5;
+            expGain += dead.m_Magic * 5;
+            expGain += dead.m_Defence * 10;
+            expGain += dead.m_Resistance * 10;
+        }
     }
 }
