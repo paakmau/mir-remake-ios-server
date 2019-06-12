@@ -277,27 +277,6 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void Tick (float dT) {
-            var monEn = EM_Unit.s_instance.GetMonsterEn ();
-            while (monEn.MoveNext ()) {
-                // 处理仇恨消失
-                var hatredEn = monEn.Current.Value.m_hatredRefreshDict.GetEnumerator ();
-                var hTarRemoveList = new List<int> ();
-                while (hatredEn.MoveNext ()) {
-                    // 仇恨时间到
-                    if (MyTimer.CheckTimeUp (hatredEn.Current.Value)) {
-                        hTarRemoveList.Add (hatredEn.Current.Key);
-                        continue;
-                    }
-                    // 仇恨目标下线或死亡
-                    var tar = EM_Sight.s_instance.GetUnitVisibleByNetworkId (hatredEn.Current.Key);
-                    if (tar == null || tar.m_IsDead) {
-                        hTarRemoveList.Add (hatredEn.Current.Key);
-                        continue;
-                    }
-                }
-                for (int i = 0; i < hTarRemoveList.Count; i++)
-                    monEn.Current.Value.m_hatredRefreshDict.Remove (hTarRemoveList[i]);
-            }
             // fsm控制AI
             var mfsmEn = m_mfsmDict.GetEnumerator ();
             while (mfsmEn.MoveNext ())

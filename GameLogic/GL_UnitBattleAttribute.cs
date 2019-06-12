@@ -41,6 +41,28 @@ namespace MirRemakeBackend.GameLogic {
                     en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
                 }
             }
+            // 处理仇恨消
+            var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
+            while (unitEn.MoveNext ()) {
+                // 处理仇恨消失
+                var hatredEn = unitEn.Current.m_hatredRefreshDict.GetEnumerator ();
+                var hTarRemoveList = new List<int> ();
+                while (hatredEn.MoveNext ()) {
+                    // 仇恨时间到
+                    if (MyTimer.CheckTimeUp (hatredEn.Current.Value)) {
+                        hTarRemoveList.Add (hatredEn.Current.Key);
+                        continue;
+                    }
+                    // 仇恨目标下线或死亡
+                    var tar = EM_Sight.s_instance.GetUnitVisibleByNetworkId (hatredEn.Current.Key);
+                    if (tar == null || tar.m_IsDead) {
+                        hTarRemoveList.Add (hatredEn.Current.Key);
+                        continue;
+                    }
+                }
+                for (int i = 0; i < hTarRemoveList.Count; i++)
+                    unitEn.Current.m_hatredRefreshDict.Remove (hTarRemoveList[i]);
+            }
         }
         public override void NetworkTick () { }
         public void NotifyHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
