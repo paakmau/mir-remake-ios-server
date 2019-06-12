@@ -71,8 +71,8 @@ namespace MirRemakeBackend.GameLogic {
             target.m_CurHp += dHp;
             target.m_CurMp += dMp;
             // xjb计算仇恨
-            float hatredTime = (float)(-dHp - dMp) / (float)target.m_MaxHp * 10;
-            if (hatredTime < 0)return;
+            float hatredTime = (float) (-dHp - dMp) / (float) target.m_MaxHp * 10;
+            if (hatredTime < 0) return;
             MyTimer.Time oriHatred;
             if (!target.m_hatredRefreshDict.TryGetValue (target.m_networkId, out oriHatred))
                 oriHatred = MyTimer.s_CurTime;
@@ -87,12 +87,11 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < statusList.Count; i++)
                 StatusChanged (target, statusList[i], 1);
         }
-        public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
-            for (int i=0; i<dAttr.Count; i++)
-                target.AddConAttr(dAttr[i].Item1, dAttr[i].Item2);
+        public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > dAttr) {
+            for (int i = 0; i < dAttr.Count; i++)
+                target.AddConAttr (dAttr[i].Item1, dAttr[i].Item2);
         }
         private void UnitDead (int deadNetId, int killerNetId) {
-
             m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (deadNetId, true),
                 deadNetId,
