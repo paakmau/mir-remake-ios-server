@@ -713,8 +713,8 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
         private byte m_targetNum;
-        private short m_value;
-        public static SC_ApplySelfMissionProgress Instance (int netId, short missionId, byte targetNum, short value) {
+        private int m_value;
+        public static SC_ApplySelfMissionProgress Instance (int netId, short missionId, byte targetNum, int value) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_missionId = missionId;
             s_instance.m_targetNum = targetNum;

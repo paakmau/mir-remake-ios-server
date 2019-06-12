@@ -62,7 +62,7 @@ namespace MirRemakeBackend.GameLogic {
                     en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
                     if (en.Current.m_IsDead)
                         // 单位死亡
-                        UnitDead (en.Current.m_networkId, en.Current.m_HighestHatredTargetNetId);
+                        UnitDead (en.Current, en.Current);
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace MirRemakeBackend.GameLogic {
 
             // 若单位死亡
             if (target.m_IsDead)
-                UnitDead (target.m_networkId, caster.m_networkId);
+                UnitDead (target, caster);
         }
         public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float>[] statusIdAndValueAndTimeArr) {
             var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, caster.m_networkId, statusIdAndValueAndTimeArr);
@@ -91,13 +91,16 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < dAttr.Count; i++)
                 target.AddConAttr (dAttr[i].Item1, dAttr[i].Item2);
         }
-        private void UnitDead (int deadNetId, int killerNetId) {
+        private void UnitDead (E_Unit dead, E_Unit killer) {
+            // client
             m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
-                EM_Sight.s_instance.GetInSightCharacterNetworkId (deadNetId, true),
-                deadNetId,
-                killerNetId
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (dead.m_networkId, true),
+                killer.m_networkId,
+                dead.m_networkId
             ));
-            // TODO:
+            // 通知Mission
+            if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
+                GL_Mission.s_instance.ListenMissionTarget ((E_Character)killer, MissionTargetType.KILL_MONSTER, ((E_Monster)dead).m_MonsterId, 1);
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
