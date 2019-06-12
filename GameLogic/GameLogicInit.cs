@@ -47,6 +47,7 @@ namespace MirRemakeBackend.GameLogic {
             int[] netIdArr = NetworkIdManager.AssignNetworkId (monNum);
             var mons = EM_Unit.s_instance.InitAllMonster (netIdArr);
             EM_Sight.s_instance.InitAllMonster (mons);
+            EM_Status.s_instance.InitAllMonster (netIdArr);
         }
         public int AssignNetworkId () {
             return NetworkIdManager.AssignNetworkId ();
