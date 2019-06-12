@@ -22,7 +22,7 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < statusEn.Current.Value.Count; i++) {
                     if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {
                         statusToRemoveList.Add (i);
-                        StatusToAttr (unit, statusEn.Current.Value[i], -1);
+                        StatusChanged (unit, statusEn.Current.Value[i], -1);
                     }
                 }
                 EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
@@ -75,18 +75,27 @@ namespace MirRemakeBackend.GameLogic {
             if (!target.m_hatredRefreshDict.TryGetValue (target.m_networkId, out oriHatred))
                 oriHatred = MyTimer.s_CurTime;
             target.m_hatredRefreshDict[target.m_networkId] = oriHatred.Ticked (hatredTime);
+
+            // 若单位死亡
+            if (target.m_IsDead) {
+                m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
+                    EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
+                    caster.m_networkId,
+                    target.m_networkId
+                ));
+            }
         }
-        public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
-            var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, statusIdAndValueAndTimeAndCasterNetIdArr);
+        public void NotifyAttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float>[] statusIdAndValueAndTimeArr) {
+            var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, caster.m_networkId, statusIdAndValueAndTimeArr);
             for (int i = 0; i < statusList.Count; i++)
-                StatusToAttr (target, statusList[i], 1);
+                StatusChanged (target, statusList[i], 1);
             // TODO: 处理caster
         }
         public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList<(ActorUnitConcreteAttributeType, int)> dAttr) {
             for (int i=0; i<dAttr.Count; i++)
                 target.AddConAttr(dAttr[i].Item1, dAttr[i].Item2);
         }
-        private void StatusToAttr (E_Unit unit, E_Status status, int k) {
+        private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
             var cAttrList = status.m_dataEntity.m_affectAttributeList;
             for (int i = 0; i < cAttrList.Count; i++)

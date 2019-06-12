@@ -293,7 +293,9 @@ namespace MirRemakeBackend.GameLogic {
         public void MFSMSkillSettle (E_Monster monster, E_MonsterSkill skill, SkillParam sp) {
             GL_BattleSettle.s_instance.NotifySkillSettle (monster, skill, sp);
         }
-        public void MFSMDead (E_Monster monster) { }
-        public void MFSMRespawn (E_Monster monster) { }
+        public void MFSMDead (E_Monster monster) {
+        }
+        public void MFSMRespawn (E_Monster monster) {
+        }
     }
 }

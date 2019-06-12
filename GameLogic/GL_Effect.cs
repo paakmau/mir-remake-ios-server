@@ -24,7 +24,7 @@ namespace MirRemakeBackend.GameLogic {
             if (effect.m_hit) {
                 // Hp Mp 状态
                 GL_UnitBattleAttribute.s_instance.NotifyHpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
-                GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, caster, effect.m_statusIdAndValueAndTimeAndCasterNetIdArr);
+                GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
             }
             // 发送到Client
             m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
@@ -38,7 +38,7 @@ namespace MirRemakeBackend.GameLogic {
             public bool m_critical;
             public int m_deltaHp;
             public int m_deltaMp;
-            public ValueTuple<short, float, float, int>[] m_statusIdAndValueAndTimeAndCasterNetIdArr;
+            public ValueTuple<short, float, float>[] m_statusIdAndValueAndTimeArr;
             public void InitWithCasterAndTarget (DE_Effect effectDe, E_Unit caster, E_Unit target) {
                 m_de = effectDe;
                 // xjb计算命中
@@ -63,12 +63,12 @@ namespace MirRemakeBackend.GameLogic {
                     if (m_critical)
                         m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f));
                     // xjb计算状态
-                    m_statusIdAndValueAndTimeAndCasterNetIdArr = new ValueTuple<short, float, float, int>[effectDe.m_statusIdAndValueAndTimeList.Count];
+                    m_statusIdAndValueAndTimeArr = new (short, float, float) [effectDe.m_statusIdAndValueAndTimeList.Count];
                     for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
                         var info = effectDe.m_statusIdAndValueAndTimeList[i];
                         float value = info.Item2 / target.m_Tenacity;
                         float durationTime = info.Item3 / target.m_Tenacity;
-                        m_statusIdAndValueAndTimeAndCasterNetIdArr[i] = new ValueTuple<short, float, float, int> (info.Item1, value, durationTime, caster.m_networkId);
+                        m_statusIdAndValueAndTimeArr[i] = (info.Item1, value, durationTime);
                     }
                 }
             }

@@ -23,15 +23,15 @@ namespace MirRemakeBackend.Entity {
             for (int i=0; i<statusList.Count; i++)
                 s_entityPool.m_statusPool.RecycleInstance (statusList[i]);
         }
-        public List<E_Status> AttachStatus (int netId, ValueTuple<short, float, float, int>[] statusIdAndValueAndTimeAndCasterNetIdArr) {
+        public List<E_Status> AttachStatus (int netId, int casterNetId, (short, float, float)[] statusIdAndValueAndTimeArr) {
             List<E_Status> oriStatusList = null;
             if (!m_statusListDict.TryGetValue (netId, out oriStatusList))
                 return null;
             var res = new List<E_Status> ();
-            foreach (var statusInfo in statusIdAndValueAndTimeAndCasterNetIdArr) {
+            foreach (var statusInfo in statusIdAndValueAndTimeArr) {
                 var de = m_dem.GetStatusById (statusInfo.Item1);
                 var statusObj = s_entityPool.m_statusPool.GetInstance ();
-                statusObj.Reset (de, statusInfo.Item1, statusInfo.Item2, statusInfo.Item3, statusInfo.Item4);
+                statusObj.Reset (de, statusInfo.Item1, statusInfo.Item2, statusInfo.Item3, casterNetId);
                 oriStatusList.Add (statusObj);
                 res.Add (statusObj);
             }
