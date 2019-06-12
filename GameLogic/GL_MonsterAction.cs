@@ -37,7 +37,8 @@ namespace MirRemakeBackend.GameLogic {
                 m_castBack = new MFSMS_CastBack (this);
                 m_faint = new MFSMS_Faint (this);
                 m_dead = new MFSMS_Dead (this);
-                m_curState = m_dead;
+                m_curState = m_autoMove;
+                m_curState.OnEnter (monster, MFSMStateType.DEAD);
             }
             public void Tick (float dT) {
                 m_curState.OnTick (m_monster, dT);
@@ -90,7 +91,11 @@ namespace MirRemakeBackend.GameLogic {
                     m_moveTimeLeft -= dT;
                 else {
                     var dir = m_targetPos - self.m_position;
-                    var deltaP = Vector2.Normalize (dir) * self.m_Speed * dT / 100f;
+                    Vector2 dirNorm;
+                    if (dir.LengthSquared() <= float.Epsilon)
+                        dirNorm = Vector2.UnitX;
+                    else dirNorm = Vector2.Normalize (dir);
+                    var deltaP = dirNorm * self.m_Speed * dT / 100f;
                     if (deltaP.LengthSquared () >= dir.LengthSquared ())
                         deltaP = dir;
                     self.m_position = self.m_position + deltaP;
@@ -120,7 +125,11 @@ namespace MirRemakeBackend.GameLogic {
                 if (unit == null)
                     return;
                 var dir = unit.m_position - self.m_position;
-                var deltaP = Vector2.Normalize (dir) * self.m_Speed * dT / 100f;
+                Vector2 dirNorm;
+                if (dir.LengthSquared() <= float.Epsilon)
+                    dirNorm = Vector2.UnitX;
+                else dirNorm = Vector2.Normalize (dir);
+                var deltaP = dirNorm * self.m_Speed * dT / 100f;
                 if (deltaP.LengthSquared () >= dir.LengthSquared ())
                     deltaP = dir;
                 self.m_position = self.m_position + deltaP;

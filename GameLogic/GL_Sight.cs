@@ -22,7 +22,6 @@ namespace MirRemakeBackend.GameLogic {
 
                 // 计算当前视野
                 var charNowSight = new List<E_Unit> ();
-                charNowSight.Clear ();
                 var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
                     // 若在视野范围外
