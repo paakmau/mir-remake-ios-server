@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
@@ -155,9 +156,14 @@ namespace MirRemakeBackend.GameLogic {
             private Dictionary<SkillAimType, EffectTargetChooserBase> m_targetChooserDict = new Dictionary<SkillAimType, EffectTargetChooserBase> ();
             private List<E_Unit> m_targetList = new List<E_Unit> ();
             public TargetStage () {
-                // TODO: 用反射, 并全部写完
-                m_targetChooserDict.Add (SkillAimType.AIM_CIRCLE, new ETC_AimCircle ());
-                m_targetChooserDict.Add (SkillAimType.NOT_AIM_SELF_CIRCLE, new ETC_NotAimSelfCircle ());
+                // TODO: 全部写完
+                // 实例化ETC的所有子类
+                var etcType = typeof (EffectTargetChooserBase);
+                var etcImplTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && etcType.IsAssignableFrom (p));
+                foreach (var type in etcImplTypes) {
+                    EffectTargetChooserBase etcObj = type.GetConstructor (Type.EmptyTypes).Invoke (null) as EffectTargetChooserBase;
+                    m_targetChooserDict.Add (etcObj.m_TargetAimType, etcObj);
+                }
             }
             public IReadOnlyList<E_Unit> GetTargetList (E_Unit self, E_MonsterSkill skill, SkillParam skillParm) {
                 EffectTargetChooserBase targetChooser = m_targetChooserDict[skill.m_AimType];
