@@ -20,7 +20,8 @@ namespace MirRemakeBackend.Entity {
         public int GetMonsterNum () {
             return m_dem.GetMonsterNum ();
         }
-        public void InitAllMonster (int[] netIdArr) {
+        public E_Monster[] InitAllMonster (int[] netIdArr) {
+            var res = new E_Monster[netIdArr.Length];
             // 实例化所有的怪物
             var idAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
             for (int i = 0; i < idAndPosList.Count; i++) {
@@ -29,7 +30,9 @@ namespace MirRemakeBackend.Entity {
                 E_Monster monster = new E_Monster ();
                 monster.Reset (netIdArr[i], idAndPosList[i].Item2, deTuple.Item1, deTuple.Item2);
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
+                res[i] = monster;
             }
+            return res;
         }
         /// <summary>
         /// 从数据库读取角色信息  

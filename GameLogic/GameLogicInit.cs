@@ -40,11 +40,13 @@ namespace MirRemakeBackend.GameLogic {
             m_skillDds = skillDds;
             m_itemDds = itemDds;
             m_missionDds = missionDds;
+            InitAllMonster ();
         }
         private void InitAllMonster () {
             int monNum = EM_Unit.s_instance.GetMonsterNum ();
             int[] netIdArr = NetworkIdManager.AssignNetworkId (monNum);
-            EM_Unit.s_instance.InitAllMonster (netIdArr);
+            var mons = EM_Unit.s_instance.InitAllMonster (netIdArr);
+            EM_Sight.s_instance.InitAllMonster (mons);
         }
         public int AssignNetworkId () {
             return NetworkIdManager.AssignNetworkId ();

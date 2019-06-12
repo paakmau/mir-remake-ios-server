@@ -61,6 +61,10 @@ namespace MirRemakeBackend.Entity {
             m_characterSightDict.TryAdd (charObj.m_networkId, new List<E_Unit> ());
             m_netIdAndUnitVisibleDict.TryAdd (charObj.m_networkId, charObj);
         }
+        public void InitAllMonster (E_Monster[] mons) {
+            foreach (var mon in mons)
+                m_netIdAndUnitVisibleDict.Add (mon.m_networkId, mon);
+        }
         /// <summary>
         /// 移除一个角色的视野信息, 并移除可视单位
         /// </summary>

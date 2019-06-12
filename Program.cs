@@ -103,11 +103,15 @@ namespace MirRemakeBackend {
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
                 GL_Character.s_instance,
+                GL_CharacterLevel.s_instance,
                 GL_Effect.s_instance,
                 GL_Item.s_instance,
+                GL_Mission.s_instance,
                 GL_MonsterAction.s_instance,
+                GL_Property.s_instance,
                 GL_Sight.s_instance,
-                GL_Skill.s_instance
+                GL_Skill.s_instance,
+                GL_UnitBattleAttribute.s_instance
             };
         }
         static int Test() {
