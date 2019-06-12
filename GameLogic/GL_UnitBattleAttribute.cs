@@ -72,12 +72,14 @@ namespace MirRemakeBackend.GameLogic {
                 var charObj = charEn.Current.Value;
                 var sight = EM_Sight.s_instance.GetCharacterRawSight (charObj.m_networkId);
                 // 发送 Hp 与 Mp 信息
-                var sightNetIdList = new List<int> (sight.Count);
-                var hpMaxHpMpMaxMpList = new List < (int, int, int, int) > (sight.Count);
+                var sightNetIdList = new List<int> (sight.Count + 1);
+                var hpMaxHpMpMaxMpList = new List < (int, int, int, int) > (sight.Count + 1);
                 for (int i = 0; i < sight.Count; i++) {
                     sightNetIdList.Add (sight[i].m_networkId);
                     hpMaxHpMpMaxMpList.Add ((sight[i].m_CurHp, sight[i].m_MaxHp, sight[i].m_CurMp, sight[i].m_MaxMp));
                 }
+                sightNetIdList.Add(charObj.m_networkId);
+                hpMaxHpMpMaxMpList.Add ((charObj.m_CurHp, charObj.m_MaxHp, charObj.m_CurMp, charObj.m_MaxMp));
                 m_networkService.SendServerCommand (SC_SetAllHPAndMP.Instance (
                     charObj.m_networkId,
                     sightNetIdList,
