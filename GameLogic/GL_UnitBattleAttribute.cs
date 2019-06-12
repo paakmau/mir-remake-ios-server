@@ -48,7 +48,7 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < hTarRemoveList.Count; i++)
                     unitEn.Current.m_hatredRefreshDict.Remove (hTarRemoveList[i]);
             }
-            // 处理具体属性的每秒变化
+            // 处理具体属性的每秒变化 TODO: 应当用状态处理
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
@@ -61,7 +61,7 @@ namespace MirRemakeBackend.GameLogic {
                     en.Current.m_CurHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
                     en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
                     if (en.Current.m_IsDead)
-                        // 单位死亡
+                        // 单位死亡 TODO: 
                         UnitDead (en.Current, en.Current);
                 }
             }
@@ -100,7 +100,7 @@ namespace MirRemakeBackend.GameLogic {
             ));
             // 通知Mission
             if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
-                GL_Mission.s_instance.ListenMissionTarget ((E_Character)killer, MissionTargetType.KILL_MONSTER, ((E_Monster)dead).m_MonsterId, 1);
+                GL_Mission.s_instance.ListenMissionTarget ((E_Character) killer, MissionTargetType.KILL_MONSTER, ((E_Monster) dead).m_MonsterId, 1);
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
@@ -116,7 +116,8 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (unit.m_networkId, true),
                 unit.m_networkId,
                 status.GetNo (),
-                k == 1));
+                k == 1
+            ));
         }
     }
 }
