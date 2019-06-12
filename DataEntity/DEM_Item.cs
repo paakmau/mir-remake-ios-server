@@ -29,6 +29,9 @@ namespace MirRemakeBackend.DataEntity {
             }
             m_itemDict.Add (-1, new DE_Item());
         }
+        public DE_Item GetEmptyItem () {
+            return GetItemById (-1);
+        }
         public DE_Item GetItemById (short itemId) {
             DE_Item res;
             m_itemDict.TryGetValue (itemId, out res);

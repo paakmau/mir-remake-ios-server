@@ -51,6 +51,7 @@ namespace MirRemakeBackend.GameLogic {
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             E_Unit targetObj = EM_Sight.s_instance.GetUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
             if (charObj == null || skill == null || targetObj == null) return;
+            if (skill.m_skillLevel == 0) return;
             SkillParam skillParam = new SkillParam (skill.m_AimType, targetObj, parmNo.m_direction, parmNo.m_position);
             // 通知战斗结算
             GL_BattleSettle.s_instance.NotifySkillSettle (charObj, skill, skillParam);

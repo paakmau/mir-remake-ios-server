@@ -55,7 +55,8 @@ namespace MirRemakeBackend.GameLogic {
             // 实例 与 数据
             if (runOut) {
                 // 物品消失
-                repo.RemoveItemByRealId (item.m_realId);
+                var empty = EM_Item.s_instance.GetEmptyInstance (realId);
+                repo.RemoveItemByRealId (empty);
                 m_itemDds.DeleteItemByRealId (item.m_realId);
                 EM_Item.s_instance.RecycleItem (item);
             } else

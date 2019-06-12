@@ -22,7 +22,7 @@ namespace MirRemakeBackend.Entity {
         /// 从背包移除整格物品  
         /// 成功返回true
         /// </summary>
-        public abstract bool RemoveItemByRealId (long realId);
+        public abstract E_Item RemoveItemByRealId (E_EmptyItem empty);
     }
     class E_Repository : E_RepositoryBase {
         private List<E_Item> m_itemList = new List<E_Item> ();
@@ -63,25 +63,26 @@ namespace MirRemakeBackend.Entity {
             resPos = -1;
             return null;
         }
-        public override bool RemoveItemByRealId (long realId) {
+        public override E_Item RemoveItemByRealId (E_EmptyItem empty) {
             for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_realId == realId) {
-                    m_itemList[i] = E_Item.s_emptyItem;
-                    return true;
+                if (m_itemList[i].m_realId == empty.m_realId) {
+                    var res = m_itemList[i];
+                    m_itemList[i] = empty;
+                    return res;
                 }
-            return false;
+            return null;
         }
         public override void SetItem (E_Item item, short pos) {
             if (m_itemList.Count <= pos)
                 return;
             m_itemList[pos] = item;
         }
-        public bool RemoveItemByPosition (int pos) {
+        public bool RemoveItemByPosition (int pos, E_EmptyItem empty) {
             if (m_itemList.Count <= pos)
                 return false;
             if (m_itemList[pos].m_IsEmpty)
                 return false;
-            m_itemList[pos] = E_Item.s_emptyItem;
+            m_itemList[pos] = empty;
             return true;
         }
         /// <summary>
@@ -155,15 +156,16 @@ namespace MirRemakeBackend.Entity {
             EquipmentPosition eqPos = (EquipmentPosition) pos;
             m_equipPositionAndEquipmentDict[eqPos] = item as E_EquipmentItem;
         }
-        public override bool RemoveItemByRealId (long realId) {
+        public override E_Item RemoveItemByRealId (E_EmptyItem empty) {
             var en = m_equipPositionAndEquipmentDict.GetEnumerator ();
             while (en.MoveNext ()) {
-                if (en.Current.Value.m_realId == realId) {
+                if (en.Current.Value.m_realId == empty.m_realId) {
+                    var res = en.Current.Value;
                     m_equipPositionAndEquipmentDict.Remove (en.Current.Key);
-                    return true;
+                    return res;
                 }
             }
-            return false;
+            return null;
         }
         public List<E_Item> GetAllItemList () {
             List<E_Item> res = new List<E_Item> ();
