@@ -40,6 +40,7 @@ namespace MirRemakeBackend.GameLogic {
             expGain += dead.m_Magic * 5;
             expGain += dead.m_Defence * 10;
             expGain += dead.m_Resistance * 10;
+            NotifyGainExperience (killer, expGain);
         }
     }
 }
