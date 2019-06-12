@@ -77,7 +77,7 @@ namespace MirRemakeBackend.GameLogic {
             E_EquipmentRegion eqRegion;
             EM_Item.s_instance.InitCharacter (netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo, out bag, out storeHouse, out eqRegion);
             // client
-            m_netService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
+            m_netService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo (), newChar.m_VirtualCurrency, newChar.m_ChargeCurrency));
 
             // 实例化技能
             var skillDdoList = m_skillDds.GetSkillListByCharacterId (charId);
