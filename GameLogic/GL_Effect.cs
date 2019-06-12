@@ -41,11 +41,11 @@ namespace MirRemakeBackend.GameLogic {
             public ValueTuple<short, float, float, int>[] m_statusIdAndValueAndTimeAndCasterNetIdArr;
             public void InitWithCasterAndTarget (DE_Effect effectDe, E_Unit caster, E_Unit target) {
                 m_de = effectDe;
-                // 处理命中
+                // xjb计算命中
                 float hitRate = effectDe.m_hitRate * caster.m_HitRate / target.m_DodgeRate;
                 m_hit = MyRandom.NextInt (1, 101) <= hitRate;
                 if (m_hit) {
-                    // 处理基础伤害(或能量剥夺)
+                    // xjb计算基础伤害(或能量剥夺)
                     m_deltaHp = effectDe.m_deltaHp;
                     m_deltaMp = effectDe.m_deltaMp;
                     switch (effectDe.m_type) {
@@ -57,12 +57,12 @@ namespace MirRemakeBackend.GameLogic {
                             m_deltaMp *= caster.m_Magic / target.m_Resistance;
                             break;
                     }
-                    // 处理暴击
+                    // xjb计算暴击
                     float criticalRate = effectDe.m_criticalRate * 0.01f * caster.m_CriticalRate / target.m_DodgeRate;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
                     if (m_critical)
                         m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f));
-                    // 处理状态
+                    // xjb计算状态
                     m_statusIdAndValueAndTimeAndCasterNetIdArr = new ValueTuple<short, float, float, int>[effectDe.m_statusIdAndValueAndTimeList.Count];
                     for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
                         var info = effectDe.m_statusIdAndValueAndTimeList[i];
