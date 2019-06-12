@@ -19,6 +19,7 @@ namespace MirRemakeBackend.GameLogic {
         /// </summary>
         /// <param name="target"></param>
         public void NotifyApplyEffect (DE_Effect effectDe, E_Unit caster, E_Unit target) {
+            if (target.m_IsDead) return;
             Effect effect = new Effect ();
             effect.InitWithCasterAndTarget (effectDe, caster, target);
             if (effect.m_hit) {

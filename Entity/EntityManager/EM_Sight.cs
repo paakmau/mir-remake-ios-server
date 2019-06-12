@@ -17,6 +17,36 @@ namespace MirRemakeBackend.Entity {
         /// </summary>
         private Dictionary<int, List<E_Unit>> m_characterSightDict = new Dictionary<int, List<E_Unit>> ();
         /// <summary>
+        /// 为角色初始化视野, 并加入可视单位
+        /// </summary>
+        public void InitCharacter (E_Character charObj) {
+            m_characterSightDict.TryAdd (charObj.m_networkId, new List<E_Unit> ());
+            m_netIdAndUnitVisibleDict.TryAdd (charObj.m_networkId, charObj);
+            m_unitInSightCharacterDict.TryAdd (charObj.m_networkId, new HashSet<int> { charObj.m_networkId });
+        }
+        public void InitAllMonster (E_Monster[] mons) {
+            foreach (var mon in mons) {
+                m_netIdAndUnitVisibleDict.Add (mon.m_networkId, mon);
+                m_unitInSightCharacterDict.TryAdd (mon.m_networkId, new HashSet<int> { });
+            }
+        }
+        /// <summary>
+        /// 移除一个角色的视野信息, 并移除可视单位
+        /// </summary>
+        public void RemoveCharacter (int netId) {
+            // 移除角色在其他单位中的视野 (仅inSightChar)
+            var charSight = GetCharacterRawSight (netId);
+            if (charSight == null) return;
+            for (int i = 0; i<charSight.Count; i++) {
+                var unitInSightChar = GetRawUnitInSightCharacter (charSight[i].m_networkId);
+                if (unitInSightChar == null) continue;
+                unitInSightChar.Remove (netId);
+            }
+            // 移除该角色视野
+            m_characterSightDict.Remove (netId);
+            m_netIdAndUnitVisibleDict.Remove (netId);
+        }
+        /// <summary>
         /// 获取角色视野内的单位 (不包括自身)  
         /// 可读写  
         /// </summary>
@@ -59,27 +89,6 @@ namespace MirRemakeBackend.Entity {
         /// </summary>
         public Dictionary<int, E_Unit>.ValueCollection.Enumerator GetUnitVisibleEnumerator () {
             return m_netIdAndUnitVisibleDict.Values.GetEnumerator ();
-        }
-        /// <summary>
-        /// 为角色初始化视野, 并加入可视单位
-        /// </summary>
-        public void InitCharacter (E_Character charObj) {
-            m_characterSightDict.TryAdd (charObj.m_networkId, new List<E_Unit> ());
-            m_netIdAndUnitVisibleDict.TryAdd (charObj.m_networkId, charObj);
-            m_unitInSightCharacterDict.TryAdd (charObj.m_networkId, new HashSet<int> { charObj.m_networkId });
-        }
-        public void InitAllMonster (E_Monster[] mons) {
-            foreach (var mon in mons) {
-                m_netIdAndUnitVisibleDict.Add (mon.m_networkId, mon);
-                m_unitInSightCharacterDict.TryAdd (mon.m_networkId, new HashSet<int> { });
-            }
-        }
-        /// <summary>
-        /// 移除一个角色的视野信息, 并移除可视单位
-        /// </summary>
-        public void RemoveCharacter (int netId) {
-            m_characterSightDict.Remove (netId);
-            m_netIdAndUnitVisibleDict.Remove (netId);
         }
     }
 }
