@@ -45,7 +45,7 @@ namespace MirRemakeBackend.Entity {
             if (m_skillLevel >= m_skillDe.m_skillMaxLevel) return;
             m_skillLevel++;
             m_masterly -= m_skillDataDe.m_upgradeMasterlyInNeed;
-            m_skillDataDe = m_skillDe.m_skillDataAllLevel[m_skillLevel - 1];
+            m_skillDataDe = m_skillDe.m_skillDataAllLevel[m_skillLevel];
         }
         public DDO_Skill GetDdo (int charId) {
             return new DDO_Skill (m_SkillId, charId, m_skillLevel, m_masterly);
