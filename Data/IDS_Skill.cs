@@ -20,7 +20,7 @@ namespace MirRemakeBackend.Data {
         public DO_Skill[] GetSkillsByOccupation(OccupationType occupation) {
             string jsonFile = File.ReadAllText("Data/D_Skill.json");
             s_skillDatas = JsonMapper.ToObject(jsonFile);
-            res = new DO_Skill[(s_skillDatas.Count-1)/4];
+            
             int faker=(s_skillDatas.Count-1)/4;
             int ssm=-1;
             switch (occupation){
@@ -41,6 +41,7 @@ namespace MirRemakeBackend.Data {
                     faker=s_skillDatas.Count;
                     break;
             }
+            res=new DO_Skill[faker];
             for (int i = ssm; i < faker+ssm; i++)
             {
                 DO_Skill skill = new DO_Skill();
@@ -64,11 +65,16 @@ namespace MirRemakeBackend.Data {
                     DO_SkillData skillData = new DO_SkillData();
                     skillData.m_skillLevel = (short)(j + 1);
                     skillData.m_upgradeCharacterLevelInNeed = (short)(10 * j + 1);
+                    
                     if(i==40){
                         skillData.m_upgradeMasterlyInNeed=0;
                     }
                     skillData.m_upgradeMoneyInNeed = GetMoney(j);
                     skillData.m_upgradeMasterlyInNeed = 100 * (j + 1);
+                    if(j==0){
+                        skillData.m_upgradeMoneyInNeed=0;
+                        skillData.m_upgradeMasterlyInNeed=0;
+                    }
                     skillData.m_mpCost = int.Parse(s_skillDatas[i]["ManaCost"][j].ToString());
                     skillData.m_singTime = float.Parse(s_skillDatas[i]["SingTime"].ToString());
                     skillData.m_castFrontTime = float.Parse(s_skillDatas[i]["CastFrontTime"].ToString());
@@ -96,6 +102,7 @@ namespace MirRemakeBackend.Data {
                         }
                         DO_Effect effect = new DO_Effect();
                         effect.m_type = (EffectType)Enum.Parse(typeof(EffectType), s_skillDatas[i]["Effect"]["EffectDeltaHPType"].ToString());
+                        //TODO hitRate and ciriticalRate
                         effect.m_hitRate = float.Parse(s_skillDatas[i]["Effect"]["HitRate"][j].ToString())+100;
                         effect.m_criticalRate = float.Parse(s_skillDatas[i]["Effect"]["CriticalRate"][j].ToString())+100;
                         effect.m_deltaMp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaMP"][j].ToString());
