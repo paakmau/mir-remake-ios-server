@@ -26,7 +26,7 @@ namespace MirRemakeBackend.GameLogic {
             m_misDds.UpdateMission (mis.GetDdo (charObj.m_characterId));
             m_networkService.SendServerCommand (SC_ApplySelfAcceptMission.Instance (netId, misId));
             // 添加监听
-            AddListener (mis);
+            AddListener (mis, charObj);
         }
         public void CommandApplyDeliveryMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -47,29 +47,45 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
             // 移除监听
-            RemoveListener (misObj);
+            RemoveListener (misObj, charObj);
             // 其他模块
             GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, misObj.m_BonusVirtualCurrency);
             GL_Property.s_instance.NotifyGainItem (charObj, misObj.m_BonusItemIdAndNumList);
             GL_CharacterLevel.s_instance.NotifyGainExperience (charObj, misObj.m_BonusExperience);
         }
         public void CommandCancelMission (int netId, short misId) {
-            var charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
-            if (charId == -1) return;
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
             var misObj = EM_Mission.s_instance.GetAcceptedMission (netId, misId);
             if (misObj == null) return;
             // 移除实例 数据 client
             EM_Mission.s_instance.CancelMission (netId, misObj);
-            m_misDds.UpdateMission (misObj.GetDdo (charId));
+            m_misDds.UpdateMission (misObj.GetDdo (charObj.m_networkId));
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
             // 移除监听
-            RemoveListener (misObj);
+            RemoveListener (misObj, charObj);
         }
-        public void NotifyInitMission (List<E_Mission> misList) {
-            for (int i = 0; i < misList.Count; i++)
-                AddListener (misList[i]);
+        public void NotifyInitCharacter (E_Character charObj) {
+            // 实例化任务
+            var ddsList = m_misDds.GetMissionListByCharacterId (charObj.m_networkId);
+            List<short> acceptedMis, acceptableMis, unacceptableMis;
+            List<E_Mission> acceptedMisObjList;
+            EM_Mission.s_instance.InitCharacter (charObj.m_networkId, charObj.m_characterId, charObj.m_Occupation, charObj.m_Level, ddsList, out acceptedMis, out acceptedMisObjList, out acceptableMis, out unacceptableMis);
+            // 添加监听
+            for (int i = 0; i < acceptedMisObjList.Count; i++)
+                AddListener (acceptedMisObjList[i], charObj);
+            // client
+            m_networkService.SendServerCommand (SC_InitSelfMission.Instance (charObj.m_networkId, acceptedMis, acceptableMis, unacceptableMis));
         }
-        private void AddListener (E_Mission mis) {
+        public void NotifyRemoveCharacter (E_Character charObj) {
+            var misDict = EM_Mission.s_instance.GetAllAcceptedMission (charObj.m_networkId);
+            var en = misDict.Values.GetEnumerator ();
+            while (en.MoveNext ())
+                RemoveListener (en.Current, charObj);
+            EM_Mission.s_instance.RemoveCharacter (charObj.m_networkId);
+        }
+        private void AddListener (E_Mission mis, E_Character charObj) {
+            // TODO: 考虑优化
             if (!m_missionCallbackDict.TryAdd (mis, new List < (MissionTargetType, Callback<short, int>) > ()))
                 return;
             // 对所有目标添加监听
@@ -79,16 +95,16 @@ namespace MirRemakeBackend.GameLogic {
                     if (mis.m_MisTarget[index].Item2 == id)
                         mis.m_misTargetProgressArr[index].Item1 += deltaV;
                 };
-                Messenger.AddListener<short, int> (mis.m_MisTarget[i].Item1.ToString (), callback);
+                Messenger.AddListener<short, int> (mis.m_MisTarget[i].Item1.ToString () + charObj.m_networkId.ToString(), callback);
                 m_missionCallbackDict[mis].Add ((mis.m_MisTarget[i].Item1, callback));
             }
         }
-        private void RemoveListener (E_Mission mis) {
+        private void RemoveListener (E_Mission mis, E_Character charObj) {
             List < (MissionTargetType, Callback<short, int>) > callbacks;
             if (!m_missionCallbackDict.TryGetValue (mis, out callbacks))
                 return;
             for (int i = 0; i < callbacks.Count; i++)
-                Messenger.RemoveListener (callbacks[i].Item1.ToString (), callbacks[i].Item2);
+                Messenger.RemoveListener (callbacks[i].Item1.ToString () + charObj.m_networkId.ToString(), callbacks[i].Item2);
         }
     }
 }

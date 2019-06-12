@@ -19,8 +19,7 @@ namespace MirRemakeBackend.GameLogic {
             m_itemDds = itemDds;
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
-            // TODO: 关联 playerId
-            // TODO: 不应当使用用EM, 需要另外设计配置模块
+            // TODO: 不应当使用用EM, 需要另外设计配置模块, 还有 playerId
             // 角色 dds
             int charId = m_charDds.CreateCharacter (ocp);
             // 技能 dds

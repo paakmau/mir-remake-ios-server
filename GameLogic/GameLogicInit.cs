@@ -53,6 +53,7 @@ namespace MirRemakeBackend.GameLogic {
             return NetworkIdManager.AssignNetworkId ();
         }
         public void CommandInitCharacterId (int netId, int charId) {
+            // TODO: 应当完全依赖相应GL来添加角色
             // 实例化角色
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId, m_charDds.GetCharacterById (charId));
             EM_Sight.s_instance.InitCharacter (newChar);
@@ -90,19 +91,16 @@ namespace MirRemakeBackend.GameLogic {
             // 初始化状态
             EM_Status.s_instance.InitCharacterStatus (netId);
 
-            // 实例化任务
-            var ddsList = m_missionDds.GetMissionListByCharacterId (charId);
-            List<short> acceptedMis, acceptableMis, unacceptableMis;
-            List<E_Mission> acceptedMisObjList;
-            EM_Mission.s_instance.InitCharacter (netId, charId, newChar.m_Occupation, newChar.m_Level, ddsList, out acceptedMis, out acceptedMisObjList, out acceptableMis, out unacceptableMis);
-            // 添加监听 TODO: 希望能不要依赖其他GL
-            GL_Mission.s_instance.NotifyInitMission (acceptedMisObjList);
-            // client
-            m_netService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMis, acceptableMis, unacceptableMis));
+            // 初始化任务
+            GL_Mission.s_instance.NotifyInitCharacter (newChar);
         }
         public void CommandRemoveCharacter (int netId) {
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+
+            GL_Mission.s_instance.NotifyRemoveCharacter (charObj);
+            // TODO: 应当完全依赖相应GL来移除
             EM_Item.s_instance.RemoveCharacter (netId);
-            EM_Mission.s_instance.RemoveCharacter (netId);
             EM_Sight.s_instance.RemoveCharacter (netId);
             EM_Skill.s_instance.RemoveCharacter (netId);
             EM_Status.s_instance.RemoveCharacterStatus (netId);
