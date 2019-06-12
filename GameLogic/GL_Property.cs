@@ -74,12 +74,8 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
             var bag = EM_Item.s_instance.GetBag (charObj.m_networkId);
             if (bag == null) return;
-            // 分配RealId
-            var realIdList = new List<long> (itemIdAndNumList.Count);
-            for (int i = 0; i < itemIdAndNumList.Count; i++)
-                realIdList.Add (m_itemDds.InsertItem (new DDO_Item ()));
             // 实例化
-            var itemList = EM_Item.s_instance.InitItemList (itemIdAndNumList, realIdList);
+            var itemList = EM_Item.s_instance.InitItemList (itemIdAndNumList);
             // 放入背包
             for (int i = 0; i < itemList.Count; i++) {
                 List < (short, E_Item) > changedItemList;
@@ -101,11 +97,10 @@ namespace MirRemakeBackend.GameLogic {
                     m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                         charObj.m_networkId, changedRealIdList, changedPosList));
 
-                // 若该物品消失 (被堆叠或无法放入) 数据删除
-                if (storePos == -1 || storePos == -2) {
-                    m_itemDds.DeleteItemByRealId (itemList[i].m_realId);
+                // 若该物品消失 (被堆叠或无法放入)
+                if (storePos == -1 || storePos == -2)
                     continue;
-                }
+
                 // 该物品单独占有一格
                 else {
                     // 基础信息 dds 与 client

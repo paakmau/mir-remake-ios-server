@@ -172,12 +172,12 @@ namespace MirRemakeBackend.Entity {
         /// 返回Entity  
         /// 不进入索引  
         /// </summary>
-        public List<E_Item> InitItemList (IReadOnlyList < (short, short) > itemIdAndNumList, IReadOnlyList<long> realIdList) {
+        public List<E_Item> InitItemList (IReadOnlyList < (short, short) > itemIdAndNumList) {
             var res = new List<E_Item> ();
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
                 var idAndNum = itemIdAndNumList[i];
                 DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
-                E_Item item = m_itemFactory.GetAndResetInitInstance (itemDe, realIdList[i], idAndNum.Item2);
+                E_Item item = m_itemFactory.GetAndResetInitInstance (itemDe, -1, idAndNum.Item2);
                 res.Add (item);
             }
             return res;
@@ -253,6 +253,7 @@ namespace MirRemakeBackend.Entity {
                         ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
                         break;
                     case ItemType.EMPTY:
+                        ((E_EmptyItem) item).Reset (itemDe, itemDdo);
                         break;
                 }
                 resItemArr[i] = item;

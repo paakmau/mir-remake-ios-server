@@ -110,9 +110,9 @@ namespace MirRemakeBackend.Entity {
             }
             // 寻找空插槽
             for (short i = 0; i < m_itemList.Count; i++) {
-                var itemInRepo = m_itemList[i];
-                if (itemInRepo.m_IsEmpty) {
-                    itemInRepo = item;
+                if (m_itemList[i].m_IsEmpty) {
+                    item.m_realId = m_itemList[i].m_realId;
+                    m_itemList[i] = item;
                     return i;
                 }
             }
