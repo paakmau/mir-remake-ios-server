@@ -78,6 +78,7 @@ namespace MirRemakeBackend.DataEntity {
             var damageParamList = new List < (SkillAimParamType, float) > (curDo.m_damageParamArr.Length);
             for (int i=0; i<curDo.m_damageParamArr.Length; i++)
                 damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float)curDo.m_damageParamArr[i].Item2 * 0.01f));
+            m_damageParamList = damageParamList;
             m_skillEffect = new DE_Effect (curDo.m_skillEffect);
         }
     }
