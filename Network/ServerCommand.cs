@@ -129,16 +129,22 @@ namespace MirRemakeBackend.Network {
         private NO_Repository m_bag;
         private NO_Repository m_storeHouse;
         private NO_Repository m_equipmentRegion;
+        private long m_virtualCy;
+        private long m_chargeCy;
         public static SC_InitSelfItem Instance (
             IReadOnlyList<int> toClientList,
             NO_Repository bag,
             NO_Repository storeHouse,
-            NO_Repository equips
+            NO_Repository equips,
+            long virtualCy,
+            long chargeCy
         ) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_bag = bag;
             s_instance.m_storeHouse = storeHouse;
             s_instance.m_equipmentRegion = equips;
+            s_instance.m_virtualCy = virtualCy;
+            s_instance.m_chargeCy = chargeCy;
             return s_instance;
         }
         private SC_InitSelfItem () { }
@@ -146,6 +152,8 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_bag);
             writer.Put (m_storeHouse);
             writer.Put (m_equipmentRegion);
+            writer.Put (m_virtualCy);
+            writer.Put (m_chargeCy);
         }
     }
     /// <summary>
