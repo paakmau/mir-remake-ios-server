@@ -17,13 +17,14 @@ namespace MirRemakeBackend.Entity {
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         public EM_Mission (DEM_Mission dem) { m_dem = dem; }
-        public void InitCharacter (int netId, int charId, OccupationType charOcp, short charLv, List<DDO_Mission> ddoList, out List<short> resAcceptedMisList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
+        public void InitCharacter (int netId, int charId, OccupationType charOcp, short charLv, List<DDO_Mission> ddoList, out List<short> resAcceptedMisIdList, out List<E_Mission> resAcceptedMisObjList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
             // 若角色已经加载
             if (m_acceptedMissionDict.TryGetValue (netId, out oriAcceptedMisDict) && m_acceptableMissionDict.TryGetValue (netId, out oriAcceptableMisSet) && m_unacceptableMissionDict.TryGetValue (netId, out oriUnacceptableMisSet)) {
-                resAcceptedMisList = CollectionUtils.GetDictKeyList (oriAcceptedMisDict);
+                resAcceptedMisIdList = CollectionUtils.GetDictKeyList (oriAcceptedMisDict);
+                resAcceptedMisObjList = CollectionUtils.GetDictValueList (oriAcceptedMisDict);
                 resAcceptableMisList = CollectionUtils.GetSetList (oriAcceptableMisSet);
                 resUnacceptableMisList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
                 return;
@@ -54,7 +55,8 @@ namespace MirRemakeBackend.Entity {
             }
 
             // 返回
-            resAcceptedMisList = CollectionUtils.GetDictKeyList (acceptedMissionDict);
+            resAcceptedMisIdList = CollectionUtils.GetDictKeyList (acceptedMissionDict);
+            resAcceptedMisObjList = CollectionUtils.GetDictValueList (acceptedMissionDict);
             resAcceptableMisList = CollectionUtils.GetSetList (acceptableMissionSet);
             resUnacceptableMisList = CollectionUtils.GetSetList (unacceptableMissionSet);
         }
