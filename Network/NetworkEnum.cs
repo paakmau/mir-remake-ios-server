@@ -18,6 +18,7 @@ namespace MirRemakeBackend.Network {
         SET_SELF_CONCRETE_ATTRIBUTE,
         APPLY_SELF_LEVEL_AND_EXP,
         APPLY_SELF_MAIN_ATTRIBUTE,
+        APPLY_ALL_RESPAWN,
         // 战斗状态与动画
         APPLY_OTHER_CAST_SKILL_BEGIN,
         APPLY_ALL_EFFECT,

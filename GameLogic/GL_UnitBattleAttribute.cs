@@ -61,7 +61,7 @@ namespace MirRemakeBackend.GameLogic {
                     en.Current.m_CurHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
                     en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
                     if (en.Current.m_IsDead)
-                        // 单位死亡 TODO: 
+                        // 单位死亡 TODO: 状态凶手
                         UnitDead (en.Current, en.Current);
                 }
             }
@@ -124,9 +124,10 @@ namespace MirRemakeBackend.GameLogic {
                 killer.m_networkId,
                 dead.m_networkId
             ));
-            // 通知Mission
+            // 通知 Mission
             if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
                 GL_Mission.s_instance.ListenMissionTarget ((E_Character) killer, MissionTargetType.KILL_MONSTER, ((E_Monster) dead).m_MonsterId, 1);
+            // 通知 CharacterLevel TODO: 
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性

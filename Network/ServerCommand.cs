@@ -350,6 +350,33 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 更新所有单位的复活
+    /// </summary>
+    class SC_ApplyAllRespawn : ServerCommandBase {
+        private static readonly SC_ApplyAllRespawn s_instance = new SC_ApplyAllRespawn ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_RESPAWN; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_netId;
+        private Vector2 m_pos;
+        private int m_hp;
+        private int m_maxHp;
+        public static SC_ApplyAllRespawn Instance (List<int> toClientList, int netId, Vector2 pos, int hp, int maxHp) {
+            s_instance.m_toClientList = toClientList;
+            s_instance.m_netId = netId;
+            s_instance.m_pos = pos;
+            s_instance.m_hp = hp;
+            s_instance.m_maxHp = maxHp;
+            return s_instance;
+        }
+        private SC_ApplyAllRespawn () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_netId);
+            writer.Put (m_pos);
+            writer.Put (m_hp);
+            writer.Put (m_maxHp);
+        }
+    }
+    /// <summary>
     /// 其他单位开始释放技能
     /// </summary>
     class SC_ApplyOtherCastSkillBegin : ServerCommandBase {

@@ -235,7 +235,6 @@ namespace MirRemakeBackend.GameLogic {
             public MFSMS_Dead (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
                 m_timer = MyRandom.NextFloat (c_respawnTimeMin, c_respawnTimeMax);
-                GL_MonsterAction.s_instance.MFSMDead (self);
             }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
@@ -247,6 +246,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
                 self.m_position = self.m_respawnPosition;
+                self.Respawn ();
                 GL_MonsterAction.s_instance.MFSMRespawn (self);
             }
         }
@@ -293,9 +293,13 @@ namespace MirRemakeBackend.GameLogic {
         public void MFSMSkillSettle (E_Monster monster, E_MonsterSkill skill, SkillParam sp) {
             GL_BattleSettle.s_instance.NotifySkillSettle (monster, skill, sp);
         }
-        public void MFSMDead (E_Monster monster) {
-        }
         public void MFSMRespawn (E_Monster monster) {
+            m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (monster.m_networkId, false),
+                monster.m_networkId,
+                monster.m_position,
+                monster.m_CurHp,
+                monster.m_MaxHp));
         }
     }
 }

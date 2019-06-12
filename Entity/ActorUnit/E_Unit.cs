@@ -111,6 +111,10 @@ namespace MirRemakeBackend.Entity {
             m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;
         }
+        public void Respawn () {
+            m_CurHp = m_MaxHp;
+            m_CurMp = m_MaxMp;
+        }
         public void AddConAttr (ActorUnitConcreteAttributeType type, int value) {
             m_concreteAttributeDict[type] += value;
         }
