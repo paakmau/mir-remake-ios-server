@@ -63,6 +63,7 @@ namespace MirRemakeBackend.Entity {
             int cnt = 0;
             while (m_experience >= m_UpgradeExperienceInNeed) {
                 m_experience -= m_UpgradeExperienceInNeed;
+                m_unitDe = m_characterDe.m_unitAllLevel[m_Level + 1];
                 m_characterDataDe = m_characterDe.m_characterDataAllLevel[m_Level + 1];
                 cnt++;
             }

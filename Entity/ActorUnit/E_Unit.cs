@@ -40,11 +40,11 @@ namespace MirRemakeBackend.Entity {
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_MP] = value; }
         }
         public int m_CurHp {
-            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_HP] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_HP]; }
+            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_HP]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_HP] = value; }
         }
         public int m_CurMp {
-            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_MP] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_MP]; }
+            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_MP]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_MP] = value; }
         }
         public int m_DeltaHpPerSecond {
