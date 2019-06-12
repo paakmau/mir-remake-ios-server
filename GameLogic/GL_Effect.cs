@@ -44,7 +44,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_de = effectDe;
                 // 处理命中
                 float hitRate = effectDe.m_hitRate * caster.m_HitRate / target.m_DodgeRate;
-                m_hit = MyRandom.NextInt (1, 101) >= hitRate;
+                m_hit = MyRandom.NextInt (1, 101) <= hitRate;
                 if (m_hit) {
                     // 处理基础伤害(或能量剥夺)
                     m_deltaHp = effectDe.m_deltaHp;
@@ -60,9 +60,9 @@ namespace MirRemakeBackend.GameLogic {
                     }
                     // 处理暴击
                     float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate / target.m_DodgeRate;
-                    m_critical = MyRandom.NextInt (1, 101) >= criticalRate;
+                    m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
                     if (m_critical)
-                        m_deltaHp *= caster.m_CriticalBonus;
+                        m_deltaHp *= (int)((float)caster.m_CriticalBonus / 100f);
                     // 处理状态
                     m_statusIdAndValueAndTimeAndCasterNetIdArr = new ValueTuple<short, float, float, int>[effectDe.m_statusIdAndValueAndTimeList.Count];
                     for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
