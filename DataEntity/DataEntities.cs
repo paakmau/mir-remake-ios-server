@@ -4,9 +4,12 @@ using MirRemakeBackend.Data;
 
 namespace MirRemakeBackend.DataEntity {
     class DE_Unit {
-        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_concreteAttributeList;
+        public readonly IReadOnlyDictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict;
         private DE_Unit (ValueTuple<ActorUnitConcreteAttributeType, int>[] attrArr) {
-            m_concreteAttributeList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (attrArr);
+            var conAttrDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
+            foreach (var item in attrArr)
+                conAttrDict.Add (item.Item1, item.Item2);
+            m_concreteAttributeDict = conAttrDict;
         }
         public DE_Unit (DO_Monster monster) : this (monster.m_attrArr) { }
         public DE_Unit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }
