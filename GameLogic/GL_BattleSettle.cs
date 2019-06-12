@@ -1,6 +1,6 @@
-using System.Numerics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
@@ -51,15 +51,31 @@ namespace MirRemakeBackend.GameLogic {
             }
             protected void GetActorUnitsInCircleRange (E_Unit self, Vector2 center, float radius, CampType targetCamp, byte unitNum, List<E_Unit> resList) {
                 resList.Clear ();
-                var unitInSightList = EM_Sight.s_instance.GetCharacterRawSight (self.m_networkId);
-                for (int i = 0; i < unitInSightList.Count; i++) {
+                var sight = EM_Sight.s_instance.GetCharacterRawSight (self.m_networkId);
+                for (int i = 0; i < sight.Count; i++) {
                     // 若阵营不匹配
-                    if (EM_Camp.s_instance.GetCampType (self, unitInSightList[i]) != targetCamp) continue;
+                    if (EM_Camp.s_instance.GetCampType (self, sight[i]) != targetCamp) continue;
                     // 若在范围之外
-                    if ((self.m_position - unitInSightList[i].m_position).LengthSquared () > radius * radius) continue;
-                    resList.Add (unitInSightList[i]);
+                    if ((self.m_position - sight[i].m_position).LengthSquared () > radius * radius) continue;
+                    resList.Add (sight[i]);
                 }
                 GetNearestUnits (center, unitNum, resList);
+            }
+            protected void GetActorUnitsInRectRange (E_Unit self, Vector2 basePoint, Vector2 dir, float length, float width, CampType targetCamp, byte unitNum, List<E_Unit> resList) {
+                resList.Clear ();
+                var sight = EM_Sight.s_instance.GetCharacterRawSight (self.m_networkId);
+                for (int i = 0; i < sight.Count; i++) {
+                    // 若阵营不匹配
+                    if (EM_Camp.s_instance.GetCampType (self, sight[i]) != targetCamp) continue;
+                    // 若在范围之外
+                    var dirNor = Vector2.Normalize (dir);
+                    var dist = sight[i].m_position - basePoint;
+                    float l = Vector2.Dot (dirNor, dist);
+                    float w = (dirNor * dist).Length () * 2;
+                    if (l < 0 || l > length || w > width) continue;
+                    resList.Add (sight[i]);
+                }
+                GetNearestUnits (basePoint, unitNum, resList);
             }
             public virtual void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parm) {
                 m_targetCamp = targetCamp;
@@ -100,6 +116,39 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
                 GetActorUnitsInCircleRange (self, self.m_position, m_radius, m_targetCamp, m_targetNumber, resList);
+            }
+        }
+        /// <summary>
+        /// 非指向性圆形溅射
+        /// </summary>
+        private class ETC_NotAimCircle : EffectTargetChooserBase {
+            public override SkillAimType m_TargetAimType { get { return SkillAimType.NOT_AIM_CIRCLE; } }
+            // 伤害半径
+            public float m_radius;
+            public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
+                base.Reset (targetCamp, targetNum, parmList);
+                TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
+            }
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
+                GetActorUnitsInCircleRange (self, parm.m_position, m_radius, m_targetCamp, m_targetNumber, resList);
+            }
+        }
+        /// <summary>
+        /// 非指向性自身出发条形
+        /// </summary>
+        private class ETC_NotAimSelfRect : EffectTargetChooserBase {
+            public override SkillAimType m_TargetAimType { get { return SkillAimType.NOT_AIM_SELF_RECT; } }
+            // 伤害长度
+            public float m_length;
+            // 伤害宽度
+            public float m_width;
+            public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
+                base.Reset (targetCamp, targetNum, parmList);
+                TryGetAimParamValue (parmList, SkillAimParamType.LENGTH, out m_length);
+                TryGetAimParamValue (parmList, SkillAimParamType.WIDTH, out m_width);
+            }
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
+                GetActorUnitsInRectRange (self, self.m_position, parm.m_direction, m_length, m_width, m_targetCamp, m_targetNumber, resList);
             }
         }
         private class TargetStage {

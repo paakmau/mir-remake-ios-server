@@ -48,7 +48,7 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < hTarRemoveList.Count; i++)
                     unitEn.Current.m_hatredRefreshDict.Remove (hTarRemoveList[i]);
             }
-            // 处理具体属性的每秒变化 TODO: 应当用状态处理
+            // 处理具体属性的每秒变化 TODO: 应当用 状态 处理
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
