@@ -96,7 +96,7 @@ namespace MirRemakeBackend.GameLogic {
                         dirNorm = Vector2.UnitX;
                     else dirNorm = Vector2.Normalize (dir);
                     var deltaP = dirNorm * self.m_Speed * dT * 0.01f;
-                    Console.WriteLine ("MFSMS_AutoMove 每帧位移" + deltaP);
+                    // Console.WriteLine ("MFSMS_AutoMove 每帧位移" + deltaP);
                     if (deltaP.LengthSquared () >= dir.LengthSquared ())
                         deltaP = dir;
                     self.m_position = self.m_position + deltaP;
