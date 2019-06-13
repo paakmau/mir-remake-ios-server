@@ -794,4 +794,25 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_acceptableMis[i]);
         }
     }
+    class SC_SendShoppingMallNormal : ServerCommandBase {
+        private static SC_SendShoppingMallNormal s_instance = new SC_SendShoppingMallNormal ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_SHOPPING_MALL_NORMAL; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<short> m_itemIdList;
+        private IReadOnlyList<long> m_itemVirtualCurrencyPriceList;
+        public static SC_SendShoppingMallNormal Instance (int netId, IReadOnlyList<short> itemIdList, IReadOnlyList<long> itemVirtualCurrencyPriceList) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_itemIdList = itemIdList;
+            s_instance.m_itemVirtualCurrencyPriceList = itemVirtualCurrencyPriceList;
+            return s_instance;
+        }
+        private SC_SendShoppingMallNormal () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_itemIdList.Count);
+            for (int i = 0; i < m_itemIdList.Count; i++) {
+                writer.Put (m_itemIdList[i]);
+                writer.Put (m_itemVirtualCurrencyPriceList[i]);
+            }
+        }
+    }
 }
