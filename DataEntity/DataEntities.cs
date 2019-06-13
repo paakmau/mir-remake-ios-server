@@ -65,7 +65,7 @@ namespace MirRemakeBackend.DataEntity {
         /// </summary>
         public readonly IReadOnlyList < (SkillAimParamType, float) > m_damageParamList;
         public readonly DE_Effect m_skillEffect;
-        public DE_SkillData (DO_SkillData curDo, DO_SkillData nextLvDo) {
+        public DE_SkillData (DO_SkillData curDo, DO_SkillData nextLvDo, short skId) {
             m_upgradeCharacterLevelInNeed = nextLvDo.m_upgradeCharacterLevelInNeed;
             m_upgradeMoneyInNeed = nextLvDo.m_upgradeMoneyInNeed;
             m_upgradeMasterlyInNeed = nextLvDo.m_upgradeMasterlyInNeed;
@@ -74,12 +74,12 @@ namespace MirRemakeBackend.DataEntity {
             m_castBackTime = curDo.m_castBackTime;
             m_coolDownTime = curDo.m_coolDownTime;
             m_targetNumber = curDo.m_targetNumber;
-            m_castRange = (float)curDo.m_castRange * 0.01f;
+            m_castRange = (float) curDo.m_castRange * 0.01f;
             var damageParamList = new List < (SkillAimParamType, float) > (curDo.m_damageParamArr.Length);
-            for (int i=0; i<curDo.m_damageParamArr.Length; i++)
-                damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float)curDo.m_damageParamArr[i].Item2 * 0.01f));
+            for (int i = 0; i < curDo.m_damageParamArr.Length; i++)
+                damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float) curDo.m_damageParamArr[i].Item2 * 0.01f));
             m_damageParamList = damageParamList;
-            m_skillEffect = new DE_Effect (curDo.m_skillEffect);
+            m_skillEffect = new DE_Effect (curDo.m_skillEffect, skId);
         }
     }
     class DE_Skill {
@@ -99,10 +99,10 @@ namespace MirRemakeBackend.DataEntity {
             m_skillAimType = skillDo.m_skillAimType;
             m_targetCamp = skillDo.m_targetCamp;
             DE_SkillData[] dataArr = new DE_SkillData[m_skillMaxLevel + 1];
-            dataArr[0] = new DE_SkillData (skillDo.m_skillDataAllLevel[0], skillDo.m_skillDataAllLevel[0]);
+            dataArr[0] = new DE_SkillData (skillDo.m_skillDataAllLevel[0], skillDo.m_skillDataAllLevel[0], m_skillId);
             for (int i = 1; i <= m_skillMaxLevel - 1; i++)
-                dataArr[i] = new DE_SkillData (skillDo.m_skillDataAllLevel[i - 1], skillDo.m_skillDataAllLevel[i]);
-            dataArr[m_skillMaxLevel] = new DE_SkillData (skillDo.m_skillDataAllLevel[m_skillMaxLevel - 1], skillDo.m_skillDataAllLevel[m_skillMaxLevel - 1]);
+                dataArr[i] = new DE_SkillData (skillDo.m_skillDataAllLevel[i - 1], skillDo.m_skillDataAllLevel[i], m_skillId);
+            dataArr[m_skillMaxLevel] = new DE_SkillData (skillDo.m_skillDataAllLevel[m_skillMaxLevel - 1], skillDo.m_skillDataAllLevel[m_skillMaxLevel - 1], m_skillId);
             m_skillDataAllLevel = new List<DE_SkillData> (dataArr);
         }
     }
@@ -114,9 +114,10 @@ namespace MirRemakeBackend.DataEntity {
         public readonly int m_deltaHp;
         public readonly int m_deltaMp;
         public readonly IReadOnlyList<ValueTuple<short, float, float>> m_statusIdAndValueAndTimeList;
-        public DE_Effect (DO_Effect effectDo) {
+        public DE_Effect (DO_Effect effectDo, short animId) {
             m_type = effectDo.m_type;
-            m_animId = effectDo.m_animId;
+            // TODO: animId 有待考量
+            m_animId = animId;
             m_hitRate = effectDo.m_hitRate;
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHp = effectDo.m_deltaHp;
@@ -158,7 +159,7 @@ namespace MirRemakeBackend.DataEntity {
     class DE_ConsumableData {
         public readonly DE_Effect m_itemEffect;
         public DE_ConsumableData (DO_Consumable consumDo) {
-            m_itemEffect = new DE_Effect (consumDo.m_effect);
+            m_itemEffect = new DE_Effect (consumDo.m_effect, (short) (consumDo.m_itemId * 100));
         }
     }
     class DE_EquipmentData {
