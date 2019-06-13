@@ -95,12 +95,13 @@ namespace MirRemakeBackend.GameLogic {
                     if (dir.LengthSquared() <= float.Epsilon)
                         dirNorm = Vector2.UnitX;
                     else dirNorm = Vector2.Normalize (dir);
-                    var deltaP = dirNorm * self.m_Speed * dT / 0.01f;
+                    var deltaP = dirNorm * self.m_Speed * dT * 0.01f;
+                    Console.WriteLine ("MFSMS_AutoMove 每帧位移" + deltaP);
                     if (deltaP.LengthSquared () >= dir.LengthSquared ())
                         deltaP = dir;
                     self.m_position = self.m_position + deltaP;
                     if ((self.m_position - m_targetPos).LengthSquared () <= 0.01f) {
-                        m_moveTimeLeft = MyRandom.NextFloat (3f, 6f);
+                        m_moveTimeLeft = MyRandom.NextFloat (5f, 10f);
                         m_targetPos = self.m_respawnPosition + new Vector2 (MyRandom.NextFloat (0f, 2.5f), MyRandom.NextFloat (0f, 2.5f));
                     }
                 }
