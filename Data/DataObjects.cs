@@ -111,4 +111,7 @@ namespace MirRemakeBackend.Data {
         public int m_bonusExperience;
         public ValueTuple<short, short>[] m_bonusItemIdAndNumArr;
     }
+    struct DO_MallItem{
+        public ValueTuple<short,ValueTuple<CurrencyType,int>[]> m_itemIdAndPrice;
+    }
 }
