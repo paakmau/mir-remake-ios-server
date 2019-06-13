@@ -30,6 +30,11 @@ namespace MirRemakeBackend.GameLogic {
             // 处理仇恨消失
             var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
             while (unitEn.MoveNext ()) {
+                // 如果这个单位已死亡
+                if (unitEn.Current.m_IsDead) {
+                    unitEn.Current.m_hatredRefreshDict.Clear ();
+                    continue;
+                }
                 var hatredEn = unitEn.Current.m_hatredRefreshDict.GetEnumerator ();
                 var hTarRemoveList = new List<int> ();
                 while (hatredEn.MoveNext ()) {
@@ -78,7 +83,7 @@ namespace MirRemakeBackend.GameLogic {
                     sightNetIdList.Add (sight[i].m_networkId);
                     hpMaxHpMpMaxMpList.Add ((sight[i].m_CurHp, sight[i].m_MaxHp, sight[i].m_CurMp, sight[i].m_MaxMp));
                 }
-                sightNetIdList.Add(charObj.m_networkId);
+                sightNetIdList.Add (charObj.m_networkId);
                 hpMaxHpMpMaxMpList.Add ((charObj.m_CurHp, charObj.m_MaxHp, charObj.m_CurMp, charObj.m_MaxMp));
                 m_networkService.SendServerCommand (SC_SetAllHPAndMP.Instance (
                     charObj.m_networkId,
@@ -133,7 +138,7 @@ namespace MirRemakeBackend.GameLogic {
                 GL_Mission.s_instance.ListenMissionTarget ((E_Character) killer, MissionTargetType.KILL_MONSTER, ((E_Monster) dead).m_MonsterId, 1);
             // 通知 CharacterLevel
             if (killer.m_UnitType == ActorUnitType.PLAYER)
-                GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character)killer, dead);
+                GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) killer, dead);
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // 处理具体属性
