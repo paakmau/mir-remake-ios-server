@@ -97,7 +97,18 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            GL_Property.s_instance.CommandApplySellItemInBag (netId, realId, num);
+            GL_Mall.s_instance.CommandApplySellItemInBag (netId, realId, num);
+        }
+    }
+    /// <summary>
+    /// 购买物品放入背包
+    /// </summary>
+    class CC_ApplyBuyItemIntoBag : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_INTO_BAG; } }
+        public void Execute (NetDataReader reader, int netId) {
+            short itemId = reader.GetShort ();
+            short num = reader.GetShort ();
+            GL_Mall.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
         }
     }
     /// <summary>
