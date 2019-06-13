@@ -98,13 +98,15 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
             target.m_CurHp += dHp;
             target.m_CurMp += dMp;
+            if (dHp >= 0 && dMp >= 0) return;
+
             // xjb计算仇恨
             float hatredTime = (float) (-dHp - dMp) / (float) target.m_MaxHp * 200;
             if (hatredTime < 0) return;
             MyTimer.Time oriHatred;
             if (!target.m_hatredRefreshDict.TryGetValue (target.m_networkId, out oriHatred))
                 oriHatred = MyTimer.s_CurTime;
-            target.m_hatredRefreshDict[target.m_networkId] = oriHatred.Ticked (hatredTime);
+            target.m_hatredRefreshDict[caster.m_networkId] = oriHatred.Ticked (hatredTime);
 
             // 若单位死亡
             if (target.m_IsDead)

@@ -42,9 +42,9 @@ namespace MirRemakeBackend.Util {
                 return false;
             }
             public static bool operator >= (Time a, Time b) {
-                if (a.m_cycle == b.m_cycle && a.m_time >= b.m_time)
+                if (a.m_cycle > b.m_cycle)
                     return true;
-                if (a.m_cycle >= b.m_cycle)
+                if (a.m_cycle == b.m_cycle && a.m_time >= b.m_time)
                     return true;
                 return false;
             }
