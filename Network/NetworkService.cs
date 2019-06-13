@@ -43,7 +43,8 @@ namespace MirRemakeBackend.Network {
         public void SendServerCommand (ServerCommandBase command) {
             m_writer.Put ((byte) command.m_DataType);
             command.PutData (m_writer);
-            Console.WriteLine ("SC: " + command.m_DataType);
+            if (command.m_DeliveryMethod != DeliveryMethod.Unreliable && command.m_DeliveryMethod != DeliveryMethod.Sequenced)
+                Console.WriteLine ("SC: " + command.m_DataType);
             for (int i = 0; i < command.m_toClientList.Count; i++)
                 m_netIdAndPeerDict[command.m_toClientList[i]].Send (m_writer, command.m_DeliveryMethod);
             m_writer.Reset ();
