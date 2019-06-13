@@ -45,8 +45,11 @@ namespace MirRemakeBackend.Network {
             command.PutData (m_writer);
             if (command.m_DeliveryMethod != DeliveryMethod.Unreliable && command.m_DeliveryMethod != DeliveryMethod.Sequenced)
                 Console.WriteLine ("SC: " + command.m_DataType);
-            for (int i = 0; i < command.m_toClientList.Count; i++)
-                m_netIdAndPeerDict[command.m_toClientList[i]].Send (m_writer, command.m_DeliveryMethod);
+            for (int i = 0; i < command.m_toClientList.Count; i++) {
+                NetPeer peer;
+                if (m_netIdAndPeerDict.TryGetValue (command.m_toClientList[i], out peer))
+                    peer.Send (m_writer, command.m_DeliveryMethod);
+            }
             m_writer.Reset ();
         }
         public void OnConnectionRequest (ConnectionRequest request) {
