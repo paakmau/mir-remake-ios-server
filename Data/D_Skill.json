@@ -1312,8 +1312,8 @@
 	"Effect":{
 		"EffectDeltaHP":[-50],
 		"EffectDeltaMP":[0],
-		"EffectDeltaHPType":"MAGIC",
-		"EffectDeltaMPType":"MAGIC",
+		"EffectDeltaHPType":"PHYSICS",
+		"EffectDeltaMPType":"PHYSICS",
 		"HitRate":[0],
 		"CriticalRate":[0],
 		"SelfHPStrategy":[["ATTACK 1"]],
