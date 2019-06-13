@@ -99,7 +99,7 @@ namespace MirRemakeBackend.GameLogic {
             target.m_CurHp += dHp;
             target.m_CurMp += dMp;
             // xjb计算仇恨
-            float hatredTime = (float) (-dHp - dMp) / (float) target.m_MaxHp * 10;
+            float hatredTime = (float) (-dHp - dMp) / (float) target.m_MaxHp * 200;
             if (hatredTime < 0) return;
             MyTimer.Time oriHatred;
             if (!target.m_hatredRefreshDict.TryGetValue (target.m_networkId, out oriHatred))

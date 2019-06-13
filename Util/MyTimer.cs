@@ -14,7 +14,7 @@ namespace MirRemakeBackend.Util {
             }
             public Time (Time t) {
                 m_cycle = t.m_cycle;
-                m_time = t.m_cycle;
+                m_time = t.m_time;
             }
             /// <summary>
             /// 自身后移dT
