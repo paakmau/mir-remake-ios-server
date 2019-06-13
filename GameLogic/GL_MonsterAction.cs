@@ -120,7 +120,6 @@ namespace MirRemakeBackend.GameLogic {
             public MFSMS_AutoBattle (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) { }
             public override void OnTick (E_Monster self, float dT) {
-                // TODO: 怪物自动战斗有问题
                 if (self.m_HighestHatredTargetNetId == -1)
                     return;
                 var unit = EM_Sight.s_instance.GetUnitVisibleByNetworkId (self.m_HighestHatredTargetNetId);
