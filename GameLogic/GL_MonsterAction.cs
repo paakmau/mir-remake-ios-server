@@ -286,6 +286,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void NetworkTick () { }
         public void MFSMCastSkillBegin (int netId, E_MonsterSkill skill, SkillParam sp) {
+            // client
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, false),
                 netId,
@@ -296,6 +297,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_BattleSettle.s_instance.NotifySkillSettle (monster, skill, sp);
         }
         public void MFSMRespawn (E_Monster monster) {
+            // client
             m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (monster.m_networkId, false),
                 monster.m_networkId,
