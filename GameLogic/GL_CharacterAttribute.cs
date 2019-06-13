@@ -35,6 +35,7 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_Intelligence,
                 charObj.m_Agility,
                 charObj.m_Spirit));
+            // TODO: 属性加点
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)
