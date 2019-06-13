@@ -151,7 +151,7 @@ namespace MirRemakeBackend.GameLogic {
                     var spg = SkillParamGeneratorBase.s_spgDict[skill.m_AimType];
                     if (spg.InCastRange (self, skill.m_CastRange, unit)) {
                         SkillParam sp = spg.GetSkillParam (self, unit);
-                        var castState = m_mfsm.m_castFront;// TODO: 上次到这里
+                        var castState = m_mfsm.m_castFront;
                         castState.Reset (skill, sp);
                         return castState;
                     }

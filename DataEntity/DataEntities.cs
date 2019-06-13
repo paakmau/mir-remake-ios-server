@@ -74,7 +74,7 @@ namespace MirRemakeBackend.DataEntity {
             m_castBackTime = curDo.m_castBackTime;
             m_coolDownTime = curDo.m_coolDownTime;
             m_targetNumber = curDo.m_targetNumber;
-            m_castRange = curDo.m_castRange;
+            m_castRange = (float)curDo.m_castRange * 0.01f;
             var damageParamList = new List < (SkillAimParamType, float) > (curDo.m_damageParamArr.Length);
             for (int i=0; i<curDo.m_damageParamArr.Length; i++)
                 damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float)curDo.m_damageParamArr[i].Item2 * 0.01f));
