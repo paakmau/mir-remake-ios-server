@@ -59,18 +59,5 @@ namespace MirRemakeBackend.GameLogic {
             var otherList = EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, false);
             m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
         }
-        public void CommandApplyDistributePoints (int netId, short str, short intl, short agl, short spr) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
-            charObj.DistributePoints (str, intl, agl, spr);
-            // dds 与 client
-            m_charDds.UpdateCharacter (charObj.GetDdo ());
-            m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
-                netId,
-                charObj.m_Strength,
-                charObj.m_Intelligence,
-                charObj.m_Agility,
-                charObj.m_Spirit));
-        }
     }
 }

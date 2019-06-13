@@ -54,7 +54,7 @@ namespace MirRemakeBackend.GameLogic {
             // 其他模块
             GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, misObj.m_BonusVirtualCurrency);
             GL_Property.s_instance.NotifyGainItem (charObj, misObj.m_BonusItemIdAndNumList);
-            GL_CharacterLevel.s_instance.NotifyGainExperience (charObj, misObj.m_BonusExperience);
+            GL_CharacterAttribute.s_instance.NotifyGainExperience (charObj, misObj.m_BonusExperience);
         }
         public void CommandCancelMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

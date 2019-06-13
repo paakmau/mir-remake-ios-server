@@ -55,7 +55,7 @@ namespace MirRemakeBackend.Network {
             short intelligence = reader.GetShort ();
             short agility = reader.GetShort ();
             short spirit = reader.GetShort ();
-            GL_Character.s_instance.CommandApplyDistributePoints (netId, strength, intelligence, agility, spirit);
+            GL_CharacterAttribute.s_instance.CommandApplyDistributePoints (netId, strength, intelligence, agility, spirit);
         }
     }
     /// <summary>
@@ -163,7 +163,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_EXP; } }
         public void Execute (NetDataReader reader, int netId) {
             int exp = reader.GetInt ();
-            GL_CharacterLevel.s_instance.CommandGainExperience (netId, exp);
+            GL_CharacterAttribute.s_instance.CommandGainExperience (netId, exp);
         }
     }
     class CC_TestGainMasterly : IClientCommand {
