@@ -194,6 +194,7 @@ namespace MirRemakeBackend.Network {
         }
         private SC_ApplyOtherCharacterInSight () { }
         public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_charAndEquipedIdList.Count);
             for (int i = 0; i < m_charAndEquipedIdList.Count; i++) {
                 writer.Put (m_charAndEquipedIdList[i].Item1);
                 writer.Put ((byte) m_charAndEquipedIdList[i].Item2.Count);
