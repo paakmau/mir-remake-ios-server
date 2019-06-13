@@ -1310,7 +1310,7 @@
 	"DamageRadian":0,
 	"SecondParameter":0,
 	"Effect":{
-		"EffectDeltaHP":[50],
+		"EffectDeltaHP":[-50],
 		"EffectDeltaMP":[0],
 		"EffectDeltaHPType":"MAGIC",
 		"EffectDeltaMPType":"MAGIC",
