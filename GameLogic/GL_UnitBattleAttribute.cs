@@ -18,6 +18,7 @@ namespace MirRemakeBackend.GameLogic {
             while (statusEn.MoveNext ()) {
                 int netId = statusEn.Current.Key;
                 E_Unit unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+                if (unit == null) continue;
                 var statusToRemoveList = new List<int> ();
                 for (int i = 0; i < statusEn.Current.Value.Count; i++) {
                     if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {

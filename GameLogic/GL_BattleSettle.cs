@@ -167,7 +167,7 @@ namespace MirRemakeBackend.GameLogic {
             public IReadOnlyList<E_Unit> GetTargetList (E_Unit self, E_MonsterSkill skill, SkillParam skillParm) {
                 // TODO: 全部写完
                 EffectTargetChooserBase targetChooser;
-                if (m_targetChooserDict.TryGetValue (skill.m_AimType, out targetChooser))
+                if (!m_targetChooserDict.TryGetValue (skill.m_AimType, out targetChooser))
                     return new List<E_Unit> ();
                 targetChooser.Reset (skill.m_TargetCamp, skill.m_TargetNumber, skill.m_DamageParamList);
                 targetChooser.GetEffectTargets (self, skillParm, m_targetList);
