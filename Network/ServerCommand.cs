@@ -37,12 +37,19 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_InitSelfAttribute s_instance = new SC_InitSelfAttribute ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 等级 </summary>
         private short m_level;
+        /// <summary> 经验 </summary>
         private int m_exp;
+        /// <summary> 力量 </summary>
         private short m_strength;
+        /// <summary> 智力 </summary>
         private short m_intelligence;
+        /// <summary> 敏捷 </summary>
         private short m_agility;
+        /// <summary> 精神 </summary>
         private short m_spirit;
+        /// <summary> 总可分配属性点 </summary>
         private short m_totalMainPoint;
         public static SC_InitSelfAttribute Instance (int netId, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -67,12 +74,13 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 初始化习得技能
+    /// 初始化技能习得情况
     /// </summary>
     class SC_InitSelfSkill : ServerCommandBase {
         private static readonly SC_InitSelfSkill s_instance = new SC_InitSelfSkill ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SKILL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 职业可学的所有技能列表, (技能Id, 当前等级, 技能熟练度) </summary>
         private (short, short, int) [] m_skillIdAndLvAndMasterlys;
         public static SC_InitSelfSkill Instance (int netId, (short, short, int) [] skillIdAndLvAndMasterlys) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -90,14 +98,17 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 初始化习得技能
+    /// 初始化任务情况
     /// </summary>
     class SC_InitSelfMission : ServerCommandBase {
         private static readonly SC_InitSelfMission s_instance = new SC_InitSelfMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 已接任务Id列表 </summary>
         IReadOnlyList<short> m_acceptedMis;
+        /// <summary> 可接任务Id列表 </summary>
         IReadOnlyList<short> m_acceptableMis;
+        /// <summary> 不可接但已解锁任务Id列表 </summary>
         IReadOnlyList<short> m_unacceptableMis;
         public static SC_InitSelfMission Instance (int netId, IReadOnlyList<short> acceptedMis, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -126,10 +137,15 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_InitSelfItem s_instance = new SC_InitSelfItem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 背包 </summary>
         private NO_Repository m_bag;
+        /// <summary> 仓库 </summary>
         private NO_Repository m_storeHouse;
+        /// <summary> 装备区 </summary>
         private NO_Repository m_equipmentRegion;
+        /// <summary> 虚拟币 </summary>
         private long m_virtualCy;
+        /// <summary> 充值币 </summary>
         private long m_chargeCy;
         public static SC_InitSelfItem Instance (
             IReadOnlyList<int> toClientList,
@@ -157,12 +173,13 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 视野中的怪物
+    /// 新进入视野的怪物
     /// </summary>
     class SC_ApplyOtherMonsterInSight : ServerCommandBase {
         private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 新进入视野 怪物列表 </summary>
         private IReadOnlyList<NO_Monster> m_monList;
         public static SC_ApplyOtherMonsterInSight Instance (int netId, IReadOnlyList<NO_Monster> newMonList) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -177,12 +194,13 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 视野中的其他角色
+    /// 新进入视野中的其他角色
     /// </summary>
     class SC_ApplyOtherCharacterInSight : ServerCommandBase {
         private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 新进入视野中的角色列表 (角色信息, 身上的装备Id列表) </summary>
         private IReadOnlyList < (NO_Character, IReadOnlyList<short>) > m_charAndEquipedIdList;
         public static SC_ApplyOtherCharacterInSight Instance (
             int netId,
@@ -204,12 +222,13 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 需要在视野中移除的单位
+    /// 离开视野的单位
     /// </summary>
     class SC_ApplyOtherActorUnitOutOfSight : ServerCommandBase {
         private static SC_ApplyOtherActorUnitOutOfSight s_instance = new SC_ApplyOtherActorUnitOutOfSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 离开视野单位的NetId列表 </summary>
         private IReadOnlyList<int> m_unitIdList;
         public static SC_ApplyOtherActorUnitOutOfSight Instance (int netId, IReadOnlyList<int> unitIdList) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -230,6 +249,7 @@ namespace MirRemakeBackend.Network {
         private static SC_SetOtherPosition s_instance = new SC_SetOtherPosition ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        /// <summary> 其他单位的位置 (NetId, Pos) </summary>
         IReadOnlyList < (int, Vector2) > m_otherNetIdAndPosList;
         public static SC_SetOtherPosition Instance (int netId, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -252,7 +272,9 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_SetAllHPAndMP s_instance = new SC_SetAllHPAndMP ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_HP_AND_MP; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        /// <summary> 视野内所有角色的NetId (可能会多传或少传) </summary>
         IReadOnlyList<int> m_allNetIdList;
+        /// <summary> 他们相对应的 (Hp, MaxHp, Mp, MaxMp) </summary>
         IReadOnlyList < (int, int, int, int) > m_hpAndMaxHpAndMpAndMaxMpList;
         public static SC_SetAllHPAndMP Instance (int netId, IReadOnlyList<int> allNetIdList, IReadOnlyList < (int, int, int, int) > hpAndMaxHpAndMpAndMaxMpList) {
             s_instance.m_toClientList = new List<int> { netId };
@@ -300,7 +322,7 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 更新自身等级与经验值
+    /// 更新自身等级与经验值与可分配的主属性点
     /// </summary>
     class SC_ApplySelfLevelAndExp : ServerCommandBase {
         private static readonly SC_ApplySelfLevelAndExp s_instance = new SC_ApplySelfLevelAndExp ();
@@ -357,9 +379,13 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_ApplyAllRespawn s_instance = new SC_ApplyAllRespawn ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_RESPAWN; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 复活的单位的NetId </summary>
         private int m_netId;
+        /// <summary> 它的位置 </summary>
         private Vector2 m_pos;
+        /// <summary> Hp </summary>
         private int m_hp;
+        /// <summary> MaxHp </summary>
         private int m_maxHp;
         public static SC_ApplyAllRespawn Instance (List<int> toClientList, int netId, Vector2 pos, int hp, int maxHp) {
             s_instance.m_toClientList = toClientList;
@@ -384,8 +410,11 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_ApplyOtherCastSkillBegin s_instance = new SC_ApplyOtherCastSkillBegin ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_BEGIN; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 施法单位的NetId </summary>
         private int m_casterNetId;
+        /// <summary> 技能的Id </summary>
         private short m_skillId;
+        /// <summary> 技能参数 </summary>
         private NO_SkillParam m_parm;
         public static SC_ApplyOtherCastSkillBegin Instance (IReadOnlyList<int> toClientList, int casterNetId, short skillId, NO_SkillParam parm) {
             s_instance.m_toClientList = toClientList;
@@ -402,13 +431,15 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 所有单位施加Effect
+    /// 对单位施加Effect
     /// </summary>
     class SC_ApplyAllEffect : ServerCommandBase {
         private static SC_ApplyAllEffect s_instance = new SC_ApplyAllEffect ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_EFFECT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 被施加Effect单位的NetId </summary>
         private int m_targetNetId;
+        /// <summary> Effect </summary>
         private NO_Effect m_effect;
         public static SC_ApplyAllEffect Instance (IReadOnlyList<int> toClientList, int targetNetId, NO_Effect effectNo) {
             s_instance.m_toClientList = toClientList;
@@ -431,6 +462,7 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_targetNetId;
         private NO_Status m_statusNo;
+        /// <summary> 若为True则该状态被添加, 否则被移除 TODO: 这里移除有问题要改接口 </summary>
         private bool m_isAttach;
         public static SC_ApplyAllStatus Instance (IReadOnlyList<int> toClientList, int targetNetId, NO_Status statusNo, bool isAttach) {
             s_instance.m_toClientList = toClientList;
@@ -453,7 +485,9 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyAllDead s_instance = new SC_ApplyAllDead ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_DEAD; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 凶手NetId </summary>
         private int m_killerNetId;
+        /// <summary> 死者NetId </summary>
         private int m_deadNetId;
         public static SC_ApplyAllDead Instance (IReadOnlyList<int> toClientList, int killNetId, int deadNetId) {
             s_instance.m_toClientList = toClientList;
@@ -474,6 +508,7 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyAllChangeEquipment s_instance = new SC_ApplyAllChangeEquipment ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_CHANGE_EQUIPMENT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 该单位换上的装备的ItemId </summary>
         private short m_itemId;
         public static SC_ApplyAllChangeEquipment Instance (IReadOnlyList<int> toClientList, short itemId) {
             s_instance.m_toClientList = toClientList;
