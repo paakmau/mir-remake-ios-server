@@ -93,7 +93,11 @@ namespace MirRemakeBackend.DynamicData
         {
             MySqlCommand cmd = new MySqlCommand(sql, ConnPool.GetConnection(dbbase));
             cmd.CommandType = CommandType.Text;
-            Execute(cmd, ds);
+            try {
+                Execute(cmd, ds);
+            } catch (Exception e) {
+                Console.WriteLine (e.StackTrace);
+            }
         }
         private void Execute(MySqlCommand cmd, DataSet ds = null)
         {
