@@ -63,8 +63,13 @@ namespace MirRemakeBackend.Data {
                 {
                     DO_SkillData skillData = new DO_SkillData();
                     skillData.m_skillLevel = (short)(j + 1);
-                    skillData.m_upgradeCharacterLevelInNeed = (short)(10 * j + 1);
-                    
+                    int sad=j>=(i/10)?j:(i/10);
+                    if(i==40){
+                        skillData.m_upgradeCharacterLevelInNeed=1;
+                    }
+                    else{    
+                        skillData.m_upgradeCharacterLevelInNeed = (short)(10 * sad + 1);
+                    }
                     if(i==40){
                         skillData.m_upgradeMasterlyInNeed=0;
                     }
