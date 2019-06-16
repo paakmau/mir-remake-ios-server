@@ -326,6 +326,30 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 更新自身特殊属性  
+    /// 如眩晕, 禁锢, 沉默等  
+    /// </summary>
+    class SC_ApplySelfSpecialAttribute : ServerCommandBase {
+        private static readonly SC_ApplySelfSpecialAttribute s_instance = new SC_ApplySelfSpecialAttribute ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SPECIAL_ATTRIBUTE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 特殊状态的类型 </summary>
+        private ActorUnitSpecialAttributeType m_spAttrType;
+        /// <summary> 特殊状态是被附加还是移除 </summary>
+        private bool m_isAttach;
+        public static SC_ApplySelfSpecialAttribute Instance (int netId, ActorUnitSpecialAttributeType spAttrType, bool isAttach) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_spAttrType = spAttrType;
+            s_instance.m_isAttach = isAttach;
+            return s_instance;
+        }
+        private SC_ApplySelfSpecialAttribute () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_spAttrType);
+            writer.Put (m_isAttach);
+        }
+    }
+    /// <summary>
     /// 更新自身等级与经验值与可分配的主属性点
     /// </summary>
     class SC_ApplySelfLevelAndExp : ServerCommandBase {
