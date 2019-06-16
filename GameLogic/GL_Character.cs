@@ -56,8 +56,8 @@ namespace MirRemakeBackend.GameLogic {
             // 通知战斗结算
             GL_BattleSettle.s_instance.NotifySkillSettle (charObj, skill, skillParam);
             // 向Client发送CastBegin事件
-            var otherList = EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, false);
-            m_networkService.SendServerCommand (SC_ApplyOtherCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
+            var otherList = EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true);
+            m_networkService.SendServerCommand (SC_ApplyAllCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
         }
     }
 }

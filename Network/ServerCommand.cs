@@ -410,9 +410,9 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 其他单位开始释放技能
     /// </summary>
-    class SC_ApplyOtherCastSkillBegin : ServerCommandBase {
-        private static readonly SC_ApplyOtherCastSkillBegin s_instance = new SC_ApplyOtherCastSkillBegin ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CAST_SKILL_BEGIN; } }
+    class SC_ApplyAllCastSkillBegin : ServerCommandBase {
+        private static readonly SC_ApplyAllCastSkillBegin s_instance = new SC_ApplyAllCastSkillBegin ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_CAST_SKILL_BEGIN; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 施法单位的NetId </summary>
         private int m_casterNetId;
@@ -420,14 +420,14 @@ namespace MirRemakeBackend.Network {
         private short m_skillId;
         /// <summary> 技能参数 </summary>
         private NO_SkillParam m_parm;
-        public static SC_ApplyOtherCastSkillBegin Instance (IReadOnlyList<int> toClientList, int casterNetId, short skillId, NO_SkillParam parm) {
+        public static SC_ApplyAllCastSkillBegin Instance (IReadOnlyList<int> toClientList, int casterNetId, short skillId, NO_SkillParam parm) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_casterNetId = casterNetId;
             s_instance.m_skillId = skillId;
             s_instance.m_parm = parm;
             return s_instance;
         }
-        private SC_ApplyOtherCastSkillBegin () { }
+        private SC_ApplyAllCastSkillBegin () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_casterNetId);
             writer.Put (m_skillId);
