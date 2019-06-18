@@ -62,10 +62,10 @@ namespace MirRemakeBackend.GameLogic {
                 while (en.MoveNext ()) {
                     if (en.Current.m_IsDead)
                         continue;
-                    int newHP = en.Current.m_CurHp + en.Current.m_DeltaHpPerSecond;
-                    int newMP = en.Current.m_CurMp + en.Current.m_DeltaMpPerSecond;
-                    en.Current.m_CurHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
-                    en.Current.m_CurMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
+                    int newHP = en.Current.m_curHp + en.Current.m_DeltaHpPerSecond;
+                    int newMP = en.Current.m_curMp + en.Current.m_DeltaMpPerSecond;
+                    en.Current.m_curHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
+                    en.Current.m_curMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
                     if (en.Current.m_IsDead)
                         // 单位死亡 TODO: 状态凶手
                         UnitDead (en.Current, en.Current);
@@ -82,10 +82,10 @@ namespace MirRemakeBackend.GameLogic {
                 var hpMaxHpMpMaxMpList = new List < (int, int, int, int) > (sight.Count + 1);
                 for (int i = 0; i < sight.Count; i++) {
                     sightNetIdList.Add (sight[i].m_networkId);
-                    hpMaxHpMpMaxMpList.Add ((sight[i].m_CurHp, sight[i].m_MaxHp, sight[i].m_CurMp, sight[i].m_MaxMp));
+                    hpMaxHpMpMaxMpList.Add ((sight[i].m_curHp, sight[i].m_MaxHp, sight[i].m_curMp, sight[i].m_MaxMp));
                 }
                 sightNetIdList.Add (charObj.m_networkId);
-                hpMaxHpMpMaxMpList.Add ((charObj.m_CurHp, charObj.m_MaxHp, charObj.m_CurMp, charObj.m_MaxMp));
+                hpMaxHpMpMaxMpList.Add ((charObj.m_curHp, charObj.m_MaxHp, charObj.m_curMp, charObj.m_MaxMp));
                 m_networkService.SendServerCommand (SC_SetAllHPAndMP.Instance (
                     charObj.m_networkId,
                     sightNetIdList,
@@ -102,8 +102,8 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void NotifyHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
-            target.m_CurHp += dHp;
-            target.m_CurMp += dMp;
+            target.m_curHp += dHp;
+            target.m_curMp += dMp;
             if (dHp >= 0 && dMp >= 0) return;
 
             // xjb计算仇恨
@@ -134,9 +134,9 @@ namespace MirRemakeBackend.GameLogic {
                 killer.m_networkId,
                 dead.m_networkId
             ));
-            // 通知 Mission
+            // log
             if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
-                GL_Mission.s_instance.ListenMissionTarget ((E_Character) killer, MissionTargetType.KILL_MONSTER, ((E_Monster) dead).m_MonsterId, 1);
+                GL_Log.s_instance.NotifyLog (GameLogType.KILL_MONSTER, killer.m_networkId, ((E_Monster) dead).m_MonsterId);
             // 通知 CharacterLevel
             if (killer.m_UnitType == ActorUnitType.PLAYER)
                 GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) killer, dead);

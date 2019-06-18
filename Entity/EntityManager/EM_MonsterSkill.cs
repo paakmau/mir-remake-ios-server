@@ -1,9 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using MirRemakeBackend.DataEntity;
-using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
@@ -40,11 +36,6 @@ namespace MirRemakeBackend.Entity {
                 }
             resSkill = null;
             return false;
-        }
-        public E_MonsterSkill[] GetRawSkillArr (int netId) {
-            E_MonsterSkill[] res = null;
-            m_skillDict.TryGetValue (netId, out res);
-            return res;
         }
     }
 }

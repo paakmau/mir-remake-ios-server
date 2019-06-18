@@ -71,6 +71,9 @@ namespace MirRemakeBackend.Entity {
             while (mEn.MoveNext ())
                 s_entityPool.m_missionPool.RecycleInstance (mEn.Current);
         }
+        public Dictionary<int, Dictionary<short, E_Mission>>.Enumerator GetAllCharMisEn () {
+            return m_acceptedMissionDict.GetEnumerator ();
+        }
         public Dictionary<short, E_Mission> GetAllAcceptedMission (int netId) {
             Dictionary<short, E_Mission> res = null;
             m_acceptedMissionDict.TryGetValue (netId, out res);
@@ -82,15 +85,6 @@ namespace MirRemakeBackend.Entity {
                 return null;
             E_Mission res = null;
             acceptedDict.TryGetValue (misId, out res);
-            return res;
-        }
-        public IReadOnlyList<short> GetAllInitUnlockMisDes (OccupationType ocp) {
-            // TODO: 应当写在配置里
-            var res = new List<short> ();
-            var deList = m_dem.GetInitUnlockMisIdList ();
-            for (int i = 0; i < deList.Count; i++)
-                if (CanUnlock (deList[i], ocp))
-                    res.Add (deList[i].m_id);
             return res;
         }
         public E_Mission AcceptMission (int netId, short misId) {
@@ -140,8 +134,7 @@ namespace MirRemakeBackend.Entity {
                 if (CanAccept (de, lv)) {
                     acceptableSet.Add (de.m_id);
                     resNewAcceptableMis.Add (de.m_id);
-                }
-                else {
+                } else {
                     unacceptableSet.Add (de.m_id);
                     resNewUnacceptableMis.Add (de.m_id);
                 }

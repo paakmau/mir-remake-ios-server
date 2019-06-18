@@ -109,8 +109,8 @@ namespace MirRemakeBackend.GameLogic {
                     }
                 }
 
-                // 通知任务 TODO: 考虑任务
-                GL_Mission.s_instance.ListenMissionTarget (charObj, MissionTargetType.GAIN_ITEM, itemList[i].m_ItemId, realStoreNum);
+                // log
+                GL_Log.s_instance.NotifyLog(GameLogType.GAIN_ITEM, charObj.m_networkId, itemList[i].m_ItemId, realStoreNum);
             }
         }
     }

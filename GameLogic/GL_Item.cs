@@ -17,6 +17,9 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
+        public void NotifyRemoveCharacter (E_Character charObj) {
+            EM_Item.s_instance.RemoveCharacter (charObj.m_networkId);
+        }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBag (netId);

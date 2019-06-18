@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
-using LiteNetLib;
-using System.IO;
-using LiteNetLib.Utils;
+using MirRemakeBackend.CharacterCreate;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
@@ -11,10 +8,6 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
-using MySql.Data;
-using System.Data;
-using MySql.Data.MySqlClient;
-using System.Data.SqlClient;
 
 namespace MirRemakeBackend {
     class Program {
@@ -85,8 +78,9 @@ namespace MirRemakeBackend {
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
+            // 实例化角色创建器
+            CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, skillDds, misDds, itemDds, s_networkService);
             // 实例化GameLogic
-            GameLogicCharacterCreator.s_instance = new GameLogicCharacterCreator (charDds, skillDds, misDds, itemDds, s_networkService);
             GameLogicInit.s_instance = new GameLogicInit (charDds, skillDds, itemDds, misDds, s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
@@ -99,6 +93,7 @@ namespace MirRemakeBackend {
             GL_Sight.s_instance = new GL_Sight (s_networkService);
             GL_Skill.s_instance = new GL_Skill (skillDds, s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
+            GL_Log.s_instance = new GL_Log (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
@@ -111,12 +106,9 @@ namespace MirRemakeBackend {
                 GL_Property.s_instance,
                 GL_Sight.s_instance,
                 GL_Skill.s_instance,
-                GL_UnitBattleAttribute.s_instance
+                GL_UnitBattleAttribute.s_instance,
+                GL_Log.s_instance
             };
-        }
-        static int Test() {
-            DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
-            return 1;
         }
     }
 }

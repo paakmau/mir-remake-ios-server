@@ -180,7 +180,9 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifySkillSettle (E_Unit self, E_MonsterSkill skill, SkillParam parm) {
-            var targetList = m_targetStage.GetTargetList (self, skill, parm);
+            NotifySkillSettle (self, skill, m_targetStage.GetTargetList (self, skill, parm));
+        }
+        public void NotifySkillSettle (E_Unit self, E_MonsterSkill skill, IReadOnlyList<E_Unit> targetList) {
             for (int i = 0; i < targetList.Count; i++)
                 GL_Effect.s_instance.NotifyApplyEffect (skill.m_SkillEffect, self, targetList[i]);
         }
