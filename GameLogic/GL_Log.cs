@@ -20,7 +20,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifyLog (GameLogType type, int parm1, int parm2, int parm3) {
-            
+            // EM_Log.s_instance.
         }
     }
 }

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.DataEntity;
-using MirRemakeBackend.Network;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
@@ -13,6 +13,8 @@ namespace MirRemakeBackend.Entity {
         public int m_networkId;
         public abstract short m_Level { get; }
         public Vector2 m_position;
+        public int m_curHp;
+        public int m_curMp;
         private Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         private Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
         public int m_finalAttackerNetId;
@@ -39,14 +41,6 @@ namespace MirRemakeBackend.Entity {
         public int m_MaxMp {
             get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_MP] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_MP]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAX_MP] = value; }
-        }
-        public int m_CurHp {
-            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_HP]; }
-            set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_HP] = value; }
-        }
-        public int m_CurMp {
-            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_MP]; }
-            set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.CURRENT_MP] = value; }
         }
         public int m_DeltaHpPerSecond {
             get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND]; }
@@ -92,14 +86,10 @@ namespace MirRemakeBackend.Entity {
             get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE] = value; }
         }
-        public int m_DodgeRate {
-            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.DODGE_RATE] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.DODGE_RATE]; }
-            set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.DODGE_RATE] = value; }
-        }
         public bool m_IsFaint { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] > 0; } }
         public bool m_IsSilent { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] > 0; } }
         public bool m_IsImmobile { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] > 0; } }
-        public bool m_IsDead { get { return m_CurHp <= 0; } }
+        public bool m_IsDead { get { return m_curHp <= 0; } }
         public virtual void Reset (DE_Unit de) {
             m_unitDe = de;
             // TODO: 具体属性使用 类似 *1000 + 1, 2, 3 的方式设计
@@ -109,8 +99,8 @@ namespace MirRemakeBackend.Entity {
             Respawn ();
         }
         public void Respawn () {
-            m_CurHp = m_MaxHp;
-            m_CurMp = m_MaxMp;
+            m_curHp = m_MaxHp;
+            m_curMp = m_MaxMp;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;
@@ -122,7 +112,6 @@ namespace MirRemakeBackend.Entity {
             m_specialAttributeDict[type] += value;
         }
     }
-
 
     class E_Monster : E_Unit {
         public override ActorUnitType m_UnitType { get { return ActorUnitType.MONSTER; } }
@@ -141,7 +130,6 @@ namespace MirRemakeBackend.Entity {
             return new NO_Monster (m_networkId, m_position, m_MonsterId);
         }
     }
-
 
     class E_Character : E_Unit {
         private DE_Character m_characterDe;

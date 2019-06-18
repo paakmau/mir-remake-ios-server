@@ -301,7 +301,7 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (monster.m_networkId, false),
                 monster.m_networkId,
                 monster.m_position,
-                monster.m_CurHp,
+                monster.m_curHp,
                 monster.m_MaxHp));
         }
     }
