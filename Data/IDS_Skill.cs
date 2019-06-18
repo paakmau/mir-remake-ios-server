@@ -80,12 +80,14 @@ namespace MirRemakeBackend.Data {
                         skillData.m_upgradeMasterlyInNeed=0;
                     }
                     skillData.m_mpCost = int.Parse(s_skillDatas[i]["ManaCost"][j].ToString());
-                    skillData.m_singTime = float.Parse(s_skillDatas[i]["SingTime"].ToString());
-                    skillData.m_castFrontTime = float.Parse(s_skillDatas[i]["CastFrontTime"].ToString());
+                    //skillData.m_singTime = 
+                    skillData.m_castFrontTime = float.Parse(s_skillDatas[i]["CastFrontTime"].ToString())+float.Parse(s_skillDatas[i]["SingTime"].ToString());;
                     skillData.m_castBackTime = float.Parse(s_skillDatas[i]["CastBackTime"].ToString());
                     skillData.m_coolDownTime = float.Parse(s_skillDatas[i]["CoolDownTime"].ToString());
                     skillData.m_targetNumber = byte.Parse(s_skillDatas[i]["TargetNumber"].ToString());
-                    skillData.m_castRange = float.Parse(s_skillDatas[i]["CastRange"].ToString());                        skillData.m_damageParamArr = new ValueTuple<SkillAimParamType, float>[2];
+                    skillData.m_castRange = float.Parse(s_skillDatas[i]["CastRange"].ToString());                        
+                    skillData.m_secondParameter=float.Parse(s_skillDatas[i]["SecondParameter"].ToString());
+                    /* skillData.m_damageParamArr = new ValueTuple<SkillAimParamType, float>[2];
                     float parameter1 = float.Parse(s_skillDatas[i]["DamageRadian"].ToString());
                     float parameter2 = float.Parse(s_skillDatas[i]["SecondParameter"].ToString());
                     SkillAimType x = skill.m_skillAimType;
@@ -103,12 +105,11 @@ namespace MirRemakeBackend.Data {
                                 (SkillAimParamType.LENGTH, parameter1);
                             skillData.m_damageParamArr[1] = new ValueTuple<SkillAimParamType, float>
                                 (SkillAimParamType.WIDTH, parameter2);
-                        }
+                        }*/
                         DO_Effect effect = new DO_Effect();
                         effect.m_type = (EffectType)Enum.Parse(typeof(EffectType), s_skillDatas[i]["Effect"]["EffectDeltaHPType"].ToString());
-                        //TODO hitRate and ciriticalRate
-                        effect.m_hitRate = float.Parse(s_skillDatas[i]["Effect"]["HitRate"][j].ToString())+100;
-                        effect.m_criticalRate = float.Parse(s_skillDatas[i]["Effect"]["CriticalRate"][j].ToString())+100;
+                        effect.m_hitRate = float.Parse(s_skillDatas[i]["Effect"]["HitRate"][j].ToString());
+                        effect.m_criticalRate = float.Parse(s_skillDatas[i]["Effect"]["CriticalRate"][j].ToString());
                         effect.m_deltaMp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaMP"][j].ToString());
                         effect.m_deltaHp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaHP"][j].ToString());
                         if(s_skillDatas[i]["Effect"]["SelfHPStrategy"].Count!=0){

@@ -9,7 +9,7 @@
     "ConversationsWhenAccepting": [],
     "ConversationsWhenDelivering": [],
     "LevelInNeed": 1,
-    "FatherMissionList": [ -1 ],
+    "FatherMissionList": [  ],
     "ChildrenMissionList": [ 1 ],
     "BonusMoney": 200,
     "BonusExperience": 200,

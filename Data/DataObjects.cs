@@ -49,7 +49,10 @@ namespace MirRemakeBackend.Data {
         /// <summary>
         /// 技能伤害判定的范围参数
         /// </summary>
-        public ValueTuple<SkillAimParamType, float>[] m_damageParamArr;
+        /// 
+        /// 
+        //public ValueTuple<SkillAimParamType, float>[] m_damageParamArr;
+        public float m_secondParameter;
         public DO_Effect m_skillEffect;
     }
     struct DO_Effect {
@@ -67,6 +70,8 @@ namespace MirRemakeBackend.Data {
         public StatusType m_type;
         public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_affectAttributeArr;
         public ActorUnitSpecialAttributeType[] m_specialAttributeArr;
+        public float m_delta_HP_per_second;
+        public float m_delta_MP_per_second;
     }
     struct DO_Item {
         public short m_itemId;

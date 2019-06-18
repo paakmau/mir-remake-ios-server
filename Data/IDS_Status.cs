@@ -37,7 +37,9 @@ namespace MirRemakeBackend.Data
                         ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_statusDatas[i]["AttributeAttachArray"][m].ToString().Split(' ')[0]),
                         int.Parse(s_statusDatas[i]["AttributeAttachArray"][m].ToString().Split(' ')[1]));
                 }
-                res[i] = status;
+                status.m_delta_HP_per_second=float.Parse(s_statusDatas[i]["DHP"].ToString()); 
+                status.m_delta_MP_per_second=float.Parse(s_statusDatas[i]["DMP"].ToString());
+                res[i]=status;
             }
             return res;
         }
