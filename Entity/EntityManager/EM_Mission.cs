@@ -87,15 +87,6 @@ namespace MirRemakeBackend.Entity {
             acceptedDict.TryGetValue (misId, out res);
             return res;
         }
-        public IReadOnlyList<short> GetAllInitUnlockMisDes (OccupationType ocp) {
-            // TODO: 应当写在配置里
-            var res = new List<short> ();
-            var deList = m_dem.GetInitUnlockMisIdList ();
-            for (int i = 0; i < deList.Count; i++)
-                if (CanUnlock (deList[i], ocp))
-                    res.Add (deList[i].m_id);
-            return res;
-        }
         public E_Mission AcceptMission (int netId, short misId) {
             HashSet<short> acceptableSet = null;
             if (!m_acceptableMissionDict.TryGetValue (netId, out acceptableSet))
