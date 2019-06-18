@@ -45,17 +45,21 @@ namespace MirRemakeBackend.GameLogic {
         /// server需要通知视野内其他client播放动画
         /// 并添加待结算技能计时, 计时结束后进入技能结算
         /// </summary>
-        public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo, int[] hitTargetArr) {
-            // TODO: 命中的目标数组
-            // 获取释放者, 技能, 获取技能参数实例
+        public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo, int[] hitTargetNetIdArr) {
+            // 获取释放者, 技能, 技能参数, 作用目标列表
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             E_Unit targetObj = EM_Sight.s_instance.GetUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
             if (charObj == null || skill == null || targetObj == null) return;
             if (skill.m_skillLevel == 0) return;
-            SkillParam skillParam = new SkillParam (skill.m_AimType, targetObj, parmNo.m_direction, parmNo.m_position);
+            List<E_Unit> targetList = new List<E_Unit> ();
+            for (int i=0; i<hitTargetNetIdArr.Length; i++) {
+                var target = EM_Sight.s_instance.GetUnitVisibleByNetworkId (hitTargetNetIdArr[i]);
+                if (target == null) continue;
+                targetList.Add (target);
+            }
             // 通知战斗结算
-            GL_BattleSettle.s_instance.NotifySkillSettle (charObj, skill, skillParam);
+            GL_BattleSettle.s_instance.NotifySkillSettle (charObj, skill, targetList);
             // 向Client发送CastBegin事件
             var otherList = EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true);
             m_networkService.SendServerCommand (SC_ApplyAllCastSkillBegin.Instance (otherList, netId, skillId, parmNo));
