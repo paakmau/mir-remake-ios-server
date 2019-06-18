@@ -76,7 +76,6 @@ namespace MirRemakeBackend.Entity {
                 }
             }
             public void RecycleItem (E_Item item) {
-                if (item.m_Type == ItemType.EMPTY) return;
                 m_itemPoolDict[item.m_Type].RecycleInstance (item);
             }
             public E_Item GetInstance (ItemType type) {
