@@ -1,5 +1,6 @@
 using LiteNetLib.Utils;
 using MirRemakeBackend.GameLogic;
+using MirRemakeBackend.CharacterCreate;
 
 namespace MirRemakeBackend.Network {
     interface IClientCommand {
@@ -11,7 +12,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             int playerId = reader.GetInt ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
-            GameLogicCharacterCreator.s_instance.CommandCreateCharacter (playerId, ocp);
+            CharacterCreator.s_instance.CommandCreateCharacter (playerId, ocp);
         }
     }
     /// <summary>

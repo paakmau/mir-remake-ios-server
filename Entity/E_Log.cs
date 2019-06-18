@@ -54,11 +54,11 @@ namespace MirRemakeBackend.Entity {
         public override GameLogType m_LogType { get { return GameLogType.GAIN_ITEM; } }
         public int m_netId;
         public short m_itemId;
-        public short m_num;
+        public short m_deltaNum;
         public override void Reset (int parm1, int parm2, int parm3) {
             m_netId = parm1;
             m_itemId = (short) parm2;
-            m_num = (short) parm3;
+            m_deltaNum = (short) parm3;
         }
     }
 }

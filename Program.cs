@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
-using LiteNetLib;
-using System.IO;
-using LiteNetLib.Utils;
+using MirRemakeBackend.CharacterCreate;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
@@ -11,10 +8,6 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
-using MySql.Data;
-using System.Data;
-using MySql.Data.MySqlClient;
-using System.Data.SqlClient;
 
 namespace MirRemakeBackend {
     class Program {
@@ -86,7 +79,7 @@ namespace MirRemakeBackend {
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
             // 实例化GameLogic
-            GameLogicCharacterCreator.s_instance = new GameLogicCharacterCreator (charDds, skillDds, misDds, itemDds, s_networkService);
+            CharacterCreator.s_instance = new CharacterCreator (charDds, skillDds, misDds, itemDds, s_networkService);
             GameLogicInit.s_instance = new GameLogicInit (charDds, skillDds, itemDds, misDds, s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
@@ -115,10 +108,6 @@ namespace MirRemakeBackend {
                 GL_UnitBattleAttribute.s_instance,
                 GL_Log.s_instance
             };
-        }
-        static int Test() {
-            DynamicDataServiceImpl impl=new DynamicDataServiceImpl();
-            return 1;
         }
     }
 }

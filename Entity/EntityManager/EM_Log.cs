@@ -32,13 +32,13 @@ namespace MirRemakeBackend.Entity {
             return res;
         }
         public List<E_Log> GetRawLogsCurTick () { return m_logs[m_curTick]; }
-        public IReadOnlyList<E_Log> m_LogsSecondTick { get { return m_logs[GetNextTick (GetNextTick (m_curTick))]; } }
+        public IReadOnlyList<E_Log> GetLogsSecondTick () { return m_logs[GetNextTick (GetNextTick (m_curTick))]; }
         public void NextTick () {
             m_curTick = GetNextTick (m_curTick);
             GetRawLogsCurTick ().Clear ();
         }
         public E_Log CreateLog (GameLogType type, int parm1, int parm2, int parm3) {
-            var log = m_logFactory.GetLogInstance(type);
+            var log = m_logFactory.GetLogInstance (type);
             log.Reset (parm1, parm2, parm3);
             return log;
         }

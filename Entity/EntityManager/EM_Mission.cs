@@ -71,6 +71,9 @@ namespace MirRemakeBackend.Entity {
             while (mEn.MoveNext ())
                 s_entityPool.m_missionPool.RecycleInstance (mEn.Current);
         }
+        public Dictionary<int, Dictionary<short, E_Mission>>.Enumerator GetAllCharMisEn () {
+            return m_acceptedMissionDict.GetEnumerator ();
+        }
         public Dictionary<short, E_Mission> GetAllAcceptedMission (int netId) {
             Dictionary<short, E_Mission> res = null;
             m_acceptedMissionDict.TryGetValue (netId, out res);
@@ -140,8 +143,7 @@ namespace MirRemakeBackend.Entity {
                 if (CanAccept (de, lv)) {
                     acceptableSet.Add (de.m_id);
                     resNewAcceptableMis.Add (de.m_id);
-                }
-                else {
+                } else {
                     unacceptableSet.Add (de.m_id);
                     resNewUnacceptableMis.Add (de.m_id);
                 }
