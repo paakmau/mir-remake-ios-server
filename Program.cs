@@ -78,8 +78,9 @@ namespace MirRemakeBackend {
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
+            // 实例化角色创建器
+            CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, skillDds, misDds, itemDds, s_networkService);
             // 实例化GameLogic
-            CharacterCreator.s_instance = new CharacterCreator (charDds, skillDds, misDds, itemDds, s_networkService);
             GameLogicInit.s_instance = new GameLogicInit (charDds, skillDds, itemDds, misDds, s_networkService);
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
