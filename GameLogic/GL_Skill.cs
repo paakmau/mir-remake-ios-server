@@ -16,6 +16,9 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
+        public void NotifyRemoveCharacter (E_Character charObj) {
+            EM_Skill.s_instance.RemoveCharacter (charObj.m_networkId);
+        }
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetLv) {
             var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

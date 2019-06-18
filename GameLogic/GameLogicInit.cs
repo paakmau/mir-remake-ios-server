@@ -100,10 +100,10 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
 
             GL_Mission.s_instance.NotifyRemoveCharacter (charObj);
+            GL_Item.s_instance.NotifyRemoveCharacter (charObj);
+            GL_Sight.s_instance.NotifyRemoveCharacter (charObj);
+            GL_Skill.s_instance.NotifyRemoveCharacter (charObj);
             // TODO: 应当完全依赖相应GL来移除
-            EM_Item.s_instance.RemoveCharacter (netId);
-            EM_Sight.s_instance.RemoveCharacter (netId);
-            EM_Skill.s_instance.RemoveCharacter (netId);
             EM_Status.s_instance.RemoveCharacterStatus (netId);
             EM_Unit.s_instance.RemoveCharacter (netId);
             NetworkIdManager.RemoveNetworkId (netId);
