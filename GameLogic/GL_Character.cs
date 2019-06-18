@@ -45,7 +45,8 @@ namespace MirRemakeBackend.GameLogic {
         /// server需要通知视野内其他client播放动画
         /// 并添加待结算技能计时, 计时结束后进入技能结算
         /// </summary>
-        public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo) {
+        public void CommandApplyCastSkillBegin (int netId, short skillId, NO_SkillParam parmNo, int[] hitTargetArr) {
+            // TODO: 命中的目标数组
             // 获取释放者, 技能, 获取技能参数实例
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);

@@ -43,12 +43,11 @@ namespace MirRemakeBackend.Network {
             short skillId = reader.GetShort ();
             NO_SkillParam skillParm = reader.GetSkillParam ();
             byte cnt = reader.GetByte ();
-            int [] hitTargetsNetId = new int [cnt];
+            int [] hitTargetArr = new int [cnt];
             for (int i = 0; i < cnt; i++) {
-                hitTargetsNetId [i] = reader.GetInt ();
+                hitTargetArr [i] = reader.GetInt ();
             }
-            // TODO: 前端请求释放技能
-            // GL_Character.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm);
+            GL_Character.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm, hitTargetArr);
         }
     }
     /// <summary>
