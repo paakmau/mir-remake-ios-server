@@ -134,9 +134,9 @@ namespace MirRemakeBackend.GameLogic {
                 killer.m_networkId,
                 dead.m_networkId
             ));
-            // 通知 Mission
+            // log
             if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
-                GL_Mission.s_instance.ListenMissionTarget ((E_Character) killer, MissionTargetType.KILL_MONSTER, ((E_Monster) dead).m_MonsterId, 1);
+                GL_Log.s_instance.NotifyLog (GameLogType.KILL_MONSTER, killer.m_networkId, ((E_Monster) dead).m_MonsterId);
             // 通知 CharacterLevel
             if (killer.m_UnitType == ActorUnitType.PLAYER)
                 GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) killer, dead);

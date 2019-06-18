@@ -35,8 +35,8 @@ namespace MirRemakeBackend.GameLogic {
                 m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                     netId, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
-                // 通知 Mission TODO: 考虑任务 架构
-                GL_Mission.s_instance.ListenMissionTarget (charObj, MissionTargetType.LEVEL_UP_SKILL, skillId, skill.m_skillLevel - oriLv);
+                // log
+                GL_Log.s_instance.NotifyLog (GameLogType.LEVEL_UP_SKILL, netId, skillId, skill.m_skillLevel);
             }
         }
         public void CommandGainMasterly (int netId, short skillId, int masterly) {

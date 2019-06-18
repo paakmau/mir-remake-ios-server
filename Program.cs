@@ -99,6 +99,7 @@ namespace MirRemakeBackend {
             GL_Sight.s_instance = new GL_Sight (s_networkService);
             GL_Skill.s_instance = new GL_Skill (skillDds, s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
+            GL_Log.s_instance = new GL_Log (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
@@ -111,7 +112,8 @@ namespace MirRemakeBackend {
                 GL_Property.s_instance,
                 GL_Sight.s_instance,
                 GL_Skill.s_instance,
-                GL_UnitBattleAttribute.s_instance
+                GL_UnitBattleAttribute.s_instance,
+                GL_Log.s_instance
             };
         }
         static int Test() {

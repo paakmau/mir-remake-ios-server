@@ -14,10 +14,9 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandApplyTalkToNpc (int netId, short npcId, short missionId) {
-            // TODO: nmsl 没有用到 missionId
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            ListenMissionTarget (charObj, MissionTargetType.TALK_TO_NPC, npcId, 1);
+            GL_Log.s_instance.NotifyLog (GameLogType.TALK_TO_NPC, netId, npcId, missionId);
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -89,27 +88,27 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.RemoveCharacter (charObj.m_networkId);
         }
         // TODO: 监听事件 双向依赖很恶心
-        public void ListenMissionTarget (E_Character charObj, MissionTargetType tarType, short id, int deltaV) {
-            var allMis = EM_Mission.s_instance.GetAllAcceptedMission (charObj.m_networkId);
-            if (allMis == null) return;
-            var en = allMis.Values.GetEnumerator ();
-            while (en.MoveNext ()) {
-                bool dirty = false;
-                var tarList = en.Current.m_MisTarget;
-                for (int i = 0; i < tarList.Count; i++) {
-                    if (tarList[i].Item1 != tarType)
-                        continue;
-                    if (tarList[i].Item2 != id)
-                        continue;
-                    dirty = true;
-                    UpdateMissionProgress (en.Current, i, deltaV, charObj.m_networkId);
-                }
-                // dds
-                if (dirty) {
-                    m_misDds.UpdateMission (en.Current.GetDdo (charObj.m_characterId));
-                }
-            }
-        }
+        // public void ListenMissionTarget (E_Character charObj, MissionTargetType tarType, short id, int deltaV) {
+        //     var allMis = EM_Mission.s_instance.GetAllAcceptedMission (charObj.m_networkId);
+        //     if (allMis == null) return;
+        //     var en = allMis.Values.GetEnumerator ();
+        //     while (en.MoveNext ()) {
+        //         bool dirty = false;
+        //         var tarList = en.Current.m_MisTarget;
+        //         for (int i = 0; i < tarList.Count; i++) {
+        //             if (tarList[i].Item1 != tarType)
+        //                 continue;
+        //             if (tarList[i].Item2 != id)
+        //                 continue;
+        //             dirty = true;
+        //             UpdateMissionProgress (en.Current, i, deltaV, charObj.m_networkId);
+        //         }
+        //         // dds
+        //         if (dirty) {
+        //             m_misDds.UpdateMission (en.Current.GetDdo (charObj.m_characterId));
+        //         }
+        //     }
+        // }
         private void UpdateMissionProgress (E_Mission mis, int i, int deltaV, int netId) {
             mis.m_misTargetProgressArr[i].Item1 ++;
             // client
