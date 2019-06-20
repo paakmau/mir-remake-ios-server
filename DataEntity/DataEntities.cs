@@ -79,7 +79,7 @@ namespace MirRemakeBackend.DataEntity {
             for (int i = 0; i < curDo.m_damageParamArr.Length; i++)
                 damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float) curDo.m_damageParamArr[i].Item2 * 0.01f));
             m_damageParamList = damageParamList;
-            //TODO 修改了判定技能范围的方式 详询台长
+            //TODO: 修改了判定技能范围的方式 详询台长
             m_skillEffect = new DE_Effect (curDo.m_skillEffect, skId);
         }
     }
