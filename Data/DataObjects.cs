@@ -51,7 +51,7 @@ namespace MirRemakeBackend.Data {
         /// </summary>
         /// 
         /// 
-        //public ValueTuple<SkillAimParamType, float>[] m_damageParamArr;
+        public ValueTuple<SkillAimParamType, float>[] m_damageParamArr;
         public float m_secondParameter;
         public DO_Effect m_skillEffect;
     }
