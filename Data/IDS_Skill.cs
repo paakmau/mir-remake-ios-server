@@ -87,7 +87,7 @@ namespace MirRemakeBackend.Data {
                     skillData.m_targetNumber = byte.Parse(s_skillDatas[i]["TargetNumber"].ToString());
                     skillData.m_castRange = float.Parse(s_skillDatas[i]["CastRange"].ToString());                        
                     skillData.m_secondParameter=float.Parse(s_skillDatas[i]["SecondParameter"].ToString());
-                    /* skillData.m_damageParamArr = new ValueTuple<SkillAimParamType, float>[2];
+                    skillData.m_damageParamArr = new ValueTuple<SkillAimParamType, float>[2];
                     float parameter1 = float.Parse(s_skillDatas[i]["DamageRadian"].ToString());
                     float parameter2 = float.Parse(s_skillDatas[i]["SecondParameter"].ToString());
                     SkillAimType x = skill.m_skillAimType;
@@ -105,34 +105,33 @@ namespace MirRemakeBackend.Data {
                                 (SkillAimParamType.LENGTH, parameter1);
                             skillData.m_damageParamArr[1] = new ValueTuple<SkillAimParamType, float>
                                 (SkillAimParamType.WIDTH, parameter2);
-                        }*/
-                        DO_Effect effect = new DO_Effect();
-                        effect.m_type = (EffectType)Enum.Parse(typeof(EffectType), s_skillDatas[i]["Effect"]["EffectDeltaHPType"].ToString());
-                        effect.m_hitRate = float.Parse(s_skillDatas[i]["Effect"]["HitRate"][j].ToString());
-                        effect.m_criticalRate = float.Parse(s_skillDatas[i]["Effect"]["CriticalRate"][j].ToString());
-                        effect.m_deltaMp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaMP"][j].ToString());
-                        effect.m_deltaHp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaHP"][j].ToString());
-                        if(s_skillDatas[i]["Effect"]["SelfHPStrategy"].Count!=0){
-                            effect.m_attributeArr = new ValueTuple<ActorUnitConcreteAttributeType, float>[s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count];
-                            for (int k = 0; k < s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count; k++)
-                            {
-                                effect.m_attributeArr[k] = new ValueTuple<ActorUnitConcreteAttributeType, float>
-                                ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_skillDatas[i]["Effect"]["SelfHPStrategy"][j][k].ToString().Split(' ')[0]),
-                                float.Parse(s_skillDatas[i]["Effect"]["SelfHPStrategy"][j][k].ToString().Split(' ')[1]));
-                            }
-                        }
-                        effect.m_statusIdAndValueAndTimeArr = new ValueTuple<short, float, float>[s_skillDatas[i]["Effect"]["StatusAttachArray"].Count];
-                        for (int wym = 0; wym < s_skillDatas[i]["Effect"]["StatusAttachArray"].Count; wym++)
-                        {
-                            effect.m_statusIdAndValueAndTimeArr[wym] = new ValueTuple<short, float, float>
-                                (short.Parse(s_skillDatas[i]["Effect"]["StatusAttachArray"][wym]["StatusID"].ToString()),
-                                float.Parse(s_skillDatas[i]["Effect"]["StatusAttachArray"][wym]["Value"][j].ToString()),
-                                float.Parse(s_skillDatas[i]["Effect"]["StatusAttachArray"][wym]["LastingTime"][j].ToString()));
-                        }
-                        skillData.m_skillEffect = effect;
-                        skill.m_skillDataAllLevel[j] = skillData;
                     }
-                    
+                    DO_Effect effect = new DO_Effect();
+                    effect.m_type = (EffectType)Enum.Parse(typeof(EffectType), s_skillDatas[i]["Effect"]["EffectDeltaHPType"].ToString());
+                    effect.m_hitRate = float.Parse(s_skillDatas[i]["Effect"]["HitRate"][j].ToString());
+                    effect.m_criticalRate = float.Parse(s_skillDatas[i]["Effect"]["CriticalRate"][j].ToString());
+                    effect.m_deltaMp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaMP"][j].ToString());
+                    effect.m_deltaHp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaHP"][j].ToString());
+                    if(s_skillDatas[i]["Effect"]["SelfHPStrategy"].Count!=0){
+                        effect.m_attributeArr = new ValueTuple<ActorUnitConcreteAttributeType, float>[s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count];
+                        for (int k = 0; k < s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count; k++)
+                        {
+                            effect.m_attributeArr[k] = new ValueTuple<ActorUnitConcreteAttributeType, float>
+                            ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_skillDatas[i]["Effect"]["SelfHPStrategy"][j][k].ToString().Split(' ')[0]),
+                                float.Parse(s_skillDatas[i]["Effect"]["SelfHPStrategy"][j][k].ToString().Split(' ')[1]));
+                        }
+                    }
+                    effect.m_statusIdAndValueAndTimeArr = new ValueTuple<short, float, float>[s_skillDatas[i]["Effect"]["StatusAttachArray"].Count];
+                    for (int wym = 0; wym < s_skillDatas[i]["Effect"]["StatusAttachArray"].Count; wym++)
+                    {
+                        effect.m_statusIdAndValueAndTimeArr[wym] = new ValueTuple<short, float, float>
+                            (short.Parse(s_skillDatas[i]["Effect"]["StatusAttachArray"][wym]["StatusID"].ToString()),
+                            float.Parse(s_skillDatas[i]["Effect"]["StatusAttachArray"][wym]["Value"][j].ToString()),
+                            float.Parse(s_skillDatas[i]["Effect"]["StatusAttachArray"][wym]["LastingTime"][j].ToString()));
+                    }
+                    skillData.m_skillEffect = effect;
+                    skill.m_skillDataAllLevel[j] = skillData;
+                }                
                 res[i - ssm] = skill;
             }
             return res;

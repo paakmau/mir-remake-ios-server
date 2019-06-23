@@ -114,6 +114,10 @@ namespace MirRemakeBackend.DataEntity {
         public readonly float m_criticalRate;
         public readonly int m_deltaHp;
         public readonly int m_deltaMp;
+
+
+        // TODO:新增
+        public readonly ValueTuple<ActorUnitConcreteAttributeType, float>[] m_attributeArr;
         public readonly IReadOnlyList<ValueTuple<short, float, float>> m_statusIdAndValueAndTimeList;
         public DE_Effect (DO_Effect effectDo, short animId) {
             m_type = effectDo.m_type;
@@ -123,6 +127,7 @@ namespace MirRemakeBackend.DataEntity {
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHp = effectDo.m_deltaHp;
             m_deltaMp = effectDo.m_deltaMp;
+            m_attributeArr=effectDo.m_attributeArr;
             m_statusIdAndValueAndTimeList = new List<ValueTuple<short, float, float>> (effectDo.m_statusIdAndValueAndTimeArr);
         }
     }
