@@ -70,6 +70,7 @@ namespace MirRemakeBackend {
             EM_Skill.s_instance = new EM_Skill (skillDem);
             EM_Status.s_instance = new EM_Status (statusDem);
             EM_Unit.s_instance = new EM_Unit (actorUnitDem);
+            EM_Log.s_instance = new EM_Log ();
         }
         static void InitGameLogic () {
             // 实例化DynamicDataService

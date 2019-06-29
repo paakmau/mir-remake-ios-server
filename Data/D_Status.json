@@ -225,7 +225,7 @@
   "AttributeAttachArray":[],
   "Type":"DEBUFF",
   "Value":1,
-  "SpecialAttributes":["IMMBOILE"],
+  "SpecialAttributes":["IMMOBILE"],
  "DHP":0,
  "DMP":0
 },{
