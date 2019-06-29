@@ -103,10 +103,16 @@ namespace MirRemakeBackend {
         SILENT,
         IMMOBILE
     }
-    enum ActorUnitType {
+    enum ActorUnitType : byte {
         PLAYER,
         MONSTER,
         NPC
+    }
+    enum MonsterType : byte {
+        NORMAL,
+        LEADER,
+        BOSS,
+        FINAL_BOSS
     }
     public enum ItemType : byte {
         EMPTY,
@@ -349,11 +355,10 @@ namespace MirRemakeBackend {
         BEEN_HIT = 6,
         DIE = 7,
     }
-
     enum MissionStatus {
-        ACCEPTED = 0,
-        ACCEPTABLE = 1,
-        UNLOCKED_BUT_UNACCEPTABLE = 2,
-        LOCKED = 3
+        LOCKED = 0,
+        UNLOCKED_BUT_UNACCEPTABLE = 1,
+        ACCEPTABLE = 2,
+        ACCEPTED = 3
     }
 }
