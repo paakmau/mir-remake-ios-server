@@ -82,10 +82,6 @@ namespace MirRemakeBackend {
     enum ActorUnitConcreteAttributeType : byte {
         MAX_HP,
         MAX_MP,
-        [Obsolete ("不应当把当前hp放在这里")]
-        CURRENT_HP,
-        [Obsolete ("不应当把当前mp放在这里")]
-        CURRENT_MP,
         DELTA_HP_PER_SECOND, // 每秒回复生命值
         DELTA_MP_PER_SECOND, // 每秒回复法力值
         ATTACK, // 物理攻击
@@ -97,12 +93,7 @@ namespace MirRemakeBackend {
         CRITICAL_RATE, // 暴击率 /100
         CRITICAL_BONUS, // 暴击伤害 /100
         HIT_RATE, // 命中率 /100
-        [Obsolete("只保留命中率即可")]
-        DODGE_RATE, // 闪避 /100
         LIFE_STEAL, // 吸取生命值 /100
-        HP_DAMAGE_PER_SECOND_PHYSICS,
-        HP_DAMAGE_PER_SECOND_MAGIC,
-        SHIELD,
         PHYSICS_VULERNABILITY, // 物理易伤
         MAGIC_VULERNABILITY, // 魔法易伤
         DAMAGE_REDUCTION // 百分比减伤，物理魔法通用，绝对防御 /100
