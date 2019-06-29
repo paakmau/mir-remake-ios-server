@@ -80,7 +80,7 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_EquipmentInfo equipment = new DDO_EquipmentInfo ();
                 equipment.m_strengthNum = byte.Parse (dt.Rows[i]["strength_num"].ToString ());
-                equipment.m_holeNum = short.Parse (dt.Rows[i]["hole_num"].ToString ());
+                //equipment.m_holeNum = short.Parse (dt.Rows[i]["hole_num"].ToString ());
                 equipment.m_realId = short.Parse (dt.Rows[i]["realid"].ToString ());
                 string gems = dt.Rows[i]["gem_list"].ToString ();
                 equipment.m_inlaidGemIdList = new List<short> ();
@@ -148,7 +148,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "insert into `equipment` values(null," + eq.m_characterId + "," + eq.m_strengthNum + "," + gems + ",\"" + enchantAttr + "\"," + eq.m_holeNum + ");";
+            cmd = "insert into `equipment` values(null," + eq.m_characterId + "," + eq.m_strengthNum + "," + gems + ",\"" + enchantAttr + "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -255,7 +255,7 @@ namespace MirRemakeBackend.DynamicData {
                         mission.m_missionTargetProgressList.Add (int.Parse (targets[j]));
                     }
                 }
-                mission.m_isAccepted=int.Parse(dt.Rows[i]["status"].ToString())==1;
+                mission.m_isAccepted=(MissionStatus)Enum.Parse(typeof(MissionTargetType),dt.Rows[i]["status"].ToString());
                 missions.Add (mission);
             }
             return missions;
@@ -271,7 +271,7 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
             }}
-            int status=ddo.m_isAccepted?1:0;
+            string status=ddo.m_isAccepted.ToString();
             cmd = "insert into mission values(null," + ddo.m_missionId +","+ddo.m_characterId +",\"" + target + "\","+status  + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
@@ -287,7 +287,7 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
                 target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
             }}
-            int status=ddo.m_isAccepted?1:0;
+            string status=ddo.m_isAccepted.ToString();
             cmd = "update mission set targets=\"" + target + "\",`status`="+status+" where charid=" + ddo.m_characterId + " and missionid=" + ddo.m_missionId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
