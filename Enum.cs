@@ -165,14 +165,6 @@ namespace MirRemakeBackend {
         RING,//戒指
         WEAPON
     }
-    [Obsolete("已经弃用, 请直接使用OccupationType")]
-    enum MissionOccupation : byte{
-        WARRIOR,
-        ROGUE,
-        MAGE,
-        TAOIST,
-        ALL
-    }
     enum BuildingEquipmentFortune : byte {
         // 欧皇
         EUROPE_THE_EMPEROR,

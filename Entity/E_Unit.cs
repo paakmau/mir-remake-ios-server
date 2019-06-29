@@ -17,7 +17,6 @@ namespace MirRemakeBackend.Entity {
         public int m_curMp;
         private Dictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
         private Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
-        public int m_finalAttackerNetId;
         // 仇恨度哈希表
         public Dictionary<int, MyTimer.Time> m_hatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
         public int m_HighestHatredTargetNetId {
