@@ -39,8 +39,6 @@ namespace MirRemakeBackend.Data {
         public long m_upgradeMoneyInNeed;
         public int m_upgradeMasterlyInNeed;
         public int m_mpCost;
-        [Obsolete ("传奇没有吟唱")]
-        public float m_singTime;
         public float m_castFrontTime;
         public float m_castBackTime;
         public float m_coolDownTime;
@@ -49,8 +47,6 @@ namespace MirRemakeBackend.Data {
         /// <summary>
         /// 技能伤害判定的范围参数
         /// </summary>
-        /// 
-        /// 
         public ValueTuple<SkillAimParamType, float>[] m_damageParamArr;
         public float m_secondParameter;
         public DO_Effect m_skillEffect;
