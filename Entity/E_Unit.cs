@@ -85,13 +85,25 @@ namespace MirRemakeBackend.Entity {
             get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE] + m_unitDe.m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE]; }
             set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.HIT_RATE] = value; }
         }
+        public int m_PhysicsVulernability {
+            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.PHYSICS_VULERNABILITY]; }
+            set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.PHYSICS_VULERNABILITY] = value; }
+        }
+        public int m_MagicVulernability {
+            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAGIC_VULERNABILITY]; }
+            set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.MAGIC_VULERNABILITY] = value; }
+        }
+        public int m_DamageReduction {
+            get { return m_concreteAttributeDict[ActorUnitConcreteAttributeType.DAMAGE_REDUCTION]; }
+            set { m_concreteAttributeDict[ActorUnitConcreteAttributeType.DAMAGE_REDUCTION] = value; }
+        }
         public bool m_IsFaint { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] > 0; } }
         public bool m_IsSilent { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] > 0; } }
         public bool m_IsImmobile { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] > 0; } }
         public bool m_IsDead { get { return m_curHp <= 0; } }
         public virtual void Reset (DE_Unit de) {
             m_unitDe = de;
-            // TODO: 具体属性使用 类似 *1000 + 1, 2, 3 的方式设计
+            // TODO: 具体属性使用 类似 *1000 + 1, 2, 3 的方式设计 已经不可行, 考虑用组合
             var attrEn = de.m_concreteAttributeDict.Keys.GetEnumerator ();
             while (attrEn.MoveNext ())
                 m_concreteAttributeDict[attrEn.Current] = 0;
