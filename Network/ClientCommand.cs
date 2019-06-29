@@ -164,7 +164,7 @@ namespace MirRemakeBackend.Network {
     class CC_RequireShoppingMallNormal : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL_NORMAL; } }
         public void Execute (NetDataReader reader, int netId) {
-            // TODO:
+            // TODO: 普通商城
         }
     }
     /// <summary>
@@ -173,7 +173,7 @@ namespace MirRemakeBackend.Network {
     class CC_RequireShoppingMallCampaign : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL_CAMPAIGN; } }
         public void Execute (NetDataReader reader, int netId) {
-            // TODO:
+            // TODO: 活动商城
         }
     }
     class CC_TestGainExp : IClientCommand {
