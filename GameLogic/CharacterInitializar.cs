@@ -4,7 +4,7 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
-    class GameLogicInit {
+    class CharacterInitializer {
         static class NetworkIdManager {
             static private HashSet<int> m_unitNetIdSet = new HashSet<int> ();
             static private int m_unitCnt = 0;
@@ -28,13 +28,13 @@ namespace MirRemakeBackend.GameLogic {
                 m_unitNetIdSet.Remove (netId);
             }
         }
-        public static GameLogicInit s_instance;
+        public static CharacterInitializer s_instance;
         private INetworkService m_netService;
         private IDDS_Character m_charDds;
         private IDDS_Skill m_skillDds;
         private IDDS_Item m_itemDds;
         private IDDS_Mission m_missionDds;
-        public GameLogicInit (IDDS_Character charDds, IDDS_Skill skillDds, IDDS_Item itemDds, IDDS_Mission missionDds, INetworkService netService) {
+        public CharacterInitializer (IDDS_Character charDds, IDDS_Skill skillDds, IDDS_Item itemDds, IDDS_Mission missionDds, INetworkService netService) {
             m_netService = netService;
             m_charDds = charDds;
             m_skillDds = skillDds;

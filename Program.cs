@@ -73,16 +73,17 @@ namespace MirRemakeBackend {
             EM_Log.s_instance = new EM_Log ();
         }
         static void InitGameLogic () {
-            // 实例化DynamicDataService
+            // DynamicDataService
             var ddsImpl = new DynamicDataServiceImpl ();
             IDDS_Character charDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
-            // 实例化角色创建器
+            // 角色创建器
             CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, skillDds, misDds, itemDds, s_networkService);
-            // 实例化GameLogic
-            GameLogicInit.s_instance = new GameLogicInit (charDds, skillDds, itemDds, misDds, s_networkService);
+            // 角色初始化器
+            CharacterInitializer.s_instance = new CharacterInitializer (charDds, skillDds, itemDds, misDds, s_networkService);
+            // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_Character.s_instance = new GL_Character (charDds, s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (charDds, s_networkService);

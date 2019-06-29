@@ -22,7 +22,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_CHARACTER_ID; } }
         public void Execute (NetDataReader reader, int netId) {
             int charId = reader.GetInt ();
-            GameLogicInit.s_instance.CommandInitCharacterId (netId, charId);
+            CharacterInitializer.s_instance.CommandInitCharacterId (netId, charId);
         }
     }
     /// <summary>
