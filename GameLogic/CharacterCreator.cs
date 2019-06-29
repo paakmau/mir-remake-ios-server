@@ -52,7 +52,7 @@ namespace MirRemakeBackend.CharacterCreate {
             // 任务 dds
             var misIdList = m_ocpInitMisIdDict [ocp];
             for (int i = 0; i < misIdList.Count; i++)
-                m_misDds.InsertMission (new DDO_Mission (misIdList[i], charId, false, new List<int> ()));
+                m_misDds.InsertMission (new DDO_Mission (misIdList[i], charId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
             // 背包和仓库 dds
             short bagSize = 3;
             short storeHouseSize = 6;
