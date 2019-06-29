@@ -161,14 +161,14 @@ namespace MirRemakeBackend.GameLogic {
             m_misDds.UpdateMission (misObj.GetDdo (charObj.m_networkId));
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
-        public void NotifyInitCharacter (E_Character charObj) {
+        public void NotifyInitCharacter (int netId, int charId) {
             // 实例化任务
-            var ddsList = m_misDds.GetMissionListByCharacterId (charObj.m_characterId);
+            var ddsList = m_misDds.GetMissionListByCharacterId (charId);
             List<short> acceptedMis, acceptableMis, unacceptableMis;
             List<E_Mission> acceptedMisObjList;
-            EM_Mission.s_instance.InitCharacter (charObj.m_networkId, charObj.m_characterId, charObj.m_Occupation, charObj.m_Level, ddsList, out acceptedMis, out acceptedMisObjList, out acceptableMis, out unacceptableMis);
+            EM_Mission.s_instance.InitCharacter (netId, charId, ddsList, out acceptedMis, out acceptedMisObjList, out acceptableMis, out unacceptableMis);
             // client
-            m_networkService.SendServerCommand (SC_InitSelfMission.Instance (charObj.m_networkId, acceptedMis, acceptableMis, unacceptableMis));
+            m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMis, acceptableMis, unacceptableMis));
         }
         public void NotifyRemoveCharacter (E_Character charObj) {
             EM_Mission.s_instance.RemoveCharacter (charObj.m_networkId);

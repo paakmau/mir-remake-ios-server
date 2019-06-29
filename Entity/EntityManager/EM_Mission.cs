@@ -17,7 +17,7 @@ namespace MirRemakeBackend.Entity {
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         public EM_Mission (DEM_Mission dem) { m_dem = dem; }
-        public void InitCharacter (int netId, int charId, OccupationType charOcp, short charLv, List<DDO_Mission> ddoList, out List<short> resAcceptedMisIdList, out List<E_Mission> resAcceptedMisObjList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
+        public void InitCharacter (int netId, int charId, List<DDO_Mission> ddoList, out List<short> resAcceptedMisIdList, out List<E_Mission> resAcceptedMisObjList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
@@ -48,7 +48,7 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < ddoList.Count; i++) {
                 if (ddoList[i].m_isAccepted) continue;
                 var de = m_dem.GetMissionById (ddoList[i].m_missionId);
-                if (CanAccept (de, charLv))
+                if (CanAccept (de, -23333)) // TODO: 数据库添加字段以减少耦合
                     acceptableMissionSet.Add (de.m_id);
                 else
                     unacceptableMissionSet.Add (de.m_id);

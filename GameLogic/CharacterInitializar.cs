@@ -93,7 +93,7 @@ namespace MirRemakeBackend.GameLogic {
             EM_Status.s_instance.InitCharacterStatus (netId);
 
             // 初始化任务
-            GL_Mission.s_instance.NotifyInitCharacter (newChar);
+            GL_Mission.s_instance.NotifyInitCharacter (newChar.m_networkId, newChar.m_characterId);
         }
         public void CommandRemoveCharacter (int netId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
