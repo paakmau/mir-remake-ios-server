@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace MirRemakeBackend {
     enum CampType : byte {
         SELF,
@@ -109,9 +106,13 @@ namespace MirRemakeBackend {
         NPC
     }
     enum MonsterType : byte {
+        /// <summary>普通怪物</summary>
         NORMAL,
-        LEADER,
+        /// <summary>精英怪物</summary>
+        ELITE,
+        /// <summary>普通Boss</summary>
         BOSS,
+        /// <summary>最终Boss</summary>
         FINAL_BOSS
     }
     public enum ItemType : byte {

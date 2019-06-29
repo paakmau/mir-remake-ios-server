@@ -141,9 +141,9 @@ namespace MirRemakeBackend.GameLogic {
             // dds 与 client
             m_misDds.DeleteMission (misId, charObj.m_characterId);
             for (int i = 0; i < acableMis.Count; i++)
-                m_misDds.InsertMission (new DDO_Mission (acableMis[i], charObj.m_characterId, MissionStatus.LOCKED, new List<int> ()));
+                m_misDds.InsertMission (new DDO_Mission (acableMis[i], charObj.m_characterId, MissionStatus.ACCEPTABLE, new List<int> ()));
             for (int i = 0; i < unaMis.Count; i++)
-                m_misDds.InsertMission (new DDO_Mission (unaMis[i], charObj.m_characterId, MissionStatus.LOCKED, new List<int> ()));
+                m_misDds.InsertMission (new DDO_Mission (unaMis[i], charObj.m_characterId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
             // 其他模块

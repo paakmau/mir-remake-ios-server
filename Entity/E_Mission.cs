@@ -37,7 +37,7 @@ namespace MirRemakeBackend.Entity {
             var progList = new List<int> (m_misTargetProgressArr.Length);
             foreach (var prog in m_misTargetProgressArr)
                 progList.Add (prog.Item1);
-            return new DDO_Mission (m_MissionId, charId, true, progList);
+            return new DDO_Mission (m_MissionId, charId, MissionStatus.ACCEPTED, progList);
         }
     }
 }

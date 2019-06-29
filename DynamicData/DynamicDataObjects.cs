@@ -88,12 +88,12 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_Mission {
         public short m_missionId;
         public int m_characterId;
-        public MissionStatus m_isAccepted;
+        public MissionStatus m_status;
         public List<int> m_missionTargetProgressList;
-        public DDO_Mission (short misId, int charId, MissionStatus isAccepted, List<int> misProgList) {
+        public DDO_Mission (short misId, int charId, MissionStatus status, List<int> misProgList) {
             m_missionId = misId;
             m_characterId = charId;
-            m_isAccepted = isAccepted;
+            m_status = status;
             m_missionTargetProgressList = misProgList;
         }
     }
