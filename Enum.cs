@@ -349,4 +349,12 @@ namespace MirRemakeBackend {
         BEEN_HIT = 6,
         DIE = 7,
     }
+
+    enum MissionStatus{
+        UNACCEPTABLE=0,
+
+        NOT_ACCTPTED=1,
+        ACCEPTED=2
+
+    }
 }
