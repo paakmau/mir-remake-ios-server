@@ -128,7 +128,7 @@ namespace MirRemakeBackend {
         VIRTUAL,
         CHARGE
     }
-    enum OccupationType : byte{
+    enum OccupationType : byte {
         NONE = 0,
         WARRIOR = 1,
         ROGUE = 2,
@@ -153,16 +153,16 @@ namespace MirRemakeBackend {
         LEVEL_UP_SKILL,
         TALK_TO_NPC
     }
-    public enum EquipmentPosition : byte{
-        HELMET,//头
-        NECKLACE,//项链(颈部)
-        SHOULDER,//护肩
-        CHEST,//胸甲
-        WRISTER,//护腕
-        GLOVES,//护手
-        GAITER,//腿甲
-        BOOT,//鞋
-        RING,//戒指
+    public enum EquipmentPosition : byte {
+        HELMET, //头
+        NECKLACE, //项链(颈部)
+        SHOULDER, //护肩
+        CHEST, //胸甲
+        WRISTER, //护腕
+        GLOVES, //护手
+        GAITER, //腿甲
+        BOOT, //鞋
+        RING, //戒指
         WEAPON
     }
     enum BuildingEquipmentFortune : byte {
@@ -342,7 +342,7 @@ namespace MirRemakeBackend {
         STAND = 0,
         WALK = 1,
         HIT_0 = 2,
-        HIT_1 = 8,//暂时用不到
+        HIT_1 = 8, //暂时用不到
         HIT_2 = 3,
         RAISE = 4,
         PICK = 5,
@@ -350,11 +350,10 @@ namespace MirRemakeBackend {
         DIE = 7,
     }
 
-    enum MissionStatus{
-        UNACCEPTABLE=0,
-
-        NOT_ACCTPTED=1,
-        ACCEPTED=2
-
+    enum MissionStatus {
+        ACCEPTED = 0,
+        ACCEPTABLE = 1,
+        UNACCEPTABLE = 2,
+        UNLOCKED = 3
     }
 }
