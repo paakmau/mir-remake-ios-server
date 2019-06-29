@@ -353,7 +353,7 @@ namespace MirRemakeBackend {
     enum MissionStatus {
         ACCEPTED = 0,
         ACCEPTABLE = 1,
-        UNACCEPTABLE = 2,
-        UNLOCKED = 3
+        UNLOCKED_BUT_UNACCEPTABLE = 2,
+        LOCKED = 3
     }
 }
