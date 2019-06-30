@@ -158,5 +158,6 @@ namespace MirRemakeBackend.GameLogic {
                 k == 1
             ));
         }
+        // TODO: 把UnitBattleAttr Effect Status 合并为一个GL
     }
 }
