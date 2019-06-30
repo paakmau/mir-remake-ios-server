@@ -127,14 +127,14 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "update `equipment` set `charid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchant_attr=\"" + enchantAttr + "\" where realid="+eq.m_realId+ ";";
+            cmd = "update `equipment` set `charid`=" + eq.m_characterId + ", strength_num=" + eq.m_strengthNum + ", gem_list=\"" + gems + "\",enchant_attr=\"" + enchantAttr + "\" where realid=" + eq.m_realId + ";";
             string database = "legend";
-            pool.ExecuteSql (database, cmd); 
+            pool.ExecuteSql (database, cmd);
         }
         public void DeleteEquipmentInfoByRealId (long realId) {
-            string cmd="delete from `equipment` where `realid`="+realId+";";
-            string database="legend";
-            pool.ExecuteSql(database,cmd); 
+            string cmd = "delete from `equipment` where `realid`=" + realId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
         }
         public void InsertEquipmentInfo (DDO_EquipmentInfo eq) {
             string cmd;
@@ -185,9 +185,9 @@ namespace MirRemakeBackend.DynamicData {
             }
             pool.ExecuteSql (database, cmd);
         }
-        public void InsertSkill(DDO_Skill skill){
+        public void InsertSkill (DDO_Skill skill) {
             string cmd;
-            cmd = "insert into skill values(null,"+skill.m_skillId+","+skill.m_characterId+","+skill.m_skillLevel+","+skill.m_skillLevel+");"; 
+            cmd = "insert into skill values(null," + skill.m_skillId + "," + skill.m_characterId + "," + skill.m_skillLevel + "," + skill.m_skillLevel + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -247,15 +247,16 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 0; i < dt.Rows.Count; i++) {
                 DDO_Mission mission = new DDO_Mission ();
                 mission.m_missionId = short.Parse (dt.Rows[i]["missionid"].ToString ());
-                mission.m_characterId=short.Parse(dt.Rows[i]["charid"].ToString());                mission.m_missionTargetProgressList = new List<int> ();
+                mission.m_characterId = short.Parse (dt.Rows[i]["charid"].ToString ());
+                mission.m_missionTargetProgressList = new List<int> ();
                 string[] targets = dt.Rows[i]["targets"].ToString ().Split (' ');
-                mission.m_missionTargetProgressList=new List<int>();
-                if(targets[0]!=""){
+                mission.m_missionTargetProgressList = new List<int> ();
+                if (targets[0] != "") {
                     for (int j = 0; j < targets.Length; j++) {
                         mission.m_missionTargetProgressList.Add (int.Parse (targets[j]));
                     }
                 }
-                mission.m_isAccepted=(MissionStatus)Enum.Parse(typeof(MissionTargetType),dt.Rows[i]["status"].ToString());
+                mission.m_status = (MissionStatus) Enum.Parse (typeof (MissionTargetType), dt.Rows[i]["status"].ToString ());
                 missions.Add (mission);
             }
             return missions;
@@ -263,32 +264,32 @@ namespace MirRemakeBackend.DynamicData {
         public void InsertMission (DDO_Mission ddo) {
             string cmd;
             string target;
-            if(ddo.m_missionTargetProgressList.Count==0){
-                target="";
+            if (ddo.m_missionTargetProgressList.Count == 0) {
+                target = "";
+            } else {
+                target = ddo.m_missionTargetProgressList[0].ToString ();
+                for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
+                    target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
+                }
             }
-            else{
-            target = ddo.m_missionTargetProgressList[0].ToString ();
-            for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
-                target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
-            }}
-            string status=ddo.m_isAccepted.ToString();
-            cmd = "insert into mission values(null," + ddo.m_missionId +","+ddo.m_characterId +",\"" + target + "\","+status  + ");";
+            string status = ddo.m_status.ToString ();
+            cmd = "insert into mission values(null," + ddo.m_missionId + "," + ddo.m_characterId + ",\"" + target + "\"," + status + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
         public void UpdateMission (DDO_Mission ddo) {
             string cmd;
             string target;
-            if(ddo.m_missionTargetProgressList.Count==0){
-                target="";
+            if (ddo.m_missionTargetProgressList.Count == 0) {
+                target = "";
+            } else {
+                target = ddo.m_missionTargetProgressList[0].ToString ();
+                for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
+                    target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
+                }
             }
-            else{
-            target = ddo.m_missionTargetProgressList[0].ToString ();
-            for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
-                target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
-            }}
-            string status=ddo.m_isAccepted.ToString();
-            cmd = "update mission set targets=\"" + target + "\",`status`="+status+" where charid=" + ddo.m_characterId + " and missionid=" + ddo.m_missionId + ";";
+            string status = ddo.m_status.ToString ();
+            cmd = "update mission set targets=\"" + target + "\",`status`=" + status + " where charid=" + ddo.m_characterId + " and missionid=" + ddo.m_missionId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
