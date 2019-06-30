@@ -90,6 +90,7 @@ namespace MirRemakeBackend {
         CRITICAL_RATE, // 暴击率 /100
         CRITICAL_BONUS, // 暴击伤害 /100
         HIT_RATE, // 命中率 /100
+        DODGE_RATE, // 回避率 /100
         LIFE_STEAL, // 吸取生命值 /100
         PHYSICS_VULERNABILITY, // 物理易伤
         MAGIC_VULERNABILITY, // 魔法易伤
