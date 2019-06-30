@@ -7,32 +7,6 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_Effect : GameLogicBase {
-        public static GL_Effect s_instance;
-        private List<int> t_intList = new List<int> ();
-        private float deltaTimeAfterLastSecond = 0f;
-        public GL_Effect (INetworkService netService) : base (netService) { }
-        public override void Tick (float dT) { }
-        public override void NetworkTick () { }
-        /// <summary>
-        /// 对目标的属性添加影响
-        /// </summary>
-        /// <param name="target"></param>
-        public void NotifyApplyEffect (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
-            if (target.m_IsDead) return;
-            Effect effect = new Effect ();
-            effect.InitWithCasterAndTarget (effectDe, animId, caster, target);
-            // Client
-            m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
-                EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
-                target.m_networkId,
-                effect.GetNo ()));
-            // 其他模块
-            if (effect.m_hit) {
-                // Hp Mp 状态
-                GL_UnitBattleAttribute.s_instance.NotifyHpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
-                GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
-            }
-        }
         struct Effect {
             private DE_Effect m_de;
             private short m_animId;
@@ -123,6 +97,32 @@ namespace MirRemakeBackend.GameLogic {
                     return (int)(damage*(0.5-armor/(armor+1000.0)));
                 }
                 return (int)(damage*(0.25-armor/(armor+10000.0)));
+            }
+        }
+        public static GL_Effect s_instance;
+        private List<int> t_intList = new List<int> ();
+        private float deltaTimeAfterLastSecond = 0f;
+        public GL_Effect (INetworkService netService) : base (netService) { }
+        public override void Tick (float dT) { }
+        public override void NetworkTick () { }
+        /// <summary>
+        /// 对目标的属性添加影响
+        /// </summary>
+        /// <param name="target"></param>
+        public void NotifyApplyEffect (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
+            if (target.m_IsDead) return;
+            Effect effect = new Effect ();
+            effect.InitWithCasterAndTarget (effectDe, animId, caster, target);
+            // Client
+            m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
+                EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
+                target.m_networkId,
+                effect.GetNo ()));
+            // 其他模块
+            if (effect.m_hit) {
+                // Hp Mp 状态
+                GL_UnitBattleAttribute.s_instance.NotifyHpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
+                GL_UnitBattleAttribute.s_instance.NotifyAttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
             }
         }
     }

@@ -5,60 +5,38 @@ namespace MirRemakeBackend {
         ENEMY
     }
     /// <summary>
-    /// 技能类型，以备以后扩展用
-    /// </summary>
-    enum SkillType : byte {
-
-    }
-    /// <summary>
     /// 技能瞄准类型
     /// 单体或多体由SkillTargetChooser决定
     /// </summary>
     enum SkillAimType : byte {
-        /// <summary>
-        /// 指向性圆形
-        /// </summary>
+        /// <summary>指向性圆形</summary>
         AIM_CIRCLE,
-        /// <summary>
-        /// 指向性自身出发的扇形
-        /// </summary>
+        /// <summary>指向性自身出发的矩形</summary>
+        AIM_SELF_RECT,
+        /// <summary>指向性自身出发的扇形</summary>
         AIM_SELF_SECTOR,
-        /// <summary>
-        /// 非指向性圆形
-        /// </summary>
+        /// <summary>非指向性圆形</summary>
         NOT_AIM_CIRCLE,
-        /// <summary>
-        /// 非指向性自身出发的圆形
-        /// </summary>
+        /// <summary>非指向性自身出发的矩形</summary>
+        NOT_AIM_SELF_RECT,
+        /// <summary>非指向性自身出发的圆形</summary>
         NOT_AIM_SELF_CIRCLE,
-        /// <summary>
-        /// 非指向性自身出发的扇形
-        /// </summary>
+        /// <summary>非指向性自身出发的扇形</summary>
         NOT_AIM_SELF_SECTOR,
-        /// <summary>
-        /// 非指向性自身出发的矩形
-        /// </summary>
-        NOT_AIM_SELF_RECT
+        /// <summary>指向性单体</summary>
+        AIM_ONE_TARGET
     }
     /// <summary>
     /// 技能瞄准的参数类型
     /// </summary>
     enum SkillAimParamType : byte {
-        /// <summary>
-        /// 半径
-        /// </summary>
+        /// <summary>半径</summary>
         RADIUS,
-        /// <summary>
-        /// 角度
-        /// </summary>
+        /// <summary>角度</summary>
         RADIAN,
-        /// <summary>
-        /// 长度
-        /// </summary>
+        /// <summary>长度</summary>
         LENGTH,
-        /// <summary>
-        /// 宽度
-        /// </summary>
+        /// <summary>宽度</summary>
         WIDTH
     }
     enum EffectType : byte {

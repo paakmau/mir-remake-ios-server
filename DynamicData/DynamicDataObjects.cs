@@ -37,18 +37,12 @@ namespace MirRemakeBackend.DynamicData {
         /// 镶嵌的宝石Id列表
         /// </summary>
         public List<short> m_inlaidGemIdList;
-        /// <summary>
-        /// 目前已经打的孔的数量
-        /// </summary>
-        [Obsolete ("已经弃用")]
-        public short m_holeNum;
         public DDO_EquipmentInfo (long realId, int charId, byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIds) {
             m_realId = realId;
             m_characterId = charId;
             m_strengthNum = strNum;
             m_enchantAttr = enchantAttr;
             m_inlaidGemIdList = inlaidGemIds;
-            m_holeNum = 0;
         }
     }
     struct DDO_Item {
