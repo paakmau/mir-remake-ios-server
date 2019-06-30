@@ -125,7 +125,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyConcreteAttributeChange (E_Unit target, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > dAttr) {
             for (int i = 0; i < dAttr.Count; i++)
-                target.AddConAttr (dAttr[i].Item1, dAttr[i].Item2);
+                target.AddBattleConAttr (dAttr[i].Item1, dAttr[i].Item2);
         }
         private void UnitDead (E_Unit dead, E_Unit killer) {
             // client
@@ -145,7 +145,7 @@ namespace MirRemakeBackend.GameLogic {
             // 处理具体属性
             var cAttrList = status.m_dataEntity.m_affectAttributeList;
             for (int i = 0; i < cAttrList.Count; i++)
-                unit.AddConAttr (cAttrList[i].Item1, (int) (cAttrList[i].Item2 * status.m_value * k));
+                unit.AddBattleConAttr (cAttrList[i].Item1, (int) (cAttrList[i].Item2 * status.m_value * k));
             // 处理特殊属性
             var sAttrList = status.m_dataEntity.m_specialAttributeList;
             for (int i = 0; i < sAttrList.Count; i++)
