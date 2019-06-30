@@ -33,7 +33,7 @@ namespace MirRemakeBackend.Entity {
             // 读取已接任务
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
-                if (!ddoList[i].m_isAccepted) continue;
+                if (ddoList[i].m_status == MissionStatus.ACCEPTED) continue;
                 E_Mission mis = s_entityPool.m_missionPool.GetInstance ();
                 mis.Reset (m_dem.GetMissionById (ddoList[i].m_missionId), ddoList[i]);
                 acceptedMissionDict[ddoList[i].m_missionId] = mis;
@@ -46,9 +46,9 @@ namespace MirRemakeBackend.Entity {
             m_acceptableMissionDict.Add (netId, acceptableMissionSet);
             m_unacceptableMissionDict.Add (netId, unacceptableMissionSet);
             for (int i = 0; i < ddoList.Count; i++) {
-                if (ddoList[i].m_isAccepted) continue;
+                if (ddoList[i].m_status == MissionStatus.ACCEPTED) continue;
                 var de = m_dem.GetMissionById (ddoList[i].m_missionId);
-                if (CanAccept (de, -23333)) // TODO: 数据库添加字段以减少耦合
+                if (ddoList[i].m_status == MissionStatus.ACCEPTABLE)
                     acceptableMissionSet.Add (de.m_id);
                 else
                     unacceptableMissionSet.Add (de.m_id);
