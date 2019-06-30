@@ -1,271 +1,349 @@
-﻿[{
-  "StatusID":0,
-  "Name":"强效恢复",
-  "Details":"提高每秒恢复的生命值",
-  "AttributeAttachArray":["DELTA_HP_PER_SECOND 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":1,
-  "Name":"气定神闲",
-  "Details":"提高每秒恢复的魔法值",
-  "AttributeAttachArray":["DELTA_MP_PER_SECOND 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":2,
-  "Name":"破甲",
-  "Details":"降低护甲值",
-  "AttributeAttachArray":["DEFENCE -1"],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":3,
-  "Name":"魔蚀",
-  "Details":"降低魔法抗性",
-  "AttributeAttachArray":["RESISTANCE -1"],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":4,
-  "Name":"流血",
-  "Details":"在持续时间内受到物理伤害",
-  "AttributeAttachArray":[],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":-1,
- "DMP":0
-},{
-  "StatusID":5,
-  "Name":"点燃",
-  "Details":"在持续时间内受到魔法伤害",
-  "AttributeAttachArray":[],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":-1,
- "DMP":0
-},{
-  "StatusID":6,
-  "Name":"厚皮",
-  "Details":"提高生命上限",
-  "AttributeAttachArray":["MAX_HP 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":7,
-  "Name":"御法",
-  "Details":"提高魔法值上限",
-  "AttributeAttachArray":["MAX_MP 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":8,
-  "Name":"强攻",
-  "Details":"提高物理攻击",
-  "AttributeAttachArray":["ATTACK 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":9,
-  "Name":"奥能强化",
-  "Details":"提高魔法攻击",
-  "AttributeAttachArray":["MAGIC 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":10,
-  "Name":"抵御",
-  "Details":"提高护甲值",
-  "AttributeAttachArray":["DEFENCE 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":11,
-  "Name":"抗魔",
-  "Details":"提高魔法抗性",
-  "AttributeAttachArray":["RESISTANCE 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":12,
-  "Name":"疾步",
-  "Details":"提高移动速度",
-  "AttributeAttachArray":["SPEED 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":13,
-  "Name":"灵巧",
-  "Details":"提高闪避率",
-  "AttributeAttachArray":["DODGE_RATE 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":14,
-  "Name":"专注",
-  "Details":"提高命中率",
-  "AttributeAttachArray":["HIT_RATE 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":15,
-  "Name":"残暴",
-  "Details":"提高暴击率",
-  "AttributeAttachArray":["CRITICAL_RATE 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":16,
-  "Name":"致命",
-  "Details":"提高暴击加成",
-  "AttributeAttachArray":["CRITICAL_BONUS 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":17,
-  "Name":"免疫",
-  "Details":"提高韧性",
-  "AttributeAttachArray":["TENACITY 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":18,
-  "Name":"嗜血",
-  "Details":"提高吸血",
-  "AttributeAttachArray":["LIFE_STEAL 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":19,
-  "Name":"眩晕",
-  "Details":"无法移动或攻击",
-  "AttributeAttachArray":[],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":["FAINT"],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":20,
-  "Name":"沉默",
-  "Details":"无法攻击",
-  "AttributeAttachArray":[],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":["SILENT"],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":21,
-  "Name":"禁锢",
-  "Details":"无法移动",
-  "AttributeAttachArray":[],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":["IMMOBILE"],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":22,
-  "Name":"冻结",
-  "Details":"无法移动",
-  "AttributeAttachArray":[],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":["IMMOBILE"],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":23,
-  "Name":"物理易伤",
-  "Details":"受到的物理伤害提高",
-  "AttributeAttachArray":["PHYSICS_VULERNABILITY 1"],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":24,
-  "Name":"魔法易伤",
-  "Details":"受到的魔法伤害提高",
-  "AttributeAttachArray":["MAGIC_VULERNABILITY 1"],
-  "Type":"DEBUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":25,
-  "Name":"强韧",
-  "Details":"受到的所有伤害降低",
-  "AttributeAttachArray":["DAMAGE_REDUCTION 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-},{
-  "StatusID":26,
-  "Name":"护盾",
-  "Details":"获得吸收伤害的护盾",
-  "AttributeAttachArray":["SHIELD 1"],
-  "Type":"BUFF",
-  "Value":1,
-  "SpecialAttributes":[],
- "DHP":0,
- "DMP":0
-}]
+﻿[
+  {
+    "StatusID": 0,
+    "Name": "强效恢复",
+    "Details": "提高每秒恢复的生命值",
+    "AttributeAttachArray": [
+      "DELTA_HP_PER_SECOND 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 1,
+    "Name": "气定神闲",
+    "Details": "提高每秒恢复的魔法值",
+    "AttributeAttachArray": [
+      "DELTA_MP_PER_SECOND 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 2,
+    "Name": "破甲",
+    "Details": "降低护甲值",
+    "AttributeAttachArray": [
+      "DEFENCE -1"
+    ],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 3,
+    "Name": "魔蚀",
+    "Details": "降低魔法抗性",
+    "AttributeAttachArray": [
+      "RESISTANCE -1"
+    ],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 4,
+    "Name": "流血",
+    "Details": "在持续时间内受到物理伤害",
+    "AttributeAttachArray": [],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": -1,
+    "DMP": 0
+  },
+  {
+    "StatusID": 5,
+    "Name": "点燃",
+    "Details": "在持续时间内受到魔法伤害",
+    "AttributeAttachArray": [],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": -1,
+    "DMP": 0
+  },
+  {
+    "StatusID": 6,
+    "Name": "厚皮",
+    "Details": "提高生命上限",
+    "AttributeAttachArray": [
+      "MAX_HP 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 7,
+    "Name": "御法",
+    "Details": "提高魔法值上限",
+    "AttributeAttachArray": [
+      "MAX_MP 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 8,
+    "Name": "强攻",
+    "Details": "提高物理攻击",
+    "AttributeAttachArray": [
+      "ATTACK 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 9,
+    "Name": "奥能强化",
+    "Details": "提高魔法攻击",
+    "AttributeAttachArray": [
+      "MAGIC 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 10,
+    "Name": "抵御",
+    "Details": "提高护甲值",
+    "AttributeAttachArray": [
+      "DEFENCE 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 11,
+    "Name": "抗魔",
+    "Details": "提高魔法抗性",
+    "AttributeAttachArray": [
+      "RESISTANCE 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 12,
+    "Name": "疾步",
+    "Details": "提高移动速度",
+    "AttributeAttachArray": [
+      "SPEED 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 13,
+    "Name": "灵巧",
+    "Details": "提高闪避率",
+    "AttributeAttachArray": [
+      "DODGE_RATE 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 14,
+    "Name": "专注",
+    "Details": "提高命中率",
+    "AttributeAttachArray": [
+      "HIT_RATE 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 15,
+    "Name": "残暴",
+    "Details": "提高暴击率",
+    "AttributeAttachArray": [
+      "CRITICAL_RATE 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 16,
+    "Name": "致命",
+    "Details": "提高暴击加成",
+    "AttributeAttachArray": [
+      "CRITICAL_BONUS 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 17,
+    "Name": "免疫",
+    "Details": "提高韧性",
+    "AttributeAttachArray": [
+      "TENACITY 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 18,
+    "Name": "嗜血",
+    "Details": "提高吸血",
+    "AttributeAttachArray": [
+      "LIFE_STEAL 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 19,
+    "Name": "眩晕",
+    "Details": "无法移动或攻击",
+    "AttributeAttachArray": [],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [
+      "FAINT"
+    ],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 20,
+    "Name": "沉默",
+    "Details": "无法攻击",
+    "AttributeAttachArray": [],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [
+      "SILENT"
+    ],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 21,
+    "Name": "禁锢",
+    "Details": "无法移动",
+    "AttributeAttachArray": [],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [
+      "IMMOBILE"
+    ],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 22,
+    "Name": "冻结",
+    "Details": "无法移动",
+    "AttributeAttachArray": [],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [
+      "IMMOBILE"
+    ],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 23,
+    "Name": "物理易伤",
+    "Details": "受到的物理伤害提高",
+    "AttributeAttachArray": [
+      "PHYSICS_VULERNABILITY 1"
+    ],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 24,
+    "Name": "魔法易伤",
+    "Details": "受到的魔法伤害提高",
+    "AttributeAttachArray": [
+      "MAGIC_VULERNABILITY 1"
+    ],
+    "Type": "DEBUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 25,
+    "Name": "强韧",
+    "Details": "受到的所有伤害降低",
+    "AttributeAttachArray": [
+      "DAMAGE_REDUCTION 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  },
+  {
+    "StatusID": 26,
+    "Name": "护盾",
+    "Details": "获得吸收伤害的护盾",
+    "AttributeAttachArray": [
+      "DEFENCE 1"
+    ],
+    "Type": "BUFF",
+    "Value": 1,
+    "SpecialAttributes": [],
+    "DHP": 0,
+    "DMP": 0
+  }
+]
