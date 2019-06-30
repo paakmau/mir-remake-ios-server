@@ -27,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
             short posInBag = -1;
             E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
             if (item == null) return;
-            GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, charObj, charObj);
+            GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, -1, charObj, charObj);
             GL_Property.s_instance.NotifyLostItem (charObj, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {

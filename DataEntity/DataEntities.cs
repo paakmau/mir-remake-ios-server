@@ -79,7 +79,6 @@ namespace MirRemakeBackend.DataEntity {
             for (int i = 0; i < curDo.m_damageParamArr.Length; i++)
                 damageParamList.Add ((curDo.m_damageParamArr[i].Item1, (float) curDo.m_damageParamArr[i].Item2 * 0.01f));
             m_damageParamList = damageParamList;
-            //TODO: 修改了判定技能范围的方式 详询台长
             m_skillEffect = new DE_Effect (curDo.m_skillEffect, skId);
         }
     }
@@ -109,25 +108,17 @@ namespace MirRemakeBackend.DataEntity {
     }
     class DE_Effect {
         public readonly EffectType m_type;
-        public readonly short m_animId;
         public readonly float m_hitRate;
         public readonly float m_criticalRate;
         public readonly int m_deltaHp;
         public readonly int m_deltaMp;
-
-
-        // TODO:新增
-        public readonly ValueTuple<ActorUnitConcreteAttributeType, float>[] m_attributeArr;
         public readonly IReadOnlyList<ValueTuple<short, float, float>> m_statusIdAndValueAndTimeList;
         public DE_Effect (DO_Effect effectDo, short animId) {
             m_type = effectDo.m_type;
-            // TODO: animId 有待考量
-            m_animId = animId;
             m_hitRate = effectDo.m_hitRate;
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHp = effectDo.m_deltaHp;
             m_deltaMp = effectDo.m_deltaMp;
-            m_attributeArr=effectDo.m_attributeArr;
             m_statusIdAndValueAndTimeList = new List<ValueTuple<short, float, float>> (effectDo.m_statusIdAndValueAndTimeArr);
         }
     }

@@ -17,10 +17,10 @@ namespace MirRemakeBackend.GameLogic {
         /// 对目标的属性添加影响
         /// </summary>
         /// <param name="target"></param>
-        public void NotifyApplyEffect (DE_Effect effectDe, E_Unit caster, E_Unit target) {
+        public void NotifyApplyEffect (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
             if (target.m_IsDead) return;
             Effect effect = new Effect ();
-            effect.InitWithCasterAndTarget (effectDe, caster, target);
+            effect.InitWithCasterAndTarget (effectDe, animId, caster, target);
             // Client
             m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
@@ -35,13 +35,15 @@ namespace MirRemakeBackend.GameLogic {
         }
         struct Effect {
             private DE_Effect m_de;
+            private short m_animId;
             public bool m_hit;
             public bool m_critical;
             public int m_deltaHp;
             public int m_deltaMp;
             public ValueTuple<short, float, float>[] m_statusIdAndValueAndTimeArr;
-            public void InitWithCasterAndTarget (DE_Effect effectDe, E_Unit caster, E_Unit target) {
+            public void InitWithCasterAndTarget (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
                 m_de = effectDe;
+                m_animId = animId;
                 // xjb计算命中
                 float hitRate = effectDe.m_hitRate * caster.m_HitRate * 0.01f;
                 m_hit = MyRandom.NextInt (1, 101) <= hitRate;
@@ -58,22 +60,22 @@ namespace MirRemakeBackend.GameLogic {
                             m_deltaMp = (int) ((float) m_deltaMp * (float) caster.m_Magic / (float) target.m_Resistance);
                             break;
                     }
-                    for(int i=0;i<effectDe.m_attributeArr.Length;i++){
-                        switch(effectDe.m_attributeArr[i].Item1){
-                            case ActorUnitConcreteAttributeType.ATTACK:
-                                m_deltaHp=m_deltaHp+(int)(caster.m_Attack*effectDe.m_attributeArr[i].Item2);
-                                break;
-                            case ActorUnitConcreteAttributeType.MAGIC:
-                                m_deltaHp=m_deltaHp+(int)(caster.m_Magic*effectDe.m_attributeArr[i].Item2);
-                                break;
-                            case ActorUnitConcreteAttributeType.MAX_HP:
-                                m_deltaHp=m_deltaHp+(int)(caster.m_MaxHp*effectDe.m_attributeArr[i].Item2);
-                                break;
-                            case ActorUnitConcreteAttributeType.MAX_MP:
-                                m_deltaHp=m_deltaHp+(int)(caster.m_MaxMp*effectDe.m_attributeArr[i].Item2);
-                                break;
-                        }
-                    }
+                    // for(int i=0;i<effectDe.m_attributeArr.Length;i++){
+                    //     switch(effectDe.m_attributeArr[i].Item1){
+                    //         case ActorUnitConcreteAttributeType.ATTACK:
+                    //             m_deltaHp=m_deltaHp+(int)(caster.m_Attack*effectDe.m_attributeArr[i].Item2);
+                    //             break;
+                    //         case ActorUnitConcreteAttributeType.MAGIC:
+                    //             m_deltaHp=m_deltaHp+(int)(caster.m_Magic*effectDe.m_attributeArr[i].Item2);
+                    //             break;
+                    //         case ActorUnitConcreteAttributeType.MAX_HP:
+                    //             m_deltaHp=m_deltaHp+(int)(caster.m_MaxHp*effectDe.m_attributeArr[i].Item2);
+                    //             break;
+                    //         case ActorUnitConcreteAttributeType.MAX_MP:
+                    //             m_deltaHp=m_deltaHp+(int)(caster.m_MaxMp*effectDe.m_attributeArr[i].Item2);
+                    //             break;
+                    //     }
+                    // }
                     // xjb计算暴击 应该ok
                     float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate * 0.01f;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
@@ -109,7 +111,7 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
             public NO_Effect GetNo () {
-                return new NO_Effect (m_de.m_animId, m_hit, m_critical, m_deltaHp, m_deltaMp);
+                return new NO_Effect (m_animId, m_hit, m_critical, m_deltaHp, m_deltaMp);
             }
 
             //计算护甲和魔法抗性的减伤
