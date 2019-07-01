@@ -8,7 +8,7 @@ namespace MirRemakeBackend.Data {
         DO_Status[] GetAllChangeHpStatus ();
         DO_Status[] GetAllChangeMpStatus ();
         (DO_Status, DO_ConcreteAttributeStatus) [] GetAllConcreteAttributeStatus ();
-        (DO_Status, DO_SpecialAttributeStatus) [] GetAllSpecialAttributeStatus ():
+        (DO_Status, DO_SpecialAttributeStatus) [] GetAllSpecialAttributeStatus ();
     }
     class DS_StatusImpl : IDS_Status {
         private static JsonData s_statusDatas;
