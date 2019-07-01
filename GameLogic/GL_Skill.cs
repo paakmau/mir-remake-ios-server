@@ -10,10 +10,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_Skill : GameLogicBase {
         public static GL_Skill s_instance;
-        private IDDS_Skill m_skillDds;
-        public GL_Skill (IDDS_Skill skillDds, INetworkService netService) : base (netService) {
-            m_skillDds = skillDds;
-        }
+        public GL_Skill (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifyRemoveCharacter (E_Character charObj) {

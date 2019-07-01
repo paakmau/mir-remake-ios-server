@@ -11,11 +11,8 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_CharacterAttribute : GameLogicBase {
         public static GL_CharacterAttribute s_instance;
-        private IDDS_Character m_charDds;
         const int c_maxLevel = 100;
-        public GL_CharacterAttribute (IDDS_Character charDds, INetworkService netService) : base (netService) {
-            m_charDds = charDds;
-        }
+        public GL_CharacterAttribute (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandGainExperience (int netId, int exp) {

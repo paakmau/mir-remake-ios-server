@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
-namespace MirRemakeBackend.CharacterCreate {
+namespace MirRemakeBackend.Data {
     class CharacterCreator {
         public static CharacterCreator s_instance;
         private INetworkService m_netService;

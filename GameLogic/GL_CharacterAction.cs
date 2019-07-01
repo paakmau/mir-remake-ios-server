@@ -11,8 +11,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_CharacterAction : GameLogicBase {
         public static GL_CharacterAction s_instance;
-        public GL_CharacterAction (INetworkService netService) : base (netService) {
-        }
+        public GL_CharacterAction (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () {
             var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();

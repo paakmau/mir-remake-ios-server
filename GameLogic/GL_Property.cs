@@ -6,12 +6,7 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.GameLogic {
     class GL_Property : GameLogicBase {
         public static GL_Property s_instance;
-        private IDDS_Item m_itemDds;
-        private IDDS_Character m_charDds;
-        public GL_Property (IDDS_Item itemDds, IDDS_Character charDds, INetworkService ns) : base (ns) {
-            m_itemDds = itemDds;
-            m_charDds = charDds;
-        }
+        public GL_Property (INetworkService ns) : base (ns) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
@@ -110,7 +105,7 @@ namespace MirRemakeBackend.GameLogic {
                 }
 
                 // log
-                GL_Log.s_instance.NotifyLog(GameLogType.GAIN_ITEM, charObj.m_networkId, itemList[i].m_ItemId, realStoreNum);
+                GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemList[i].m_ItemId, realStoreNum);
             }
         }
     }

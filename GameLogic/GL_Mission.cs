@@ -66,9 +66,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public static GL_Mission s_instance;
         private Dictionary<MissionTargetType, IMissionTargetProgressChecker> m_progressCheckerDict = new Dictionary<MissionTargetType, IMissionTargetProgressChecker> ();
-        private IDDS_Mission m_misDds;
-        public GL_Mission (IDDS_Mission mDds, INetworkService ns) : base (ns) {
-            m_misDds = mDds;
+        public GL_Mission (INetworkService ns) : base (ns) {
             // 实例化所有 IMissionTargetProgressChecker 接口的实现类
             var iType = typeof (IMissionTargetProgressChecker);
             var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && iType.IsAssignableFrom (p));
