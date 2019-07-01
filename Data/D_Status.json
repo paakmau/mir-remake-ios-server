@@ -3,27 +3,25 @@
     "StatusID": 0,
     "Name": "强效恢复",
     "Details": "提高每秒恢复的生命值",
-    "AttributeAttachArray": [
-      "DELTA_HP_PER_SECOND 1"
-    ],
-    "Type": "BUFF",
+    "AttributeAttachArray": [],
+    "Type": "CHANGE_HP",
     "Value": 1,
     "SpecialAttributes": [],
-    "DHP": 0,
-    "DMP": 0
+    "DHP": 1,
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 1,
     "Name": "气定神闲",
     "Details": "提高每秒恢复的魔法值",
-    "AttributeAttachArray": [
-      "DELTA_MP_PER_SECOND 1"
-    ],
-    "Type": "BUFF",
+    "AttributeAttachArray": [],
+    "Type": "CHANGE_MP",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 1,
+    "IsBuff":1
   },
   {
     "StatusID": 2,
@@ -32,11 +30,12 @@
     "AttributeAttachArray": [
       "DEFENCE -1"
     ],
-    "Type": "DEBUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 3,
@@ -45,33 +44,36 @@
     "AttributeAttachArray": [
       "RESISTANCE -1"
     ],
-    "Type": "DEBUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 4,
     "Name": "流血",
     "Details": "在持续时间内受到物理伤害",
     "AttributeAttachArray": [],
-    "Type": "DEBUFF",
+    "Type": "CHANGE_HP",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": -1,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 5,
     "Name": "点燃",
     "Details": "在持续时间内受到魔法伤害",
     "AttributeAttachArray": [],
-    "Type": "DEBUFF",
+    "Type": "CHANGE_HP",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": -1,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 6,
@@ -80,11 +82,12 @@
     "AttributeAttachArray": [
       "MAX_HP 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 7,
@@ -93,11 +96,12 @@
     "AttributeAttachArray": [
       "MAX_MP 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 8,
@@ -106,11 +110,12 @@
     "AttributeAttachArray": [
       "ATTACK 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 9,
@@ -119,11 +124,12 @@
     "AttributeAttachArray": [
       "MAGIC 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 10,
@@ -132,11 +138,12 @@
     "AttributeAttachArray": [
       "DEFENCE 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 11,
@@ -145,11 +152,12 @@
     "AttributeAttachArray": [
       "RESISTANCE 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 12,
@@ -158,11 +166,12 @@
     "AttributeAttachArray": [
       "SPEED 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 13,
@@ -171,11 +180,12 @@
     "AttributeAttachArray": [
       "DODGE_RATE 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 14,
@@ -184,11 +194,12 @@
     "AttributeAttachArray": [
       "HIT_RATE 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 15,
@@ -197,11 +208,12 @@
     "AttributeAttachArray": [
       "CRITICAL_RATE 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 16,
@@ -210,11 +222,12 @@
     "AttributeAttachArray": [
       "CRITICAL_BONUS 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 17,
@@ -223,11 +236,12 @@
     "AttributeAttachArray": [
       "TENACITY 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 18,
@@ -236,63 +250,68 @@
     "AttributeAttachArray": [
       "LIFE_STEAL 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 19,
     "Name": "眩晕",
     "Details": "无法移动或攻击",
     "AttributeAttachArray": [],
-    "Type": "DEBUFF",
+    "Type": "SPECIAL_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [
       "FAINT"
     ],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 20,
     "Name": "沉默",
     "Details": "无法攻击",
     "AttributeAttachArray": [],
-    "Type": "DEBUFF",
+    "Type": "SPECIAL_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [
       "SILENT"
     ],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 21,
     "Name": "禁锢",
     "Details": "无法移动",
     "AttributeAttachArray": [],
-    "Type": "DEBUFF",
+    "Type": "SPECIAL_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [
       "IMMOBILE"
     ],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 22,
     "Name": "冻结",
     "Details": "无法移动",
     "AttributeAttachArray": [],
-    "Type": "DEBUFF",
+    "Type": "SPECIAL_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [
       "IMMOBILE"
     ],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 23,
@@ -301,11 +320,12 @@
     "AttributeAttachArray": [
       "PHYSICS_VULERNABILITY 1"
     ],
-    "Type": "DEBUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 24,
@@ -314,11 +334,12 @@
     "AttributeAttachArray": [
       "MAGIC_VULERNABILITY 1"
     ],
-    "Type": "DEBUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":0
   },
   {
     "StatusID": 25,
@@ -327,11 +348,12 @@
     "AttributeAttachArray": [
       "DAMAGE_REDUCTION 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   },
   {
     "StatusID": 26,
@@ -340,10 +362,11 @@
     "AttributeAttachArray": [
       "DEFENCE 1"
     ],
-    "Type": "BUFF",
+    "Type": "CURRENT_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
-    "DMP": 0
+    "DMP": 0,
+    "IsBuff":1
   }
 ]
