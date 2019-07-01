@@ -81,18 +81,18 @@ namespace MirRemakeBackend {
             IDDS_Mission misDds = ddsImpl;
             // 角色创建器
             CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, skillDds, misDds, itemDds, s_networkService);
-            // 角色初始化器
-            CharacterInitializer.s_instance = new CharacterInitializer (charDds, skillDds, itemDds, misDds, s_networkService);
+            // 单位初始化器
+            UnitInitializer.s_instance = new UnitInitializer ();
             // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
-            GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (charDds, s_networkService);
-            GL_Item.s_instance = new GL_Item (itemDds, s_networkService);
-            GL_Mission.s_instance = new GL_Mission (misDds, s_networkService);
+            GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
+            GL_Item.s_instance = new GL_Item (s_networkService);
+            GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
-            GL_Property.s_instance = new GL_Property (itemDds, charDds, s_networkService);
+            GL_Property.s_instance = new GL_Property (s_networkService);
             GL_Sight.s_instance = new GL_Sight (s_networkService);
-            GL_Skill.s_instance = new GL_Skill (skillDds, s_networkService);
+            GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
             GL_Log.s_instance = new GL_Log (s_networkService);
             // 放入数组中

@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
 using MirRemakeBackend.GameLogic;
-using MirRemakeBackend.CharacterCreate;
+using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Network {
     interface IClientCommand {
@@ -22,7 +22,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_CHARACTER_ID; } }
         public void Execute (NetDataReader reader, int netId) {
             int charId = reader.GetInt ();
-            CharacterInitializer.s_instance.CommandInitCharacterId (netId, charId);
+            UnitInitializer.s_instance.CommandInitCharacterId (netId, charId);
         }
     }
     /// <summary>

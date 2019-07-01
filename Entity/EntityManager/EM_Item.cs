@@ -24,15 +24,15 @@ namespace MirRemakeBackend.Entity {
             private class II_Empty : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.EMPTY; } }
                 public II_Empty (DEM_Item dem) : base (dem) { }
-                public override void Initialize(E_Item resItem, DE_Item de, short num) {
-                    ((E_EmptyItem)resItem).Reset (de);
+                public override void Initialize (E_Item resItem, DE_Item de, short num) {
+                    ((E_EmptyItem) resItem).Reset (de);
                 }
             }
             private class II_Material : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.MATERIAL; } }
                 public II_Material (DEM_Item dem) : base (dem) { }
-                public override void Initialize(E_Item resItem, DE_Item de, short num) {
-                    ((E_MaterialItem)resItem).Reset (de, num);
+                public override void Initialize (E_Item resItem, DE_Item de, short num) {
+                    ((E_MaterialItem) resItem).Reset (de, num);
                 }
             }
             private class II_Consumable : ItemInitializerBase {
@@ -66,7 +66,7 @@ namespace MirRemakeBackend.Entity {
                 public void Reset (List<DDO_EquipmentInfo> eqInfoDdoList) {
                     m_eqInfoDict.Clear ();
                     for (int i=0; i<eqInfoDdoList.Count; i++)
-                        m_eqInfoDict.TryAdd (eqInfoDdoList[i].m_realId, eqInfoDdoList[i]);
+                        m_eqInfoDict.Add (eqInfoDdoList[i].m_realId, eqInfoDdoList[i]);
                 }
                 public DDO_EquipmentInfo GetEquipment (long realId) {
                     DDO_EquipmentInfo res;
@@ -105,7 +105,7 @@ namespace MirRemakeBackend.Entity {
                     base.ResetInfo (resItem, realId);
                     var eqDdo = m_iidc.GetEquipment (realId);
                     var gemList = new List<DE_GemData> (eqDdo.m_inlaidGemIdList.Count);
-                    for (int i=0; i<eqDdo.m_inlaidGemIdList.Count; i++)
+                    for (int i = 0; i < eqDdo.m_inlaidGemIdList.Count; i++)
                         gemList.Add (m_dem.GetGemById (eqDdo.m_inlaidGemIdList[i]));
                     ((E_EquipmentItem) resItem).ResetEquipmentInfo (eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, gemList);
                 }
@@ -115,6 +115,7 @@ namespace MirRemakeBackend.Entity {
                 public IIR_Gem (DEM_Item dem, ItemInfoDdoCollections iidc) : base (dem, iidc) { }
             }
             #endregion
+            private DEM_Item m_dem;
             private Dictionary<ItemType, ObjectPool> m_itemPoolDict = new Dictionary<ItemType, ObjectPool> ();
             private Dictionary<ItemType, ItemInitializerBase> m_itemInitializerDict = new Dictionary<ItemType, ItemInitializerBase> ();
             private ItemInfoDdoCollections m_itemInfoDdoCollections = new ItemInfoDdoCollections ();
@@ -125,6 +126,7 @@ namespace MirRemakeBackend.Entity {
             private const int c_equipmentItemPoolSize = 100000;
             private const int c_gemItemPoolSize = 100000;
             public ItemFactory (DEM_Item dem) {
+                m_dem = dem;
                 m_itemPoolDict.Add (ItemType.EMPTY, new ObjectPool<E_EmptyItem> (c_emptyItemPoolSize));
                 m_itemPoolDict.Add (ItemType.MATERIAL, new ObjectPool<E_MaterialItem> (c_materialItemPoolSize));
                 m_itemPoolDict.Add (ItemType.CONSUMABLE, new ObjectPool<E_ConsumableItem> (c_consumableItemPoolSize));
@@ -151,6 +153,12 @@ namespace MirRemakeBackend.Entity {
             private E_Item GetInstance (ItemType type) {
                 return m_itemPoolDict[type].GetInstanceObj () as E_Item;
             }
+            public E_EmptyItem GetEmptyItemInstance (long realId) {
+                var res = GetInstance (ItemType.EMPTY) as E_EmptyItem;
+                res.Reset (m_dem.GetEmptyItem ());
+                res.ResetRealId (realId);
+                return res;
+            }
             /// <summary>
             /// 获得物品实例, 不分配 RealId
             /// </summary>
@@ -160,15 +168,21 @@ namespace MirRemakeBackend.Entity {
                 initializer.Initialize (res, de, num);
                 return res;
             }
+            /// <summary>
+            /// 在加载角色初始信息时, 获得物品实例, 有 RealId 与 ItemInfo
+            /// </summary>
             public E_Item[] GetAndResetInstanceArr (List<DDO_Item> itemList, List<DDO_EquipmentInfo> eqInfoList) {
+                E_Item[] res = new E_Item[itemList.Count];
                 m_itemInfoDdoCollections.Reset (eqInfoList);
-                
-            }
-            public E_Item GetAndResetInstance (DE_Item de, long realId, short num) {
-                var initializer = m_itemInitializer[de.m_type];
-                var res = GetInstance (de.m_type);
-                initializer.Reset (res, de, realId, num);
-                // TODO: 先init再reset
+                for (int i = 0; i < itemList.Count; i++) {
+                    var de = m_dem.GetItemById (itemList[i].m_itemId);
+                    var initlzer = m_itemInitializerDict[de.m_type];
+                    var infoReseter = m_itemInfoReseterDict[de.m_type];
+                    var itemObj = GetInstance (de.m_type);
+                    initlzer.Initialize (itemObj, de, itemList[i].m_num);
+                    infoReseter.ResetInfo (itemObj, itemList[i].m_realId);
+                    res[i] = itemObj;
+                }
                 return res;
             }
         }
@@ -207,24 +221,23 @@ namespace MirRemakeBackend.Entity {
                 eqRegion = GetEquiped (netId);
                 return;
             }
-            var bagDdo = m_dds.GetBagByCharacterId (charId);
-            var storeHouseDdo = m_dds.GetStoreHouseByCharacterId (charId);
-            var equipedDdo = m_dds.GetEquipmentRegionByCharacterId (charId);
+            var bagDdoList = m_dds.GetBagByCharacterId (charId);
+            var storeHouseDdoList = m_dds.GetStoreHouseByCharacterId (charId);
+            var equipedDdoList = m_dds.GetEquipmentRegionByCharacterId (charId);
+            var eqInfoDdoList = m_dds.GetAllEquipmentByCharacterId (charId);
 
-            // 索引角色的所有装备
-            Dictionary<long, DDO_EquipmentInfo> eqDdoDict = new Dictionary<long, DDO_EquipmentInfo> ();
-            for (int i = 0; i < allEquipmentDdoList.Count; i++)
-                eqDdoDict.Add (allEquipmentDdoList[i].m_realId, allEquipmentDdoList[i]);
             // 初始化背包, 仓库, 装备区
             bag = s_entityPool.m_repositoryPool.GetInstance ();
             storeHouse = s_entityPool.m_repositoryPool.GetInstance ();
             eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
-            E_Item[] itemInBag = new E_Item[bagDdo.Count];
-            E_Item[] itemInStoreHouse = new E_Item[storeHouseDdo.Count];
-            E_Item[] itemEquiped = new E_Item[equipedDdo.Count];
-            GetItemEntityArrByDdo (bagDdo, eqDdoDict, itemInBag);
-            GetItemEntityArrByDdo (storeHouseDdo, eqDdoDict, itemInStoreHouse);
-            GetItemEntityArrByDdo (equipedDdo, eqDdoDict, itemEquiped);
+
+            bagDdoList.Sort ((a, b) => { return a.m_position - b.m_position; });
+            storeHouseDdoList.Sort ((a, b) => { return a.m_position - b.m_position; });
+            equipedDdoList.Sort ((a, b) => { return a.m_position - b.m_position; });
+            
+            E_Item[] itemInBag = m_itemFactory.GetAndResetInstanceArr (bagDdoList, eqInfoDdoList);
+            E_Item[] itemInStoreHouse = m_itemFactory.GetAndResetInstanceArr (storeHouseDdoList, eqInfoDdoList);
+            E_Item[] itemEquiped = m_itemFactory.GetAndResetInstanceArr (equipedDdoList, eqInfoDdoList);
             bag.Reset (ItemPlace.BAG, itemInBag);
             storeHouse.Reset (ItemPlace.STORE_HOUSE, itemInStoreHouse);
             eqRegion.Reset (ItemPlace.EQUIPMENT_REGION, itemEquiped);
@@ -269,7 +282,7 @@ namespace MirRemakeBackend.Entity {
             return res;
         }
         public E_EmptyItem GetEmptyInstance (long realId) {
-            return m_itemFactory.GetEmptyInstance (m_dem.GetEmptyItem (), realId);
+            return m_itemFactory.GetEmptyItemInstance (realId);
         }
         /// <summary>
         /// 获取装备区
@@ -305,45 +318,6 @@ namespace MirRemakeBackend.Entity {
         public void RecycleItemList (List<E_Item> itemList) {
             for (int i = 0; i < itemList.Count; i++)
                 RecycleItem (itemList[i]);
-        }
-        /// <summary>
-        /// 根据ddoList写入itemArr  
-        /// itemArr的空间需要足够  
-        /// </summary>
-        private void GetItemEntityArrByDdo (List<DDO_Item> ddoList, Dictionary<long, DDO_EquipmentInfo> eqDdoDict, E_Item[] resItemArr) {
-            ddoList.Sort ((a, b) => { return a.m_position - b.m_position; });
-            for (int i = 0; i < ddoList.Count; i++) {
-                DDO_Item itemDdo = ddoList[i];
-                short itemId = itemDdo.m_itemId;
-                long realId = itemDdo.m_realId;
-                DE_Item itemDe = m_dem.GetItemById (itemId);
-                E_Item item = m_itemFactory.GetInstance (itemDe.m_type);
-                switch (itemDe.m_type) {
-                    case ItemType.CONSUMABLE:
-                        DE_ConsumableData cDe = m_dem.GetConsumableById (itemId);
-                        ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo.m_realId, itemDdo.m_num);
-                        break;
-                    case ItemType.EQUIPMENT:
-                        DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
-                        DDO_EquipmentInfo eqDdo = eqDdoDict[realId];
-                        List<DE_GemData> inlaidGemList = new List<DE_GemData> (eqDdo.m_inlaidGemIdList.Count);
-                        for (int j = 0; j < eqDdo.m_inlaidGemIdList.Count; j++)
-                            inlaidGemList.Add (m_dem.GetGemById (eqDdo.m_inlaidGemIdList[j]));
-                        ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo.m_realId, itemDdo.m_num, eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, inlaidGemList);
-                        break;
-                    case ItemType.MATERIAL:
-                        ((E_MaterialItem) item).Reset (itemDe, itemDdo.m_realId, itemDdo.m_num);
-                        break;
-                    case ItemType.GEM:
-                        DE_GemData gDe = m_dem.GetGemById (itemId);
-                        ((E_GemItem) item).Reset (itemDe, gDe, itemDdo.m_realId, itemDdo.m_num);
-                        break;
-                    case ItemType.EMPTY:
-                        ((E_EmptyItem) item).Reset (itemDe, itemDdo.m_realId, itemDdo.m_num);
-                        break;
-                }
-                resItemArr[i] = item;
-            }
         }
     }
 }
