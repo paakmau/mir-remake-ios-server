@@ -4,12 +4,29 @@ using MirRemakeBackend.Data;
 
 namespace MirRemakeBackend.DataEntity {
     class DE_Unit {
-        public readonly IReadOnlyDictionary<ActorUnitConcreteAttributeType, int> m_concreteAttributeDict;
+        public readonly IReadOnlyDictionary<ActorUnitConcreteAttributeType, int> m_attrDict;
+        public int m_MaxHp { get { return m_attrDict[ActorUnitConcreteAttributeType.MAX_HP]; } }
+        public int m_MaxMp { get { return m_attrDict[ActorUnitConcreteAttributeType.MAX_MP]; } }
+        public int m_DeltaHpPerSecond { get { return m_attrDict[ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND]; } }
+        public int m_DeltaMpPerSecond { get { return m_attrDict[ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND]; } }
+        public int m_Attack { get { return m_attrDict[ActorUnitConcreteAttributeType.ATTACK]; } }
+        public int m_Magic { get { return m_attrDict[ActorUnitConcreteAttributeType.MAGIC]; } }
+        public int m_Defence { get { return m_attrDict[ActorUnitConcreteAttributeType.DEFENCE]; } }
+        public int m_Resistance { get { return m_attrDict[ActorUnitConcreteAttributeType.RESISTANCE]; } }
+        public int m_Tenacity { get { return m_attrDict[ActorUnitConcreteAttributeType.TENACITY]; } }
+        public int m_Speed { get { return m_attrDict[ActorUnitConcreteAttributeType.SPEED]; } }
+        public int m_CriticalRate { get { return m_attrDict[ActorUnitConcreteAttributeType.CRITICAL_RATE]; } }
+        public int m_CriticalBonus { get { return m_attrDict[ActorUnitConcreteAttributeType.CRITICAL_BONUS]; } }
+        public int m_HitRate { get { return m_attrDict[ActorUnitConcreteAttributeType.HIT_RATE]; } }
+        public int m_DodgeRate { get { return m_attrDict[ActorUnitConcreteAttributeType.DODGE_RATE]; } }
+        public int m_PhysicsVulernability { get { return m_attrDict[ActorUnitConcreteAttributeType.PHYSICS_VULERNABILITY]; } }
+        public int m_MagicVulernability { get { return m_attrDict[ActorUnitConcreteAttributeType.MAGIC_VULERNABILITY]; } }
+        public int m_DamageReduction { get { return m_attrDict[ActorUnitConcreteAttributeType.DAMAGE_REDUCTION]; } }
         private DE_Unit (ValueTuple<ActorUnitConcreteAttributeType, int>[] attrArr) {
             var conAttrDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
             foreach (var item in attrArr)
                 conAttrDict.Add (item.Item1, item.Item2);
-            m_concreteAttributeDict = conAttrDict;
+            m_attrDict = conAttrDict;
         }
         public DE_Unit (DO_Monster monster) : this (monster.m_attrArr) { }
         public DE_Unit (DO_Character charDo) : this (charDo.m_concreteAttributeArr) { }

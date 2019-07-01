@@ -1,24 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
-using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
-using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
-    /// 管理角色
+    /// 管理角色行为
     /// 技能释放, 移动等
-    /// 属性点分配
     /// </summary>
-    /// </summary>
-    class GL_Character : GameLogicBase {
-        public static GL_Character s_instance;
-        private IDDS_Character m_charDds;
-        public GL_Character (IDDS_Character charDds, INetworkService netService) : base (netService) {
-            m_charDds = charDds;
+    class GL_CharacterAction : GameLogicBase {
+        public static GL_CharacterAction s_instance;
+        public GL_CharacterAction (INetworkService netService) : base (netService) {
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () {
@@ -53,7 +46,7 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null || skill == null || targetObj == null) return;
             if (skill.m_skillLevel == 0) return;
             List<E_Unit> targetList = new List<E_Unit> ();
-            for (int i=0; i<hitTargetNetIdArr.Length; i++) {
+            for (int i = 0; i < hitTargetNetIdArr.Length; i++) {
                 var target = EM_Sight.s_instance.GetUnitVisibleByNetworkId (hitTargetNetIdArr[i]);
                 if (target == null) continue;
                 targetList.Add (target);

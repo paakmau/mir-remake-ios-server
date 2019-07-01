@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
-    /// 管理角色升级
+    /// 管理角色属性相关
+    /// 升级, 属性点分配
+    /// 装备相关属性
     /// </summary>
     class GL_CharacterAttribute : GameLogicBase {
         public static GL_CharacterAttribute s_instance;
@@ -52,6 +55,10 @@ namespace MirRemakeBackend.GameLogic {
             expGain += dead.m_Defence * 3;
             expGain += dead.m_Resistance * 3;
             NotifyGainExperience (killer, expGain);
+        }
+        public void NotifyConcreteAttributeChange (E_Character charObj, List < (ActorUnitConcreteAttributeType, int) > attrList) {
+            for (int i = 0; i < attrList.Count; i++)
+                charObj.AddEquipConAttr (attrList[i].Item1, attrList[i].Item2);
         }
     }
 }

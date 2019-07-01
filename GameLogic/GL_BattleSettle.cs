@@ -184,7 +184,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifySkillSettle (E_Unit self, E_MonsterSkill skill, IReadOnlyList<E_Unit> targetList) {
             for (int i = 0; i < targetList.Count; i++)
-                GL_Effect.s_instance.NotifyApplyEffect (skill.m_SkillEffect, skill.m_SkillId, self, targetList[i]);
+                GL_UnitBattleAttribute.s_instance.NotifyApplyEffect (skill.m_SkillEffect, skill.m_SkillId, self, targetList[i]);
         }
     }
 }

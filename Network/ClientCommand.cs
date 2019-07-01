@@ -32,7 +32,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.SET_POSITION; } }
         public void Execute (NetDataReader reader, int netId) {
             var pos = reader.GetVector2 ();
-            GL_Character.s_instance.CommandSetPosition (netId, pos);
+            GL_CharacterAction.s_instance.CommandSetPosition (netId, pos);
         }
     }
     /// <summary>
@@ -48,7 +48,7 @@ namespace MirRemakeBackend.Network {
             for (int i = 0; i < cnt; i++) {
                 hitTargetArr [i] = reader.GetInt ();
             }
-            GL_Character.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm, hitTargetArr);
+            GL_CharacterAction.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm, hitTargetArr);
         }
     }
     /// <summary>

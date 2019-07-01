@@ -7,17 +7,12 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     abstract class E_Unit {
-        class ConcreteAttribute {
+        protected class ConcreteAttribute {
             private Dictionary<ActorUnitConcreteAttributeType, int> m_attrDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
             public void Reset (IEnumerator<ActorUnitConcreteAttributeType> en) {
                 m_attrDict.Clear ();
                 while (en.MoveNext ())
                     m_attrDict[en.Current] = 0;
-            }
-            public void Reset (IEnumerator<KeyValuePair<ActorUnitConcreteAttributeType, int>> en) {
-                m_attrDict.Clear ();
-                while (en.MoveNext ())
-                    m_attrDict[en.Current.Key] = en.Current.Value;
             }
             public int GetAttr (ActorUnitConcreteAttributeType type) {
                 return m_attrDict[type];
@@ -102,101 +97,53 @@ namespace MirRemakeBackend.Entity {
         public int m_networkId;
         public abstract short m_Level { get; }
         public Vector2 m_position;
-        private ConcreteAttribute m_battleConcreteAttr = new ConcreteAttribute ();
         private Dictionary<ActorUnitSpecialAttributeType, int> m_specialAttributeDict = new Dictionary<ActorUnitSpecialAttributeType, int> ();
+        public bool m_IsFaint { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] > 0; } }
+        public bool m_IsSilent { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] > 0; } }
+        public bool m_IsImmobile { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] > 0; } }
+        private ConcreteAttribute m_battleConcreteAttr = new ConcreteAttribute ();
         public int m_curHp;
+        public bool m_IsDead { get { return m_curHp <= 0; } }
         public int m_curMp;
-        public virtual int m_MaxHp {
-            get { return m_battleConcreteAttr.m_MaxHp; }
-            set { m_battleConcreteAttr.m_MaxHp = value; }
-        }
-        public int m_MaxMp {
-            get { return m_battleConcreteAttr.m_MaxMp; }
-            set { m_battleConcreteAttr.m_MaxMp = value; }
-        }
-        public int m_DeltaHpPerSecond {
-            get { return m_battleConcreteAttr.m_DeltaHpPerSecond; }
-            set { m_battleConcreteAttr.m_DeltaHpPerSecond = value; }
-        }
-        public int m_DeltaMpPerSecond {
-            get { return m_battleConcreteAttr.m_DeltaMpPerSecond; }
-            set { m_battleConcreteAttr.m_DeltaMpPerSecond = value; }
-        }
-        public int m_Attack {
-            get { return m_battleConcreteAttr.m_Attack; }
-            set { m_battleConcreteAttr.m_Attack = value; }
-        }
-        public int m_Magic {
-            get { return m_battleConcreteAttr.m_Magic; }
-            set { m_battleConcreteAttr.m_Magic = value; }
-        }
-        public int m_Defence {
-            get { return m_battleConcreteAttr.m_Defence; }
-            set { m_battleConcreteAttr.m_Defence = value; }
-        }
-        public int m_Resistance {
-            get { return m_battleConcreteAttr.m_Resistance; }
-            set { m_battleConcreteAttr.m_Resistance = value; }
-        }
-        public int m_Tenacity {
-            get { return m_battleConcreteAttr.m_Tenacity; }
-            set { m_battleConcreteAttr.m_Tenacity = value; }
-        }
-        public int m_Speed {
-            get { return m_battleConcreteAttr.m_Speed; }
-            set { m_battleConcreteAttr.m_Speed = value; }
-        }
-        public int m_CriticalRate {
-            get { return m_battleConcreteAttr.m_CriticalRate; }
-            set { m_battleConcreteAttr.m_CriticalRate = value; }
-        }
-        public int m_CriticalBonus {
-            get { return m_battleConcreteAttr.m_CriticalBonus; }
-            set { m_battleConcreteAttr.m_CriticalBonus = value; }
-        }
-        public int m_HitRate {
-            get { return m_battleConcreteAttr.m_HitRate; }
-            set { m_battleConcreteAttr.m_HitRate = value; }
-        }
-        public int m_DodgeRate {
-            get { return m_battleConcreteAttr.m_DodgeRate; }
-            set { m_battleConcreteAttr.m_DodgeRate = value; }
-        }
-        public int m_PhysicsVulernability {
-            get { return m_battleConcreteAttr.m_PhysicsVulernability; }
-            set { m_battleConcreteAttr.m_PhysicsVulernability = value; }
-        }
-        public int m_MagicVulernability {
-            get { return m_battleConcreteAttr.m_MagicVulernability; }
-            set { m_battleConcreteAttr.m_MagicVulernability = value; }
-        }
-        public int m_DamageReduction {
-            get { return m_battleConcreteAttr.m_DamageReduction; }
-            set { m_battleConcreteAttr.m_DamageReduction = value; }
-        }
-        // 仇恨度哈希表
-        public Dictionary<int, MyTimer.Time> m_hatredRefreshDict = new Dictionary<int, MyTimer.Time> ();
+        public virtual int m_MaxHp { get { return m_battleConcreteAttr.m_MaxHp + m_unitDe.m_MaxHp; } }
+        public virtual int m_MaxMp { get { return m_battleConcreteAttr.m_MaxMp + m_unitDe.m_MaxMp; } }
+        public virtual int m_DeltaHpPerSecond { get { return m_battleConcreteAttr.m_DeltaHpPerSecond + m_unitDe.m_DeltaHpPerSecond; } }
+        public virtual int m_DeltaMpPerSecond { get { return m_battleConcreteAttr.m_DeltaMpPerSecond + m_unitDe.m_DeltaMpPerSecond; } }
+        public virtual int m_Attack { get { return m_battleConcreteAttr.m_Attack + m_unitDe.m_Attack; } }
+        public virtual int m_Magic { get { return m_battleConcreteAttr.m_Magic + m_unitDe.m_Magic; } }
+        public virtual int m_Defence { get { return m_battleConcreteAttr.m_Defence + m_unitDe.m_Defence; } }
+        public virtual int m_Resistance { get { return m_battleConcreteAttr.m_Resistance + m_unitDe.m_Resistance; } }
+        public virtual int m_Tenacity { get { return m_battleConcreteAttr.m_Tenacity + m_unitDe.m_Tenacity; } }
+        public virtual int m_Speed { get { return m_battleConcreteAttr.m_Speed + m_unitDe.m_Speed; } }
+        public virtual int m_CriticalRate { get { return m_battleConcreteAttr.m_CriticalRate + m_unitDe.m_CriticalRate; } }
+        public virtual int m_CriticalBonus { get { return m_battleConcreteAttr.m_CriticalBonus + m_unitDe.m_CriticalBonus; } }
+        public virtual int m_HitRate { get { return m_battleConcreteAttr.m_HitRate + m_unitDe.m_HitRate; } }
+        public virtual int m_DodgeRate { get { return m_battleConcreteAttr.m_DodgeRate + m_unitDe.m_DodgeRate; } }
+        public virtual int m_PhysicsVulernability { get { return m_battleConcreteAttr.m_PhysicsVulernability + m_unitDe.m_PhysicsVulernability; } }
+        public virtual int m_MagicVulernability { get { return m_battleConcreteAttr.m_MagicVulernability + m_unitDe.m_MagicVulernability; } }
+        public virtual int m_DamageReduction { get { return m_battleConcreteAttr.m_DamageReduction + m_unitDe.m_DamageReduction; } }
+        /// <summary>退出被攻击状态计时器</summary>
+        public MyTimer.Time m_isAttackedTimer;
+        /// <summary>伤害值统计</summary>
+        public Dictionary<int, int> m_netIdAndDamageDict = new Dictionary<int, int> ();
+        /// <summary>根据伤害值计算仇恨</summary>
         public int m_HighestHatredTargetNetId {
             get {
                 int res = -1;
-                MyTimer.Time resHighest = MyTimer.s_CurTime;
-                var en = m_hatredRefreshDict.GetEnumerator ();
+                int maxDamage = 0;
+                var en = m_netIdAndDamageDict.GetEnumerator ();
                 while (en.MoveNext ()) {
-                    if (en.Current.Value >= resHighest) {
+                    if (en.Current.Value >= maxDamage) {
                         res = en.Current.Key;
-                        resHighest = en.Current.Value;
+                        maxDamage = en.Current.Value;
                     }
                 }
                 return res;
             }
         }
-        public bool m_IsFaint { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] > 0; } }
-        public bool m_IsSilent { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] > 0; } }
-        public bool m_IsImmobile { get { return m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] > 0; } }
-        public bool m_IsDead { get { return m_curHp <= 0; } }
         public virtual void Reset (DE_Unit de) {
             m_unitDe = de;
-            m_battleConcreteAttr.Reset (de.m_concreteAttributeDict.Keys.GetEnumerator ());
+            m_battleConcreteAttr.Reset (de.m_attrDict.Keys.GetEnumerator ());
             Respawn ();
         }
         public void Respawn () {
@@ -244,7 +191,6 @@ namespace MirRemakeBackend.Entity {
         public int m_UpgradeExperienceInNeed { get { return m_characterDataDe.m_upgradeExperienceInNeed; } }
         public int m_experience;
         public Dictionary<CurrencyType, long> m_currencyDict = new Dictionary<CurrencyType, long> ();
-        public Dictionary<ActorUnitMainAttributeType, short> m_mainAttrPointDict = new Dictionary<ActorUnitMainAttributeType, short> ();
         public long m_VirtualCurrency {
             get { return m_currencyDict[CurrencyType.VIRTUAL]; }
             set { m_currencyDict[CurrencyType.VIRTUAL] = value; }
@@ -253,6 +199,7 @@ namespace MirRemakeBackend.Entity {
             get { return m_currencyDict[CurrencyType.CHARGE]; }
             set { m_currencyDict[CurrencyType.CHARGE] = value; }
         }
+        public Dictionary<ActorUnitMainAttributeType, short> m_mainAttrPointDict = new Dictionary<ActorUnitMainAttributeType, short> ();
         public short m_Strength {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH]; }
             set { m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH] = value; }
@@ -269,6 +216,24 @@ namespace MirRemakeBackend.Entity {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT]; }
             set { m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT] = value; }
         }
+        private ConcreteAttribute m_equipConcreteAttr = new ConcreteAttribute ();
+        public override int m_MaxHp { get { return m_equipConcreteAttr.m_MaxHp + base.m_MaxHp; } }
+        public override int m_MaxMp { get { return m_equipConcreteAttr.m_MaxMp + base.m_MaxMp; } }
+        public override int m_DeltaHpPerSecond { get { return m_equipConcreteAttr.m_DeltaHpPerSecond + base.m_DeltaHpPerSecond; } }
+        public override int m_DeltaMpPerSecond { get { return m_equipConcreteAttr.m_DeltaMpPerSecond + base.m_DeltaMpPerSecond; } }
+        public override int m_Attack { get { return m_equipConcreteAttr.m_Attack + base.m_Attack; } }
+        public override int m_Magic { get { return m_equipConcreteAttr.m_Magic + base.m_Magic; } }
+        public override int m_Defence { get { return m_equipConcreteAttr.m_Defence + base.m_Defence; } }
+        public override int m_Resistance { get { return m_equipConcreteAttr.m_Resistance + base.m_Resistance; } }
+        public override int m_Tenacity { get { return m_equipConcreteAttr.m_Tenacity + base.m_Tenacity; } }
+        public override int m_Speed { get { return m_equipConcreteAttr.m_Speed + base.m_Speed; } }
+        public override int m_CriticalRate { get { return m_equipConcreteAttr.m_CriticalRate + base.m_CriticalRate; } }
+        public override int m_CriticalBonus { get { return m_equipConcreteAttr.m_CriticalBonus + base.m_CriticalBonus; } }
+        public override int m_HitRate { get { return m_equipConcreteAttr.m_HitRate + base.m_HitRate; } }
+        public override int m_DodgeRate { get { return m_equipConcreteAttr.m_DodgeRate + base.m_DodgeRate; } }
+        public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
+        public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
+        public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
         public void Reset (int netId, int charId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
@@ -303,6 +268,9 @@ namespace MirRemakeBackend.Entity {
             m_Intelligence = intl;
             m_Agility = agl;
             m_Spirit = spr;
+        }
+        public void AddEquipConAttr (ActorUnitConcreteAttributeType type, int value) {
+            m_equipConcreteAttr.AddAttr (type, value);
         }
         public DDO_Character GetDdo () {
             var currencyArr = new (CurrencyType, long) [2];

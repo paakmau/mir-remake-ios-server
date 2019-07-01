@@ -27,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
             short posInBag = -1;
             E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
             if (item == null) return;
-            GL_Effect.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, -1, charObj, charObj);
+            GL_UnitBattleAttribute.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, -1, charObj, charObj);
             GL_Property.s_instance.NotifyLostItem (charObj, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
@@ -38,14 +38,14 @@ namespace MirRemakeBackend.GameLogic {
             short posInBag = -1;
             var eq = bag.GetItemByRealId (realId, out posInBag) as E_EquipmentItem;
             if (eq == null) return;
-            // 通知战斗属性逻辑
+            // 通知角色属性逻辑
             // 该位置原有装备卸下
             var oriEq = eqRegion.GetItemByPosition ((short) eq.m_EquipmentPosition) as E_EquipmentItem;
             if (oriEq != null) {
-                GL_UnitBattleAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, -1));
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, -1));
             }
             // 装备穿上Attr
-            GL_UnitBattleAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
+            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
             // 通知Property逻辑
             GL_Property.s_instance.NotifySwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
