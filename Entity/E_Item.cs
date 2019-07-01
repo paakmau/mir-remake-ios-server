@@ -7,27 +7,29 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.Entity {
     class E_EmptyItem : E_Item {
         public override ItemType m_Type { get { return ItemType.EMPTY; } }
+        public void Reset (DE_Item de) {
+            base.Reset (de, 0);
+        }
     }
     class E_MaterialItem : E_Item {
         public override ItemType m_Type { get { return ItemType.MATERIAL; } }
+        public new void Reset (DE_Item de, short num) {
+            base.Reset (de, num);
+        }
     }
     class E_GemItem : E_Item {
         public DE_GemData m_gemDe;
         public override ItemType m_Type { get { return ItemType.GEM; } }
-        public void Reset (DE_Item itemDe, DE_GemData gemDe, long realId, short num) {
-            base.Reset (itemDe, realId, num);
-            m_gemDe = gemDe;
-        }
-        public void Reset (DE_Item itemDe, DE_GemData gemDe, long realId) {
-            base.Reset (itemDe, realId, 1);
+        public void Reset (DE_Item itemDe, DE_GemData gemDe) {
+            base.Reset (itemDe, 1);
             m_gemDe = gemDe;
         }
     }
     class E_ConsumableItem : E_Item {
         public DE_ConsumableData m_consumableDe;
         public override ItemType m_Type { get { return ItemType.CONSUMABLE; } }
-        public void Reset (DE_Item itemDe, DE_ConsumableData consDe, long realId, short num) {
-            base.Reset (itemDe, realId, num);
+        public void Reset (DE_Item itemDe, DE_ConsumableData consDe, short num) {
+            base.Reset (itemDe, num);
             m_consumableDe = consDe;
         }
     }
@@ -40,7 +42,7 @@ namespace MirRemakeBackend.Entity {
         public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List<(ActorUnitConcreteAttributeType, int)> ();
         private List<short> m_inlaidGemIdList = new List<short> ();
         public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
-        public void ResetEquipmentInfo (long realId, byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
+        public void ResetEquipmentInfo (byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
             m_strengthenNum = strNum;
             m_enchantAttrList.Clear ();
             m_enchantAttrList.AddRange (enchantAttr);
@@ -49,8 +51,8 @@ namespace MirRemakeBackend.Entity {
             m_inlaidGemList.Clear ();
             m_inlaidGemList.AddRange (inlaidGemList);
         }
-        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, long realId) {
-            base.Reset (itemDe, realId, 1);
+        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe) {
+            base.Reset (itemDe, 1);
             m_equipmentDe = eqDe;
             m_strengthenNum = 0;
             m_enchantAttrList.Clear ();
@@ -76,10 +78,12 @@ namespace MirRemakeBackend.Entity {
         public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
         public long m_Price { get { return m_itemDe.m_price; } }
         public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
-        public void Reset (DE_Item de, long realId, short num) {
+        protected void Reset (DE_Item de, short num) {
             m_itemDe = de;
-            m_realId = realId;
             m_num = num;
+        }
+        public void ResetRealId (long realId) {
+            m_realId = realId;
         }
         /// <summary>
         /// 移除一定的数量  
