@@ -140,13 +140,25 @@ namespace MirRemakeBackend.DataEntity {
         }
     }
     class DE_Status {
+        public readonly short m_id;
         public readonly StatusType m_type;
-        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_affectAttributeList;
-        public readonly IReadOnlyList<ActorUnitSpecialAttributeType> m_specialAttributeList;
-        public DE_Status (DO_Status statusDo) {
-            m_type = statusDo.m_type;
-            m_affectAttributeList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (statusDo.m_affectAttributeArr);
-            m_specialAttributeList = new List<ActorUnitSpecialAttributeType> (statusDo.m_specialAttributeArr);
+        public readonly bool m_isBuff;
+        public DE_Status (DO_Status sDo) {
+            m_id = sDo.m_statusId;
+            m_type = sDo.m_type;
+            m_isBuff = sDo.m_isBuff;
+        }
+    }
+    class DE_ConcreteAttributeStatus {
+        IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_conAttrList;
+        public DE_ConcreteAttributeStatus (DO_ConcreteAttributeStatus casDo) {
+            m_conAttrList = new List < (ActorUnitConcreteAttributeType, int) > (casDo.m_conAttrArr);
+        }
+    }
+    class DE_SpecialAttributeStatus {
+        public readonly ActorUnitSpecialAttributeType m_spAttr;
+        public DE_SpecialAttributeStatus (DO_SpecialAttributeStatus sasDo) {
+            m_spAttr = sasDo.m_spAttr;
         }
     }
     class DE_Item {

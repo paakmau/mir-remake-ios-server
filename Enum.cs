@@ -4,49 +4,9 @@ namespace MirRemakeBackend {
         FRIEND,
         ENEMY
     }
-    /// <summary>
-    /// 技能瞄准类型
-    /// 单体或多体由SkillTargetChooser决定
-    /// </summary>
-    enum SkillAimType : byte {
-        /// <summary>指向性圆形</summary>
-        AIM_CIRCLE,
-        /// <summary>指向性自身出发的矩形</summary>
-        AIM_SELF_RECT,
-        /// <summary>指向性自身出发的扇形</summary>
-        AIM_SELF_SECTOR,
-        /// <summary>非指向性圆形</summary>
-        NOT_AIM_CIRCLE,
-        /// <summary>非指向性自身出发的矩形</summary>
-        NOT_AIM_SELF_RECT,
-        /// <summary>非指向性自身出发的圆形</summary>
-        NOT_AIM_SELF_CIRCLE,
-        /// <summary>非指向性自身出发的扇形</summary>
-        NOT_AIM_SELF_SECTOR,
-        /// <summary>指向性单体</summary>
-        AIM_ONE_TARGET
-    }
-    /// <summary>
-    /// 技能瞄准的参数类型
-    /// </summary>
-    enum SkillAimParamType : byte {
-        /// <summary>半径</summary>
-        RADIUS,
-        /// <summary>角度</summary>
-        RADIAN,
-        /// <summary>长度</summary>
-        LENGTH,
-        /// <summary>宽度</summary>
-        WIDTH
-    }
-    enum EffectType : byte {
-        PHYSICS,
-        MAGIC,
-        CONSUMABLE
-    }
-    enum StatusType : byte {
-        BUFF,
-        DEBUFF
+    public enum GenderType : byte {
+        MALE,
+        FEMALE
     }
     enum ActorUnitMainAttributeType : byte {
         STRENGTH,
@@ -93,6 +53,52 @@ namespace MirRemakeBackend {
         BOSS,
         /// <summary>最终Boss</summary>
         FINAL_BOSS
+    }
+    /// <summary>
+    /// 技能瞄准类型
+    /// 单体或多体由SkillTargetChooser决定
+    /// </summary>
+    enum SkillAimType : byte {
+        /// <summary>指向性圆形</summary>
+        AIM_CIRCLE,
+        /// <summary>指向性自身出发的矩形</summary>
+        AIM_SELF_RECT,
+        /// <summary>指向性自身出发的扇形</summary>
+        AIM_SELF_SECTOR,
+        /// <summary>非指向性圆形</summary>
+        NOT_AIM_CIRCLE,
+        /// <summary>非指向性自身出发的矩形</summary>
+        NOT_AIM_SELF_RECT,
+        /// <summary>非指向性自身出发的圆形</summary>
+        NOT_AIM_SELF_CIRCLE,
+        /// <summary>非指向性自身出发的扇形</summary>
+        NOT_AIM_SELF_SECTOR,
+        /// <summary>指向性单体</summary>
+        AIM_ONE_TARGET
+    }
+    /// <summary>
+    /// 技能瞄准的参数类型
+    /// </summary>
+    enum SkillAimParamType : byte {
+        /// <summary>半径</summary>
+        RADIUS,
+        /// <summary>角度</summary>
+        RADIAN,
+        /// <summary>长度</summary>
+        LENGTH,
+        /// <summary>宽度</summary>
+        WIDTH
+    }
+    enum EffectType : byte {
+        PHYSICS,
+        MAGIC,
+        CONSUMABLE
+    }
+    enum StatusType : byte {
+        CHANGE_HP,
+        CHANGE_MP,
+        CONCRETE_ATTRIBUTE,
+        SPECIAL_ATTRIBUTE
     }
     public enum ItemType : byte {
         EMPTY,
@@ -217,123 +223,6 @@ namespace MirRemakeBackend {
         /// 一键回收
         /// </summary>
         ONE_PRESS_RECYCLE
-    }
-    public enum DirectionType : byte {
-        NORTH = 0,
-        NORTH_EAST = 1,
-        EAST = 2,
-        SOUTH_EAST = 3,
-        SOUTH = 4,
-        SOUTH_WEST = 5,
-        WEST = 6,
-        NORTH_WEST = 7,
-        NONE = 8
-    }
-    /// <summary>
-    /// 人物状态特效类型
-    /// </summary>
-    public enum CharacterStateEffectType : byte {
-        /// <summary>
-        /// 眩晕
-        /// </summary>
-        DIZZY,
-        /// <summary>
-        /// 流血
-        /// </summary> 
-        BLEEDING,
-        /// <summary>
-        /// 中毒
-        /// </summary>
-        POISONING,
-        /// <summary>
-        /// 被点燃
-        /// </summary>
-        FIRING,
-        /// <summary>
-        /// 死亡
-        /// </summary>
-        DEATH,
-        /// <summary>
-        /// 红buff，持续回血
-        /// </summary>
-        HP_BUFF,
-        /// <summary>
-        /// 蓝buff，持续回蓝
-        /// </summary>
-        MP_BUFF,
-    }
-    /// <summary>
-    /// 文本框样式类型
-    /// </summary>
-    public enum TextBoxStyleType : byte {
-        /// <summary>
-        /// 无
-        /// </summary>
-        NONE,
-        /// <summary>
-        /// 普通的角色名
-        /// </summary>
-        CHARACTER_NAME_NORMAL,
-        /// <summary>
-        /// 高级的角色名
-        /// </summary>
-        CHARACTER_NAME_HIGH_GRADE,
-        /// <summary>
-        /// 卓越的角色名
-        /// </summary>
-        CHARACTER_NAME_BRILLIANT,
-        /// <summary>
-        /// 普通的角色称号
-        /// </summary>
-        CHARACTER_TITLE_NORMAL,
-        /// <summary>
-        /// 高级的角色称号
-        /// </summary>
-        CHARACTER_TITLE_HIGH_GRADE,
-        /// <summary>
-        /// 卓越的角色称号
-        /// </summary>
-        CHARACTER_TITLE_BRILLIANT,
-    }
-    /// <summary>
-    /// 伤害类型
-    /// </summary>
-    public enum DamageType : byte {
-        /// <summary>
-        /// 普通伤害
-        /// </summary>
-        NORMAL,
-        /// <summary>
-        /// 暴击伤害
-        /// </summary>
-        CRITICAL,
-        /// <summary>
-        /// 流血
-        /// </summary>
-        BLEEDING,
-        /// <summary>
-        /// 中毒
-        /// </summary>
-        POISONING,
-        /// <summary>
-        /// 火烧
-        /// </summary>
-        FIRING,
-    }
-    public enum GenderType : byte {
-        MALE,
-        FEMALE
-    }
-    public enum OutLookAnimType : byte {
-        STAND = 0,
-        WALK = 1,
-        HIT_0 = 2,
-        HIT_1 = 8, //暂时用不到
-        HIT_2 = 3,
-        RAISE = 4,
-        PICK = 5,
-        BEEN_HIT = 6,
-        DIE = 7,
     }
     enum MissionStatus {
         LOCKED = 0,

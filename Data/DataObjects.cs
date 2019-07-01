@@ -64,10 +64,13 @@ namespace MirRemakeBackend.Data {
     struct DO_Status {
         public short m_statusId;
         public StatusType m_type;
-        public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_affectAttributeArr;
-        public ActorUnitSpecialAttributeType[] m_specialAttributeArr;
-        public float m_delta_HP_per_second;
-        public float m_delta_MP_per_second;
+        public bool m_isBuff;
+    }
+    struct DO_ConcreteAttributeStatus {
+        public (ActorUnitConcreteAttributeType, int) [] m_conAttrArr;
+    }
+    struct DO_SpecialAttributeStatus {
+        public ActorUnitSpecialAttributeType m_spAttr;
     }
     struct DO_Item {
         public short m_itemId;
@@ -112,7 +115,7 @@ namespace MirRemakeBackend.Data {
         public int m_bonusExperience;
         public ValueTuple<short, short>[] m_bonusItemIdAndNumArr;
     }
-    struct DO_MallItem{
-        public ValueTuple<short,ValueTuple<CurrencyType,int>[]> m_itemIdAndPrice;
+    struct DO_MallItem {
+        public ValueTuple<short, ValueTuple<CurrencyType, int>[]> m_itemIdAndPrice;
     }
 }
