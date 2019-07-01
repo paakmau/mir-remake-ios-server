@@ -37,29 +37,31 @@ namespace MirRemakeBackend.Entity {
         public const int c_maxStrengthenNum = 10;
         public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
         public byte m_strengthenNum;
-        public (ActorUnitConcreteAttributeType, int) [] m_enchantAttr;
+        public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List<(ActorUnitConcreteAttributeType, int)> ();
         private List<short> m_inlaidGemIdList = new List<short> ();
         public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
-        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, long realId, short num, byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
-            base.Reset (itemDe, realId, num);
-            m_equipmentDe = eqDe;
+        public void ResetEquipmentInfo (long realId, byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
             m_strengthenNum = strNum;
-            m_enchantAttr = enchantAttr;
-            m_inlaidGemIdList = inlaidGemIdList;
-            m_inlaidGemList = inlaidGemList;
+            m_enchantAttrList.Clear ();
+            m_enchantAttrList.AddRange (enchantAttr);
+            m_inlaidGemIdList.Clear ();
+            m_inlaidGemIdList.AddRange (inlaidGemIdList);
+            m_inlaidGemList.Clear ();
+            m_inlaidGemList.AddRange (inlaidGemList);
         }
         public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, long realId) {
             base.Reset (itemDe, realId, 1);
             m_equipmentDe = eqDe;
             m_strengthenNum = 0;
-            m_enchantAttr = new (ActorUnitConcreteAttributeType, int) [0];
+            m_enchantAttrList.Clear ();
+            m_inlaidGemIdList.Clear ();
             m_inlaidGemList.Clear ();
         }
         public DDO_EquipmentInfo GetEquipmentInfoDdo (int charId) {
-            return new DDO_EquipmentInfo (m_realId, charId, m_strengthenNum, m_enchantAttr, m_inlaidGemIdList);
+            return new DDO_EquipmentInfo (m_realId, charId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
         }
         public NO_EquipmentItemInfo GetEquipmentInfoNo () {
-            return new NO_EquipmentItemInfo (m_realId, m_strengthenNum, m_enchantAttr, m_inlaidGemIdList);
+            return new NO_EquipmentItemInfo (m_realId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
         }
         public int CalcStrengthenedAttr (int value) {
             return (int) (value * (1 + m_strengthenNum / c_maxStrengthenNum * m_equipmentDe.m_attrWave));

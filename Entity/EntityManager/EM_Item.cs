@@ -12,55 +12,106 @@ namespace MirRemakeBackend.Entity {
     /// </summary>
     class EM_Item : EntityManagerBase {
         private class ItemFactory {
+            #region ItemInitializer
             private abstract class ItemInitializerBase {
                 public abstract ItemType m_ItemType { get; }
                 protected DEM_Item m_dem;
-                protected IDDS_Item m_dds;
-                public ItemInitializerBase (DEM_Item dem, IDDS_Item dds) {
+                public ItemInitializerBase (DEM_Item dem) {
                     m_dem = dem;
-                    m_dds = dds;
                 }
-                public virtual void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
-                    resItem.Reset (de, realId, num);
-                }
-                public virtual void Reset (E_Item resItem, DE_Item de, long realId, short num) {
-                    resItem.Reset (de, realId, num);
+                public virtual void Initialize (E_Item resItem, DE_Item de, short num) {
+                    resItem.Reset (de, -1, num);
                 }
             }
             private class II_Empty : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.EMPTY; } }
-                public II_Empty (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
+                public II_Empty (DEM_Item dem) : base (dem) { }
             }
             private class II_Material : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.MATERIAL; } }
-                public II_Material (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
+                public II_Material (DEM_Item dem) : base (dem) { }
             }
             private class II_Consumable : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
-                public II_Consumable (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
-                public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                public II_Consumable (DEM_Item dem) : base (dem) { }
+                public override void Initialize (E_Item resItem, DE_Item de, short num) {
                     var conDe = m_dem.GetConsumableById (de.m_id);
-                    ((E_ConsumableItem) resItem).Reset (de, conDe, realId, num);
+                    ((E_ConsumableItem) resItem).Reset (de, conDe, -1, num);
                 }
             }
             private class II_Equipment : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
-                public II_Equipment (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
-                public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                public II_Equipment (DEM_Item dem) : base (dem) { }
+                public override void Initialize (E_Item resItem, DE_Item de, short num) {
                     var eqDe = m_dem.GetEquipmentById (de.m_id);
-                    ((E_EquipmentItem) resItem).Reset (de, eqDe, realId);
+                    ((E_EquipmentItem) resItem).Reset (de, eqDe, -1);
                 }
             }
             private class II_Gem : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.GEM; } }
-                public II_Gem (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
-                public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                public II_Gem (DEM_Item dem) : base (dem) { }
+                public override void Initialize (E_Item resItem, DE_Item de, short num) {
                     var gemDe = m_dem.GetGemById (de.m_id);
-                    ((E_GemItem) resItem).Reset (de, gemDe, realId);
+                    ((E_GemItem) resItem).Reset (de, gemDe, -1);
                 }
             }
+            #endregion
+            #region ItemInfoReseter
+            private class ItemInfoDdoCollections {
+                private Dictionary<long, DDO_EquipmentInfo> m_eqInfoDict = new Dictionary<long, DDO_EquipmentInfo> ();
+                public void Reset (List<DDO_EquipmentInfo> eqDdoList) {
+                    m_eqInfoDict.Clear ();
+                    for (int i=0; i<eqDdoList.Count; i++)
+                        m_eqInfoDict.TryAdd (eqDdoList[i].m_realId, eqDdoList[i]);
+                }
+                public DDO_EquipmentInfo GetEquipment (long realId) {
+                    DDO_EquipmentInfo res;
+                    m_eqInfoDict.TryGetValue (realId, out res);
+                    return res;
+                }
+            }
+            private abstract class ItemInfoReseterBase {
+                public abstract ItemType m_ItemType { get; }
+                protected DEM_Item m_dem;
+                protected ItemInfoDdoCollections m_iidc;
+                public ItemInfoReseterBase (DEM_Item dem, ItemInfoDdoCollections iidc) {
+                    m_dem = dem;
+                    m_iidc = iidc;
+                }
+                public virtual void ResetInfo (E_Item resItem, long realId) { }
+            }
+            private class IIR_Empty : ItemInfoReseterBase {
+                public override ItemType m_ItemType { get { return ItemType.EMPTY; } }
+                public IIR_Empty (DEM_Item dem, ItemInfoDdoCollections iidc) : base (dem, iidc) { }
+            }
+            private class IIR_Material : ItemInfoReseterBase {
+                public override ItemType m_ItemType { get { return ItemType.MATERIAL; } }
+                public IIR_Material (DEM_Item dem, ItemInfoDdoCollections iidc) : base (dem, iidc) { }
+            }
+            private class IIR_Consumable : ItemInfoReseterBase {
+                public override ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
+                public IIR_Consumable (DEM_Item dem, ItemInfoDdoCollections iidc) : base (dem, iidc) { }
+            }
+            private class IIR_Equipment : ItemInfoReseterBase {
+                public override ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
+                public IIR_Equipment (DEM_Item dem, ItemInfoDdoCollections iidc) : base (dem, iidc) { }
+                public override void ResetInfo (E_Item resItem, long realId) {
+                    var eqDdo = m_iidc.GetEquipment (realId);
+                    var gemList = new List<DE_GemData> (eqDdo.m_inlaidGemIdList.Count);
+                    for (int i=0; i<eqDdo.m_inlaidGemIdList.Count; i++)
+                        gemList.Add (m_dem.GetGemById (eqDdo.m_inlaidGemIdList[i]));
+                    ((E_EquipmentItem) resItem).ResetEquipmentInfo (realId, eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, gemList);
+                }
+            }
+            private class IIR_Gem : ItemInfoReseterBase {
+                public override ItemType m_ItemType { get { return ItemType.GEM; } }
+                public IIR_Gem (DEM_Item dem, ItemInfoDdoCollections iidc) : base (dem, iidc) { }
+            }
+            #endregion
             private Dictionary<ItemType, ObjectPool> m_itemPoolDict = new Dictionary<ItemType, ObjectPool> ();
-            private Dictionary<ItemType, ItemInitializerBase> m_itemInitializer = new Dictionary<ItemType, ItemInitializerBase> ();
+            private Dictionary<ItemType, ItemInitializerBase> m_itemInitializerDict = new Dictionary<ItemType, ItemInitializerBase> ();
+            private ItemInfoDdoCollections m_itemInfoDdoCollections = new ItemInfoDdoCollections ();
+            private Dictionary<ItemType, ItemInfoReseterBase> m_itemInfoReseterDict = new Dictionary<ItemType, ItemInfoReseterBase> ();
             private const int c_emptyItemPoolSize = 100000;
             private const int c_materialItemPoolSize = 100000;
             private const int c_consumableItemPoolSize = 100000;
@@ -73,11 +124,18 @@ namespace MirRemakeBackend.Entity {
                 m_itemPoolDict.Add (ItemType.EQUIPMENT, new ObjectPool<E_EquipmentItem> (c_equipmentItemPoolSize));
                 m_itemPoolDict.Add (ItemType.GEM, new ObjectPool<E_GemItem> (c_gemItemPoolSize));
                 // 实例化所有 ItemInitializerBase 的子类
-                var ccType = typeof (ItemInitializerBase);
-                var ccImplTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && ccType.IsAssignableFrom (p));
-                foreach (var type in ccImplTypes) {
-                    ItemInitializerBase ii = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (new Object[] { dem }) as ItemInitializerBase;
-                    m_itemInitializer.Add (ii.m_ItemType, ii);
+                var baseType = typeof (ItemInitializerBase);
+                var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
+                foreach (var type in implTypes) {
+                    ItemInitializerBase impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (new Object[] { dem }) as ItemInitializerBase;
+                    m_itemInitializerDict.Add (impl.m_ItemType, impl);
+                }
+                // 实例化所有 ItemInfoReseterBase 的子类
+                baseType = typeof (ItemInfoReseterBase);
+                implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
+                foreach (var type in implTypes) {
+                    ItemInfoReseterBase impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (new Object[] { dem, m_itemInfoDdoCollections }) as ItemInfoReseterBase;
+                    m_itemInfoReseterDict.Add (impl.m_ItemType, impl);
                 }
             }
             public void RecycleItem (E_Item item) {
@@ -86,23 +144,32 @@ namespace MirRemakeBackend.Entity {
             public E_Item GetInstance (ItemType type) {
                 return m_itemPoolDict[type].GetInstanceObj () as E_Item;
             }
-            public E_Item GetAndInitInstance (DE_Item de, long realId, short num) {
-                var initializer = m_itemInitializer[de.m_type];
+            public E_Item GetAndInitInstance (DE_Item de, short num) {
+                var initializer = m_itemInitializerDict[de.m_type];
                 var res = GetInstance (de.m_type);
-                initializer.Initialize (res, de, realId, num);
+                initializer.Initialize (res, de, num);
                 return res;
             }
-            public E_Item GetAndResetInstance ()
+            public E_Item[]
+            public E_Item GetAndResetInstance (DE_Item de, long realId, short num) {
+                var initializer = m_itemInitializer[de.m_type];
+                var res = GetInstance (de.m_type);
+                initializer.Reset (res, de, realId, num);
+                // TODO: 先init再reset
+                return res;
+            }
         }
         public static EM_Item s_instance;
         private DEM_Item m_dem;
+        private IDDS_Item m_dds;
         private ItemFactory m_itemFactory;
         private Dictionary<int, E_Repository> m_bagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_storeHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
-        public EM_Item (DEM_Item dem) {
+        public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
-            m_itemFactory = new ItemFactory (m_dem);
+            m_dds = dds;
+            m_itemFactory = new ItemFactory (dem);
         }
         /// <summary>
         /// 初始化新的角色的所有物品
@@ -114,9 +181,7 @@ namespace MirRemakeBackend.Entity {
         /// <param name="allEquipmentDdoList"></param>
         public void InitCharacter (
             int netId,
-            List<DDO_Item> bagDdo,
-            List<DDO_Item> storeHouseDdo,
-            List<DDO_Item> equipedDdo,
+            int charId,
             List<DDO_EquipmentInfo> allEquipmentDdoList,
             out E_Repository bag,
             out E_Repository storeHouse,
@@ -129,6 +194,9 @@ namespace MirRemakeBackend.Entity {
                 eqRegion = GetEquiped (netId);
                 return;
             }
+            var bagDdo = m_dds.GetBagByCharacterId (charId);
+            var storeHouseDdo = m_dds.GetStoreHouseByCharacterId (charId);
+            var equipedDdo = m_dds.GetEquipmentRegionByCharacterId (charId);
 
             // 索引角色的所有装备
             Dictionary<long, DDO_EquipmentInfo> eqDdoDict = new Dictionary<long, DDO_EquipmentInfo> ();
@@ -182,13 +250,13 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
                 var idAndNum = itemIdAndNumList[i];
                 DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
-                E_Item item = m_itemFactory.GetAndInitInstance (itemDe, -1, idAndNum.Item2);
+                E_Item item = m_itemFactory.GetAndInitInstance (itemDe, idAndNum.Item2);
                 res.Add (item);
             }
             return res;
         }
         public E_EmptyItem GetEmptyInstance (long realId) {
-            return (E_EmptyItem) m_itemFactory.GetAndInitInstance (m_dem.GetEmptyItem (), realId, 0);
+            return (E_EmptyItem) m_itemFactory.GetAndResetInstance (m_dem.GetEmptyItem (), realId, 0);
         }
         /// <summary>
         /// 获取装备区

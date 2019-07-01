@@ -37,11 +37,11 @@ namespace MirRemakeBackend.DynamicData {
         /// 镶嵌的宝石Id列表
         /// </summary>
         public List<short> m_inlaidGemIdList;
-        public DDO_EquipmentInfo (long realId, int charId, byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIds) {
+        public DDO_EquipmentInfo (long realId, int charId, byte strNum, List < (ActorUnitConcreteAttributeType, int) > enchantAttr, List<short> inlaidGemIds) {
             m_realId = realId;
             m_characterId = charId;
             m_strengthNum = strNum;
-            m_enchantAttr = enchantAttr;
+            m_enchantAttr = enchantAttr.ToArray ();
             m_inlaidGemIdList = inlaidGemIds;
         }
     }
