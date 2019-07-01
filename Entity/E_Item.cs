@@ -10,17 +10,12 @@ namespace MirRemakeBackend.Entity {
     }
     class E_MaterialItem : E_Item {
         public override ItemType m_Type { get { return ItemType.MATERIAL; } }
-        public new void Reset (DE_Item de, DDO_Item ddo) {
-            base.Reset (de, ddo);
-        }
-        public new void Reset (DE_Item de, long realId, short num) {
-            base.Reset (de, realId, num);
-        }
     }
     class E_GemItem : E_Item {
         public DE_GemData m_gemDe;
-        public void Reset (DE_Item itemDe, DE_GemData gemDe, DDO_Item ddo) {
-            base.Reset (itemDe, ddo);
+        public override ItemType m_Type { get { return ItemType.GEM; } }
+        public void Reset (DE_Item itemDe, DE_GemData gemDe, long realId, short num) {
+            base.Reset (itemDe, realId, num);
             m_gemDe = gemDe;
         }
         public void Reset (DE_Item itemDe, DE_GemData gemDe, long realId) {
@@ -29,37 +24,36 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_ConsumableItem : E_Item {
-        public override ItemType m_Type { get { return ItemType.CONSUMABLE; } }
         public DE_ConsumableData m_consumableDe;
-        public void Reset (DE_Item itemDe, DE_ConsumableData consDe, DDO_Item itemDdo) {
-            base.Reset (itemDe, itemDdo);
-            m_consumableDe = consDe;
-        }
+        public override ItemType m_Type { get { return ItemType.CONSUMABLE; } }
         public void Reset (DE_Item itemDe, DE_ConsumableData consDe, long realId, short num) {
             base.Reset (itemDe, realId, num);
             m_consumableDe = consDe;
         }
     }
     class E_EquipmentItem : E_Item {
-        public const int c_maxStrengthenNum = 10;
         public DE_EquipmentData m_equipmentDe;
+        public override ItemType m_Type { get { return ItemType.EQUIPMENT; } }
+        public const int c_maxStrengthenNum = 10;
         public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
         public byte m_strengthenNum;
         public (ActorUnitConcreteAttributeType, int) [] m_enchantAttr;
-        public List<short> m_inlaidGemIdList;
-        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, DDO_Item itemDdo, DDO_EquipmentInfo equipDdo) {
-            base.Reset (itemDe, itemDdo);
+        private List<short> m_inlaidGemIdList = new List<short> ();
+        public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
+        public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, long realId, short num, byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
+            base.Reset (itemDe, realId, num);
             m_equipmentDe = eqDe;
-            m_strengthenNum = equipDdo.m_strengthNum;
-            m_enchantAttr = equipDdo.m_enchantAttr;
-            m_inlaidGemIdList = equipDdo.m_inlaidGemIdList;
+            m_strengthenNum = strNum;
+            m_enchantAttr = enchantAttr;
+            m_inlaidGemIdList = inlaidGemIdList;
+            m_inlaidGemList = inlaidGemList;
         }
         public void Reset (DE_Item itemDe, DE_EquipmentData eqDe, long realId) {
             base.Reset (itemDe, realId, 1);
             m_equipmentDe = eqDe;
             m_strengthenNum = 0;
             m_enchantAttr = new (ActorUnitConcreteAttributeType, int) [0];
-            m_inlaidGemIdList = new List<short> ();
+            m_inlaidGemList.Clear ();
         }
         public DDO_EquipmentInfo GetEquipmentInfoDdo (int charId) {
             return new DDO_EquipmentInfo (m_realId, charId, m_strengthenNum, m_enchantAttr, m_inlaidGemIdList);
@@ -76,7 +70,7 @@ namespace MirRemakeBackend.Entity {
         public DE_Item m_itemDe;
         public short m_num;
         public short m_ItemId { get { return m_itemDe.m_id; } }
-        public virtual ItemType m_Type { get; }
+        public abstract ItemType m_Type { get; }
         public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
         public long m_Price { get { return m_itemDe.m_price; } }
         public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
@@ -84,9 +78,6 @@ namespace MirRemakeBackend.Entity {
             m_itemDe = de;
             m_realId = realId;
             m_num = num;
-        }
-        public void Reset (DE_Item de, DDO_Item ddo) {
-            Reset (de, ddo.m_realId, ddo.m_num);
         }
         /// <summary>
         /// 移除一定的数量  

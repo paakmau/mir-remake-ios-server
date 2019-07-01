@@ -15,24 +15,29 @@ namespace MirRemakeBackend.Entity {
             private abstract class ItemInitializerBase {
                 public abstract ItemType m_ItemType { get; }
                 protected DEM_Item m_dem;
-                public ItemInitializerBase (DEM_Item dem) {
+                protected IDDS_Item m_dds;
+                public ItemInitializerBase (DEM_Item dem, IDDS_Item dds) {
                     m_dem = dem;
+                    m_dds = dds;
                 }
                 public virtual void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
+                    resItem.Reset (de, realId, num);
+                }
+                public virtual void Reset (E_Item resItem, DE_Item de, long realId, short num) {
                     resItem.Reset (de, realId, num);
                 }
             }
             private class II_Empty : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.EMPTY; } }
-                public II_Empty (DEM_Item dem) : base (dem) { }
+                public II_Empty (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
             }
             private class II_Material : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.MATERIAL; } }
-                public II_Material (DEM_Item dem) : base (dem) { }
+                public II_Material (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
             }
             private class II_Consumable : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
-                public II_Consumable (DEM_Item dem) : base (dem) { }
+                public II_Consumable (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
                 public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
                     var conDe = m_dem.GetConsumableById (de.m_id);
                     ((E_ConsumableItem) resItem).Reset (de, conDe, realId, num);
@@ -40,7 +45,7 @@ namespace MirRemakeBackend.Entity {
             }
             private class II_Equipment : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
-                public II_Equipment (DEM_Item dem) : base (dem) { }
+                public II_Equipment (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
                 public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
                     var eqDe = m_dem.GetEquipmentById (de.m_id);
                     ((E_EquipmentItem) resItem).Reset (de, eqDe, realId);
@@ -48,7 +53,7 @@ namespace MirRemakeBackend.Entity {
             }
             private class II_Gem : ItemInitializerBase {
                 public override ItemType m_ItemType { get { return ItemType.GEM; } }
-                public II_Gem (DEM_Item dem) : base (dem) { }
+                public II_Gem (DEM_Item dem, IDDS_Item dds) : base (dem, dds) { }
                 public override void Initialize (E_Item resItem, DE_Item de, long realId, short num) {
                     var gemDe = m_dem.GetGemById (de.m_id);
                     ((E_GemItem) resItem).Reset (de, gemDe, realId);
@@ -81,12 +86,13 @@ namespace MirRemakeBackend.Entity {
             public E_Item GetInstance (ItemType type) {
                 return m_itemPoolDict[type].GetInstanceObj () as E_Item;
             }
-            public E_Item GetAndResetInitInstance (DE_Item de, long realId, short num) {
+            public E_Item GetAndInitInstance (DE_Item de, long realId, short num) {
                 var initializer = m_itemInitializer[de.m_type];
                 var res = GetInstance (de.m_type);
                 initializer.Initialize (res, de, realId, num);
                 return res;
             }
+            public E_Item GetAndResetInstance ()
         }
         public static EM_Item s_instance;
         private DEM_Item m_dem;
@@ -176,16 +182,13 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
                 var idAndNum = itemIdAndNumList[i];
                 DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
-                E_Item item = m_itemFactory.GetAndResetInitInstance (itemDe, -1, idAndNum.Item2);
+                E_Item item = m_itemFactory.GetAndInitInstance (itemDe, -1, idAndNum.Item2);
                 res.Add (item);
             }
             return res;
         }
         public E_EmptyItem GetEmptyInstance (long realId) {
-            return (E_EmptyItem) m_itemFactory.GetAndResetInitInstance (m_dem.GetEmptyItem (), realId, 0);
-        }
-        public DE_GemData GetGemById (short itemId) {
-            return m_dem.GetGemById (itemId);
+            return (E_EmptyItem) m_itemFactory.GetAndInitInstance (m_dem.GetEmptyItem (), realId, 0);
         }
         /// <summary>
         /// 获取装备区
@@ -237,22 +240,25 @@ namespace MirRemakeBackend.Entity {
                 switch (itemDe.m_type) {
                     case ItemType.CONSUMABLE:
                         DE_ConsumableData cDe = m_dem.GetConsumableById (itemId);
-                        ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo);
+                        ((E_ConsumableItem) item).Reset (itemDe, cDe, itemDdo.m_realId, itemDdo.m_num);
                         break;
                     case ItemType.EQUIPMENT:
                         DE_EquipmentData eqDe = m_dem.GetEquipmentById (itemId);
                         DDO_EquipmentInfo eqDdo = eqDdoDict[realId];
-                        ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo, eqDdo);
+                        List<DE_GemData> inlaidGemList = new List<DE_GemData> (eqDdo.m_inlaidGemIdList.Count);
+                        for (int j = 0; j < eqDdo.m_inlaidGemIdList.Count; j++)
+                            inlaidGemList.Add (m_dem.GetGemById (eqDdo.m_inlaidGemIdList[j]));
+                        ((E_EquipmentItem) item).Reset (itemDe, eqDe, itemDdo.m_realId, itemDdo.m_num, eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, inlaidGemList);
                         break;
                     case ItemType.MATERIAL:
-                        ((E_MaterialItem) item).Reset (itemDe, itemDdo);
+                        ((E_MaterialItem) item).Reset (itemDe, itemDdo.m_realId, itemDdo.m_num);
                         break;
                     case ItemType.GEM:
                         DE_GemData gDe = m_dem.GetGemById (itemId);
-                        ((E_GemItem) item).Reset (itemDe, gDe, itemDdo);
+                        ((E_GemItem) item).Reset (itemDe, gDe, itemDdo.m_realId, itemDdo.m_num);
                         break;
                     case ItemType.EMPTY:
-                        ((E_EmptyItem) item).Reset (itemDe, itemDdo);
+                        ((E_EmptyItem) item).Reset (itemDe, itemDdo.m_realId, itemDdo.m_num);
                         break;
                 }
                 resItemArr[i] = item;
