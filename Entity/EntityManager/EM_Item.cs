@@ -252,14 +252,16 @@ namespace MirRemakeBackend.Entity {
             #endregion
             private DEM_Item m_dem;
             private IDDS_Item m_dds;
+            private ItemFactory m_fact;
             private Dictionary<ItemType, IItemInserter> m_inserterDict = new Dictionary<ItemType, IItemInserter> ();
             private Dictionary<ItemType, IItemSaver> m_saverDict = new Dictionary<ItemType, IItemSaver> ();
             private Dictionary<ItemType, IItemDeleter> m_deleterDict = new Dictionary<ItemType, IItemDeleter> ();
             private ItemInfoDdoCollections m_itemInfoDdoCollections = new ItemInfoDdoCollections ();
             private Dictionary<ItemType, IItemInfoReseter> m_itemInfoReseterDict = new Dictionary<ItemType, IItemInfoReseter> ();
-            public ItemDynamicDataHelper (DEM_Item dem, IDDS_Item dds) {
+            public ItemDynamicDataHelper (DEM_Item dem, IDDS_Item dds, ItemFactory fact) {
                 m_dem = dem;
                 m_dds = dds;
+                m_fact = fact;
                 // 实例化所有 IItemInserter 的子类
                 var baseType = typeof (IItemInserter);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
@@ -299,7 +301,7 @@ namespace MirRemakeBackend.Entity {
             /// <summary>
             /// 在加载角色初始信息时, 获得物品实例, 有 RealId 与 ItemInfo
             /// </summary>
-            public bool GetAndResetInstanceArr (int charId, out E_Item[] resBag, out E_Item[] resStoreHouse, out E_Item[] resEquiped) {
+            public bool GetAndResetCharacterItemInstance (int charId, out E_Item[] resBag, out E_Item[] resStoreHouse, out E_Item[] resEquiped) {
                 resBag = null;
                 resStoreHouse = null;
                 resEquiped = null;
@@ -307,31 +309,41 @@ namespace MirRemakeBackend.Entity {
                 var bagList = m_dds.GetBagByCharacterId (charId);
                 var storeHouseList = m_dds.GetStoreHouseByCharacterId (charId);
                 var equipedList = m_dds.GetEquipmentRegionByCharacterId (charId);
-                if (eqInfoList == null || bagList == null || storeHouseList == null || )
+                if (eqInfoList == null || bagList == null || storeHouseList == null || equipedList == null)
+                    return false;
+                // 排序
+                bagList.Sort ((a, b) => { return a.m_position - b.m_position; });
+                storeHouseList.Sort ((a, b) => { return a.m_position - b.m_position; });
+                equipedList.Sort ((a, b) => { return a.m_position - b.m_position; });
+                // 获取实例
                 m_itemInfoDdoCollections.Reset (eqInfoList);
+                resBag = GetAndResetInstanceArr (bagList, m_itemInfoDdoCollections);
+                resStoreHouse = GetAndResetInstanceArr (storeHouseList, m_itemInfoDdoCollections);
+                resEquiped = GetAndResetInstanceArr (equipedList, m_itemInfoDdoCollections);
+                return true;
+            }
+            private E_Item[] GetAndResetInstanceArr (List<DDO_Item> itemList, ItemInfoDdoCollections iidc) {
+                E_Item[] res = new E_Item[itemList.Count];
                 for (int i = 0; i < itemList.Count; i++) {
                     var de = m_dem.GetItemById (itemList[i].m_itemId);
-                    var initlzer = m_itemInitializerDict[de.m_type];
-                    var infoReseter = m_itemInfoReseterDict[de.m_type];
-                    var itemObj = GetInstance (de.m_type);
-                    initlzer.Initialize (m_dem, itemObj, de, itemList[i].m_num);
-                    infoReseter.ResetInfo (m_dem, m_itemInfoDdoCollections, itemList[i].m_realId, itemObj);
+                    var itemObj = m_fact.GetAndInitInstance (de, itemList[i].m_num);
+                    m_itemInfoReseterDict[de.m_type].ResetInfo (m_dem, iidc, itemList[i].m_realId, itemObj);
                     res[i] = itemObj;
                 }
-                return true;
+                return res;
             }
         }
         public static EM_Item s_instance;
         private DEM_Item m_dem;
-        private IDDS_Item m_dds;
         private ItemFactory m_itemFactory;
+        private ItemDynamicDataHelper m_ddh;
         private Dictionary<int, E_Repository> m_bagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_storeHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
-            m_dds = dds;
             m_itemFactory = new ItemFactory (dem);
+            m_ddh = new ItemDynamicDataHelper (dem, dds, m_itemFactory);
         }
         /// <summary>
         /// 初始化新的角色的所有物品
@@ -356,23 +368,13 @@ namespace MirRemakeBackend.Entity {
                 eqRegion = GetEquiped (netId);
                 return;
             }
-            var bagDdoList = m_dds.GetBagByCharacterId (charId);
-            var storeHouseDdoList = m_dds.GetStoreHouseByCharacterId (charId);
-            var equipedDdoList = m_dds.GetEquipmentRegionByCharacterId (charId);
-            var eqInfoDdoList = m_dds.GetAllEquipmentByCharacterId (charId);
-
             // 初始化背包, 仓库, 装备区
             bag = s_entityPool.m_repositoryPool.GetInstance ();
             storeHouse = s_entityPool.m_repositoryPool.GetInstance ();
             eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
 
-            bagDdoList.Sort ((a, b) => { return a.m_position - b.m_position; });
-            storeHouseDdoList.Sort ((a, b) => { return a.m_position - b.m_position; });
-            equipedDdoList.Sort ((a, b) => { return a.m_position - b.m_position; });
-
-            E_Item[] itemInBag = m_itemFactory.GetAndResetInstanceArr (bagDdoList, eqInfoDdoList);
-            E_Item[] itemInStoreHouse = m_itemFactory.GetAndResetInstanceArr (storeHouseDdoList, eqInfoDdoList);
-            E_Item[] itemEquiped = m_itemFactory.GetAndResetInstanceArr (equipedDdoList, eqInfoDdoList);
+            E_Item[] itemInBag, itemInStoreHouse, itemEquiped;
+            m_ddh.GetAndResetCharacterItemInstance (charId, out itemInBag, out itemInStoreHouse, out itemEquiped);
             bag.Reset (ItemPlace.BAG, itemInBag);
             storeHouse.Reset (ItemPlace.STORE_HOUSE, itemInStoreHouse);
             eqRegion.Reset (ItemPlace.EQUIPMENT_REGION, itemEquiped);
@@ -451,11 +453,11 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < itemList.Count; i++)
                 RecycleItem (itemList[i]);
         }
-        public void SaveItem (E_Item item) {
-            m_dds
+        public void SaveItem (E_Item item, int charId, ItemPlace ip, short pos) {
+            m_ddh.Save (item, charId, ip, pos);
         }
-        public void DeleteItem (long realId) {
-
+        public void DeleteItem (E_Item item) {
+            m_ddh.Delete (item);
         }
     }
 }
