@@ -10,14 +10,15 @@ namespace MirRemakeBackend.Entity {
     class EM_Mission : EntityManagerBase {
         public static EM_Mission s_instance;
         private DEM_Mission m_dem;
+        private IDDS_Mission m_dds;
         /// <summary>已接任务</summary>
         private Dictionary<int, Dictionary<short, E_Mission>> m_acceptedMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         /// <summary>可接任务</summary>
         private Dictionary<int, HashSet<short>> m_acceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
-        public EM_Mission (DEM_Mission dem) { m_dem = dem; }
-        public void InitCharacter (int netId, int charId, List<DDO_Mission> ddoList, out List<short> resAcceptedMisIdList, out List<E_Mission> resAcceptedMisObjList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
+        public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_dds = dds; }
+        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisObjList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
