@@ -87,15 +87,11 @@ namespace MirRemakeBackend.Entity {
         }
         /// <summary>
         /// 存储一个Item  
-        /// </summary>
-        /// <param name="posAndChangedItemList">
-        /// 背包内的因为插入而被修改的物品 (pos, obj) 列表
-        /// </param>
-        /// <returns>
+        /// 背包内的因为插入而被修改的物品 (pos, obj) 列表  
         /// 若item占用了一个槽位返回 pos  
         /// 若完全堆叠返回 -1  
         /// 未能完全存入返回 -2  
-        /// </returns>
+        /// </summary>
         public short AutoStoreItem (E_Item item, out List < (short, E_Item) > posAndChangedItemList, out int storedNum, out E_EmptyItem oriEmptySlot) {
             posAndChangedItemList = new List < (short, E_Item) > ();
             storedNum = 0;

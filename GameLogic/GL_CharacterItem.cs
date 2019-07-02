@@ -52,6 +52,14 @@ namespace MirRemakeBackend.GameLogic {
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
             NotifySwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
+        /// <summary>
+        /// 失去确定位置的物品
+        /// </summary>
+        /// <param name="charObj"></param>
+        /// <param name="item"></param>
+        /// <param name="num"></param>
+        /// <param name="pos"></param>
+        /// <param name="repo"></param>
         public void NotifyLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
@@ -60,12 +68,10 @@ namespace MirRemakeBackend.GameLogic {
             // 实例 与 数据
             if (runOut) {
                 // 物品消失
-                var empty = EM_Item.s_instance.GetEmptyInstance (realId);
+                var empty = EM_Item.s_instance.ItemLose (item, charObj.m_characterId, ItemPlace.BAG, pos);
                 repo.RemoveItemByRealId (empty);
-                m_itemDds.DeleteItemByRealId (item.m_realId);
-                EM_Item.s_instance.RecycleItem (item);
             } else
-                m_itemDds.UpdateItem (item.GetItemDdo (charObj.m_characterId, ItemPlace.BAG, pos));
+                EM_Item.s_instance.ItemUpdate (item, charObj.m_characterId, ItemPlace.BAG, pos);
             // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                 charObj.m_networkId, new List<long> { realId }, new List<short> { curNum }));
@@ -85,14 +91,12 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < itemList.Count; i++) {
                 var realStoreNum = 0;
                 List < (short, E_Item) > changedItemList;
-                E_EmptyItem oriStoreSlot;
-                short storePos = bag.AutoStoreItem (itemList[i], out changedItemList, out realStoreNum, out oriStoreSlot);
+                E_EmptyItem oriBagSlot;
+                short storePos = bag.AutoStoreItem (itemList[i], out changedItemList, out realStoreNum, out oriBagSlot);
                 // 处理原有物品的堆叠
                 // dds 更新
                 for (int j = 0; j < changedItemList.Count; j++)
-                    m_itemDds.UpdateItem (
-                        changedItemList[j].Item2.GetItemDdo (
-                            charObj.m_characterId, ItemPlace.BAG, changedItemList[j].Item1));
+                    EM_Item.s_instance.ItemUpdate (changedItemList[j].Item2, charObj.m_characterId, ItemPlace.BAG, changedItemList[j].Item1);
                 // client
                 List<long> changedRealIdList = new List<long> (changedItemList.Count);
                 List<short> changedPosList = new List<short> (changedItemList.Count);
@@ -107,27 +111,21 @@ namespace MirRemakeBackend.GameLogic {
                 // 若该物品单独占有一格
                 if (storePos != -1 && storePos != -2) {
                     // 回收原有空插槽
-                    EM_Item.s_instance.RecycleItem (oriStoreSlot);
-                    // 基础信息 dds 与 client
-                    m_itemDds.UpdateItem (itemList[i].GetItemDdo (charObj.m_characterId, ItemPlace.BAG, storePos));
+                    EM_Item.s_instance.ItemGain (oriBagSlot, itemList[i], charObj.m_characterId, ItemPlace.BAG, storePos);
+                    // 基础信息 client
                     m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
                         charObj.m_networkId,
                         new List<NO_Item> { itemList[i].GetItemNo () },
                         new List<ItemPlace> { ItemPlace.BAG },
                         new List<short> { storePos }));
-                    // 附加信息 (装备等) dds 与 client TODO: 考虑改模式
-                    switch (itemList[i].m_Type) {
-                        case ItemType.EQUIPMENT:
-                            m_itemDds.UpdateEquipmentInfo (((E_EquipmentItem) itemList[i]).GetEquipmentInfoDdo (charObj.m_characterId));
-                            m_networkService.SendServerCommand (
-                                SC_ApplySelfUpdateEquipment.Instance (
-                                    charObj.m_networkId, itemList[i].m_realId,
-                                    ((E_EquipmentItem) itemList[i]).GetEquipmentInfoNo ()));
-                            break;
-                    }
+                    // 附加信息 (装备等) client TODO: 考虑改模式
+                    if (itemList[i].m_Type == ItemType.EQUIPMENT)
+                        m_networkService.SendServerCommand (
+                            SC_ApplySelfUpdateEquipment.Instance (
+                                charObj.m_networkId, itemList[i].m_realId,
+                                ((E_EquipmentItem) itemList[i]).GetEquipmentInfoNo ()));
                 }
-
-                // log
+                // 通知 log
                 GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemList[i].m_ItemId, realStoreNum);
             }
         }
