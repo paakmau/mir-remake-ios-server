@@ -53,13 +53,13 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < attrList.Count; i++)
                 res.Add ((attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2)));
             // 处理附魔
-            var enchantAttr = eqObj.m_enchantAttr;
+            var enchantAttr = eqObj.m_enchantAttrList;
             foreach (var attr in enchantAttr)
                 res.Add ((attr.Item1, k * attr.Item2));
             // 处理镶嵌
-            var gemIdList = eqObj.m_inlaidGemIdList;
-            for (int i = 0; i < gemIdList.Count; i++) {
-                var gemDe = EM_Item.s_instance.GetGemById (gemIdList[i]);
+            var gemList = eqObj.m_inlaidGemList;
+            for (int i = 0; i < gemList.Count; i++) {
+                var gemDe = gemList[i];
                 for (int j = 0; j < gemDe.m_attrList.Count; j++)
                     res.Add ((gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2));
             }
