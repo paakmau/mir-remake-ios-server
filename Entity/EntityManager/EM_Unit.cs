@@ -12,10 +12,12 @@ namespace MirRemakeBackend.Entity {
     class EM_Unit : EntityManagerBase {
         public static EM_Unit s_instance;
         private DEM_Unit m_dem;
+        private IDDS_Character m_dds;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
-        public EM_Unit (DEM_Unit dem) {
+        public EM_Unit (DEM_Unit dem, IDDS_Character dds) {
             m_dem = dem;
+            m_dds = dds;
         }
         public int GetMonsterNum () {
             return m_dem.GetMonsterNum ();
@@ -86,6 +88,9 @@ namespace MirRemakeBackend.Entity {
         }
         public Dictionary<int, E_Monster>.Enumerator GetMonsterEn () {
             return m_networkIdAndMonsterDict.GetEnumerator ();
+        }
+        public void SaveCharacter (E_Character charObj) {
+            m_dds.UpdateCharacter (charObj.GetDdo ());
         }
     }
 }

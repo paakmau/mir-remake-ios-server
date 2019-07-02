@@ -31,7 +31,6 @@ namespace MirRemakeBackend.Entity {
     }
     class E_ConcreteAttributeStatus : E_Status {
         public override StatusType m_Type { get { return StatusType.CONCRETE_ATTRIBUTE; } }
-        public 
         public void Reset (DE_Status statusDe, DE_ConcreteAttributeStatus casDe, float value, float durationTime, int casterNetId) {
             base.Reset (statusDe, value, durationTime, casterNetId);
         }

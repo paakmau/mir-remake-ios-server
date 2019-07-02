@@ -35,8 +35,8 @@ namespace MirRemakeBackend.GameLogic {
             if (item == null)
                 return;
             var virCy = (int) (item.m_Price * num * 0.8f);
-            GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
-            GL_Property.s_instance.NotifyLostItem (charObj, item, num, pos, bag);
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
+            GL_CharacterItem.s_instance.NotifyLostItem (charObj, item, num, pos, bag);
         }
         public void CommandApplyBuyItemIntoBag (int netId, short itemId, short num) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -44,8 +44,8 @@ namespace MirRemakeBackend.GameLogic {
                 return;
             DE_Item itemDe = m_itemDem.GetItemById (itemId);
             var virCy = itemDe.m_price * num;
-            GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -virCy);
-            GL_Property.s_instance.NotifyGainItem (charObj, new List < (short, short) > {
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -virCy);
+            GL_CharacterItem.s_instance.NotifyGainItem (charObj, new List < (short, short) > {
                 (itemId, num)
             });
         }

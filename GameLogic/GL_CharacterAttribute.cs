@@ -25,7 +25,7 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             charObj.DistributePoints (str, intl, agl, spr);
             // dds 与 client
-            m_charDds.UpdateCharacter (charObj.GetDdo ());
+            EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
                 netId,
                 charObj.m_Strength,
@@ -34,13 +34,18 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_Spirit));
             // TODO: 属性加点
         }
+        public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            NotifyUpdateCurrency (charObj, type, dC);
+        }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)
                 return;
             charObj.m_experience += exp;
             charObj.TryLevelUp ();
             // dds 与 client
-            m_charDds.UpdateCharacter (charObj.GetDdo ());
+            EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
@@ -56,6 +61,14 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyConcreteAttributeChange (E_Character charObj, List < (ActorUnitConcreteAttributeType, int) > attrList) {
             for (int i = 0; i < attrList.Count; i++)
                 charObj.AddEquipConAttr (attrList[i].Item1, attrList[i].Item2);
+        }
+        public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
+            // 实例 与 数据
+            charObj.m_currencyDict[type] += dC;
+            EM_Unit.s_instance.SaveCharacter (charObj);
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
+                charObj.m_networkId, charObj.m_VirtualCurrency, charObj.m_ChargeCurrency));
         }
     }
 }
