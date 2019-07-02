@@ -78,6 +78,11 @@ namespace MirRemakeBackend.GameLogic {
                 }
                 GetNearestUnits (basePoint, unitNum, resList);
             }
+
+            //TODO:扇形范围判定
+            protected void GetActorUnitsInSectorRange(E_Unit self, Vector2 basePoint, Vector2 dir,float radius,float radian,CampType targetCamp,byte unitNum,List<E_Unit> resList){
+                
+            }
             public virtual void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parm) {
                 m_targetCamp = targetCamp;
                 m_targetNumber = targetNum;
@@ -104,6 +109,65 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
         }
+        ///<summary>
+        /// 指向性单目标
+        /// </summary>
+        private class ETC_AimOneTarget:EffectTargetChooserBase{
+            public override SkillAimType m_TargetAimType{get {return SkillAimType.AIM_ONE_TARGET;}}
+            public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
+                base.Reset (targetCamp, targetNum, parmList);
+            }
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
+                resList.Add(parm.m_target);
+            }
+        }
+        ///<summary>
+        /// 指向性 自身出发 矩形
+        /// </summary>
+        private class ETC_AimSelfRect:EffectTargetChooserBase{
+            public override SkillAimType m_TargetAimType{get {return SkillAimType.AIM_SELF_RECT;}}
+            //长度
+            public float m_length;
+            // 伤害宽度
+            public float m_width;
+            public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
+                base.Reset (targetCamp, targetNum, parmList);
+                TryGetAimParamValue (parmList, SkillAimParamType.LENGTH, out m_length);
+                TryGetAimParamValue (parmList, SkillAimParamType.WIDTH, out m_width);
+            }
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
+                if (m_targetNumber == 1) {
+                    resList.Clear ();
+                    resList.Add (parm.m_target);
+                } else {
+                    GetActorUnitsInRectRange (self, self.m_position, parm.m_direction, m_length, m_width, m_targetCamp, m_targetNumber, resList);
+                } 
+            }
+        }
+        
+        ///<summary>
+        /// 指向性 自身出发 扇形
+        /// </summary>
+        private class ETC_AimSelfSector:EffectTargetChooserBase{
+            public override SkillAimType m_TargetAimType{get {return SkillAimType.AIM_SELF_SECTOR;}}
+            //半径
+            public float m_radius;
+            // 角度
+            public float m_radian;
+            public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
+                base.Reset (targetCamp, targetNum, parmList);
+                TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
+                TryGetAimParamValue (parmList, SkillAimParamType.RADIAN, out m_radian);
+            }
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
+                if (m_targetNumber == 1) {
+                    resList.Clear ();
+                    resList.Add (parm.m_target);
+                } else {
+                    GetActorUnitsInRectRange (self, self.m_position, parm.m_direction, m_radius, m_radian, m_targetCamp, m_targetNumber, resList);
+                } 
+            }
+        }
         /// <summary>
         /// 非指向性自身出发圆形溅射
         /// </summary>
@@ -119,6 +183,8 @@ namespace MirRemakeBackend.GameLogic {
                 GetActorUnitsInCircleRange (self, self.m_position, m_radius, m_targetCamp, m_targetNumber, resList);
             }
         }
+        
+        
         /// <summary>
         /// 非指向性圆形溅射
         /// </summary>
