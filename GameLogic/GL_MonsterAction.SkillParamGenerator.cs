@@ -24,5 +24,48 @@ namespace MirRemakeBackend.GameLogic
                 return new SkillParam (m_AimType, aimedTarget, Vector2.Zero, Vector2.Zero);
             }
         }
+        class SPG_AimOneTarget : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.AIM_ONE_TARGET;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,Vector2.Zero,Vector2.Zero);
+            }
+        }
+        class SPG_AimSelfRect : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.AIM_SELF_RECT;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,Vector2.Zero,Vector2.Zero);
+            }
+        }
+        class SPG_AimSelfSector : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.AIM_SELF_SECTOR;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,Vector2.Zero,Vector2.Zero);
+            }
+        }
+        class SPG_NotAimCircle : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.NOT_AIM_CIRCLE;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,Vector2.Zero,aimedTarget.m_position);
+            }
+        }
+        class SPG_NotAimSelfCircle : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.NOT_AIM_SELF_CIRCLE;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,Vector2.Zero,aimedTarget.m_position);
+            }
+        }
+        class SPG_NotAimSelfRect : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.NOT_AIM_SELF_RECT;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,aimedTarget.m_position-self.m_position,Vector2.Zero);
+            }
+        }
+        class SPG_NotAimSelfSector : SkillParamGeneratorBase{
+            public override SkillAimType m_AimType{ get {return SkillAimType.NOT_AIM_SELF_SECTOR;}}
+            public override SkillParam GetSkillParam(E_Unit self, E_Unit aimedTarget){
+                return new SkillParam(m_AimType,aimedTarget,aimedTarget.m_position-self.m_position,Vector2.Zero);
+            }
+        }
+        
     }
 }
