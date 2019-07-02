@@ -354,19 +354,5 @@
     "DHP": 0,
     "DMP": 0,
     "IsBuff":1
-  },
-  {
-    "StatusID": 26,
-    "Name": "护盾",
-    "Details": "获得吸收伤害的护盾",
-    "AttributeAttachArray": [
-      "DEFENCE 1"
-    ],
-    "Type": "CURRENT_ATTRIBUTE",
-    "Value": 1,
-    "SpecialAttributes": [],
-    "DHP": 0,
-    "DMP": 0,
-    "IsBuff":1
   }
 ]

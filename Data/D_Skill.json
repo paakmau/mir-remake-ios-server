@@ -882,7 +882,7 @@
 },{
 	"SkillID":27,
 	"Name":"奥术屏障",
-	"Details":"利用奥术能量为自己创造一层屏障，获得巨额护盾",
+	"Details":"利用奥术能量为自己创造一层屏障，使受到的伤害减少",
 	"ManaCost":[100,250,750,1250,1750,3000,4000,5000,6000,7500],
 	"SingTime":0,
 	"CastFrontTime":0,
@@ -905,8 +905,8 @@
 		"SelfHPStrategy":[],
 		"TargetHPStrategy":[],
 		"StatusAttachArray":[{
-			"StatusID":26,
-			"Value":[10000,20000,30000,40000,50000,60000,70000,80000,90000,100000],
+			"StatusID":25,
+			"Value":[5,7,9,11,13,15,18,21,24,27,30],
 			"LastingTime":[15,15,15,15,15,15,15,15,15,15],
 			"ValueAffectionDict":[]
 		}]
