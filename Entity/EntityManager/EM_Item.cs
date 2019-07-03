@@ -70,7 +70,7 @@ namespace MirRemakeBackend.Entity {
                 var baseType = typeof (IItemInitializer);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
                 foreach (var type in implTypes) {
-                    IItemInitializer impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (null) as IItemInitializer;
+                    IItemInitializer impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemInitializer;
                     m_itemInitializerDict.Add (impl.m_ItemType, impl);
                 }
             }
@@ -266,28 +266,28 @@ namespace MirRemakeBackend.Entity {
                 var baseType = typeof (IItemInserter);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
                 foreach (var type in implTypes) {
-                    IItemInserter impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (null) as IItemInserter;
+                    IItemInserter impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemInserter;
                     m_inserterDict.Add (impl.m_ItemType, impl);
                 }
                 // 实例化所有 IItemSaver 的子类
                 baseType = typeof (IItemSaver);
                 implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
                 foreach (var type in implTypes) {
-                    IItemSaver impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (null) as IItemSaver;
+                    IItemSaver impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemSaver;
                     m_saverDict.Add (impl.m_ItemType, impl);
                 }
                 // 实例化所有 IItemDeleter 的子类
                 baseType = typeof (IItemDeleter);
                 implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
                 foreach (var type in implTypes) {
-                    IItemDeleter impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (null) as IItemDeleter;
+                    IItemDeleter impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemDeleter;
                     m_deleterDict.Add (impl.m_ItemType, impl);
                 }
                 // 实例化所有 IItemInfoReseter 的子类
                 baseType = typeof (IItemInfoReseter);
                 implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
                 foreach (var type in implTypes) {
-                    IItemInfoReseter impl = type.GetConstructor (new Type[] { typeof (DEM_Item) }).Invoke (null) as IItemInfoReseter;
+                    IItemInfoReseter impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemInfoReseter;
                     m_itemInfoReseterDict.Add (impl.m_ItemType, impl);
                 }
             }
