@@ -42,7 +42,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandInitCharacterId (int netId, int charId) {
             // TODO: 应当完全依赖相应GL来添加角色
             // 实例化角色
-            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId, m_charDds.GetCharacterById (charId));
+            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
             EM_Sight.s_instance.InitCharacter (newChar);
             // client 角色
             m_netService.SendServerCommand (SC_InitSelfAttribute.Instance (

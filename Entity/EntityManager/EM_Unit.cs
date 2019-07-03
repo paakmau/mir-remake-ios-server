@@ -41,10 +41,11 @@ namespace MirRemakeBackend.Entity {
         /// 并在场景中索引新接入的角色  
         /// 若场景中已存在该角色, 则直接返回
         /// </summary>
-        public E_Character InitCharacter (int netId, int charId, DDO_Character charDdo) {
+        public E_Character InitCharacter (int netId, int charId) {
             E_Character newChar = null;
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
+            var charDdo = m_dds.GetCharacterById (charId);
             newChar = s_entityPool.m_characterPool.GetInstance ();
             DE_Character charDe;
             DE_Unit unitDe;
