@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
 using MirRemakeBackend.GameLogic;
-using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.CharacterCreate;
 
 namespace MirRemakeBackend.Network {
     interface IClientCommand {
@@ -82,7 +82,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_USE_CONSUMABLE_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
             int itemRealId = reader.GetInt ();
-            GL_Item.s_instance.CommandApplyUseConsumableItem (netId, itemRealId);
+            GL_CharacterItem.s_instance.CommandApplyUseConsumableItem (netId, itemRealId);
         }
     }
     /// <summary>
@@ -92,7 +92,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_USE_EQUIPMENT_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
             int itemRealId = reader.GetInt ();
-            GL_Item.s_instance.CommandApplyUseEquipmentItem (netId, itemRealId);
+            GL_CharacterItem.s_instance.CommandApplyUseEquipmentItem (netId, itemRealId);
         }
     }
     /// <summary>
@@ -196,7 +196,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             CurrencyType cyType = (CurrencyType) reader.GetByte ();
             long cy = reader.GetLong ();
-            GL_Property.s_instance.CommandGainCurrency (netId, cyType, cy);
+            GL_CharacterAttribute.s_instance.CommandGainCurrency (netId, cyType, cy);
         }
     }
     class CC_TestGainItem : IClientCommand {
@@ -204,7 +204,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
-            GL_Property.s_instance.CommandGainItem (netId, itemId, num);
+            GL_CharacterItem.s_instance.CommandGainItem (netId, itemId, num);
         }
     }
 }

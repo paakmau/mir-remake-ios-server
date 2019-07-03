@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using MirRemakeBackend.CharacterCreate;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
@@ -46,7 +47,7 @@ namespace MirRemakeBackend {
             }
         }
         static void InitEntityManager () {
-            // 实例化DataService
+            // DataService
             IDS_Map mapDs = new DS_MapImpl ();
             IDS_Character charDs = new DS_CharacterImpl ();
             IDS_Monster monsterDs = new DS_MonsterImpl ();
@@ -54,42 +55,41 @@ namespace MirRemakeBackend {
             IDS_Skill skillDs = new DS_SkillImpl ();
             IDS_Item itemDs = new DS_ItemImpl ();
             IDS_Mission misDs = new DS_MissionImpl ();
-            // 实例化DataEntity
+            // DataEntity
             DEM_Unit actorUnitDem = new DEM_Unit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
             DEM_Item itemDem = new DEM_Item (itemDs);
             DEM_Mission misDem = new DEM_Mission (misDs);
-            // 实例化EntityManager
-            EM_Camp.s_instance = new EM_Camp ();
-            EM_Item.s_instance = new EM_Item (itemDem);
-            EM_Mission.s_instance = new EM_Mission (misDem);
-            EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
-            EM_Sight.s_instance = new EM_Sight ();
-            EM_Skill.s_instance = new EM_Skill (skillDem);
-            EM_Status.s_instance = new EM_Status (statusDem);
-            EM_Unit.s_instance = new EM_Unit (actorUnitDem);
-            EM_Log.s_instance = new EM_Log ();
-        }
-        static void InitGameLogic () {
             // DynamicDataService
             var ddsImpl = new DynamicDataServiceImpl ();
             IDDS_Character charDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
+            // EntityManager
+            EM_Camp.s_instance = new EM_Camp ();
+            EM_Item.s_instance = new EM_Item (itemDem, itemDds);
+            EM_Mission.s_instance = new EM_Mission (misDem, misDds);
+            EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
+            EM_Sight.s_instance = new EM_Sight ();
+            EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
+            EM_Status.s_instance = new EM_Status (statusDem);
+            EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds);
+            EM_Log.s_instance = new EM_Log ();
             // 角色创建器
             CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, skillDds, misDds, itemDds, s_networkService);
+        }
+        static void InitGameLogic () {
             // 单位初始化器
             UnitInitializer.s_instance = new UnitInitializer ();
             // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
-            GL_Item.s_instance = new GL_Item (s_networkService);
+            GL_CharacterItem.s_instance = new GL_CharacterItem (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
-            GL_Property.s_instance = new GL_Property (s_networkService);
             GL_Sight.s_instance = new GL_Sight (s_networkService);
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
@@ -99,10 +99,9 @@ namespace MirRemakeBackend {
                 GL_BattleSettle.s_instance,
                 GL_CharacterAction.s_instance,
                 GL_CharacterAttribute.s_instance,
-                GL_Item.s_instance,
+                GL_CharacterItem.s_instance,
                 GL_Mission.s_instance,
                 GL_MonsterAction.s_instance,
-                GL_Property.s_instance,
                 GL_Sight.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,

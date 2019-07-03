@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
@@ -12,11 +9,13 @@ namespace MirRemakeBackend.Entity {
     class EM_Skill : EntityManagerBase {
         public static EM_Skill s_instance;
         private DEM_Skill m_dem;
+        private IDDS_Skill m_dds;
         private Dictionary<int, Dictionary<short, E_Skill>> m_characterSkillDict = new Dictionary<int, Dictionary<short, E_Skill>> ();
-        public EM_Skill (DEM_Skill dem) {
+        public EM_Skill (DEM_Skill dem, IDDS_Skill dds) {
             m_dem = dem;
+            m_dds = dds;
         }
-        public E_Skill[] InitCharacter (int netId, int charId, List<DDO_Skill> ddoList) {
+        public E_Skill[] InitCharacter (int netId, int charId) {
             E_Skill[] res;
             Dictionary<short, E_Skill> charSkillDict;
             // 若角色已经加载
@@ -30,6 +29,7 @@ namespace MirRemakeBackend.Entity {
                 }
                 return res;
             }
+            var ddoList = m_dds.GetSkillListByCharacterId (charId);
             res = new E_Skill[ddoList.Count];
             charSkillDict = new Dictionary<short, E_Skill> ();
             for (int i = 0; i < ddoList.Count; i++) {
@@ -61,6 +61,9 @@ namespace MirRemakeBackend.Entity {
             E_Skill res = null;
             learnedSkill.TryGetValue (skillId, out res);
             return res;
+        }
+        public void SkillUpdate (int charId, E_Skill skObj) {
+            m_dds.UpdateSkill (skObj.GetDdo (charId));
         }
     }
 }

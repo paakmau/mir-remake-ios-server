@@ -27,9 +27,9 @@ namespace MirRemakeBackend.GameLogic {
                 skill.Upgrade ();
             }
             if (oriLv != skill.m_skillLevel) {
-                GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -costTotal);
-                // dds 与 client
-                m_skillDds.UpdateSkill (skill.GetDdo (charObj.m_characterId));
+                GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -costTotal);
+                // 持久化 与 client
+                EM_Skill.s_instance.SkillUpdate (charObj.m_characterId, skill);
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                     netId, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
                 // log
@@ -41,8 +41,8 @@ namespace MirRemakeBackend.GameLogic {
             var skObj = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             if (charId == -1 || skObj == null) return;
             skObj.m_masterly += masterly;
-            // dds 与 client
-            m_skillDds.UpdateSkill (skObj.GetDdo (charId));
+            // 持久化 与 client
+            EM_Skill.s_instance.SkillUpdate (charId, skObj);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                 netId, skObj.m_SkillId, skObj.m_skillLevel, skObj.m_masterly));
         }

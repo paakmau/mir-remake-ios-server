@@ -69,7 +69,7 @@ namespace MirRemakeBackend.Network {
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
             // 分配NetId
-            int netId = CharacterInitializer.s_instance.AssignNetworkId ();
+            int netId = UnitInitializer.s_instance.AssignNetworkId ();
 
             // 索引并保存peer
             m_peerIdAndNetworkIdDict[peer.Id] = netId;
@@ -85,7 +85,7 @@ namespace MirRemakeBackend.Network {
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
             // 移除角色
-            CharacterInitializer.s_instance.CommandRemoveCharacter (netId);
+            UnitInitializer.s_instance.CommandRemoveCharacter (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
     }
