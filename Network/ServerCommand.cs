@@ -53,7 +53,23 @@ namespace MirRemakeBackend.Network {
         private short m_spirit;
         /// <summary> 总可分配属性点 </summary>
         private short m_totalMainPoint;
-        public static SC_InitSelfAttribute Instance (int netId, OccupationType ocp, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint) {
+        /// <summary> 虚拟币 </summary>
+        private long m_virtualCy;
+        /// <summary> 充值币 </summary>
+        private long m_chargeCy;
+        public static SC_InitSelfAttribute Instance (
+            int netId,
+            OccupationType ocp,
+            short level,
+            int exp,
+            short strenth,
+            short intelligence,
+            short agility,
+            short spirit,
+            short m_totalMainPoint,
+            long virtualCy,
+            long chargeCy
+        ) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_ocp = ocp;
             s_instance.m_level = level;
@@ -63,6 +79,8 @@ namespace MirRemakeBackend.Network {
             s_instance.m_agility = agility;
             s_instance.m_spirit = spirit;
             s_instance.m_totalMainPoint = m_totalMainPoint;
+            s_instance.m_virtualCy = virtualCy;
+            s_instance.m_chargeCy = chargeCy;
             return s_instance;
         }
         private SC_InitSelfAttribute () { }
@@ -75,6 +93,8 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_agility);
             writer.Put (m_spirit);
             writer.Put (m_totalMainPoint);
+            writer.Put (m_virtualCy);
+            writer.Put (m_chargeCy);
         }
     }
     /// <summary>
@@ -147,24 +167,16 @@ namespace MirRemakeBackend.Network {
         private NO_Repository m_storeHouse;
         /// <summary> 装备区 </summary>
         private NO_Repository m_equipmentRegion;
-        /// <summary> 虚拟币 </summary>
-        private long m_virtualCy;
-        /// <summary> 充值币 </summary>
-        private long m_chargeCy;
         public static SC_InitSelfItem Instance (
             IReadOnlyList<int> toClientList,
             NO_Repository bag,
             NO_Repository storeHouse,
-            NO_Repository equips,
-            long virtualCy,
-            long chargeCy
+            NO_Repository equips
         ) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_bag = bag;
             s_instance.m_storeHouse = storeHouse;
             s_instance.m_equipmentRegion = equips;
-            s_instance.m_virtualCy = virtualCy;
-            s_instance.m_chargeCy = chargeCy;
             return s_instance;
         }
         private SC_InitSelfItem () { }
@@ -172,8 +184,6 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_bag);
             writer.Put (m_storeHouse);
             writer.Put (m_equipmentRegion);
-            writer.Put (m_virtualCy);
-            writer.Put (m_chargeCy);
         }
     }
     /// <summary>
