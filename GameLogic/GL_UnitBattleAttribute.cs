@@ -194,6 +194,12 @@ namespace MirRemakeBackend.GameLogic {
                 ));
             }
         }
+        public void NotifyInitCharacter (int netId) {
+            EM_Status.s_instance.InitCharacterStatus (netId);
+        }
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Status.s_instance.RemoveCharacterStatus (netId);
+        }
         public void NotifyApplyEffect (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
             if (target.m_IsDead) return;
             Effect effect = new Effect ();

@@ -38,6 +38,24 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
+        public E_Character NotifyInitCharacter (int netId, int charId) {
+            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
+            // client
+            m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
+                netId,
+                newChar.m_Occupation,
+                newChar.m_Level,
+                newChar.m_experience,
+                newChar.m_Strength,
+                newChar.m_Intelligence,
+                newChar.m_Agility,
+                newChar.m_Spirit,
+                newChar.m_TotalMainPoint));
+            return newChar;
+        }
+        public void NotifyRemoveCharacter (E_Character charObj) {
+            EM_Unit.s_instance.RemoveCharacter (charObj.m_networkId);
+        }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)
                 return;

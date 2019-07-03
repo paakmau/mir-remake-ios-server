@@ -10,9 +10,6 @@ namespace MirRemakeBackend.GameLogic {
         public GL_Skill (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
-        public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Skill.s_instance.RemoveCharacter (charObj.m_networkId);
-        }
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetLv) {
             var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -45,6 +42,17 @@ namespace MirRemakeBackend.GameLogic {
             EM_Skill.s_instance.SkillUpdate (charId, skObj);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                 netId, skObj.m_SkillId, skObj.m_skillLevel, skObj.m_masterly));
+        }
+        public void NotifyInitCharacter (int netId, int charId) {
+            E_Skill[] skillArr = EM_Skill.s_instance.InitCharacter (netId, charId);
+            // client
+            var skillIdAndLvAndMasterlyArr = new (short, short, int) [skillArr.Length];
+            for (int i = 0; i < skillArr.Length; i++)
+                skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
+            m_networkService.SendServerCommand (SC_InitSelfSkill.Instance (netId, skillIdAndLvAndMasterlyArr));
+        }
+        public void NotifyRemoveCharacter (E_Character charObj) {
+            EM_Skill.s_instance.RemoveCharacter (charObj.m_networkId);
         }
     }
 }

@@ -347,21 +347,13 @@ namespace MirRemakeBackend.Entity {
             m_itemFactory = new ItemFactory (dem);
             m_ddh = new ItemDynamicDataHelper (dem, dds, m_itemFactory);
         }
-        /// <summary>
-        /// 初始化新的角色的所有物品
-        /// </summary>
-        /// <param name="netId"></param>
-        /// <param name="bagDdo"></param>
-        /// <param name="storeHouseDdo"></param>
-        /// <param name="equipedDdo"></param>
-        /// <param name="allEquipmentDdoList"></param>
+        /// <summary>初始化新的角色的所有物品</summary>
         public void InitCharacter (
             int netId,
             int charId,
-            List<DDO_EquipmentInfo> allEquipmentDdoList,
-            out E_Repository bag,
-            out E_Repository storeHouse,
-            out E_EquipmentRegion eqRegion
+            out E_RepositoryBase bag,
+            out E_RepositoryBase storeHouse,
+            out E_RepositoryBase eqRegion
         ) {
             // 若角色已经初始化
             if (m_bagDict.ContainsKey (netId)) {
@@ -381,9 +373,9 @@ namespace MirRemakeBackend.Entity {
             storeHouse.Reset (ItemPlace.STORE_HOUSE, itemInStoreHouse);
             eqRegion.Reset (ItemPlace.EQUIPMENT_REGION, itemEquiped);
             // 索引各区域
-            m_bagDict[netId] = bag;
-            m_storeHouseDict[netId] = storeHouse;
-            m_equipmentRegionDict[netId] = eqRegion;
+            m_bagDict[netId] = bag as E_Repository;
+            m_storeHouseDict[netId] = storeHouse as E_Repository;
+            m_equipmentRegionDict[netId] = eqRegion as E_EquipmentRegion;
         }
         public void RemoveCharacter (int netId) {
             E_Repository bag;

@@ -40,59 +40,35 @@ namespace MirRemakeBackend.GameLogic {
             return NetworkIdManager.AssignNetworkId ();
         }
         public void CommandInitCharacterId (int netId, int charId) {
-            // TODO: 应当完全依赖相应GL来添加角色
-            // 实例化角色
-            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
-            EM_Sight.s_instance.InitCharacter (newChar);
-            // client 角色
-            m_netService.SendServerCommand (SC_InitSelfAttribute.Instance (
-                netId,
-                newChar.m_Occupation,
-                newChar.m_Level,
-                newChar.m_experience,
-                newChar.m_Strength,
-                newChar.m_Intelligence,
-                newChar.m_Agility,
-                newChar.m_Spirit,
-                newChar.m_TotalMainPoint));
+            // 角色
+            var newChar = GL_CharacterAttribute.s_instance.NotifyInitCharacter (netId, charId);
 
-            // 实例化道具
-            var bagDdo = m_itemDds.GetBagByCharacterId (charId);
-            var storeHouseDdo = m_itemDds.GetStoreHouseByCharacterId (charId);
-            var eqRegionDdo = m_itemDds.GetEquipmentRegionByCharacterId (charId);
-            var equipmentDdo = m_itemDds.GetAllEquipmentByCharacterId (charId);
-            E_Repository bag, storeHouse;
-            E_EquipmentRegion eqRegion;
-            EM_Item.s_instance.InitCharacter (netId, bagDdo, storeHouseDdo, eqRegionDdo, equipmentDdo, out bag, out storeHouse, out eqRegion);
-            // client
-            m_netService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo (), newChar.m_VirtualCurrency, newChar.m_ChargeCurrency));
+            // Sight
+            GL_Sight.s_instance.NotifyInitCharacter (newChar);
 
-            // 实例化技能
-            var skillDdoList = m_skillDds.GetSkillListByCharacterId (charId);
-            E_Skill[] skillArr = EM_Skill.s_instance.InitCharacter (netId, charId, skillDdoList);
-            // client
-            var skillIdAndLvAndMasterlyArr = new (short, short, int) [skillArr.Length];
-            for (int i = 0; i < skillArr.Length; i++)
-                skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
-            m_netService.SendServerCommand (SC_InitSelfSkill.Instance (netId, skillIdAndLvAndMasterlyArr));
+            // 道具
+            GL_CharacterItem.s_instance.NotifyInitCharacter (netId, charId);
 
-            // 初始化状态
-            EM_Status.s_instance.InitCharacterStatus (netId);
+            // 技能
+            GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
 
-            // 初始化任务
-            GL_Mission.s_instance.NotifyInitCharacter (newChar.m_networkId, newChar.m_characterId);
+            // 战斗属性
+            GL_UnitBattleAttribute.s_instance.NotifyInitCharacter (netId);
+
+            // 任务
+            GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
         }
         public void CommandRemoveCharacter (int netId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
 
-            GL_Mission.s_instance.NotifyRemoveCharacter (charObj);
-            GL_Item.s_instance.NotifyRemoveCharacter (charObj);
+            GL_CharacterAttribute.s_instance.NotifyRemoveCharacter (charObj);
             GL_Sight.s_instance.NotifyRemoveCharacter (charObj);
+            GL_CharacterItem.s_instance.NotifyRemoveCharacter (charObj);
             GL_Skill.s_instance.NotifyRemoveCharacter (charObj);
-            // TODO: 应当完全依赖相应GL来移除
-            EM_Status.s_instance.RemoveCharacterStatus (netId);
-            EM_Unit.s_instance.RemoveCharacter (netId);
+            GL_UnitBattleAttribute.s_instance.NotifyRemoveCharacter (netId);
+            GL_Mission.s_instance.NotifyRemoveCharacter (charObj);
+            // 释放NetId
             NetworkIdManager.RemoveNetworkId (netId);
         }
     }

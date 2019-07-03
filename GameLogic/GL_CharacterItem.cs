@@ -50,14 +50,15 @@ namespace MirRemakeBackend.GameLogic {
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
             NotifySwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
+        public void NotifyInitCharacter (int netId, int charId) {
+            E_RepositoryBase bag, storeHouse, eqRegion;
+            EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
+            // client
+            m_networkService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo (), newChar.m_VirtualCurrency, newChar.m_ChargeCurrency));
+        }
         /// <summary>
         /// 失去确定位置的物品
         /// </summary>
-        /// <param name="charObj"></param>
-        /// <param name="item"></param>
-        /// <param name="num"></param>
-        /// <param name="pos"></param>
-        /// <param name="repo"></param>
         public void NotifyLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
