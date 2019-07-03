@@ -257,22 +257,22 @@ namespace MirRemakeBackend.GameLogic {
                 GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) killer, dead);
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
-            // 处理具体属性
-            var cAttrList = status.m_dataEntity.m_affectAttributeList;
-            for (int i = 0; i < cAttrList.Count; i++)
-                unit.AddBattleConAttr (cAttrList[i].Item1, (int) (cAttrList[i].Item2 * status.m_value * k));
-            // 处理特殊属性
-            var sAttrList = status.m_dataEntity.m_specialAttributeList;
-            for (int i = 0; i < sAttrList.Count; i++)
-                unit.AddSpAttr (sAttrList[i], k);
-            // 通知Client
-            m_networkService.SendServerCommand (SC_ApplyAllStatus.Instance (
-                EM_Sight.s_instance.GetInSightCharacterNetworkId (unit.m_networkId, true),
-                unit.m_networkId,
-                status.GetNo (),
-                k == 1
-            ));
+            // TODO: StatusChanged GL
+            // // 处理具体属性
+            // var cAttrList = status.m_dataEntity.m_affectAttributeList;
+            // for (int i = 0; i < cAttrList.Count; i++)
+            //     unit.AddBattleConAttr (cAttrList[i].Item1, (int) (cAttrList[i].Item2 * status.m_value * k));
+            // // 处理特殊属性
+            // var sAttrList = status.m_dataEntity.m_specialAttributeList;
+            // for (int i = 0; i < sAttrList.Count; i++)
+            //     unit.AddSpAttr (sAttrList[i], k);
+            // // 通知Client
+            // m_networkService.SendServerCommand (SC_ApplyAllStatus.Instance (
+            //     EM_Sight.s_instance.GetInSightCharacterNetworkId (unit.m_networkId, true),
+            //     unit.m_networkId,
+            //     status.GetNo (),
+            //     k == 1
+            // ));
         }
-        // TODO: 把UnitBattleAttr Effect Status 合并为一个GL
     }
 }
