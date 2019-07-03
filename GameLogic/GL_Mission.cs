@@ -134,13 +134,13 @@ namespace MirRemakeBackend.GameLogic {
                 return;
             // 移除实例
             List<short> acableMis, unaMis;
-            EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_Occupation, charObj.m_Level, out acableMis, out unaMis);
+            EM_Mission.s_instance.DeliveryMission (netId, charObj.m_characterId, misObj, charObj.m_Occupation, charObj.m_Level, out acableMis, out unaMis);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
             // 其他模块
-            GL_Property.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, misObj.m_BonusVirtualCurrency);
-            GL_Property.s_instance.NotifyGainItem (charObj, misObj.m_BonusItemIdAndNumList);
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, misObj.m_BonusVirtualCurrency);
+            GL_CharacterItem.s_instance.NotifyGainItem (charObj, misObj.m_BonusItemIdAndNumList);
             GL_CharacterAttribute.s_instance.NotifyGainExperience (charObj, misObj.m_BonusExperience);
         }
         public void CommandCancelMission (int netId, short misId) {
