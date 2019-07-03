@@ -18,18 +18,19 @@ namespace MirRemakeBackend.Entity {
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_dds = dds; }
-        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisObjList, out List<short> resAcceptableMisList, out List<short> resUnacceptableMisList) {
+        public void InitCharacter (int netId, int charId, out List<short> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
             // 若角色已经加载
             if (m_acceptedMissionDict.TryGetValue (netId, out oriAcceptedMisDict) && m_acceptableMissionDict.TryGetValue (netId, out oriAcceptableMisSet) && m_unacceptableMissionDict.TryGetValue (netId, out oriUnacceptableMisSet)) {
                 resAcceptedMisIdList = CollectionUtils.GetDictKeyList (oriAcceptedMisDict);
-                resAcceptedMisObjList = CollectionUtils.GetDictValueList (oriAcceptedMisDict);
-                resAcceptableMisList = CollectionUtils.GetSetList (oriAcceptableMisSet);
-                resUnacceptableMisList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
+                resAcceptableMisIdList = CollectionUtils.GetSetList (oriAcceptableMisSet);
+                resUnacceptableMisIdList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
                 return;
             }
+
+            var ddoList = m_dds.GetMissionListByCharacterId (charId);
 
             // 读取已接任务
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
@@ -57,9 +58,8 @@ namespace MirRemakeBackend.Entity {
 
             // 返回
             resAcceptedMisIdList = CollectionUtils.GetDictKeyList (acceptedMissionDict);
-            resAcceptedMisObjList = CollectionUtils.GetDictValueList (acceptedMissionDict);
-            resAcceptableMisList = CollectionUtils.GetSetList (acceptableMissionSet);
-            resUnacceptableMisList = CollectionUtils.GetSetList (unacceptableMissionSet);
+            resAcceptableMisIdList = CollectionUtils.GetSetList (acceptableMissionSet);
+            resUnacceptableMisIdList = CollectionUtils.GetSetList (unacceptableMissionSet);
         }
         public void RemoveCharacter (int netId) {
             m_acceptableMissionDict.Remove (netId);
@@ -88,7 +88,7 @@ namespace MirRemakeBackend.Entity {
             acceptedDict.TryGetValue (misId, out res);
             return res;
         }
-        public E_Mission AcceptMission (int netId, short misId) {
+        public E_Mission AcceptMission (int netId, int charId, short misId) {
             HashSet<short> acceptableSet = null;
             if (!m_acceptableMissionDict.TryGetValue (netId, out acceptableSet))
                 return null;
@@ -104,13 +104,15 @@ namespace MirRemakeBackend.Entity {
             // 处理可接 已接
             acceptableSet.Remove (misId);
             acceptedDict[misId] = mis;
+            // 持久化
+            m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
             return mis;
         }
         /// <summary>
         /// 交付一个任务  
         /// 返回解锁任务的修改信息
         /// </summary>
-        public void DeliveryMission (int netId, E_Mission mis, OccupationType ocp, short lv, out List<short> resNewAcceptableMis, out List<short> resNewUnacceptableMis) {
+        public void DeliveryMission (int netId, int charId, E_Mission mis, OccupationType ocp, short lv, out List<short> resNewAcceptableMis, out List<short> resNewUnacceptableMis) {
             resNewAcceptableMis = null;
             resNewUnacceptableMis = null;
             HashSet<short> acceptableSet = null;
@@ -140,8 +142,14 @@ namespace MirRemakeBackend.Entity {
                     resNewUnacceptableMis.Add (de.m_id);
                 }
             }
+            // 持久化
+            m_dds.DeleteMission (mis.m_MissionId, charId);
+            for (int i = 0; i < resNewAcceptableMis.Count; i++)
+                m_dds.InsertMission (new DDO_Mission (resNewAcceptableMis[i], charId, MissionStatus.ACCEPTABLE, new List<int> ()));
+            for (int i = 0; i < resNewUnacceptableMis.Count; i++)
+                m_dds.InsertMission (new DDO_Mission (resNewUnacceptableMis[i], charId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
         }
-        public void CancelMission (int netId, E_Mission mis) {
+        public void CancelMission (int netId, int charId, E_Mission mis) {
             HashSet<short> acceptableSet = null;
             if (!m_acceptableMissionDict.TryGetValue (netId, out acceptableSet))
                 return;
@@ -152,6 +160,12 @@ namespace MirRemakeBackend.Entity {
             acceptedDict.Remove (mis.m_MissionId);
             s_entityPool.m_missionPool.RecycleInstance (mis);
             acceptableSet.Add (mis.m_MissionId);
+
+            // 持久化
+            m_dds.UpdateMission (mis.GetDdo(charId, MissionStatus.ACCEPTABLE));
+        }
+        public void UpdateMission (int charId, E_Mission mis) {
+            m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
         }
         /// <summary>
         /// 刷新已解锁任务中的可接任务

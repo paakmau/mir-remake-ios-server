@@ -101,11 +101,11 @@ namespace MirRemakeBackend.GameLogic {
                                 // client
                                 misProgs[j].Item1 = newProgs;
                                 dirty = true;
-                                m_networkService.SendServerCommand(SC_ApplySelfMissionProgress.Instance (charNetId, misId, (byte)j, newProgs));
+                                m_networkService.SendServerCommand (SC_ApplySelfMissionProgress.Instance (charNetId, misId, (byte) j, newProgs));
                             }
                         }
                         if (dirty)
-                            m_misDds.UpdateMission (misObj.GetDdo (charId));
+                            EM_Mission.s_instance.UpdateMission (charId, misObj);
                     }
                 }
             }
@@ -120,10 +120,9 @@ namespace MirRemakeBackend.GameLogic {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             // 实例化
-            var mis = EM_Mission.s_instance.AcceptMission (netId, misId);
+            var mis = EM_Mission.s_instance.AcceptMission (netId, charObj.m_characterId, misId);
             if (mis == null) return;
-            // 数据与client
-            m_misDds.UpdateMission (mis.GetDdo (charObj.m_characterId));
+            // client
             m_networkService.SendServerCommand (SC_ApplySelfAcceptMission.Instance (netId, misId));
         }
         public void CommandApplyDeliveryMission (int netId, short misId) {
@@ -136,12 +135,7 @@ namespace MirRemakeBackend.GameLogic {
             // 移除实例
             List<short> acableMis, unaMis;
             EM_Mission.s_instance.DeliveryMission (netId, misObj, charObj.m_Occupation, charObj.m_Level, out acableMis, out unaMis);
-            // dds 与 client
-            m_misDds.DeleteMission (misId, charObj.m_characterId);
-            for (int i = 0; i < acableMis.Count; i++)
-                m_misDds.InsertMission (new DDO_Mission (acableMis[i], charObj.m_characterId, MissionStatus.ACCEPTABLE, new List<int> ()));
-            for (int i = 0; i < unaMis.Count; i++)
-                m_misDds.InsertMission (new DDO_Mission (unaMis[i], charObj.m_characterId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
+            // client
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
             // 其他模块
@@ -155,16 +149,13 @@ namespace MirRemakeBackend.GameLogic {
             var misObj = EM_Mission.s_instance.GetAcceptedMission (netId, misId);
             if (misObj == null) return;
             // 移除实例 数据 client
-            EM_Mission.s_instance.CancelMission (netId, misObj);
-            m_misDds.UpdateMission (misObj.GetDdo (charObj.m_networkId));
+            EM_Mission.s_instance.CancelMission (netId, charObj.m_characterId, misObj);
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
         public void NotifyInitCharacter (int netId, int charId) {
             // 实例化任务
-            var ddsList = m_misDds.GetMissionListByCharacterId (charId);
             List<short> acceptedMis, acceptableMis, unacceptableMis;
-            List<E_Mission> acceptedMisObjList;
-            EM_Mission.s_instance.InitCharacter (netId, charId, ddsList, out acceptedMis, out acceptedMisObjList, out acceptableMis, out unacceptableMis);
+            EM_Mission.s_instance.InitCharacter (netId, charId, out acceptedMis, out acceptableMis, out unacceptableMis);
             // client
             m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMis, acceptableMis, unacceptableMis));
         }
