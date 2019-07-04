@@ -18,9 +18,7 @@
 		"SingTime": 0,
 		"CastFrontTime": 0,
 		"CastBackTime": 1,
-		"FatherID": [
-			-1
-		],
+		"FatherID": [],
 		"ChildrenIDList": [
 			1
 		],
@@ -1368,9 +1366,7 @@
 		"SingTime": 0,
 		"CastFrontTime": 0,
 		"CastBackTime": 0.5,
-		"FatherID": [
-			-1
-		],
+		"FatherID": [],
 		"ChildrenIDList": [
 			11
 		],
@@ -2719,9 +2715,7 @@
 		"SingTime": 1,
 		"CastFrontTime": 0,
 		"CastBackTime": 0,
-		"FatherID": [
-			-1
-		],
+		"FatherID": [],
 		"ChildrenIDList": [
 			21
 		],
@@ -4044,9 +4038,7 @@
 		"SingTime": 1,
 		"CastFrontTime": 0,
 		"CastBackTime": 0,
-		"FatherID": [
-			-1
-		],
+		"FatherID": [],
 		"ChildrenIDList": [
 			31
 		],
