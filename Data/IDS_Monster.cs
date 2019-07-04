@@ -7,7 +7,7 @@ namespace MirRemakeBackend.Data {
         DO_Monster[] GetAllMonster ();//done
     }
     class DS_MonsterImpl : IDS_Monster {
-        private static JsonData s_monsterDatas;
+        private JsonData s_monsterDatas;
         private static DO_Monster[] res;
         public DO_Monster[] GetAllMonster() {
             string jsonFile = File.ReadAllText("Data/D_Monster.json");
