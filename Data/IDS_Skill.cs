@@ -51,9 +51,9 @@ namespace MirRemakeBackend.Data {
                 {
                     skill.m_fatherIdArr[j] = short.Parse(s_skillDatas[i]["FatherID"][j].ToString());
                 }
-                skill.m_childrenIdArr = new short[s_skillDatas[i]["FatherID"].Count];
+                skill.m_childrenIdArr = new short[s_skillDatas[i]["ChildrenIDList"].Count];
                 for (int j = 0; j < s_skillDatas[i]["ChildrenIDList"].Count; j++)
-                {
+                {   
                     skill.m_childrenIdArr[j] = short.Parse(s_skillDatas[i]["ChildrenIDList"][j].ToString());
                 }
                 skill.m_skillAimType = (SkillAimType)Enum.Parse(typeof(SkillAimType), s_skillDatas[i]["SkillAimType"].ToString());

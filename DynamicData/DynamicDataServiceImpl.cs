@@ -273,7 +273,7 @@ namespace MirRemakeBackend.DynamicData {
                 }
             }
             string status = ddo.m_status.ToString ();
-            cmd = "insert into mission values(null," + ddo.m_missionId + "," + ddo.m_characterId + ",\"" + target + "\"," + status + ");";
+            cmd = "insert into mission values(null," + ddo.m_missionId + "," + ddo.m_characterId + ",\"" + target + "\",\"" + status + "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -289,7 +289,7 @@ namespace MirRemakeBackend.DynamicData {
                 }
             }
             string status = ddo.m_status.ToString ();
-            cmd = "update mission set targets=\"" + target + "\",`status`=" + status + " where charid=" + ddo.m_characterId + " and missionid=" + ddo.m_missionId + ";";
+            cmd = "update mission set targets=\"" + target + "\",`status`=\"" + status + "\" where charid=" + ddo.m_characterId + " and missionid=" + ddo.m_missionId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
