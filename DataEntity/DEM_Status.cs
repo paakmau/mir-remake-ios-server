@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
-using System;
+//using System;
 namespace MirRemakeBackend.DataEntity {
     /// <summary>
     /// 数据型Entity的容器  
@@ -20,7 +20,7 @@ namespace MirRemakeBackend.DataEntity {
             foreach (var status in mpStatusArr)
                 m_statusDict.Add (status.m_statusId, new DE_Status (status));
             foreach (var status in conAttrStatusArr) {
-                Console.WriteLine(status.Item1.m_statusId);
+                //Console.WriteLine(status.Item1.m_statusId);
                 m_statusDict.Add (status.Item1.m_statusId, new DE_Status (status.Item1));
                 m_conAttrStatusDict.Add (status.Item1.m_statusId, new DE_ConcreteAttributeStatus (status.Item2));
             }
