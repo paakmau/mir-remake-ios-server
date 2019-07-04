@@ -209,8 +209,8 @@ namespace MirRemakeBackend.GameLogic {
             // 
             if (effect.m_hit) {
                 // Hp Mp 状态
-                GL_UnitBattleAttribute.s_instance.HpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
-                GL_UnitBattleAttribute.s_instance.AttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
+                HpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
+                AttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
             }
         }
         private void HpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
