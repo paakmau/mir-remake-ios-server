@@ -51,8 +51,8 @@ namespace MirRemakeBackend.GameLogic {
                 skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
             m_networkService.SendServerCommand (SC_InitSelfSkill.Instance (netId, skillIdAndLvAndMasterlyArr));
         }
-        public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Skill.s_instance.RemoveCharacter (charObj.m_networkId);
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Skill.s_instance.RemoveCharacter (netId);
         }
     }
 }

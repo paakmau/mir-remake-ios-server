@@ -32,16 +32,16 @@ namespace MirRemakeBackend.GameLogic {
         private void InitAllMonster () {
             int monNum = EM_Unit.s_instance.GetMonsterNum ();
             int[] netIdArr = NetworkIdManager.AssignNetworkId (monNum);
-            var mons = EM_Unit.s_instance.InitAllMonster (netIdArr);
-            EM_Sight.s_instance.InitAllMonster (mons);
-            EM_Status.s_instance.InitAllMonster (netIdArr);
+
+            var mons = GL_UnitBattleAttribute.s_instance.NotifyInitAllMonster (netIdArr);
+            GL_Sight.s_instance.NotifyInitAllMonster (mons);
         }
         public int AssignNetworkId () {
             return NetworkIdManager.AssignNetworkId ();
         }
         public void CommandInitCharacterId (int netId, int charId) {
             // 角色
-            var newChar = GL_CharacterAttribute.s_instance.NotifyInitCharacter (netId, charId);
+            var newChar = GL_UnitBattleAttribute.s_instance.NotifyInitCharacter (netId, charId);
 
             // Sight
             GL_Sight.s_instance.NotifyInitCharacter (newChar);
@@ -52,22 +52,15 @@ namespace MirRemakeBackend.GameLogic {
             // 技能
             GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
 
-            // 战斗属性
-            GL_UnitBattleAttribute.s_instance.NotifyInitCharacter (netId);
-
             // 任务
             GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
         }
         public void CommandRemoveCharacter (int netId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
-
-            GL_CharacterAttribute.s_instance.NotifyRemoveCharacter (charObj);
-            GL_Sight.s_instance.NotifyRemoveCharacter (charObj);
-            GL_CharacterItem.s_instance.NotifyRemoveCharacter (charObj);
-            GL_Skill.s_instance.NotifyRemoveCharacter (charObj);
             GL_UnitBattleAttribute.s_instance.NotifyRemoveCharacter (netId);
-            GL_Mission.s_instance.NotifyRemoveCharacter (charObj);
+            GL_Sight.s_instance.NotifyRemoveCharacter (netId);
+            GL_CharacterItem.s_instance.NotifyRemoveCharacter (netId);
+            GL_Skill.s_instance.NotifyRemoveCharacter (netId);
+            GL_Mission.s_instance.NotifyRemoveCharacter (netId);
             // 释放NetId
             NetworkIdManager.RemoveNetworkId (netId);
         }

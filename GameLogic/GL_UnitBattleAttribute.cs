@@ -191,10 +191,31 @@ namespace MirRemakeBackend.GameLogic {
                 ));
             }
         }
-        public void NotifyInitCharacter (int netId) {
+        public E_Monster[] NotifyInitAllMonster (int[] netIdArr) {
+            var mons = EM_Unit.s_instance.InitAllMonster (netIdArr);
+            EM_Status.s_instance.InitAllMonster (netIdArr);
+            return mons;
+        }
+        public E_Character NotifyInitCharacter (int netId, int charId) {
+            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
+            // client
+            m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
+                netId,
+                newChar.m_Occupation,
+                newChar.m_Level,
+                newChar.m_experience,
+                newChar.m_Strength,
+                newChar.m_Intelligence,
+                newChar.m_Agility,
+                newChar.m_Spirit,
+                newChar.m_TotalMainPoint,
+                newChar.m_VirtualCurrency,
+                newChar.m_ChargeCurrency));
             EM_Status.s_instance.InitCharacterStatus (netId);
+            return newChar;
         }
         public void NotifyRemoveCharacter (int netId) {
+            EM_Unit.s_instance.RemoveCharacter (netId);
             EM_Status.s_instance.RemoveCharacterStatus (netId);
         }
         public void NotifyApplyEffect (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {

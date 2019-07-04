@@ -102,11 +102,14 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () { }
+        public void NotifyInitAllMonster (E_Monster[] monObjArr) {
+            EM_Sight.s_instance.InitAllMonster (monObjArr);
+        }
         public void NotifyInitCharacter (E_Character charObj) {
             EM_Sight.s_instance.InitCharacter (charObj);
         }
-        public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Sight.s_instance.RemoveCharacter (charObj.m_networkId);
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Sight.s_instance.RemoveCharacter (netId);
         }
     }
 }

@@ -12,8 +12,8 @@ namespace MirRemakeBackend.GameLogic {
         public GL_CharacterItem (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
-        public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Item.s_instance.RemoveCharacter (charObj.m_networkId);
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Item.s_instance.RemoveCharacter (netId);
         }
         public void CommandGainItem (int netId, short itemId, short num) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

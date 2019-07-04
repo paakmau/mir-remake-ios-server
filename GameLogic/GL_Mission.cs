@@ -158,8 +158,8 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMis, acceptableMis, unacceptableMis));
         }
-        public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Mission.s_instance.RemoveCharacter (charObj.m_networkId);
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Mission.s_instance.RemoveCharacter (netId);
         }
         private void UpdateMissionProgress (E_Mission mis, int i, int deltaV, int netId) {
             mis.m_misTargetProgressArr[i].Item1++;
