@@ -52,20 +52,16 @@ namespace MirRemakeBackend.Entity {
             }
             #endregion
             private DEM_Item m_dem;
-            private Dictionary<ItemType, ObjectPool> m_itemPoolDict = new Dictionary<ItemType, ObjectPool> ();
+            private Dictionary<ItemType, ObjectPool> m_poolDict = new Dictionary<ItemType, ObjectPool> ();
             private Dictionary<ItemType, IItemInitializer> m_itemInitializerDict = new Dictionary<ItemType, IItemInitializer> ();
-            private const int c_emptyItemPoolSize = 100000;
-            private const int c_materialItemPoolSize = 100000;
-            private const int c_consumableItemPoolSize = 100000;
-            private const int c_equipmentItemPoolSize = 100000;
-            private const int c_gemItemPoolSize = 100000;
+            private const int c_poolSize = 2000;
             public ItemFactory (DEM_Item dem) {
                 m_dem = dem;
-                m_itemPoolDict.Add (ItemType.EMPTY, new ObjectPool<E_EmptyItem> (c_emptyItemPoolSize));
-                m_itemPoolDict.Add (ItemType.MATERIAL, new ObjectPool<E_MaterialItem> (c_materialItemPoolSize));
-                m_itemPoolDict.Add (ItemType.CONSUMABLE, new ObjectPool<E_ConsumableItem> (c_consumableItemPoolSize));
-                m_itemPoolDict.Add (ItemType.EQUIPMENT, new ObjectPool<E_EquipmentItem> (c_equipmentItemPoolSize));
-                m_itemPoolDict.Add (ItemType.GEM, new ObjectPool<E_GemItem> (c_gemItemPoolSize));
+                m_poolDict.Add (ItemType.EMPTY, new ObjectPool<E_EmptyItem> (c_poolSize));
+                m_poolDict.Add (ItemType.MATERIAL, new ObjectPool<E_MaterialItem> (c_poolSize));
+                m_poolDict.Add (ItemType.CONSUMABLE, new ObjectPool<E_ConsumableItem> (c_poolSize));
+                m_poolDict.Add (ItemType.EQUIPMENT, new ObjectPool<E_EquipmentItem> (c_poolSize));
+                m_poolDict.Add (ItemType.GEM, new ObjectPool<E_GemItem> (c_poolSize));
                 // 实例化所有 IItemInitializer 的子类
                 var baseType = typeof (IItemInitializer);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
@@ -75,10 +71,10 @@ namespace MirRemakeBackend.Entity {
                 }
             }
             public void RecycleItem (E_Item item) {
-                m_itemPoolDict[item.m_Type].RecycleInstance (item);
+                m_poolDict[item.m_Type].RecycleInstance (item);
             }
             private E_Item GetInstance (ItemType type) {
-                return m_itemPoolDict[type].GetInstanceObj () as E_Item;
+                return m_poolDict[type].GetInstanceObj () as E_Item;
             }
             public E_EmptyItem GetEmptyItemInstance () {
                 return GetAndInitInstance (m_dem.GetEmptyItem (), 0) as E_EmptyItem;

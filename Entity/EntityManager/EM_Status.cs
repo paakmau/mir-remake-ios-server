@@ -1,8 +1,28 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     class EM_Status : EntityManagerBase {
+        private class StatusFactory {
+            #region StatusInitializer
+            private interface IStatusInitializer {
+                
+            }
+            #endregion
+            private const int c_poolSize = 2000;
+            private Dictionary<StatusType, ObjectPool> m_poolDict;
+            public StatusFactory () {
+                m_poolDict.Add (StatusType.CHANGE_HP, new ObjectPool<E_ChangeHpStatus> (c_poolSize));
+                m_poolDict.Add (StatusType.CHANGE_MP, new ObjectPool<E_ChangeMpStatus> (c_poolSize));
+                m_poolDict.Add (StatusType.CONCRETE_ATTRIBUTE, new ObjectPool<E_ConcreteAttributeStatus> (c_poolSize));
+                m_poolDict.Add (StatusType.SPECIAL_ATTRIBUTE, new ObjectPool<E_SpecialAttributeStatus> (c_poolSize));
+            }
+            public E_Status GetInstance (DE_Status de) {
+                var res = m_poolDict[de.m_type].GetInstanceObj () as E_Status;
+                return res;
+            }
+        }
         public static EM_Status s_instance;
         private DEM_Status m_dem;
         private Dictionary<int, List<E_Status>> m_statusListDict = new Dictionary<int, List<E_Status>> ();
