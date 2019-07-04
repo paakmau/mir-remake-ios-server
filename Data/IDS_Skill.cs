@@ -11,7 +11,7 @@ namespace MirRemakeBackend.Data {
         DO_Skill[] GetSkillsByOccupation(OccupationType occupation);
     }
     class DS_SkillImpl:IDS_Skill{
-        private static JsonData s_skillDatas;
+        private JsonData s_skillDatas;
         private DO_Skill[] res;
         public DO_Skill[] GetAllSkill() {
             return GetSkillsByOccupation(OccupationType.ALL);

@@ -30,7 +30,7 @@
     "AttributeAttachArray": [
       "DEFENCE -1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -44,7 +44,7 @@
     "AttributeAttachArray": [
       "RESISTANCE -1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -82,7 +82,7 @@
     "AttributeAttachArray": [
       "MAX_HP 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -96,7 +96,7 @@
     "AttributeAttachArray": [
       "MAX_MP 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -110,7 +110,7 @@
     "AttributeAttachArray": [
       "ATTACK 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -124,7 +124,7 @@
     "AttributeAttachArray": [
       "MAGIC 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -138,7 +138,7 @@
     "AttributeAttachArray": [
       "DEFENCE 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -152,7 +152,7 @@
     "AttributeAttachArray": [
       "RESISTANCE 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -166,7 +166,7 @@
     "AttributeAttachArray": [
       "SPEED 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -180,7 +180,7 @@
     "AttributeAttachArray": [
       "DODGE_RATE 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -194,7 +194,7 @@
     "AttributeAttachArray": [
       "HIT_RATE 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -208,7 +208,7 @@
     "AttributeAttachArray": [
       "CRITICAL_RATE 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -222,7 +222,7 @@
     "AttributeAttachArray": [
       "CRITICAL_BONUS 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -236,7 +236,7 @@
     "AttributeAttachArray": [
       "TENACITY 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -250,7 +250,7 @@
     "AttributeAttachArray": [
       "LIFE_STEAL 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -320,7 +320,7 @@
     "AttributeAttachArray": [
       "PHYSICS_VULERNABILITY 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -334,7 +334,7 @@
     "AttributeAttachArray": [
       "MAGIC_VULERNABILITY 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
@@ -348,7 +348,7 @@
     "AttributeAttachArray": [
       "DAMAGE_REDUCTION 1"
     ],
-    "Type": "CURRENT_ATTRIBUTE",
+    "Type": "CONCRETE_ATTRIBUTE",
     "Value": 1,
     "SpecialAttributes": [],
     "DHP": 0,
