@@ -113,10 +113,10 @@ namespace MirRemakeBackend.Data {
                     effect.m_deltaMp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaMP"][j].ToString());
                     effect.m_deltaHp = int.Parse(s_skillDatas[i]["Effect"]["EffectDeltaHP"][j].ToString());
                     if(s_skillDatas[i]["Effect"]["SelfHPStrategy"].Count!=0){
-                        effect.m_attributeArr = new ValueTuple<ActorUnitConcreteAttributeType, float>[s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count];
+                        effect.m_attributeBonusArr = new ValueTuple<ActorUnitConcreteAttributeType, float>[s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count];
                         for (int k = 0; k < s_skillDatas[i]["Effect"]["SelfHPStrategy"][j].Count; k++)
                         {
-                            effect.m_attributeArr[k] = new ValueTuple<ActorUnitConcreteAttributeType, float>
+                            effect.m_attributeBonusArr[k] = new ValueTuple<ActorUnitConcreteAttributeType, float>
                             ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_skillDatas[i]["Effect"]["SelfHPStrategy"][j][k].ToString().Split(' ')[0]),
                                 float.Parse(s_skillDatas[i]["Effect"]["SelfHPStrategy"][j][k].ToString().Split(' ')[1]));
                         }

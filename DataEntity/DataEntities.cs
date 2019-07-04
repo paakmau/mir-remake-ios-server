@@ -129,13 +129,15 @@ namespace MirRemakeBackend.DataEntity {
         public readonly float m_criticalRate;
         public readonly int m_deltaHp;
         public readonly int m_deltaMp;
-        public readonly IReadOnlyList<ValueTuple<short, float, float>> m_statusIdAndValueAndTimeList;
+        public readonly IReadOnlyList < (ActorUnitConcreteAttributeType, float) > m_attrBonus;
+        public readonly IReadOnlyList < (short, float, float) > m_statusIdAndValueAndTimeList;
         public DE_Effect (DO_Effect effectDo, short animId) {
             m_type = effectDo.m_type;
             m_hitRate = effectDo.m_hitRate;
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHp = effectDo.m_deltaHp;
             m_deltaMp = effectDo.m_deltaMp;
+            m_attrBonus = effectDo.m_attributeBonusArr;
             m_statusIdAndValueAndTimeList = new List<ValueTuple<short, float, float>> (effectDo.m_statusIdAndValueAndTimeArr);
         }
     }
