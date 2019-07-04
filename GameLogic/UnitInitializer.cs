@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Entity;
-using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
     class UnitInitializer {

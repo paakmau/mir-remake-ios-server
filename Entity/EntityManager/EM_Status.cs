@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 
@@ -24,7 +23,7 @@ namespace MirRemakeBackend.Entity {
             // for (int i=0; i<statusList.Count; i++)
             //     s_entityPool.m_statusPool.RecycleInstance (statusList[i]);
         }
-        public List<E_Status> AttachStatus (int netId, int casterNetId, (short, float, float)[] statusIdAndValueAndTimeArr) {
+        public List<E_Status> AttachStatus (int netId, int casterNetId, (short, float, float) [] statusIdAndValueAndTimeArr) {
             // TODO: Status EM Attach
             // List<E_Status> oriStatusList = null;
             // if (!m_statusListDict.TryGetValue (netId, out oriStatusList))
