@@ -58,8 +58,8 @@ namespace MirRemakeBackend.Data {
             LoadAllStatus();
             ValueTuple<DO_Status,DO_ConcreteAttributeStatus>[] x=new ValueTuple<DO_Status,DO_ConcreteAttributeStatus>[18];
             int m=-1;
-            for(int i=3;i<26;i++){
-                if(i==5||i==6||(i>=19 &&i<=22)){
+            for(int i=2;i<26;i++){
+                if(i==5||i==4||(i>=19 &&i<=22)){
                     continue;
                 }
                 //Console.WriteLine(i);
