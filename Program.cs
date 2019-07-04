@@ -81,8 +81,6 @@ namespace MirRemakeBackend {
             CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, skillDds, misDds, itemDds, s_networkService);
         }
         static void InitGameLogic () {
-            // 单位初始化器
-            UnitInitializer.s_instance = new UnitInitializer ();
             // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
@@ -94,6 +92,8 @@ namespace MirRemakeBackend {
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
             GL_Log.s_instance = new GL_Log (s_networkService);
+            // 单位初始化器
+            UnitInitializer.s_instance = new UnitInitializer ();
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
