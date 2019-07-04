@@ -87,9 +87,9 @@ namespace MirRemakeBackend.Entity {
             m_statusListDict.TryGetValue (netId, out statusList);
             if (statusList == null) return;
             m_statusListDict.Remove (netId);
-            // TODO: Status 回收实例
-            // for (int i=0; i<statusList.Count; i++)
-            //     s_entityPool.m_statusPool.RecycleInstance (statusList[i]);
+            // 回收Status实例
+            for (int i=0; i<statusList.Count; i++)
+                m_fact.RecycleInstance (statusList[i]);
         }
         public List<E_Status> AttachStatus (int netId, int casterNetId, (short, float, float) [] statusIdAndValueAndTimeArr) {
             // TODO: Status EM Attach
