@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
-using MirRemakeBackend.Network;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.CharacterCreate {
     class CharacterCreator {
@@ -33,13 +33,11 @@ namespace MirRemakeBackend.CharacterCreate {
             var allMis = misDs.GetAllMission ();
             foreach (var ocp in ocpArr)
                 m_ocpInitMisIdDict.Add (ocp, new List<short> ());
-            foreach (var mDo in allMis) {
-                // TODO: 让yzj改为 0长度数组
-                if (mDo.m_fatherMissionIdArr.Length == 1 && mDo.m_fatherMissionIdArr[0] == -1)
+            foreach (var mDo in allMis)
+                if (mDo.m_fatherMissionIdArr.Length == 0)
                     foreach (var ocp in ocpArr)
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
-            }
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // 角色 dds
@@ -49,7 +47,7 @@ namespace MirRemakeBackend.CharacterCreate {
             for (int i = 0; i < skillIdList.Count; i++)
                 m_skillDds.InsertSkill (new DDO_Skill (skillIdList[i], charId, 0, 0));
             // 任务 dds
-            var misIdList = m_ocpInitMisIdDict [ocp];
+            var misIdList = m_ocpInitMisIdDict[ocp];
             for (int i = 0; i < misIdList.Count; i++)
                 m_misDds.InsertMission (new DDO_Mission (misIdList[i], charId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
             // 背包和仓库 dds
