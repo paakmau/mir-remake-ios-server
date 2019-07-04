@@ -4,10 +4,6 @@ namespace MirRemakeBackend {
         FRIEND,
         ENEMY
     }
-    public enum GenderType : byte {
-        MALE,
-        FEMALE
-    }
     enum ActorUnitMainAttributeType : byte {
         STRENGTH,
         INTELLIGENCE,
@@ -43,6 +39,20 @@ namespace MirRemakeBackend {
         PLAYER,
         MONSTER,
         NPC
+    }
+    public enum GenderType : byte {
+        MALE,
+        FEMALE
+    }
+    enum OccupationType : byte {
+        NONE = 0,
+        WARRIOR = 1,
+        ROGUE = 2,
+        MAGE = 4,
+        TAOIST = 8,
+        ALL = WARRIOR | ROGUE | MAGE | TAOIST,
+        PHYSICS_OCCUPATION = WARRIOR | ROGUE,
+        MAGIC_OCCUPATION = MAGE | TAOIST
     }
     enum MonsterType : byte {
         /// <summary>普通怪物</summary>
@@ -120,16 +130,6 @@ namespace MirRemakeBackend {
         VIRTUAL,
         CHARGE
     }
-    enum OccupationType : byte {
-        NONE = 0,
-        WARRIOR = 1,
-        ROGUE = 2,
-        MAGE = 4,
-        TAOIST = 8,
-        ALL = WARRIOR | ROGUE | MAGE | TAOIST,
-        PHYSICS_OCCUPATION = WARRIOR | ROGUE,
-        MAGIC_OCCUPATION = MAGE | TAOIST
-    }
     enum NpcActionType : byte {
         MISSION_ACCEPT,
         MISSION_DELIVERY,
@@ -144,6 +144,12 @@ namespace MirRemakeBackend {
         GAIN_ITEM,
         LEVEL_UP_SKILL,
         TALK_TO_NPC
+    }
+    enum MissionStatus {
+        LOCKED = 0,
+        UNLOCKED_BUT_UNACCEPTABLE = 1,
+        ACCEPTABLE = 2,
+        ACCEPTED = 3
     }
     public enum EquipmentPosition : byte {
         HELMET, //头
@@ -224,10 +230,9 @@ namespace MirRemakeBackend {
         /// </summary>
         ONE_PRESS_RECYCLE
     }
-    enum MissionStatus {
-        LOCKED = 0,
-        UNLOCKED_BUT_UNACCEPTABLE = 1,
-        ACCEPTABLE = 2,
-        ACCEPTED = 3
+    enum ChattingChanelType : byte {
+        WORLD,
+        PRIVATE,
+        SYSTEM
     }
 }
