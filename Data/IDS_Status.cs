@@ -57,12 +57,15 @@ namespace MirRemakeBackend.Data {
         }
         public (DO_Status, DO_ConcreteAttributeStatus) [] GetAllConcreteAttributeStatus (){
             LoadAllStatus();
-            ValueTuple<DO_Status,DO_ConcreteAttributeStatus>[] x=new ValueTuple<DO_Status,DO_ConcreteAttributeStatus>[19];
-            for(int i=3;i<27;i++){
+            ValueTuple<DO_Status,DO_ConcreteAttributeStatus>[] x=new ValueTuple<DO_Status,DO_ConcreteAttributeStatus>[18];
+            int m=-1;
+            for(int i=3;i<26;i++){
                 if(i==5||i==6||(i>=19 &&i<=22)){
                     continue;
                 }
-                x[i]=new ValueTuple<DO_Status,DO_ConcreteAttributeStatus>(res[i],concreteAttributes[i]);
+                Console.WriteLine(i);
+                m++;
+                x[m]=new ValueTuple<DO_Status,DO_ConcreteAttributeStatus>(res[i],concreteAttributes[i]);
             }
             return x;
         }
@@ -70,7 +73,7 @@ namespace MirRemakeBackend.Data {
             LoadAllStatus();
             ValueTuple<DO_Status,DO_SpecialAttributeStatus>[] x=new ValueTuple<DO_Status,DO_SpecialAttributeStatus>[4];
             for(int i=19;i<23;i++){
-                x[19-i]=new ValueTuple<DO_Status,DO_SpecialAttributeStatus>(res[i],specialAttributes[i]);
+                x[i-19]=new ValueTuple<DO_Status,DO_SpecialAttributeStatus>(res[i],specialAttributes[i]);
             }
             return x;
         }
