@@ -37,39 +37,47 @@ namespace MirRemakeBackend.GameLogic {
                             m_deltaMp = (int) ((float) m_deltaMp * (float) caster.m_Magic / (float) target.m_Resistance);
                             break;
                     }
-                    // for(int i=0;i<effectDe.m_attributeArr.Length;i++){
-                    //     switch(effectDe.m_attributeArr[i].Item1){
-                    //         case ActorUnitConcreteAttributeType.ATTACK:
-                    //             m_deltaHp=m_deltaHp+(int)(caster.m_Attack*effectDe.m_attributeArr[i].Item2);
-                    //             break;
-                    //         case ActorUnitConcreteAttributeType.MAGIC:
-                    //             m_deltaHp=m_deltaHp+(int)(caster.m_Magic*effectDe.m_attributeArr[i].Item2);
-                    //             break;
-                    //         case ActorUnitConcreteAttributeType.MAX_HP:
-                    //             m_deltaHp=m_deltaHp+(int)(caster.m_MaxHp*effectDe.m_attributeArr[i].Item2);
-                    //             break;
-                    //         case ActorUnitConcreteAttributeType.MAX_MP:
-                    //             m_deltaHp=m_deltaHp+(int)(caster.m_MaxMp*effectDe.m_attributeArr[i].Item2);
-                    //             break;
-                    //     }
-                    // }
+                     for(int i=0;i<effectDe.m_attrBonus.Count;i++){
+                         switch(effectDe.m_attrBonus[i].Item1){
+                             case ActorUnitConcreteAttributeType.ATTACK:
+                                 m_deltaHp=m_deltaHp+(int)(caster.m_Attack*effectDe.m_attrBonus[i].Item2);
+                                 break;
+                             case ActorUnitConcreteAttributeType.MAGIC:
+                                 m_deltaHp=m_deltaHp+(int)(caster.m_Magic*effectDe.m_attrBonus[i].Item2);
+                                 break;
+                             case ActorUnitConcreteAttributeType.MAX_HP:
+                                 m_deltaHp=m_deltaHp+(int)(caster.m_MaxHp*effectDe.m_attrBonus[i].Item2);
+                                 break;
+                             case ActorUnitConcreteAttributeType.MAX_MP:
+                                 m_deltaHp=m_deltaHp+(int)(caster.m_MaxMp*effectDe.m_attrBonus[i].Item2);
+                                 break;
+                         }
+                     }
                     // xjb计算暴击 应该ok
                     float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate * 0.01f;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
                     if (m_critical)
                         m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f));
 
-                    //减伤+易伤 TODO: 人物属性里没有减伤易伤？
+                    //减伤+易伤 
                     if (m_deltaHp < 0) {
                         if (effectDe.m_type == EffectType.PHYSICS) {
-                            //m_deltaHp=m_deltaHp*target.m_???
+                            m_deltaHp=(int)(m_deltaHp*(target.m_PhysicsVulernability*0.01f+1)*(1-target.m_DamageReduction*0.01f));
+                        }
+                        else{
+                             m_deltaHp=(int)(m_deltaHp*(target.m_MagicVulernability*0.01f+1)*(1-target.m_DamageReduction*0.01f));
                         }
 
                     }
 
-                    //仇恨 TODO:
+                    //仇恨 (伤害列表)
                     if (m_deltaHp < 0) {
-                        //target.
+                        if(!target.m_netIdAndDamageDict.ContainsKey(caster.m_networkId)){
+                            target.m_netIdAndDamageDict[caster.m_networkId]=target.m_netIdAndDamageDict[caster.m_networkId]-m_deltaHp;
+                        }
+                        else{
+                            target.m_netIdAndDamageDict.Add(caster.m_networkId,-m_deltaHp);
+                        }
                     }
 
                     // xjb计算状态 TODO: 这里是不是要单独拎出去
