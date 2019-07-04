@@ -1,6 +1,6 @@
 using LiteNetLib.Utils;
-using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.CharacterCreate;
+using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
     interface IClientCommand {
@@ -44,9 +44,9 @@ namespace MirRemakeBackend.Network {
             short skillId = reader.GetShort ();
             NO_SkillParam skillParm = reader.GetSkillParam ();
             byte cnt = reader.GetByte ();
-            int [] hitTargetArr = new int [cnt];
+            int[] hitTargetArr = new int[cnt];
             for (int i = 0; i < cnt; i++) {
-                hitTargetArr [i] = reader.GetInt ();
+                hitTargetArr[i] = reader.GetInt ();
             }
             GL_CharacterAction.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm, hitTargetArr);
         }

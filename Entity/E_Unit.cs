@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.DataEntity;
@@ -9,10 +10,12 @@ namespace MirRemakeBackend.Entity {
     abstract class E_Unit {
         protected class ConcreteAttribute {
             private Dictionary<ActorUnitConcreteAttributeType, int> m_attrDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
-            public void Reset (IEnumerator<ActorUnitConcreteAttributeType> en) {
-                m_attrDict.Clear ();
-                while (en.MoveNext ())
-                    m_attrDict[en.Current] = 0;
+            public ConcreteAttribute () {
+                Reset ();
+            }
+            public void Reset () {
+                foreach (ActorUnitConcreteAttributeType attr in Enum.GetValues (typeof (ActorUnitConcreteAttributeType)))
+                    m_attrDict[attr] = 0;
             }
             public int GetAttr (ActorUnitConcreteAttributeType type) {
                 return m_attrDict[type];
@@ -143,12 +146,19 @@ namespace MirRemakeBackend.Entity {
         }
         public virtual void Reset (DE_Unit de) {
             m_unitDe = de;
-            m_battleConcreteAttr.Reset (de.m_attrDict.Keys.GetEnumerator ());
             Respawn ();
+        }
+        public void Dead () {
+            m_curHp = m_curMp = 0;
+            m_battleConcreteAttr.Reset ();
+            m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;
+            m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
+            m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;
         }
         public void Respawn () {
             m_curHp = m_MaxHp;
             m_curMp = m_MaxMp;
+            m_battleConcreteAttr.Reset ();
             m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;

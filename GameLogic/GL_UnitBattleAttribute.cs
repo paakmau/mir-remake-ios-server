@@ -147,7 +147,7 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < hTarRemoveList.Count; i++)
                     unitEn.Current.m_netIdAndDamageDict.Remove (hTarRemoveList[i]);
             }
-            // 处理具体属性的每秒变化 TODO: 应当用 状态 处理
+            // 每秒变化 (每秒回血回蓝)
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
@@ -159,9 +159,6 @@ namespace MirRemakeBackend.GameLogic {
                     int newMP = en.Current.m_curMp + en.Current.m_DeltaMpPerSecond;
                     en.Current.m_curHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
                     en.Current.m_curMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
-                    if (en.Current.m_IsDead)
-                        // 单位死亡 TODO: 状态凶手
-                        UnitDead (en.Current, en.Current);
                 }
             }
         }
@@ -230,8 +227,21 @@ namespace MirRemakeBackend.GameLogic {
             target.m_netIdAndDamageDict[caster.m_networkId] = oriDmg + newDmg;
 
             // 若单位死亡
-            if (target.m_IsDead)
-                UnitDead (target, caster);
+            if (target.m_IsDead) {
+                target.Dead();
+                // client
+                m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
+                    EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
+                    caster.m_networkId,
+                    target.m_networkId
+                ));
+                // log
+                if (target.m_UnitType == ActorUnitType.MONSTER && caster.m_UnitType == ActorUnitType.PLAYER)
+                    GL_Log.s_instance.NotifyLog (GameLogType.KILL_MONSTER, caster.m_networkId, ((E_Monster) target).m_MonsterId);
+                // 通知 CharacterLevel
+                if (caster.m_UnitType == ActorUnitType.PLAYER)
+                    GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) caster, target);
+            }
         }
         private void AttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float>[] statusIdAndValueAndTimeArr) {
             var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, caster.m_networkId, statusIdAndValueAndTimeArr);
@@ -241,20 +251,6 @@ namespace MirRemakeBackend.GameLogic {
         private void ConcreteAttributeChange (E_Unit target, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > dAttr) {
             for (int i = 0; i < dAttr.Count; i++)
                 target.AddBattleConAttr (dAttr[i].Item1, dAttr[i].Item2);
-        }
-        private void UnitDead (E_Unit dead, E_Unit killer) {
-            // client
-            m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
-                EM_Sight.s_instance.GetInSightCharacterNetworkId (dead.m_networkId, true),
-                killer.m_networkId,
-                dead.m_networkId
-            ));
-            // log
-            if (dead.m_UnitType == ActorUnitType.MONSTER && killer.m_UnitType == ActorUnitType.PLAYER)
-                GL_Log.s_instance.NotifyLog (GameLogType.KILL_MONSTER, killer.m_networkId, ((E_Monster) dead).m_MonsterId);
-            // 通知 CharacterLevel
-            if (killer.m_UnitType == ActorUnitType.PLAYER)
-                GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) killer, dead);
         }
         private void StatusChanged (E_Unit unit, E_Status status, int k) {
             // TODO: StatusChanged GL
