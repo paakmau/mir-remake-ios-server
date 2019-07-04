@@ -62,7 +62,7 @@ namespace MirRemakeBackend.Data {
                 if(i==5||i==6||(i>=19 &&i<=22)){
                     continue;
                 }
-                Console.WriteLine(i);
+                //Console.WriteLine(i);
                 m++;
                 x[m]=new ValueTuple<DO_Status,DO_ConcreteAttributeStatus>(res[i],concreteAttributes[i]);
             }
