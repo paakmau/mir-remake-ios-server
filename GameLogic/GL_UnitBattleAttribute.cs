@@ -68,18 +68,27 @@ namespace MirRemakeBackend.GameLogic {
                 for (int i = 0; i < hTarRemoveList.Count; i++)
                     unitEn.Current.m_netIdAndDamageDict.Remove (hTarRemoveList[i]);
             }
-            // 每秒变化 (每秒回血回蓝)
+            // 每秒变化 (每秒回血回蓝) (Status)
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
-                var en = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
-                while (en.MoveNext ()) {
-                    if (en.Current.m_IsDead)
+                unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
+                while (unitEn.MoveNext ()) {
+                    if (unitEn.Current.m_IsDead)
                         continue;
-                    int newHP = en.Current.m_curHp + en.Current.m_DeltaHpPerSecond;
-                    int newMP = en.Current.m_curMp + en.Current.m_DeltaMpPerSecond;
-                    en.Current.m_curHp = Math.Max (Math.Min (newHP, en.Current.m_MaxHp), 0);
-                    en.Current.m_curMp = Math.Max (Math.Min (newMP, en.Current.m_MaxMp), 0);
+                    int newHP = unitEn.Current.m_curHp + unitEn.Current.m_DeltaHpPerSecond;
+                    int newMP = unitEn.Current.m_curMp + unitEn.Current.m_DeltaMpPerSecond;
+                    unitEn.Current.m_curHp = Math.Max (Math.Min (newHP, unitEn.Current.m_MaxHp), 0);
+                    unitEn.Current.m_curMp = Math.Max (Math.Min (newMP, unitEn.Current.m_MaxMp), 0);
+                }
+                allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
+                while (allUnitStatusEn.MoveNext ()) {
+                    var netId = allUnitStatusEn.Current.Key;
+                    var statusList = allUnitStatusEn.Current.Value;
+                    var unit = EM_Sight.s_instance.GetUnitVisibleByNetworkId (netId);
+                    if (unit == null) continue;
+                    for (int i = 0; i < statusList.Count; i++)
+                        TickStatusPerSecond (unit, statusList[i]);
                 }
             }
         }
@@ -199,7 +208,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         private void RemoveStatus (E_Unit target, List<int> orderedIndexList, IReadOnlyList<E_Status> fullStatusList) {
             for (int i = 0; i < orderedIndexList.Count; i++)
-                m_statusHandlerDict[fullStatusList[orderedIndexList[i]].m_Type].Remove(fullStatusList[orderedIndexList[i]], target);
+                m_statusHandlerDict[fullStatusList[orderedIndexList[i]].m_Type].Remove (fullStatusList[orderedIndexList[i]], target);
             EM_Status.s_instance.RemoveOrderedStatus (target.m_networkId, orderedIndexList);
         }
     }
