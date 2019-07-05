@@ -54,7 +54,7 @@ namespace MirRemakeBackend.Entity {
                 var type = typeof (IStatusInitializer);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && type.IsAssignableFrom (p));
                 foreach (var implType in implTypes) {
-                    IStatusInitializer impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IStatusInitializer;
+                    IStatusInitializer impl = implType.GetConstructor (Type.EmptyTypes).Invoke (null) as IStatusInitializer;
                     m_initializerDict.Add (impl.m_StatusType, impl);
                 }
             }

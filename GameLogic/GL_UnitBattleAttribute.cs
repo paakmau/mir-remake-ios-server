@@ -21,7 +21,7 @@ namespace MirRemakeBackend.GameLogic {
             var type = typeof (IStatusHandler);
             var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && type.IsAssignableFrom (p));
             foreach (var impl in implTypes) {
-                var sh = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IStatusHandler;
+                var sh = impl.GetConstructor (Type.EmptyTypes).Invoke (null) as IStatusHandler;
                 m_statusHandlerDict.Add (sh.m_Type, sh);
             }
         }
