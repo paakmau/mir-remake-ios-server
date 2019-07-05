@@ -227,23 +227,24 @@ namespace MirRemakeBackend.Entity {
             set { m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT] = value; }
         }
         private ConcreteAttribute m_equipConcreteAttr = new ConcreteAttribute ();
-        public override int m_MaxHp { get { return m_equipConcreteAttr.m_MaxHp + base.m_MaxHp; } }
-        public override int m_MaxMp { get { return m_equipConcreteAttr.m_MaxMp + base.m_MaxMp; } }
-        public override int m_DeltaHpPerSecond { get { return m_equipConcreteAttr.m_DeltaHpPerSecond + base.m_DeltaHpPerSecond; } }
-        public override int m_DeltaMpPerSecond { get { return m_equipConcreteAttr.m_DeltaMpPerSecond + base.m_DeltaMpPerSecond; } }
-        public override int m_Attack { get { return m_equipConcreteAttr.m_Attack + base.m_Attack; } }
-        public override int m_Magic { get { return m_equipConcreteAttr.m_Magic + base.m_Magic; } }
-        public override int m_Defence { get { return m_equipConcreteAttr.m_Defence + base.m_Defence; } }
-        public override int m_Resistance { get { return m_equipConcreteAttr.m_Resistance + base.m_Resistance; } }
-        public override int m_Tenacity { get { return m_equipConcreteAttr.m_Tenacity + base.m_Tenacity; } }
-        public override int m_Speed { get { return m_equipConcreteAttr.m_Speed + base.m_Speed; } }
-        public override int m_CriticalRate { get { return m_equipConcreteAttr.m_CriticalRate + base.m_CriticalRate; } }
-        public override int m_CriticalBonus { get { return m_equipConcreteAttr.m_CriticalBonus + base.m_CriticalBonus; } }
-        public override int m_HitRate { get { return m_equipConcreteAttr.m_HitRate + base.m_HitRate; } }
-        public override int m_DodgeRate { get { return m_equipConcreteAttr.m_DodgeRate + base.m_DodgeRate; } }
-        public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
-        public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
-        public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
+        private ConcreteAttribute m_mainPointConcreteAttr = new ConcreteAttribute ();
+        public override int m_MaxHp { get { return m_equipConcreteAttr.m_MaxHp + m_mainPointConcreteAttr.m_MaxHp + base.m_MaxHp; } }
+        public override int m_MaxMp { get { return m_equipConcreteAttr.m_MaxMp + m_mainPointConcreteAttr.m_MaxMp + base.m_MaxMp; } }
+        public override int m_DeltaHpPerSecond { get { return m_equipConcreteAttr.m_DeltaHpPerSecond + m_mainPointConcreteAttr.m_DeltaHpPerSecond + base.m_DeltaHpPerSecond; } }
+        public override int m_DeltaMpPerSecond { get { return m_equipConcreteAttr.m_DeltaMpPerSecond + m_mainPointConcreteAttr.m_DeltaMpPerSecond + base.m_DeltaMpPerSecond; } }
+        public override int m_Attack { get { return m_equipConcreteAttr.m_Attack + m_mainPointConcreteAttr.m_Attack + base.m_Attack; } }
+        public override int m_Magic { get { return m_equipConcreteAttr.m_Magic + m_mainPointConcreteAttr.m_Magic + base.m_Magic; } }
+        public override int m_Defence { get { return m_equipConcreteAttr.m_Defence + m_mainPointConcreteAttr.m_Defence + base.m_Defence; } }
+        public override int m_Resistance { get { return m_equipConcreteAttr.m_Resistance + m_mainPointConcreteAttr.m_Resistance + base.m_Resistance; } }
+        public override int m_Tenacity { get { return m_equipConcreteAttr.m_Tenacity + m_mainPointConcreteAttr.m_Tenacity + base.m_Tenacity; } }
+        public override int m_Speed { get { return m_equipConcreteAttr.m_Speed + m_mainPointConcreteAttr.m_Speed + base.m_Speed; } }
+        public override int m_CriticalRate { get { return m_equipConcreteAttr.m_CriticalRate + m_mainPointConcreteAttr.m_CriticalRate + base.m_CriticalRate; } }
+        public override int m_CriticalBonus { get { return m_equipConcreteAttr.m_CriticalBonus + m_mainPointConcreteAttr.m_CriticalBonus + base.m_CriticalBonus; } }
+        public override int m_HitRate { get { return m_equipConcreteAttr.m_HitRate + m_mainPointConcreteAttr.m_HitRate + base.m_HitRate; } }
+        public override int m_DodgeRate { get { return m_equipConcreteAttr.m_DodgeRate + m_mainPointConcreteAttr.m_DodgeRate + base.m_DodgeRate; } }
+        public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
+        public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
+        public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
         public void Reset (int netId, int charId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;

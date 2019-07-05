@@ -3,10 +3,7 @@ using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
-    /// 管理角色
-    /// 技能释放, 移动等
-    /// 属性点分配
-    /// </summary>
+    /// 管理消息
     /// </summary>
     class GL_Log : GameLogicBase {
         public static GL_Log s_instance;
