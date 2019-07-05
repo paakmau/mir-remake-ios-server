@@ -102,6 +102,7 @@ namespace MirRemakeBackend.GameLogic {
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, (int)(charObj.m_Spirit*0.05));
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAGIC, (int)(charObj.m_Intelligence*0.5));
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, (int)(charObj.m_Spirit*0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_HP, (int)(charObj.m_Spirit*2.5));
         }
     }
 }
