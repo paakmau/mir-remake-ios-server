@@ -48,7 +48,7 @@ namespace MirRemakeBackend {
         }
         static void InitEntityManager () {
             // DataService
-            IDS_Map mapDs = new DS_MapImpl ();
+            IDS_MonsterMap mapDs = new DS_MonsterMapImpl ();
             IDS_Character charDs = new DS_CharacterImpl ();
             IDS_Monster monsterDs = new DS_MonsterImpl ();
             IDS_Status statusDs = new DS_StatusImpl ();

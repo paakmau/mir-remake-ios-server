@@ -12,7 +12,7 @@ namespace MirRemakeBackend.DataEntity {
         private Dictionary<short, ValueTuple<DE_Unit, DE_MonsterData>> m_monsterDict = new Dictionary<short, ValueTuple<DE_Unit, DE_MonsterData>> ();
         private Dictionary<OccupationType, DE_Character> m_characterDict = new Dictionary<OccupationType, DE_Character> ();
         private IReadOnlyList<ValueTuple<short, Vector2>> m_monsterIdAndRespawnPositionList;
-        public DEM_Unit (IDS_Monster monDs, IDS_Character charDs, IDS_Map mapDs) {
+        public DEM_Unit (IDS_Monster monDs, IDS_Character charDs, IDS_MonsterMap mapDs) {
             var monsterDoArr = monDs.GetAllMonster ();
             var charDoAllLvArr = charDs.GetAllCharacter ();
             foreach (var monsterDo in monsterDoArr)

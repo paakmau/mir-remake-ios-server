@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using LitJson;
+
 namespace MirRemakeBackend.Data {
-    interface IDS_Map {
+    interface IDS_MonsterMap {
         /// <summary>
         /// 获取所有怪物的刷新位置
         /// </summary>
@@ -15,7 +15,7 @@ namespace MirRemakeBackend.Data {
         /// </returns>
         ValueTuple<short, Vector2>[] GetAllMonsterRespawnPosition ();
     }
-    class DS_MapImpl : IDS_Map {
+    class DS_MonsterMapImpl : IDS_MonsterMap {
         public ValueTuple<short, Vector2>[] GetAllMonsterRespawnPosition () {
             string jsonFile = File.ReadAllText ("Data/D_Map.json");
             JsonData data = JsonMapper.ToObject (jsonFile);
