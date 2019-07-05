@@ -37,22 +37,22 @@ namespace MirRemakeBackend.GameLogic {
                             m_deltaMp = (int) ((float) m_deltaMp * (float) caster.m_Magic / (float) target.m_Resistance);
                             break;
                     }
-                     for(int i=0;i<effectDe.m_attrBonus.Count;i++){
-                         switch(effectDe.m_attrBonus[i].Item1){
-                             case ActorUnitConcreteAttributeType.ATTACK:
-                                 m_deltaHp=m_deltaHp+(int)(caster.m_Attack*effectDe.m_attrBonus[i].Item2);
-                                 break;
-                             case ActorUnitConcreteAttributeType.MAGIC:
-                                 m_deltaHp=m_deltaHp+(int)(caster.m_Magic*effectDe.m_attrBonus[i].Item2);
-                                 break;
-                             case ActorUnitConcreteAttributeType.MAX_HP:
-                                 m_deltaHp=m_deltaHp+(int)(caster.m_MaxHp*effectDe.m_attrBonus[i].Item2);
-                                 break;
-                             case ActorUnitConcreteAttributeType.MAX_MP:
-                                 m_deltaHp=m_deltaHp+(int)(caster.m_MaxMp*effectDe.m_attrBonus[i].Item2);
-                                 break;
-                         }
-                     }
+                    for (int i = 0; i < effectDe.m_attrBonus.Count; i++) {
+                        switch (effectDe.m_attrBonus[i].Item1) {
+                            case ActorUnitConcreteAttributeType.ATTACK:
+                                m_deltaHp = m_deltaHp + (int) (caster.m_Attack * effectDe.m_attrBonus[i].Item2);
+                                break;
+                            case ActorUnitConcreteAttributeType.MAGIC:
+                                m_deltaHp = m_deltaHp + (int) (caster.m_Magic * effectDe.m_attrBonus[i].Item2);
+                                break;
+                            case ActorUnitConcreteAttributeType.MAX_HP:
+                                m_deltaHp = m_deltaHp + (int) (caster.m_MaxHp * effectDe.m_attrBonus[i].Item2);
+                                break;
+                            case ActorUnitConcreteAttributeType.MAX_MP:
+                                m_deltaHp = m_deltaHp + (int) (caster.m_MaxMp * effectDe.m_attrBonus[i].Item2);
+                                break;
+                        }
+                    }
                     // xjb计算暴击 应该ok
                     float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate * 0.01f;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
@@ -62,21 +62,19 @@ namespace MirRemakeBackend.GameLogic {
                     //减伤+易伤 
                     if (m_deltaHp < 0) {
                         if (effectDe.m_type == EffectType.PHYSICS) {
-                            m_deltaHp=(int)(m_deltaHp*(target.m_PhysicsVulernability*0.01f+1)*(1-target.m_DamageReduction*0.01f));
-                        }
-                        else{
-                             m_deltaHp=(int)(m_deltaHp*(target.m_MagicVulernability*0.01f+1)*(1-target.m_DamageReduction*0.01f));
+                            m_deltaHp = (int) (m_deltaHp * (target.m_PhysicsVulernability * 0.01f + 1) * (1 - target.m_DamageReduction * 0.01f));
+                        } else {
+                            m_deltaHp = (int) (m_deltaHp * (target.m_MagicVulernability * 0.01f + 1) * (1 - target.m_DamageReduction * 0.01f));
                         }
 
                     }
 
                     //仇恨 (伤害列表)
                     if (m_deltaHp < 0) {
-                        if(!target.m_netIdAndDamageDict.ContainsKey(caster.m_networkId)){
-                            target.m_netIdAndDamageDict[caster.m_networkId]=target.m_netIdAndDamageDict[caster.m_networkId]-m_deltaHp;
-                        }
-                        else{
-                            target.m_netIdAndDamageDict.Add(caster.m_networkId,-m_deltaHp);
+                        if (!target.m_netIdAndDamageDict.ContainsKey (caster.m_networkId)) {
+                            target.m_netIdAndDamageDict[caster.m_networkId] = target.m_netIdAndDamageDict[caster.m_networkId] - m_deltaHp;
+                        } else {
+                            target.m_netIdAndDamageDict.Add (caster.m_networkId, -m_deltaHp);
                         }
                     }
 
@@ -257,7 +255,7 @@ namespace MirRemakeBackend.GameLogic {
 
             // 若单位死亡
             if (target.m_IsDead) {
-                target.Dead();
+                target.Dead ();
                 // client
                 m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (
                     EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
@@ -272,10 +270,9 @@ namespace MirRemakeBackend.GameLogic {
                     GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) caster, target);
             }
         }
-        private void AttachStatus (E_Unit target, E_Unit caster, ValueTuple<short, float, float>[] statusIdAndValueAndTimeArr) {
-            var statusList = EM_Status.s_instance.AttachStatus (target.m_networkId, caster.m_networkId, statusIdAndValueAndTimeArr);
-            for (int i = 0; i < statusList.Count; i++)
-                StatusChanged (target, statusList[i], 1);
+        private void AttachStatus (E_Unit target, E_Unit caster, (short, float, float) [] statusIdAndValueAndTimeArr) {
+            foreach (var idValueTime in statusIdAndValueAndTimeArr)
+                EM_Status.s_instance.GetStatusInstanceAndAttach (target.m_networkId, caster.m_networkId, idValueTime);
         }
         private void ConcreteAttributeChange (E_Unit target, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > dAttr) {
             for (int i = 0; i < dAttr.Count; i++)
