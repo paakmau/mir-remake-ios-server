@@ -23,6 +23,8 @@ namespace MirRemakeBackend.GameLogic {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             charObj.DistributePoints (str, intl, agl, spr);
+            // 角色加点后, 具体属性变化
+            this.MainPointToConAttr (charObj);
             // dds 与 client
             EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
@@ -31,12 +33,32 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_Intelligence,
                 charObj.m_Agility,
                 charObj.m_Spirit));
-            // TODO: 属性加点
         }
         public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
+        }
+        public E_Character NotifyInitCharacter (int netId, int charId) {
+            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
+            MainPointToConAttr(newChar);
+            // client
+            m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
+                netId,
+                newChar.m_Occupation,
+                newChar.m_Level,
+                newChar.m_experience,
+                newChar.m_Strength,
+                newChar.m_Intelligence,
+                newChar.m_Agility,
+                newChar.m_Spirit,
+                newChar.m_TotalMainPoint,
+                newChar.m_VirtualCurrency,
+                newChar.m_ChargeCurrency));
+            return newChar;
+        }
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Unit.s_instance.RemoveCharacter (netId);
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)
@@ -68,6 +90,10 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
                 charObj.m_networkId, charObj.m_VirtualCurrency, charObj.m_ChargeCurrency));
+        }
+        private void MainPointToConAttr (E_Character charObj) {
+            // TODO: 根据角色属性点 直接计算 具体属性
+            // charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, 23333);
         }
     }
 }

@@ -283,6 +283,9 @@ namespace MirRemakeBackend.Entity {
         public void AddEquipConAttr (ActorUnitConcreteAttributeType type, int value) {
             m_equipConcreteAttr.AddAttr (type, value);
         }
+        public void SetMainPointConAttr (ActorUnitConcreteAttributeType type, int value) {
+            m_mainPointConcreteAttr.SetAttr (type, value);
+        }
         public DDO_Character GetDdo () {
             var currencyArr = new (CurrencyType, long) [2];
             currencyArr[0] = (CurrencyType.VIRTUAL, m_VirtualCurrency);
