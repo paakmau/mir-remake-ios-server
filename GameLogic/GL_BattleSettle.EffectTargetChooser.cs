@@ -144,6 +144,5 @@ namespace MirRemakeBackend.GameLogic {
                 GetActorUnitsInRectRange (self, self.m_position, parm.m_direction, m_length, m_width, m_targetCamp, m_targetNumber, resList);
             }
         }
-        // TODO: 全部写完 ETC
     }
 }

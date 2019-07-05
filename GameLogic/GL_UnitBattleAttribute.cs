@@ -179,7 +179,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void AttachHatred (E_Unit target, E_Unit caster, float hatred) {
             // 仇恨 (伤害列表)
-            // TODO: 仇恨 现在暂时使用 E_Unit.m_netIdAndDamageDict 来记录
+            // xjb 仇恨 现在暂时使用 E_Unit.m_netIdAndDamageDict 来记录
         }
         private void AttachStatus (E_Unit target, E_Unit caster, IReadOnlyList < (short, float, float) > statusIdAndValueAndTimeList) {
             for (int i = 0; i < statusIdAndValueAndTimeList.Count; i++) {

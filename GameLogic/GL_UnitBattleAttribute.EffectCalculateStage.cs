@@ -25,11 +25,11 @@ namespace MirRemakeBackend.GameLogic {
             public void InitWithCasterAndTarget (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
                 m_de = effectDe;
                 m_animId = animId;
-                // xjb计算命中
+                // 计算命中
                 float hitRate = effectDe.m_hitRate * caster.m_HitRate * 0.01f;
                 m_hit = MyRandom.NextInt (1, 101) <= hitRate;
                 if (m_hit) {
-                    // xjb计算基础伤害 (或能量剥夺)
+                    // 计算基础伤害 (或能量剥夺)
                     m_deltaHp = effectDe.m_deltaHp;
                     m_deltaMp = effectDe.m_deltaMp;
                     switch (effectDe.m_type) {
@@ -57,7 +57,7 @@ namespace MirRemakeBackend.GameLogic {
                                 break;
                         }
                     }
-                    // xjb计算暴击 应该ok
+                    // 计算暴击
                     float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate * 0.01f;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
                     if (m_critical)
@@ -73,7 +73,7 @@ namespace MirRemakeBackend.GameLogic {
 
                     }
 
-                    // xjb计算状态
+                    // 计算状态
                     m_statusIdAndValueAndTimeArr = new (short, float, float) [effectDe.m_statusIdAndValueAndTimeList.Count];
                     for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
                         var info = effectDe.m_statusIdAndValueAndTimeList[i];
@@ -82,7 +82,7 @@ namespace MirRemakeBackend.GameLogic {
                         m_statusIdAndValueAndTimeArr[i] = (info.Item1, value, durationTime);
                     }
 
-                    // TODO: xjb计算仇恨
+                    // xjb计算仇恨
                     if (m_deltaHp < 0)
                         m_hatred = -m_deltaHp;
                 }
