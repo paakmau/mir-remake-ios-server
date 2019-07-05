@@ -101,16 +101,15 @@ namespace MirRemakeBackend.Entity {
             oriStatusList.Add (statusObj);
         }
         public void RemoveOrderedStatus (int netId, List<int> orderedIndexList) {
-            // TODO: Status EM Remove
-            // List<E_Status> statusList = null;
-            // m_statusListDict.TryGetValue (netId, out statusList);
-            // if (statusList == null)
-            //     return;
-            // for (int i = orderedIndexList.Count - 1; i >= 0; i--) {
-            //     E_Status obj = statusList[orderedIndexList[i]];
-            //     s_entityPool.m_statusPool.RecycleInstance (obj);
-            //     statusList.RemoveAt (orderedIndexList[i]);
-            // }
+            List<E_Status> statusList = null;
+            m_statusListDict.TryGetValue (netId, out statusList);
+            if (statusList == null)
+                return;
+            for (int i = orderedIndexList.Count - 1; i >= 0; i--) {
+                E_Status obj = statusList[orderedIndexList[i]];
+                m_fact.RecycleInstance (obj);
+                statusList.RemoveAt (orderedIndexList[i]);
+            }
         }
         public Dictionary<int, List<E_Status>>.Enumerator GetStatusEn () {
             return m_statusListDict.GetEnumerator ();
