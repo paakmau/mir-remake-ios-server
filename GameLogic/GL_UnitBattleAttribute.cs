@@ -110,19 +110,17 @@ namespace MirRemakeBackend.GameLogic {
         private float m_secondTimer = 0;
         public override void Tick (float dT) {
             // 移除超时的状态
-            var statusEn = EM_Status.s_instance.GetStatusEn ();
-            while (statusEn.MoveNext ()) {
-                int netId = statusEn.Current.Key;
+            var allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
+            while (allUnitStatusEn.MoveNext ()) {
+                int netId = allUnitStatusEn.Current.Key;
+                var statusList = allUnitStatusEn.Current.Value;
                 E_Unit unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
                 if (unit == null) continue;
                 var statusToRemoveList = new List<int> ();
-                for (int i = 0; i < statusEn.Current.Value.Count; i++) {
-                    if (MyTimer.CheckTimeUp (statusEn.Current.Value[i].m_endTime)) {
+                for (int i = 0; i < statusList.Count; i++)
+                    if (MyTimer.CheckTimeUp (statusList[i].m_endTime))
                         statusToRemoveList.Add (i);
-                        StatusChanged (unit, statusEn.Current.Value[i], -1);
-                    }
-                }
-                EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
+                RemoveStatus (netId, statusToRemoveList);
             }
             // 处理仇恨消失
             var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
@@ -237,7 +235,7 @@ namespace MirRemakeBackend.GameLogic {
             if (effect.m_hit) {
                 // Hp Mp 状态
                 HpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
-                AttachStatus (target, caster, effect.m_statusIdAndValueAndTimeArr);
+                AttachStatus (target.m_networkId, caster.m_networkId, effect.m_statusIdAndValueAndTimeArr);
             }
         }
         private void HpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
@@ -270,31 +268,12 @@ namespace MirRemakeBackend.GameLogic {
                     GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) caster, target);
             }
         }
-        private void AttachStatus (E_Unit target, E_Unit caster, (short, float, float) [] statusIdAndValueAndTimeArr) {
+        private void AttachStatus (int targetNetId, int casterNetId, (short, float, float) [] statusIdAndValueAndTimeArr) {
             foreach (var idValueTime in statusIdAndValueAndTimeArr)
-                EM_Status.s_instance.GetStatusInstanceAndAttach (target.m_networkId, caster.m_networkId, idValueTime);
+                EM_Status.s_instance.GetStatusInstanceAndAttach (targetNetId, casterNetId, idValueTime);
         }
-        private void ConcreteAttributeChange (E_Unit target, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > dAttr) {
-            for (int i = 0; i < dAttr.Count; i++)
-                target.AddBattleConAttr (dAttr[i].Item1, dAttr[i].Item2);
-        }
-        private void StatusChanged (E_Unit unit, E_Status status, int k) {
-            // TODO: StatusChanged GL
-            // // 处理具体属性
-            // var cAttrList = status.m_dataEntity.m_affectAttributeList;
-            // for (int i = 0; i < cAttrList.Count; i++)
-            //     unit.AddBattleConAttr (cAttrList[i].Item1, (int) (cAttrList[i].Item2 * status.m_value * k));
-            // // 处理特殊属性
-            // var sAttrList = status.m_dataEntity.m_specialAttributeList;
-            // for (int i = 0; i < sAttrList.Count; i++)
-            //     unit.AddSpAttr (sAttrList[i], k);
-            // // 通知Client
-            // m_networkService.SendServerCommand (SC_ApplyAllStatus.Instance (
-            //     EM_Sight.s_instance.GetInSightCharacterNetworkId (unit.m_networkId, true),
-            //     unit.m_networkId,
-            //     status.GetNo (),
-            //     k == 1
-            // ));
+        private void RemoveStatus (int netId, List<int> statusToRemoveList) {
+            EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
         }
     }
 }

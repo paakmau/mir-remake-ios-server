@@ -111,7 +111,7 @@ namespace MirRemakeBackend.Entity {
                 statusList.RemoveAt (orderedIndexList[i]);
             }
         }
-        public Dictionary<int, List<E_Status>>.Enumerator GetStatusEn () {
+        public Dictionary<int, List<E_Status>>.Enumerator GetAllUnitStatusEn () {
             return m_statusListDict.GetEnumerator ();
         }
     }
