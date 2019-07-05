@@ -24,7 +24,7 @@ namespace MirRemakeBackend.Network {
             // 初始化LiteNet
             m_serverNetManager = new NetManager (this);
             m_serverNetManager.Start (c_serverPort);
-            // 实例化所有ClientCommand接口的实现类
+            // 实例化所有 ClientCommand 接口的实现类
             var ccType = typeof (IClientCommand);
             var ccImplTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && ccType.IsAssignableFrom (p));
             foreach (var type in ccImplTypes) {

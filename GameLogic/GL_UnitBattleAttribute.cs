@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
@@ -10,27 +11,33 @@ namespace MirRemakeBackend.GameLogic {
     /// 管理单位战斗相关属性与状态
     /// </summary>
     partial class GL_UnitBattleAttribute : GameLogicBase {
-        private class StatusHandler {
-
-        }
         public static GL_UnitBattleAttribute s_instance;
-        private static EffectCalculateStage m_effectStage = new EffectCalculateStage ();
+        private EffectCalculateStage m_effectStage = new EffectCalculateStage ();
+        private Dictionary<StatusType, IStatusHandler> m_statusHandlerDict = new Dictionary<StatusType, IStatusHandler> ();
         private const float c_isAttackedLastTime = 7.0f;
         private float m_secondTimer = 0;
-        public GL_UnitBattleAttribute (INetworkService netService) : base (netService) { }
+        public GL_UnitBattleAttribute (INetworkService netService) : base (netService) {
+            // 实例化所有 StatusHandler 接口的实现类
+            var type = typeof (IStatusHandler);
+            var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && type.IsAssignableFrom (p));
+            foreach (var impl in implTypes) {
+                var sh = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IStatusHandler;
+                m_statusHandlerDict.Add (sh.m_Type, sh);
+            }
+        }
         public override void Tick (float dT) {
             // 移除超时的状态
             var allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
             while (allUnitStatusEn.MoveNext ()) {
                 int netId = allUnitStatusEn.Current.Key;
                 var statusList = allUnitStatusEn.Current.Value;
-                E_Unit unit = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+                E_Unit unit = EM_Sight.s_instance.GetUnitVisibleByNetworkId (netId);
                 if (unit == null) continue;
                 var statusToRemoveList = new List<int> ();
                 for (int i = 0; i < statusList.Count; i++)
                     if (MyTimer.CheckTimeUp (statusList[i].m_endTime))
                         statusToRemoveList.Add (i);
-                RemoveStatus (netId, statusToRemoveList);
+                RemoveStatus (unit, statusToRemoveList, statusList);
             }
             // 处理仇恨消失
             var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
@@ -144,7 +151,7 @@ namespace MirRemakeBackend.GameLogic {
             if (m_effectStage.m_Hit) {
                 AttachHatred (target, caster, m_effectStage.m_Hatred);
                 AttachHpAndMpChange (target, caster, m_effectStage.m_DeltaHp, m_effectStage.m_DeltaMp);
-                AttachStatus (target.m_networkId, caster.m_networkId, m_effectStage.m_StatusIdAndValueAndTimeList);
+                AttachStatus (target, caster, m_effectStage.m_StatusIdAndValueAndTimeList);
             }
         }
         private void AttachHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
@@ -181,14 +188,19 @@ namespace MirRemakeBackend.GameLogic {
             // 仇恨 (伤害列表)
             // TODO: 仇恨 现在暂时使用 E_Unit.m_netIdAndDamageDict 来记录
         }
-        private void AttachStatus (int targetNetId, int casterNetId, IReadOnlyList < (short, float, float) > statusIdAndValueAndTimeList) {
-            // TODO: 
-            for (int i = 0; i < statusIdAndValueAndTimeList.Count; i++)
-                EM_Status.s_instance.GetStatusInstanceAndAttach (targetNetId, casterNetId, statusIdAndValueAndTimeList[i]);
+        private void AttachStatus (E_Unit target, E_Unit caster, IReadOnlyList < (short, float, float) > statusIdAndValueAndTimeList) {
+            for (int i = 0; i < statusIdAndValueAndTimeList.Count; i++) {
+                var status = EM_Status.s_instance.GetStatusInstanceAndAttach (target.m_networkId, statusIdAndValueAndTimeList[i]);
+                m_statusHandlerDict[status.m_Type].Attach (status, target, caster);
+            }
         }
-        private void RemoveStatus (int netId, List<int> statusToRemoveList) {
-            // TODO: 
-            EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
+        private void TickStatusPerSecond (E_Unit target, E_Status status) {
+            m_statusHandlerDict[status.m_Type].TickPerSecond (status, target);
+        }
+        private void RemoveStatus (E_Unit target, List<int> orderedIndexList, IReadOnlyList<E_Status> fullStatusList) {
+            for (int i = 0; i < orderedIndexList.Count; i++)
+                m_statusHandlerDict[fullStatusList[orderedIndexList[i]].m_Type].Remove(fullStatusList[orderedIndexList[i]], target);
+            EM_Status.s_instance.RemoveOrderedStatus (target.m_networkId, orderedIndexList);
         }
     }
 }

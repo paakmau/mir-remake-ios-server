@@ -91,14 +91,15 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < statusList.Count; i++)
                 m_fact.RecycleInstance (statusList[i]);
         }
-        public void GetStatusInstanceAndAttach (int targetNetId, int casterNetId, (short, float, float) idValueTime) {
+        public E_Status GetStatusInstanceAndAttach (int targetNetId, (short, float, float) idValueTime) {
             List<E_Status> oriStatusList = null;
             if (!m_statusListDict.TryGetValue (targetNetId, out oriStatusList))
-                return;
+                return null;
 
             var statusObj = m_fact.GetInstance (m_dem.GetStatusById (idValueTime.Item1));
-            statusObj.ResetValues (idValueTime.Item2, idValueTime.Item3, casterNetId);
+            statusObj.ResetValues (idValueTime.Item2, idValueTime.Item3);
             oriStatusList.Add (statusObj);
+            return statusObj;
         }
         public void RemoveOrderedStatus (int netId, List<int> orderedIndexList) {
             List<E_Status> statusList = null;

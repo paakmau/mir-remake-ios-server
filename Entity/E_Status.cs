@@ -6,7 +6,6 @@ namespace MirRemakeBackend.Entity {
     abstract class E_Status {
         public DE_Status m_statusDe;
         public abstract StatusType m_Type { get; }
-        public int m_casterNetId;
         public short m_Id { get { return m_statusDe.m_id; } }
         public float m_value;
         private float m_durationTime;
@@ -14,11 +13,10 @@ namespace MirRemakeBackend.Entity {
         public void Reset (DE_Status de) {
             m_statusDe = de;
         }
-        public void ResetValues (float value, float durationTime, int casterNetId) {
+        public void ResetValues (float value, float durationTime) {
             m_value = value;
             m_durationTime = durationTime;
             m_endTime = MyTimer.s_CurTime.Ticked (m_durationTime);
-            m_casterNetId = casterNetId;
         }
         public NO_Status GetNo () {
             return new NO_Status (m_Id, m_value, m_durationTime);
