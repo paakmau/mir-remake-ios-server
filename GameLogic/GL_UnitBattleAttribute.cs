@@ -9,105 +9,15 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理单位战斗相关属性与状态
     /// </summary>
-    class GL_UnitBattleAttribute : GameLogicBase {
-        struct Effect {
-            private DE_Effect m_de;
-            private short m_animId;
-            public bool m_hit;
-            public bool m_critical;
-            public int m_deltaHp;
-            public int m_deltaMp;
-            public ValueTuple<short, float, float>[] m_statusIdAndValueAndTimeArr;
-            public void InitWithCasterAndTarget (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
-                m_de = effectDe;
-                m_animId = animId;
-                // xjb计算命中
-                float hitRate = effectDe.m_hitRate * caster.m_HitRate * 0.01f;
-                m_hit = MyRandom.NextInt (1, 101) <= hitRate;
-                if (m_hit) {
-                    // xjb计算基础伤害(或能量剥夺)
-                    m_deltaHp = effectDe.m_deltaHp;
-                    m_deltaMp = effectDe.m_deltaMp;
-                    switch (effectDe.m_type) {
-                        case EffectType.PHYSICS:
-                            m_deltaHp = (int) ((float) m_deltaHp * (float) caster.m_Attack / (float) target.m_Defence);
-                            break;
-                        case EffectType.MAGIC:
-                            m_deltaHp = (int) ((float) m_deltaHp * (float) caster.m_Magic / (float) target.m_Resistance);
-                            m_deltaMp = (int) ((float) m_deltaMp * (float) caster.m_Magic / (float) target.m_Resistance);
-                            break;
-                    }
-                    for (int i = 0; i < effectDe.m_attrBonus.Count; i++) {
-                        switch (effectDe.m_attrBonus[i].Item1) {
-                            case ActorUnitConcreteAttributeType.ATTACK:
-                                m_deltaHp = m_deltaHp + (int) (caster.m_Attack * effectDe.m_attrBonus[i].Item2);
-                                break;
-                            case ActorUnitConcreteAttributeType.MAGIC:
-                                m_deltaHp = m_deltaHp + (int) (caster.m_Magic * effectDe.m_attrBonus[i].Item2);
-                                break;
-                            case ActorUnitConcreteAttributeType.MAX_HP:
-                                m_deltaHp = m_deltaHp + (int) (caster.m_MaxHp * effectDe.m_attrBonus[i].Item2);
-                                break;
-                            case ActorUnitConcreteAttributeType.MAX_MP:
-                                m_deltaHp = m_deltaHp + (int) (caster.m_MaxMp * effectDe.m_attrBonus[i].Item2);
-                                break;
-                        }
-                    }
-                    // xjb计算暴击 应该ok
-                    float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate * 0.01f;
-                    m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
-                    if (m_critical)
-                        m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f));
+    partial class GL_UnitBattleAttribute : GameLogicBase {
+        private class StatusHandler {
 
-                    //减伤+易伤 
-                    if (m_deltaHp < 0) {
-                        if (effectDe.m_type == EffectType.PHYSICS) {
-                            m_deltaHp = (int) (m_deltaHp * (target.m_PhysicsVulernability * 0.01f + 1) * (1 - target.m_DamageReduction * 0.01f));
-                        } else {
-                            m_deltaHp = (int) (m_deltaHp * (target.m_MagicVulernability * 0.01f + 1) * (1 - target.m_DamageReduction * 0.01f));
-                        }
-
-                    }
-
-                    //仇恨 (伤害列表)
-                    if (m_deltaHp < 0) {
-                        if (!target.m_netIdAndDamageDict.ContainsKey (caster.m_networkId)) {
-                            target.m_netIdAndDamageDict[caster.m_networkId] = target.m_netIdAndDamageDict[caster.m_networkId] - m_deltaHp;
-                        } else {
-                            target.m_netIdAndDamageDict.Add (caster.m_networkId, -m_deltaHp);
-                        }
-                    }
-
-                    // xjb计算状态 TODO: 这里是不是要单独拎出去
-                    m_statusIdAndValueAndTimeArr = new (short, float, float) [effectDe.m_statusIdAndValueAndTimeList.Count];
-                    for (int i = 0; i < effectDe.m_statusIdAndValueAndTimeList.Count; i++) {
-                        var info = effectDe.m_statusIdAndValueAndTimeList[i];
-                        float value = info.Item2 / target.m_Tenacity;
-                        float durationTime = info.Item3 / target.m_Tenacity;
-                        m_statusIdAndValueAndTimeArr[i] = (info.Item1, value, durationTime);
-                    }
-
-                }
-            }
-            public NO_Effect GetNo () {
-                return new NO_Effect (m_animId, m_hit, m_critical, m_deltaHp, m_deltaMp);
-            }
-
-            //计算护甲和魔法抗性的减伤
-            private int getDamage (int damage, int armor) {
-                if (armor <= 100) {
-                    return (int) (damage * (1 - armor / (armor + 100.0)));
-                }
-                if (armor <= 100) {
-                    return (int) (damage * (0.5 - armor / (armor + 1000.0)));
-                }
-                return (int) (damage * (0.25 - armor / (armor + 10000.0)));
-            }
         }
         public static GL_UnitBattleAttribute s_instance;
-        public GL_UnitBattleAttribute (INetworkService netService) : base (netService) { }
+        private static EffectCalculateStage m_effectStage = new EffectCalculateStage ();
         private const float c_isAttackedLastTime = 7.0f;
         private float m_secondTimer = 0;
+        public GL_UnitBattleAttribute (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 移除超时的状态
             var allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
@@ -224,26 +134,25 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyApplyEffect (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
             if (target.m_IsDead) return;
-            Effect effect = new Effect ();
-            effect.InitWithCasterAndTarget (effectDe, animId, caster, target);
+            m_effectStage.InitWithCasterAndTarget (effectDe, animId, caster, target);
             // Client
             m_networkService.SendServerCommand (SC_ApplyAllEffect.Instance (
                 EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
                 target.m_networkId,
-                effect.GetNo ()));
-            // 
-            if (effect.m_hit) {
-                // Hp Mp 状态
-                HpAndMpChange (target, caster, effect.m_deltaHp, effect.m_deltaMp);
-                AttachStatus (target.m_networkId, caster.m_networkId, effect.m_statusIdAndValueAndTimeArr);
+                m_effectStage.GetNo ()));
+            // 若命中
+            if (m_effectStage.m_Hit) {
+                AttachHatred (target, caster, m_effectStage.m_Hatred);
+                AttachHpAndMpChange (target, caster, m_effectStage.m_DeltaHp, m_effectStage.m_DeltaMp);
+                AttachStatus (target.m_networkId, caster.m_networkId, m_effectStage.m_StatusIdAndValueAndTimeList);
             }
         }
-        private void HpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
+        private void AttachHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
             target.m_curHp += dHp;
             target.m_curMp += dMp;
             if (dHp >= 0 && dMp >= 0) return;
 
-            // 计算伤害量
+            // 统计伤害量
             int newDmg = -dHp;
             target.m_isAttackedTimer = MyTimer.s_CurTime.Ticked (c_isAttackedLastTime);
             int oriDmg;
@@ -268,11 +177,17 @@ namespace MirRemakeBackend.GameLogic {
                     GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) caster, target);
             }
         }
-        private void AttachStatus (int targetNetId, int casterNetId, (short, float, float) [] statusIdAndValueAndTimeArr) {
-            foreach (var idValueTime in statusIdAndValueAndTimeArr)
-                EM_Status.s_instance.GetStatusInstanceAndAttach (targetNetId, casterNetId, idValueTime);
+        public void AttachHatred (E_Unit target, E_Unit caster, float hatred) {
+            // 仇恨 (伤害列表)
+            // TODO: 仇恨 现在暂时使用 E_Unit.m_netIdAndDamageDict 来记录
+        }
+        private void AttachStatus (int targetNetId, int casterNetId, IReadOnlyList < (short, float, float) > statusIdAndValueAndTimeList) {
+            // TODO: 
+            for (int i = 0; i < statusIdAndValueAndTimeList.Count; i++)
+                EM_Status.s_instance.GetStatusInstanceAndAttach (targetNetId, casterNetId, statusIdAndValueAndTimeList[i]);
         }
         private void RemoveStatus (int netId, List<int> statusToRemoveList) {
+            // TODO: 
             EM_Status.s_instance.RemoveOrderedStatus (netId, statusToRemoveList);
         }
     }
