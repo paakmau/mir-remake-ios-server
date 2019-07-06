@@ -33,11 +33,13 @@ namespace MirRemakeBackend.DataEntity {
     }
     class DE_MonsterData {
         public readonly short m_monsterId;
+        public readonly MonsterType m_monsterType;
         public readonly short m_level;
         public readonly IReadOnlyList<ValueTuple<short, short>> m_skillIdAndLevelList;
         public readonly IReadOnlyList<short> m_dropItemIdList;
         public DE_MonsterData (DO_Monster monsterDo) {
             m_monsterId = monsterDo.m_monsterId;
+            m_monsterType = monsterDo.m_monsterType;
             m_level = monsterDo.m_level;
             m_skillIdAndLevelList = new List<ValueTuple<short, short>> (monsterDo.m_skillIdAndLevelArr);
             m_dropItemIdList = new List<short> (monsterDo.m_dropItemIdArr);

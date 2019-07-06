@@ -41,10 +41,12 @@ namespace MirRemakeBackend.Network {
         public int m_netId;
         public Vector2 m_position;
         public short m_monsterId;
-        public NO_Monster (int netId, Vector2 pos, short monId) {
+        public MonsterType m_monsterType;
+        public NO_Monster (int netId, Vector2 pos, short monId, MonsterType monType) {
             m_netId = netId;
             m_position = pos;
             m_monsterId = monId;
+            m_monsterType = monType;
         }
     }
     struct NO_Character {
@@ -140,12 +142,14 @@ namespace MirRemakeBackend.Network {
             writer.Put (monNo.m_netId);
             writer.Put (monNo.m_position);
             writer.Put (monNo.m_monsterId);
+            writer.Put ((byte)monNo.m_monsterType);
         }
         public static NO_Monster GetMonster (this NetDataReader reader) {
             int netId = reader.GetInt ();
             Vector2 pos = reader.GetVector2 ();
             short monsterId = reader.GetShort ();
-            return new NO_Monster (netId, pos, monsterId);
+            MonsterType monType = (MonsterType)reader.GetByte ();
+            return new NO_Monster (netId, pos, monsterId, monType);
         }
         public static void Put (this NetDataWriter writer, NO_Character charNo) {
             writer.Put (charNo.m_netId);

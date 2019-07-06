@@ -3,11 +3,11 @@ using System;
 namespace MirRemakeBackend.Data {
     struct DO_Monster {
         public short m_monsterId;
+        public MonsterType m_monsterType;
         public short m_level;
         public ValueTuple<ActorUnitConcreteAttributeType, int>[] m_attrArr;
         public ValueTuple<short, short>[] m_skillIdAndLevelArr;
         public short[] m_dropItemIdArr;
-        public MonsterType m_monsterType;
     }
     struct DO_Character {
         public OccupationType m_occupation;
