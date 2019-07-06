@@ -12,7 +12,6 @@ namespace MirRemakeBackend.Data {
         /// </summary>
         ValueTuple<short, Vector2>[] GetAllGroundItemRespawnPosition ();
     }
-    // TODO:
     class DS_GroundItemMapImpl : IDS_GroundItemMap{
         private JsonData s_itemPosDatas;
         public ValueTuple<short,Vector2>[] GetAllGroundItemRespawnPosition(){

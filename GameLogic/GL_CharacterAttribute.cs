@@ -92,8 +92,16 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_networkId, charObj.m_VirtualCurrency, charObj.m_ChargeCurrency));
         }
         private void MainPointToConAttr (E_Character charObj) {
-            // TODO: 根据角色属性点 直接计算 具体属性
             // charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, charObj.m_Strength * 233);
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int)(charObj.m_Strength*0.55));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int)(charObj.m_Agility*0.2));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int)(charObj.m_Agility*0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int)(charObj.m_Agility*0.0015));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_MP, (int)(charObj.m_Intelligence*2));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, (int)(charObj.m_Spirit*0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAGIC, (int)(charObj.m_Intelligence*0.5));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, (int)(charObj.m_Spirit*0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_HP, (int)(charObj.m_Spirit*2.5));
         }
     }
 }
