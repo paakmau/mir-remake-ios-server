@@ -25,6 +25,8 @@ namespace MirRemakeBackend.GameLogic {
             charObj.DistributePoints (str, intl, agl, spr);
             // 角色加点后, 具体属性变化
             this.MainPointToConAttr (charObj);
+            // 战斗力变化
+            NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
             EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
@@ -39,9 +41,16 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
+        public void CommandGetCombatEffectivenessChange (int netId) {
+            // TODO: 客户端要求获取战斗力
+        }
+        public void NotifyCombatEffectivenessChange (E_Character unit) {
+            // TODO: 计算战斗力变化 并 储存
+        }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
-            MainPointToConAttr(newChar);
+            MainPointToConAttr (newChar);
+            NotifyCombatEffectivenessChange (newChar);
             // client
             m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
                 netId,
@@ -64,7 +73,9 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj.m_Level == c_maxLevel)
                 return;
             charObj.m_experience += exp;
-            charObj.TryLevelUp ();
+            var dLv = charObj.TryLevelUp ();
+            if (dLv > 0)
+                NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
             EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
@@ -93,15 +104,15 @@ namespace MirRemakeBackend.GameLogic {
         }
         private void MainPointToConAttr (E_Character charObj) {
             // charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, charObj.m_Strength * 233);
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int)(charObj.m_Strength*0.55));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int)(charObj.m_Agility*0.2));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int)(charObj.m_Agility*0.05));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int)(charObj.m_Agility*0.0015));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_MP, (int)(charObj.m_Intelligence*2));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, (int)(charObj.m_Spirit*0.05));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAGIC, (int)(charObj.m_Intelligence*0.5));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, (int)(charObj.m_Spirit*0.05));
-            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_HP, (int)(charObj.m_Spirit*2.5));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int) (charObj.m_Strength * 0.55));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int) (charObj.m_Agility * 0.2));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int) (charObj.m_Agility * 0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int) (charObj.m_Agility * 0.0015));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_MP, (int) (charObj.m_Intelligence * 2));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_HP_PER_SECOND, (int) (charObj.m_Spirit * 0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAGIC, (int) (charObj.m_Intelligence * 0.5));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.DELTA_MP_PER_SECOND, (int) (charObj.m_Spirit * 0.05));
+            charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.MAX_HP, (int) (charObj.m_Spirit * 2.5));
         }
     }
 }
