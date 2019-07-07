@@ -195,6 +195,7 @@ namespace MirRemakeBackend.Entity {
         private DE_CharacterData m_characterDataDe;
         public override ActorUnitType m_UnitType { get { return ActorUnitType.PLAYER; } }
         public int m_characterId;
+        public string m_name;
         public OccupationType m_Occupation { get { return m_characterDe.m_occupation; } }
         public override short m_Level { get { return m_characterDataDe.m_level; } }
         public short m_MaxLevel { get { return m_characterDe.m_characterMaxLevel; } }
