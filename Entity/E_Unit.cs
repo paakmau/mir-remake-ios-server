@@ -298,7 +298,7 @@ namespace MirRemakeBackend.Entity {
             pointArr[1] = (ActorUnitMainAttributeType.INTELLIGENCE, m_Intelligence);
             pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);
             pointArr[3] = (ActorUnitMainAttributeType.SPIRIT, m_Spirit);
-            return new DDO_Character (m_characterId, m_Level, m_Occupation, m_experience, currencyArr, pointArr);
+            return new DDO_Character (m_characterId, m_Level, m_Occupation, m_experience, currencyArr, pointArr, m_name);
         }
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);
