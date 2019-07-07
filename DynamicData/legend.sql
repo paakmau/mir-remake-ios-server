@@ -53,7 +53,7 @@ create table `mission`(
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `character_position`;
-CREATE TABLE `character` (
+CREATE TABLE `character_position` (
   `charid` int NOT NULL,
   `x` VARCHAR(20),
   `y` VARCHAR(20),
