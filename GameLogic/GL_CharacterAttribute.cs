@@ -1,16 +1,17 @@
+using System;
 using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
-using System;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理角色属性相关
     /// 升级, 属性点分配
     /// 装备相关属性
     /// </summary>
-    class GL_CharacterAttribute : GameLogicBase {
+    partial class GL_CharacterAttribute : GameLogicBase {
         public static GL_CharacterAttribute s_instance;
         const int c_maxLevel = 100;
+        CombatEffectivenessRank m_combatEfctRank = new CombatEffectivenessRank ();
         public GL_CharacterAttribute (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -41,31 +42,35 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
-        public void CommandGetCombatEffectivenessChange (int netId) {
-            // TODO: 客户端要求获取战斗力
+        public void CommandGetCombatEffectivenessRank (int netId) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            var topCombatEfctRnkList = m_combatEfctRank.GetTopCombatEfctRnkList ();
+            var myRank = m_combatEfctRank.GetRank (netId);
+            m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, charObj.m_combatEffectiveness, myRank));
         }
         public void NotifyCombatEffectivenessChange (E_Character unit) {
-            double res=0;
-            switch(unit.m_Occupation){
+            double res = 0;
+            switch (unit.m_Occupation) {
                 case OccupationType.WARRIOR:
-                    res=Math.Pow(unit.m_Attack,1.5);
+                    res = Math.Pow (unit.m_Attack, 1.5);
                     break;
                 case OccupationType.ROGUE:
-                    res=2.5*Math.Pow(unit.m_Attack,1.5);
+                    res = 2.5 * Math.Pow (unit.m_Attack, 1.5);
                     break;
                 case OccupationType.MAGE:
-                    res=0.8*Math.Pow(unit.m_Intelligence,1.5);
+                    res = 0.8 * Math.Pow (unit.m_Intelligence, 1.5);
                     break;
                 case OccupationType.TAOIST:
-                    res=1.3*Math.Pow(unit.m_Intelligence,1.5);
+                    res = 1.3 * Math.Pow (unit.m_Intelligence, 1.5);
                     break;
-            }      
-            res=res+Math.Pow(unit.m_MaxHp,0.5)*0.5;
-            res=res+Math.Pow(unit.m_MaxMp,0.4)*0.3;
-            res=res+Math.Pow(unit.m_Defence*unit.m_Agility,0.75);
-            res=res*(1+0.72*unit.m_CriticalRate*0.01*unit.m_CriticalBonus);
-            res=res*unit.m_HitRate/(1-unit.m_DodgeRate*0.01f)*0.01f;
-            unit.m_combatEffectiveness=(int)(res);
+            }
+            res = res + Math.Pow (unit.m_MaxHp, 0.5) * 0.5;
+            res = res + Math.Pow (unit.m_MaxMp, 0.4) * 0.3;
+            res = res + Math.Pow (unit.m_Defence * unit.m_Agility, 0.75);
+            res = res * (1 + 0.72 * unit.m_CriticalRate * 0.01 * unit.m_CriticalBonus);
+            res = res * unit.m_HitRate / (1 - unit.m_DodgeRate * 0.01f) * 0.01f;
+            unit.m_combatEffectiveness = (int) (res);
         }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);

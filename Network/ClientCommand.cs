@@ -71,7 +71,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_REFRESH_FIGHT_CAPACITY_RANK; } }
         public void Execute (NetDataReader reader, int netId) {
             OccupationType ocp = (OccupationType) reader.GetByte ();
-            GL_CharacterAttribute.s_instance.CommandGetCombatEffectivenessChange (netId);
+            GL_CharacterAttribute.s_instance.CommandGetCombatEffectivenessRank (netId);
         }
     }
     /// <summary>
