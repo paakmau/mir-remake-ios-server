@@ -1,4 +1,3 @@
-using System;
 namespace MirRemakeBackend.Network {
     enum NetworkToClientDataType : byte {
         // 初始化相关
@@ -20,6 +19,8 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_LEVEL_AND_EXP,
         APPLY_SELF_MAIN_ATTRIBUTE,
         APPLY_ALL_RESPAWN,
+        // 战力排行榜
+        SEND_FIGHT_CAPACITY_RANK,
         // 战斗状态与动画
         APPLY_ALL_CAST_SKILL_BEGIN,
         APPLY_ALL_EFFECT,
@@ -45,7 +46,9 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
         // 商城
         SEND_SHOPPING_MALL_NORMAL,
-        SEND_SHOPPING_MALL_COMPAIGN
+        SEND_SHOPPING_MALL_COMPAIGN,
+        // 信息
+        SEND_MESSAGE
     }
     enum NetworkToServerDataType : byte {
         // 创建角色
@@ -58,6 +61,8 @@ namespace MirRemakeBackend.Network {
         APPLY_CAST_SKILL_BEGIN,
         // 分配属性点
         APPLY_DISTRIBUTE_POINTS,
+        // 获取战力排行榜
+        REQUIRE_REFRESH_FIGHT_CAPACITY_RANK,
         // 技能升级
         APPLY_UPDATE_SKILL_LEVEL,
         // 地面物品扔拾; 背包物品 使用, 交易
@@ -75,6 +80,8 @@ namespace MirRemakeBackend.Network {
         // 获取商城信息
         REQUIRE_SHOPPING_MALL_NORMAL,
         REQUIRE_SHOPPING_MALL_CAMPAIGN,
+        // 发送消息
+        REQUIRE_SEND_MESSAGE,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,

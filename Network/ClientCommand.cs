@@ -65,6 +65,16 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 打开战力排行榜时请求刷新操作
+    /// </summary>
+    class CC_RequireRefreshFightCapacityRank : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_REFRESH_FIGHT_CAPACITY_RANK; } }
+        public void Execute (NetDataReader reader, int netId) {
+            OccupationType ocp = (OccupationType) reader.GetByte ();
+            GL_CharacterAttribute.s_instance.CommandGetCombatEffectivenessChange (netId);
+        }
+    }
+    /// <summary>
     /// 技能升级
     /// </summary>
     class CC_ApplyUpdateSkillLevel : IClientCommand {
@@ -174,6 +184,30 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL_CAMPAIGN; } }
         public void Execute (NetDataReader reader, int netId) {
             // TODO: 活动商城
+        }
+    }
+    /// <summary>
+    /// 请求发送消息  
+    /// 数据格式:  
+    /// chanelType: ChattingChanelType,  
+    /// messageContent: string,  
+    /// to: int
+    /// </summary>
+    class CC_RequireSendMessage : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SEND_MESSAGE; } }
+        public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        private ChattingChanelType m_chanelType;
+        private string m_messageContent;
+        private int m_to;
+        public CC_RequireSendMessage (ChattingChanelType chanelType, string messageContent, int to) {
+            m_chanelType = chanelType;
+            m_messageContent = messageContent;
+            m_to = to;
+        }
+        public void PutData (NetDataWriter writer) {
+            writer.Put ((byte)m_chanelType);
+            writer.Put (m_messageContent);
+            writer.Put (m_to);
         }
     }
     class CC_TestGainExp : IClientCommand {

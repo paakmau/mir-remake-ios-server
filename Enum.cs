@@ -130,15 +130,6 @@ namespace MirRemakeBackend {
         VIRTUAL,
         CHARGE
     }
-    enum NpcActionType : byte {
-        MISSION_ACCEPT,
-        MISSION_DELIVERY,
-        MISSION_TALK,
-        SHOP,
-        FORGE,
-        STRENGTHEN,
-        ENCHANT
-    }
     enum MissionTargetType : byte {
         KILL_MONSTER,
         GAIN_ITEM,
