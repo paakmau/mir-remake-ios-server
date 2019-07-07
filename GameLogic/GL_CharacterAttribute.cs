@@ -45,7 +45,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandGetCombatEffectivenessRank (int netId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            var topCombatEfctRnkList = m_combatEfctRank.GetTopCombatEfctRnkList ();
+            var topCombatEfctRnkList = m_combatEfctRank.GetTopCombatEfctRnkList (10);
             var myRank = m_combatEfctRank.GetRank (netId);
             m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, charObj.m_combatEffectiveness, myRank));
         }
