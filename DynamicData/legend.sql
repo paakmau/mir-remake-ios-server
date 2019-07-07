@@ -52,10 +52,10 @@ create table `mission`(
   `status` VARCHAR(255) NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
-use legend;
-select * from mission;
-select * from item;
-select * from `character`;
+DROP TABLE IF EXISTS `character_position`;
+CREATE TABLE `character` (
+  `charid` int NOT NULL,
+  `x` VARCHAR(20),
+  `y` VARCHAR(20),
+   primary key (`characterid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

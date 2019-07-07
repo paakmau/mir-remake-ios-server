@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character,IDDS_CharacterPosition {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -300,6 +300,41 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
 
         }
+        
+        
+        public void UpdateCharacterPosition(DDO_CharacterPosition cp){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "update character_position set `x`="+cp.m_position.X + "`y`="+cp.m_position.Y+"where charid="+cp.m_characterId +";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
+        public void InsertCharacterPosition(DDO_CharacterPosition cp){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "insert into character_position values("+cp.m_characterId+","+cp.m_position.X+","+cp.m_position.Y+");";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
+
+        public DDO_CharacterPosition GetCharacterPosition(short charId){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "select * from character_position where charid=" + charId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd, ds);
+            DataTable dt = ds.Tables[0];
+            float x=float.Parse (dt.Rows[0]["x"].ToString ());
+            float y=float.Parse (dt.Rows[0]["y"].ToString ());
+            DDO_CharacterPosition cp=new DDO_CharacterPosition(charId,new System.Numerics.Vector2(x,y));
+            return cp;
+        }
+        
+        
+        
+        
+        
+        
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
@@ -322,5 +357,7 @@ namespace MirRemakeBackend.DynamicData {
             res = res + "]";
             return res;
         }
+        
+        
     }
 }
