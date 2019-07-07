@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DynamicData;
@@ -8,14 +9,16 @@ namespace MirRemakeBackend.CharacterCreate {
         public static CharacterCreator s_instance;
         private INetworkService m_netService;
         private IDDS_Character m_charDds;
+        private IDDS_CharacterPosition m_charPosDds;
         private IDDS_Skill m_skillDds;
         private IDDS_Mission m_misDds;
         private IDDS_Item m_itemDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public CharacterCreator (IDS_Skill skillDs, IDS_Mission misDs, IDDS_Character charDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
+        public CharacterCreator (IDS_Skill skillDs, IDS_Mission misDs, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
             m_netService = ns;
             m_charDds = charDds;
+            m_charPosDds = charPosDds;
             m_skillDds = skillDds;
             m_misDds = misDds;
             m_itemDds = itemDds;
@@ -42,6 +45,7 @@ namespace MirRemakeBackend.CharacterCreate {
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // 角色 dds
             int charId = m_charDds.CreateCharacter (ocp);
+            m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];
             for (int i = 0; i < skillIdList.Count; i++)
