@@ -5,22 +5,6 @@ using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
-    class EM_UnitPosition : EntityManagerBase {
-        public static EM_UnitPosition s_instance;
-        private IDDS_CharacterPosition m_charPosDds;
-        private Dictionary<int, Vector2> m_unitPosDict;
-        public EM_UnitPosition (IDDS_CharacterPosition charPosDds) {
-            m_charPosDds = charPosDds;
-        }
-        public Vector2 GetUnitPosition (int netId) {
-            Vector2 res;
-            m_unitPosDict.TryGetValue (netId, out res);
-            return res;
-        }
-        public void UpdateCharacterPosition (int charId, Vector2 pos) {
-            m_charPosDds.UpdateCharacterPosition (new DDO_CharacterPosition (charId, pos));
-        }
-    }
     /// <summary>
     /// 索引场景中所有的单位  
     /// 怪物不需要内存池因为每个怪物都需要Respawn且不会永久消失  
@@ -29,6 +13,7 @@ namespace MirRemakeBackend.Entity {
         public static EM_Unit s_instance;
         private DEM_Unit m_dem;
         private IDDS_Character m_dds;
+        private IDDS_CharacterPosition m_charPosDds;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
         public EM_Unit (DEM_Unit dem, IDDS_Character dds) {
@@ -69,8 +54,8 @@ namespace MirRemakeBackend.Entity {
             m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out charDe, out unitDe, out charDataDe);
             m_networkIdAndCharacterDict[netId] = newChar;
             newChar.Reset (netId, charId, charDe, unitDe, charDataDe, charDdo);
-            // TODO: 角色位置读取数据库
-            newChar.m_position = new Vector2 (44, 25);
+            // 角色位置读取数据库
+            newChar.m_position = m_charPosDds.GetCharacterPosition (charId).m_position;
             return newChar;
         }
         /// <summary>
@@ -108,6 +93,9 @@ namespace MirRemakeBackend.Entity {
         }
         public void SaveCharacter (E_Character charObj) {
             m_dds.UpdateCharacter (charObj.GetDdo ());
+        }
+        public void SaveCharacterPosition (E_Character charObj) {
+            m_charPosDds.UpdateCharacterPosition (charObj.GetPosDdo ());
         }
     }
 }
