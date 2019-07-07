@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -439,6 +440,32 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_pos);
             writer.Put (m_hp);
             writer.Put (m_maxHp);
+        }
+    }
+    /// <summary>
+    /// 发送战斗力排行榜
+    /// </summary>
+    class SC_SendFightCapacityRank : ServerCommandBase {
+        private static readonly SC_SendFightCapacityRank s_instance = new SC_SendFightCapacityRank ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_FIGHT_CAPACITY_RANK; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        IReadOnlyList<NO_FightCapacityRankInfo> m_combatEfctRankList;
+        int m_myCombatEfct;
+        int m_myRank;
+        public static SC_SendFightCapacityRank Instance (int netId, IReadOnlyList<NO_FightCapacityRankInfo> combatEfctRnkList, int myCombatEfct, int myRank) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_combatEfctRankList = combatEfctRnkList;
+            s_instance.m_myCombatEfct = myCombatEfct;
+            s_instance.m_myRank = myRank;
+            return s_instance;
+        }
+        private SC_SendFightCapacityRank () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_combatEfctRankList.Count);
+            for (int i=0; i<m_combatEfctRankList.Count; i++)
+                writer.Put (m_combatEfctRankList[i]);
+            writer.Put (m_myCombatEfct);
+            writer.Put (m_myRank);
         }
     }
     /// <summary>
