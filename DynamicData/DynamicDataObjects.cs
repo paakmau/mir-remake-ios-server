@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-
+using System.Numerics;
 namespace MirRemakeBackend.DynamicData {
     struct DDO_Character {
         public int m_characterId;
@@ -89,6 +89,14 @@ namespace MirRemakeBackend.DynamicData {
             m_characterId = charId;
             m_status = status;
             m_missionTargetProgressList = misProgList;
+        }
+    }
+    struct DDO_CharacterPosition{
+        public short m_characterId;
+        public Vector2 m_position;
+        public DDO_CharacterPosition(short charId, Vector2 pos){
+            m_characterId=charId;
+            m_position=pos;
         }
     }
 }
