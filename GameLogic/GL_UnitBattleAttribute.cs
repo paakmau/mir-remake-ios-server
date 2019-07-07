@@ -196,10 +196,8 @@ namespace MirRemakeBackend.GameLogic {
             m_statusHandlerDict[status.m_Type].TickPerSecond (status, target);
         }
         private void RemoveStatus (E_Unit target, List<int> orderedIndexList, IReadOnlyList<E_Status> fullStatusList) {
-            for (int i = 0; i < orderedIndexList.Count; i++) {
-                var statusObj = fullStatusList[orderedIndexList[i]];
-                m_statusHandlerDict[fullStatusList[orderedIndexList[i]].m_Type].Remove (statusObj, target);
-            }
+            for (int i = 0; i < orderedIndexList.Count; i++)
+                m_statusHandlerDict[fullStatusList[orderedIndexList[i]].m_Type].Remove (fullStatusList[orderedIndexList[i]], target);
             EM_Status.s_instance.RemoveOrderedStatus (target.m_networkId, orderedIndexList);
         }
     }
