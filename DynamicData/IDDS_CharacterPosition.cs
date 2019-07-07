@@ -5,7 +5,7 @@ namespace MirRemakeBackend.DynamicData
         void InsertCharacterPosition(DDO_CharacterPosition cp);
         void UpdateCharacterPosition(DDO_CharacterPosition cp);
 
-        DDO_CharacterPosition GetCharacterPosition(short charId);
+        DDO_CharacterPosition GetCharacterPosition(int charId);
 
     }
 }
