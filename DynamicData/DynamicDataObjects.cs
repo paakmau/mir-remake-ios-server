@@ -12,13 +12,15 @@ namespace MirRemakeBackend.DynamicData {
         /// 已分配的主属性点情况
         /// </summary>
         public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
-        public DDO_Character (int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr) {
+        public string m_name;
+        public DDO_Character (int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr,string name) {
             m_characterId = charId;
             m_level = level;
             m_occupation = oc;
             m_experience = exp;
             m_currencyArr = currencyArr;
             m_distributedMainAttrPointArr = attrPointArr;
+            m_name=name;
         }
     }
     struct DDO_EquipmentInfo {

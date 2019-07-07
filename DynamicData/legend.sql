@@ -9,6 +9,7 @@ CREATE TABLE `character` (
   `experience` int DEFAULT NULL,
   `currency` varchar(255) NOT NULL,
   `giftpoints` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
    primary key (`characterid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

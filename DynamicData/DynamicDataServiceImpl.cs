@@ -195,7 +195,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "insert into `character` values (null,\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\");select last_insert_id();";
+            cmd = "insert into `character` values (null,\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\",NULL);select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables[0];
@@ -221,6 +221,7 @@ namespace MirRemakeBackend.DynamicData {
             character.m_occupation = (OccupationType) Enum.Parse (typeof (OccupationType), dt.Rows[0]["occupation"].ToString ());
             character.m_experience = int.Parse (dt.Rows[0]["experience"].ToString ());
             character.m_characterId = int.Parse (dt.Rows[0]["characterid"].ToString ());
+            character.m_name=dt.Rows[0]["name"].ToString();
             return character;
         }
         public void UpdateCharacter (DDO_Character charObj) {
@@ -231,7 +232,7 @@ namespace MirRemakeBackend.DynamicData {
                 charObj.m_distributedMainAttrPointArr[2].Item2.ToString () + " " +
                 charObj.m_distributedMainAttrPointArr[3].Item2.ToString () + "\"";
             cmd = "update `character` set characterid=" + charObj.m_characterId + ",occupation=\"" + charObj.m_occupation.ToString () + "\",level=" + charObj.m_level + ",experience=" +
-                charObj.m_experience + ",currency=" + currencyArr + ",giftpoints=" + giftPoints + " where characterid=" + charObj.m_characterId + ";";
+                charObj.m_experience + ",currency=" + currencyArr + ",giftpoints=" + giftPoints +",`name`=\""+charObj.m_name+"\" where characterid=" + charObj.m_characterId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
