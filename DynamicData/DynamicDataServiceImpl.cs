@@ -317,7 +317,7 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
 
-        public DDO_CharacterPosition GetCharacterPosition(short charId){
+        public DDO_CharacterPosition GetCharacterPosition(int charId){
             string cmd;
             DataSet ds = new DataSet ();
             cmd = "select * from character_position where charid=" + charId + ";";
