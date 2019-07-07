@@ -305,14 +305,14 @@ namespace MirRemakeBackend.DynamicData {
         public void UpdateCharacterPosition(DDO_CharacterPosition cp){
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "update character_position set `x`="+cp.m_position.X + "`y`="+cp.m_position.Y+"where charid="+cp.m_characterId +";";
+            cmd = "update character_position set `x`=\""+cp.m_position.X + "\",`y`=\""+cp.m_position.Y+"\" where charid="+cp.m_characterId +";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
         public void InsertCharacterPosition(DDO_CharacterPosition cp){
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "insert into character_position values("+cp.m_characterId+","+cp.m_position.X+","+cp.m_position.Y+");";
+            cmd = "insert into character_position values("+cp.m_characterId+",\""+cp.m_position.X+"\",\""+cp.m_position.Y+"\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
