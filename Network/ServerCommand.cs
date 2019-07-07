@@ -462,7 +462,7 @@ namespace MirRemakeBackend.Network {
         private SC_SendFightCapacityRank () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_combatEfctRankList.Count);
-            for (int i=0; i<m_combatEfctRankList.Count; i++)
+            for (int i = 0; i < m_combatEfctRankList.Count; i++)
                 writer.Put (m_combatEfctRankList[i]);
             writer.Put (m_myCombatEfct);
             writer.Put (m_myRank);
@@ -909,6 +909,30 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_itemIdList[i]);
                 writer.Put (m_itemVirtualCurrencyPriceList[i]);
             }
+        }
+    }
+    class SC_SendMessage : ServerCommandBase {
+        public static SC_SendMessage s_instance = new SC_SendMessage ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_MESSAGE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private ChattingChanelType m_channel;
+        private int m_senderCharId;
+        private string m_senderName;
+        private string m_msg;
+        public static SC_SendMessage Instance (int netId, ChattingChanelType channel, int senderCharId, string senderName, string msg) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_channel = channel;
+            s_instance.m_senderCharId = senderCharId;
+            s_instance.m_senderName = senderName;
+            s_instance.m_msg = msg;
+            return s_instance;
+        }
+        private SC_SendMessage () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_channel);
+            writer.Put (m_senderCharId);
+            writer.Put (m_senderName);
+            writer.Put (m_msg);
         }
     }
 }
