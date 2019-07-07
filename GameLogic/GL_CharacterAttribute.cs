@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
-
+using System;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理角色属性相关
@@ -45,7 +45,27 @@ namespace MirRemakeBackend.GameLogic {
             // TODO: 客户端要求获取战斗力
         }
         public void NotifyCombatEffectivenessChange (E_Character unit) {
-            // TODO: 计算战斗力变化 并 储存
+            double res=0;
+            switch(unit.m_Occupation){
+                case OccupationType.WARRIOR:
+                    res=Math.Pow(unit.m_Attack,1.5);
+                    break;
+                case OccupationType.ROGUE:
+                    res=2.5*Math.Pow(unit.m_Attack,1.5);
+                    break;
+                case OccupationType.MAGE:
+                    res=0.8*Math.Pow(unit.m_Intelligence,1.5);
+                    break;
+                case OccupationType.TAOIST:
+                    res=1.3*Math.Pow(unit.m_Intelligence,1.5);
+                    break;
+            }      
+            res=res+Math.Pow(unit.m_MaxHp,0.5)*0.5;
+            res=res+Math.Pow(unit.m_MaxMp,0.4)*0.3;
+            res=res+Math.Pow(unit.m_Defence*unit.m_Agility,0.75);
+            res=res*(1+0.72*unit.m_CriticalRate*0.01*unit.m_CriticalBonus);
+            res=res*unit.m_HitRate/(1-unit.m_DodgeRate*0.01f)*0.01f;
+            unit.m_combatEffectiveness=(int)(res);
         }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
