@@ -195,7 +195,6 @@ namespace MirRemakeBackend.Network {
     /// </summary>
     class CC_RequireSendMessage : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SEND_MESSAGE; } }
-        public DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         private ChattingChanelType m_chanelType;
         private string m_messageContent;
         private int m_to;

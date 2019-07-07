@@ -96,6 +96,27 @@ namespace MirRemakeBackend.Network {
             m_equipmentInfoList = equipsList;
         }
     }
+    struct NO_FightCapacityRankInfo {
+        public int m_charId;
+        public string m_name;
+        public short m_level;
+        /// <summary>排名</summary>
+        public short m_rank;
+        /// <summary>战力</summary>
+        public int m_fightCapacity;
+        /// <summary>家族(TODO: 扩展用, 暂时不用管)</summary>
+        public string m_family;
+        public byte m_occupation;
+        public NO_FightCapacityRankInfo (int charId, string name, short level, short rank, int fightCapacity, string family, byte occupation) {
+            m_charId = charId;
+            m_family = family;
+            m_fightCapacity = fightCapacity;
+            m_level = level;
+            m_name = name;
+            m_rank = rank;
+            m_occupation = occupation;
+        }
+    }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.X);
@@ -221,6 +242,25 @@ namespace MirRemakeBackend.Network {
             for (int i = 0; i < equipNum; i++)
                 equipList.Add (reader.GetEquipmentItemInfo ());
             return new NO_Repository (itemList, equipList);
+        }
+        public static void Put (this NetDataWriter writer, NO_FightCapacityRankInfo fcri) {
+            writer.Put (fcri.m_charId);
+            writer.Put (fcri.m_name);
+            writer.Put (fcri.m_rank);
+            writer.Put (fcri.m_level);
+            writer.Put (fcri.m_fightCapacity);
+            writer.Put (fcri.m_family);
+            writer.Put (fcri.m_occupation);
+        }
+        public static NO_FightCapacityRankInfo GetFightCapacityRankInfo (this NetDataReader reader) {
+            int charId = reader.GetInt ();
+            string name = reader.GetString ();
+            short rank = reader.GetShort ();
+            short level = reader.GetShort ();
+            int fightCapacity = reader.GetInt ();
+            string family = reader.GetString ();
+            byte occupation = reader.GetByte ();
+            return new NO_FightCapacityRankInfo (charId, name, level, rank, fightCapacity, family, occupation);
         }
     }
 }
