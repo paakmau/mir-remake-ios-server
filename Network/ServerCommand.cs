@@ -500,20 +500,16 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_targetNetId;
         private NO_Status m_statusNo;
-        /// <summary> 若为True则该状态被添加, 否则被移除 TODO: 这里移除有问题要改接口 </summary>
-        private bool m_isAttach;
-        public static SC_ApplyAllStatus Instance (IReadOnlyList<int> toClientList, int targetNetId, NO_Status statusNo, bool isAttach) {
+        public static SC_ApplyAllStatus Instance (IReadOnlyList<int> toClientList, int targetNetId, NO_Status statusNo) {
             s_instance.m_toClientList = toClientList;
             s_instance.m_targetNetId = targetNetId;
             s_instance.m_statusNo = statusNo;
-            s_instance.m_isAttach = isAttach;
             return s_instance;
         }
         private SC_ApplyAllStatus () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_targetNetId);
             writer.Put (m_statusNo);
-            writer.Put (m_isAttach);
         }
     }
     /// <summary>

@@ -195,18 +195,11 @@ namespace MirRemakeBackend.Network {
     /// </summary>
     class CC_RequireSendMessage : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SEND_MESSAGE; } }
-        private ChattingChanelType m_chanelType;
-        private string m_messageContent;
-        private int m_to;
-        public CC_RequireSendMessage (ChattingChanelType chanelType, string messageContent, int to) {
-            m_chanelType = chanelType;
-            m_messageContent = messageContent;
-            m_to = to;
-        }
-        public void PutData (NetDataWriter writer) {
-            writer.Put ((byte)m_chanelType);
-            writer.Put (m_messageContent);
-            writer.Put (m_to);
+        public void Execute (NetDataReader reader, int netId) {
+            ChattingChanelType channel = (ChattingChanelType) reader.GetByte ();
+            string msg = reader.GetString ();
+            int toCharId = reader.GetInt ();
+            GL_Chat.s_instance.CommandSendMessage (netId, channel, msg, toCharId);
         }
     }
     class CC_TestGainExp : IClientCommand {
