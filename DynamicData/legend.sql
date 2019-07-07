@@ -57,5 +57,5 @@ CREATE TABLE `character` (
   `charid` int NOT NULL,
   `x` VARCHAR(20),
   `y` VARCHAR(20),
-   primary key (`characterid`)
+   primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
