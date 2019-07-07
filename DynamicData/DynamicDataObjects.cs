@@ -92,9 +92,9 @@ namespace MirRemakeBackend.DynamicData {
         }
     }
     struct DDO_CharacterPosition{
-        public short m_characterId;
+        public int m_characterId;
         public Vector2 m_position;
-        public DDO_CharacterPosition(short charId, Vector2 pos){
+        public DDO_CharacterPosition(int charId, Vector2 pos){
             m_characterId=charId;
             m_position=pos;
         }

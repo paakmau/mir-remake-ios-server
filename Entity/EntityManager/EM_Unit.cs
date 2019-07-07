@@ -5,6 +5,22 @@ using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
+    class EM_UnitPosition : EntityManagerBase {
+        public static EM_UnitPosition s_instance;
+        private IDDS_CharacterPosition m_charPosDds;
+        private Dictionary<int, Vector2> m_unitPosDict;
+        public EM_UnitPosition (IDDS_CharacterPosition charPosDds) {
+            m_charPosDds = charPosDds;
+        }
+        public Vector2 GetUnitPosition (int netId) {
+            Vector2 res;
+            m_unitPosDict.TryGetValue (netId, out res);
+            return res;
+        }
+        public void UpdateCharacterPosition (int charId, Vector2 pos) {
+            m_charPosDds.UpdateCharacterPosition (new DDO_CharacterPosition (charId, pos));
+        }
+    }
     /// <summary>
     /// 索引场景中所有的单位  
     /// 怪物不需要内存池因为每个怪物都需要Respawn且不会永久消失  
