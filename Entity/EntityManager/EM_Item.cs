@@ -362,6 +362,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         private GroundItemIdManager m_groundItemIdManager = new GroundItemIdManager ();
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
+        private Dictionary<int, List<E_GroundItem>> m_groundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -396,8 +397,12 @@ namespace MirRemakeBackend.Entity {
             m_bagDict[netId] = bag as E_Repository;
             m_storeHouseDict[netId] = storeHouse as E_Repository;
             m_equipmentRegionDict[netId] = eqRegion as E_EquipmentRegion;
+
+            // 地面物品视野
+            m_groundItemSightDict.TryAdd (netId, new List<E_GroundItem> ());
         }
         public void RemoveCharacter (int netId) {
+            // 仓库
             E_Repository bag;
             m_bagDict.TryGetValue (netId, out bag);
             E_Repository storeHouse;
@@ -415,6 +420,9 @@ namespace MirRemakeBackend.Entity {
             RecycleItemList (bag.m_ItemList);
             RecycleItemList (storeHouse.m_ItemList);
             RecycleItemList (equiped.GetAllItemList ());
+
+            // 地面物品视野
+            m_groundItemSightDict.Remove(netId);
         }
         /// <summary>
         /// 获取装备区
