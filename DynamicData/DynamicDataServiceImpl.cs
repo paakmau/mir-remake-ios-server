@@ -257,7 +257,7 @@ namespace MirRemakeBackend.DynamicData {
                         mission.m_missionTargetProgressList.Add (int.Parse (targets[j]));
                     }
                 }
-                mission.m_status = (MissionStatus) Enum.Parse (typeof (MissionTargetType), dt.Rows[i]["status"].ToString ());
+                mission.m_status = (MissionStatus) Enum.Parse (typeof (MissionStatus), dt.Rows[i]["status"].ToString ());
                 missions.Add (mission);
             }
             return missions;

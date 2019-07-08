@@ -76,7 +76,7 @@ namespace MirRemakeBackend {
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
-            EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds);
+            EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds, charPosDds);
             EM_Log.s_instance = new EM_Log ();
             // 角色创建器
             CharacterCreator.s_instance = new CharacterCreator (new DS_SkillImpl (), new DS_MissionImpl (), charDds, charPosDds, skillDds, misDds, itemDds, s_networkService);
