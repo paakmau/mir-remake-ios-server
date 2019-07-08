@@ -142,6 +142,7 @@ namespace MirRemakeBackend.GameLogic {
             var bagItemList = charBag.m_ItemList;
             List<E_Item> droppedItemList = new List<E_Item> ();
             // TODO: 根据bagItemList (从角色bag中), 角色掉落遗物
+
             EM_Item.s_instance.DropItemOntoGround (droppedItemList);
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
