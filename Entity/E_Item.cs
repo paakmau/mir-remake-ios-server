@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     class E_EmptyItem : E_Item {
@@ -60,17 +61,19 @@ namespace MirRemakeBackend.Entity {
             m_inlaidGemList.Clear ();
         }
         public DDO_EquipmentInfo GetEquipmentInfoDdo (int charId) {
-            return new DDO_EquipmentInfo (m_realId, charId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
+            return new DDO_EquipmentInfo (m_RealId, charId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
         }
         public NO_EquipmentItemInfo GetEquipmentInfoNo () {
-            return new NO_EquipmentItemInfo (m_realId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
+            return new NO_EquipmentItemInfo (m_RealId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
         }
         public int CalcStrengthenedAttr (int value) {
             return (int) (value * (1 + m_strengthenNum / c_maxStrengthenNum * m_equipmentDe.m_attrWave));
         }
     }
     abstract class E_Item {
-        public long m_realId;
+        private long m_realId;
+        public long m_RealId { get { return m_realId; } }
+        public bool m_HasRealId { get { return m_realId != -1; } }
         public DE_Item m_itemDe;
         public short m_num;
         public short m_ItemId { get { return m_itemDe.m_id; } }
@@ -79,6 +82,7 @@ namespace MirRemakeBackend.Entity {
         public long m_Price { get { return m_itemDe.m_price; } }
         public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
         protected void Reset (DE_Item de, short num) {
+            m_realId = -1;
             m_itemDe = de;
             m_num = num;
         }
@@ -108,5 +112,10 @@ namespace MirRemakeBackend.Entity {
         public NO_Item GetItemNo () {
             return new NO_Item (m_realId, m_ItemId, m_num);
         }
+    }
+    class E_GroundItem {
+        long m_groundId;
+        MyTimer.Time m_diappearTime;
+        E_Item m_item;
     }
 }

@@ -62,7 +62,7 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
-            long realId = item.m_realId;
+            long realId = item.m_RealId;
             short curNum = item.m_num;
             // 实例 与 数据
             if (runOut) {
@@ -100,7 +100,7 @@ namespace MirRemakeBackend.GameLogic {
                 List<long> changedRealIdList = new List<long> (changedItemList.Count);
                 List<short> changedPosList = new List<short> (changedItemList.Count);
                 for (int j = 0; j < changedItemList.Count; j++) {
-                    changedRealIdList.Add (changedItemList[i].Item2.m_realId);
+                    changedRealIdList.Add (changedItemList[i].Item2.m_RealId);
                     changedPosList.Add (changedItemList[i].Item1);
                 }
                 if (changedItemList.Count != 0)
@@ -121,7 +121,7 @@ namespace MirRemakeBackend.GameLogic {
                     if (itemList[i].m_Type == ItemType.EQUIPMENT)
                         m_networkService.SendServerCommand (
                             SC_ApplySelfUpdateEquipment.Instance (
-                                charObj.m_networkId, itemList[i].m_realId,
+                                charObj.m_networkId, itemList[i].m_RealId,
                                 ((E_EquipmentItem) itemList[i]).GetEquipmentInfoNo ()));
                 }
                 // 通知 log

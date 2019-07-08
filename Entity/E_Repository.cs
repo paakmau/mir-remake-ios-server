@@ -45,7 +45,7 @@ namespace MirRemakeBackend.Entity {
         }
         public override E_Item GetItemByRealId (long realId) {
             for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_realId == realId)
+                if (m_itemList[i].m_RealId == realId)
                     return m_itemList[i];
             return null;
         }
@@ -56,7 +56,7 @@ namespace MirRemakeBackend.Entity {
         }
         public E_Item GetItemByRealId (long realId, out short resPos) {
             for (short i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_realId == realId) {
+                if (m_itemList[i].m_RealId == realId) {
                     resPos = i;
                     return m_itemList[i];
                 }
@@ -65,7 +65,7 @@ namespace MirRemakeBackend.Entity {
         }
         public override E_Item RemoveItemByRealId (E_EmptyItem empty) {
             for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_realId == empty.m_realId) {
+                if (m_itemList[i].m_RealId == empty.m_RealId) {
                     var res = m_itemList[i];
                     m_itemList[i] = empty;
                     return res;
@@ -110,7 +110,6 @@ namespace MirRemakeBackend.Entity {
             // 寻找空插槽
             for (short i = 0; i < m_itemList.Count; i++) {
                 if (m_itemList[i].m_IsEmpty) {
-                    item.m_realId = m_itemList[i].m_realId;
                     oriEmptySlot = m_itemList[i] as E_EmptyItem;
                     m_itemList[i] = item;
                     storedNum += item.m_num;
@@ -142,7 +141,7 @@ namespace MirRemakeBackend.Entity {
         public override E_Item GetItemByRealId (long realId) {
             var en = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
             while (en.MoveNext ()) {
-                if (en.Current.m_realId == realId)
+                if (en.Current.m_RealId == realId)
                     return en.Current;
             }
             return null;
@@ -160,7 +159,7 @@ namespace MirRemakeBackend.Entity {
         public override E_Item RemoveItemByRealId (E_EmptyItem empty) {
             var en = m_equipPositionAndEquipmentDict.GetEnumerator ();
             while (en.MoveNext ()) {
-                if (en.Current.Value.m_realId == empty.m_realId) {
+                if (en.Current.Value.m_RealId == empty.m_RealId) {
                     var res = en.Current.Value;
                     m_equipPositionAndEquipmentDict.Remove (en.Current.Key);
                     return res;

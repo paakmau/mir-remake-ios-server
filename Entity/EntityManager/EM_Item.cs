@@ -93,37 +93,37 @@ namespace MirRemakeBackend.Entity {
             #region ItemInserter
             private interface IItemInserter {
                 ItemType m_ItemType { get; }
-                void Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos);
+                long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos);
             }
             private class II_Empty : IItemInserter {
                 public ItemType m_ItemType { get { return ItemType.EMPTY; } }
-                public void Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
-                    dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
                 }
             }
             private class II_Material : IItemInserter {
                 public ItemType m_ItemType { get { return ItemType.MATERIAL; } }
-                public void Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
-                    dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
                 }
             }
             private class II_Consumable : IItemInserter {
                 public ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
-                public void Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
-                    dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
                 }
             }
             private class II_Equipment : IItemInserter {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
-                public void Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
-                    dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
                     dds.InsertEquipmentInfo (((E_EquipmentItem) item).GetEquipmentInfoDdo (charId));
+                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
                 }
             }
             private class II_Gem : IItemInserter {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
-                public void Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
-                    dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
                 }
             }
             #endregion
@@ -172,32 +172,32 @@ namespace MirRemakeBackend.Entity {
             private class ID_Empty : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.EMPTY; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_realId);
+                    dds.DeleteItemByRealId (item.m_RealId);
                 }
             }
             private class ID_Material : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.MATERIAL; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_realId);
+                    dds.DeleteItemByRealId (item.m_RealId);
                 }
             }
             private class ID_Consumable : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_realId);
+                    dds.DeleteItemByRealId (item.m_RealId);
                 }
             }
             private class ID_Equipment : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_realId);
-                    dds.DeleteEquipmentInfoByRealId (item.m_realId);
+                    dds.DeleteItemByRealId (item.m_RealId);
+                    dds.DeleteEquipmentInfoByRealId (item.m_RealId);
                 }
             }
             private class ID_Gem : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_realId);
+                    dds.DeleteItemByRealId (item.m_RealId);
                 }
             }
             #endregion
@@ -221,15 +221,15 @@ namespace MirRemakeBackend.Entity {
             }
             private class IIR_Empty : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.EMPTY; } }
-                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.m_realId = realId; }
+                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.ResetRealId (realId); }
             }
             private class IIR_Material : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.MATERIAL; } }
-                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.m_realId = realId; }
+                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.ResetRealId (realId); }
             }
             private class IIR_Consumable : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
-                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.m_realId = realId; }
+                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.ResetRealId (realId); }
             }
             private class IIR_Equipment : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
@@ -238,12 +238,13 @@ namespace MirRemakeBackend.Entity {
                     var gemList = new List<DE_GemData> (eqDdo.m_inlaidGemIdList.Count);
                     for (int i = 0; i < eqDdo.m_inlaidGemIdList.Count; i++)
                         gemList.Add (dem.GetGemById (eqDdo.m_inlaidGemIdList[i]));
+                    resItem.ResetRealId (realId);
                     ((E_EquipmentItem) resItem).ResetEquipmentInfo (eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, gemList);
                 }
             }
             private class IIR_Gem : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
-                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.m_realId = realId; }
+                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.ResetRealId (realId); }
             }
             #endregion
             private DEM_Item m_dem;
@@ -287,8 +288,8 @@ namespace MirRemakeBackend.Entity {
                     m_itemInfoReseterDict.Add (impl.m_ItemType, impl);
                 }
             }
-            public void Insert (E_Item item, int charId, ItemPlace ip, short pos) {
-                m_inserterDict[item.m_Type].Insert (m_dds, item, charId, ip, pos);
+            public long Insert (E_Item item, int charId, ItemPlace ip, short pos) {
+                return m_inserterDict[item.m_Type].Insert (m_dds, item, charId, ip, pos);
             }
             public void Save (E_Item item, int charId, ItemPlace ip, short pos) {
                 m_saverDict[item.m_Type].Save (m_dds, item, charId, ip, pos);
@@ -440,7 +441,8 @@ namespace MirRemakeBackend.Entity {
         public void ItemGain (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
             m_ddh.Delete (oriSlot);
-            m_ddh.Insert (item, charId, ip, pos);
+            var realId = m_ddh.Insert (item, charId, ip, pos);
+            item.ResetRealId (realId);
             // 回收实例
             RecycleItem (oriSlot);
         }
@@ -448,7 +450,8 @@ namespace MirRemakeBackend.Entity {
             // 持久层
             m_ddh.Delete (item);
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
-            m_ddh.Insert (emptyItem, charId, ip, pos);
+            var realId = m_ddh.Insert (emptyItem, charId, ip, pos);
+            emptyItem.ResetRealId (realId);
             // 回收实例
             RecycleItem (item);
             return emptyItem;
