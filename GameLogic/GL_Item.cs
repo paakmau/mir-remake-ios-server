@@ -25,7 +25,8 @@ namespace MirRemakeBackend.GameLogic {
             while (charEn.MoveNext ()) {
                 var netId = charEn.Current.Key;
                 var sight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
-                // if ()
+                if (sight == null) continue;
+                
             }
         }
         public override void NetworkTick () { }

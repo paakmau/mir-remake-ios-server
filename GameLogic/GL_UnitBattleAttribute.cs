@@ -97,6 +97,8 @@ namespace MirRemakeBackend.GameLogic {
             while (charEn.MoveNext ()) {
                 var charObj = charEn.Current.Value;
                 var sight = EM_Sight.s_instance.GetCharacterRawSight (charObj.m_networkId);
+                if (sight == null)
+                    continue;
                 // 发送 Hp 与 Mp 信息
                 var sightNetIdList = new List<int> (sight.Count + 1);
                 var hpMaxHpMpMaxMpList = new List < (int, int, int, int) > (sight.Count + 1);
