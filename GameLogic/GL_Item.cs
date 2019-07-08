@@ -11,6 +11,7 @@ namespace MirRemakeBackend.GameLogic {
     class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
         private const float c_groundItemSightRadius = 12;
+        private const int c_groundItemSightMaxNum = 31;
         public GL_Item (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 道具消失
@@ -25,20 +26,52 @@ namespace MirRemakeBackend.GameLogic {
             // 地面道具视野
             var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
             var charDspprItemIdList = new List<long> ();
-            var charNewItemIdList = new List<long> ();
+            var charShowItemList = new List<NO_GroundItem> ();
             while (charEn.MoveNext ()) {
                 var netId = charEn.Current.Key;
                 var charObj = charEn.Current.Value;
-                charDspprItemIdList.Clear ();
-                charNewItemIdList.Clear ();
 
                 var oriSight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
                 if (oriSight == null) continue;
                 // 计算新视野
                 var newSight = new List<E_GroundItem> (oriSight.Count);
-                for (int i=0; i<gndItemList.Count; i++)
-                    if ((gndItemList[i].m_position - charObj.m_position).LengthSquared () <= c_groundItemSightRadius * c_groundItemSightRadius)
+                for (int i = 0; i < gndItemList.Count; i++)
+                    if ((gndItemList[i].m_position - charObj.m_position).LengthSquared () <= c_groundItemSightRadius * c_groundItemSightRadius) {
                         newSight.Add (gndItemList[i]);
+                        if (newSight.Count > c_groundItemSightMaxNum)
+                            break;
+                    }
+
+                charDspprItemIdList.Clear ();
+                charShowItemList.Clear ();
+                for (int i = 0; i < oriSight.Count; i++) {
+                    long gndItemId = oriSight[i].m_groundItemId;
+                    bool removed = true;
+                    for (int j = 0; j < newSight.Count; j++)
+                        if (newSight[j].m_groundItemId == gndItemId) {
+                            removed = false;
+                            break;
+                        }
+                    if (removed)
+                        charDspprItemIdList.Add (gndItemId);
+                }
+                for (int i = 0; i < newSight.Count; i++) {
+                    long gndItemId = newSight[i].m_groundItemId;
+                    bool isNew = true;
+                    for (int j = 0; j < oriSight.Count; j++)
+                        if (oriSight[j].m_groundItemId == gndItemId) {
+                            isNew = false;
+                            break;
+                        }
+                    if (isNew)
+                        charShowItemList.Add (newSight[i].GetNo ());
+                }
+
+                // client
+                if (charDspprItemIdList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplyGroundItemDisappear.Instance (netId, charDspprItemIdList));
+                if (charShowItemList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplyGroundItemShow.Instance (netId, charShowItemList));
             }
         }
         public override void NetworkTick () { }
@@ -158,7 +191,7 @@ namespace MirRemakeBackend.GameLogic {
                 GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemId, realStoreNum);
             }
         }
-        public void NotifyMonsterDropLegacy (E_Monster monObj) {
+        public void NotifyMonsterDropLegacy (E_Monster monObj, E_Unit killer) {
             IReadOnlyList<short> monLegacyList = monObj.m_DropItemIdList;
             List < (short, short) > dropItemIdAndNumList = new List < (short, short) > ();
             for (int i = 0; i < monLegacyList.Count; i++) {
@@ -171,16 +204,18 @@ namespace MirRemakeBackend.GameLogic {
                         dropItemIdAndNumList.Add ((id, (short) 1));
                 }
             }
-            EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList, monObj.m_position);
+            int charId = (killer.m_UnitType == ActorUnitType.PLAYER)? ((E_Character)killer).m_characterId : -1;
+            EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList, charId, monObj.m_position);
         }
-        public void NotifyCharacterDropLegacy (E_Character charObj) {
+        public void NotifyCharacterDropLegacy (E_Character charObj, E_Unit killer) {
             var charBag = EM_Item.s_instance.GetBag (charObj.m_networkId);
             if (charBag == null) return;
             var bagItemList = charBag.m_ItemList;
             List<E_Item> droppedItemList = new List<E_Item> ();
             // TODO: 根据bagItemList (从角色bag中), 角色掉落遗物
 
-            EM_Item.s_instance.DropItemOntoGround (droppedItemList, charObj.m_position);
+            int charId = (killer.m_UnitType == ActorUnitType.PLAYER)? ((E_Character)killer).m_characterId : -1;
+            EM_Item.s_instance.DropItemOntoGround (droppedItemList, charId, charObj.m_position);
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();

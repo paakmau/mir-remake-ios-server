@@ -719,12 +719,10 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyGroundItemShow s_instance = new SC_ApplyGroundItemShow ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_SHOW; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList<NO_Item> m_itemList;
-        private IReadOnlyList<Vector2> m_posList;
-        public static SC_ApplyGroundItemShow Instance (IReadOnlyList<int> toClientList, IReadOnlyList<NO_Item> itemList, IReadOnlyList<Vector2> posList) {
-            s_instance.m_toClientList = toClientList;
+        private IReadOnlyList<NO_GroundItem> m_itemList;
+        public static SC_ApplyGroundItemShow Instance (int netId, IReadOnlyList<NO_GroundItem> itemList) {
+            s_instance.m_toClientList = new List<int> () { netId };
             s_instance.m_itemList = itemList;
-            s_instance.m_posList = posList;
             return s_instance;
         }
         private SC_ApplyGroundItemShow () { }
@@ -732,8 +730,6 @@ namespace MirRemakeBackend.Network {
             writer.Put ((byte) m_itemList.Count);
             for (int i = 0; i < m_itemList.Count; i++)
                 writer.Put (m_itemList[i]);
-            for (int i = 0; i < m_itemList.Count; i++)
-                writer.Put (m_posList[i]);
         }
     }
 
@@ -744,17 +740,17 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyGroundItemDisappear s_instance = new SC_ApplyGroundItemDisappear ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_DISAPPEAR; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList<long> m_realIdList;
-        public static SC_ApplyGroundItemDisappear Instance (IReadOnlyList<int> toClientList, IReadOnlyList<long> realIdList) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_realIdList = realIdList;
+        private IReadOnlyList<long> m_gndItemIdList;
+        public static SC_ApplyGroundItemDisappear Instance (int netId, IReadOnlyList<long> gndIdList) {
+            s_instance.m_toClientList = new List<int> () { netId };
+            s_instance.m_gndItemIdList = gndIdList;
             return s_instance;
         }
         private SC_ApplyGroundItemDisappear () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_realIdList.Count);
-            for (int i = 0; i < m_realIdList.Count; i++)
-                writer.Put (m_realIdList[i]);
+            writer.Put ((byte) m_gndItemIdList.Count);
+            for (int i = 0; i < m_gndItemIdList.Count; i++)
+                writer.Put (m_gndItemIdList[i]);
         }
     }
 

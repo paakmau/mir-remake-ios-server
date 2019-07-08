@@ -118,12 +118,17 @@ namespace MirRemakeBackend.Entity {
         public long m_groundItemId;
         public MyTimer.Time m_disappearTime;
         public E_Item m_item;
+        public int m_charId;
         public Vector2 m_position;
-        public void Reset (long groundItemId, MyTimer.Time disappearTime, E_Item item, Vector2 pos) {
+        public void Reset (long groundItemId, MyTimer.Time disappearTime, E_Item item, int charId, Vector2 pos) {
             m_groundItemId = groundItemId;
             m_disappearTime = disappearTime;
             m_item = item;
+            m_charId = charId;
             m_position = pos;
+        }
+        public NO_GroundItem GetNo () {
+            return new NO_GroundItem (m_groundItemId, m_item.m_ItemId, m_item.m_num, m_charId, m_position);
         }
     }
 }

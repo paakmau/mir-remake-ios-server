@@ -61,6 +61,20 @@ namespace MirRemakeBackend.Network {
             m_level = lv;
         }
     }
+    struct NO_GroundItem {
+        public long m_groundItemId;
+        public short m_itemId;
+        public short m_num;
+        public int m_charId;
+        public Vector2 m_pos;
+        public NO_GroundItem (long gndItemId, short itemId, short num, int charId, Vector2 pos) {
+            m_groundItemId = gndItemId;
+            m_itemId = itemId;
+            m_num = num;
+            m_charId = charId;
+            m_pos = pos;
+        }
+    }
     struct NO_Item {
         public long m_realId;
         public short m_itemId;
@@ -163,13 +177,13 @@ namespace MirRemakeBackend.Network {
             writer.Put (monNo.m_netId);
             writer.Put (monNo.m_position);
             writer.Put (monNo.m_monsterId);
-            writer.Put ((byte)monNo.m_monsterType);
+            writer.Put ((byte) monNo.m_monsterType);
         }
         public static NO_Monster GetMonster (this NetDataReader reader) {
             int netId = reader.GetInt ();
             Vector2 pos = reader.GetVector2 ();
             short monsterId = reader.GetShort ();
-            MonsterType monType = (MonsterType)reader.GetByte ();
+            MonsterType monType = (MonsterType) reader.GetByte ();
             return new NO_Monster (netId, pos, monsterId, monType);
         }
         public static void Put (this NetDataWriter writer, NO_Character charNo) {
@@ -184,6 +198,21 @@ namespace MirRemakeBackend.Network {
             OccupationType ocp = (OccupationType) reader.GetByte ();
             short lv = reader.GetShort ();
             return new NO_Character (netId, pos, ocp, lv);
+        }
+        public static void Put (this NetDataWriter writer, NO_GroundItem gndItem) {
+            writer.Put (gndItem.m_groundItemId);
+            writer.Put (gndItem.m_itemId);
+            writer.Put (gndItem.m_num);
+            writer.Put (gndItem.m_charId);
+            writer.Put (gndItem.m_pos);
+        }
+        public static NO_GroundItem GetGroundItem (this NetDataReader reader) {
+            long gndItemId = reader.GetLong ();
+            short itemId = reader.GetShort ();
+            short num = reader.GetShort ();
+            int charId = reader.GetInt ();
+            Vector2 pos = reader.GetVector2 ();
+            return new NO_GroundItem (gndItemId, itemId, num, charId, pos);
         }
         public static void Put (this NetDataWriter writer, NO_Item item) {
             writer.Put (item.m_realId);
