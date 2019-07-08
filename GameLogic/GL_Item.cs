@@ -132,12 +132,17 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyMonsterDropLegacy (E_Monster monObj) {
             var monLegacyList = monObj.m_DropItemIdList;
             List < (short, short) > dropItemIdAndNumList = new List < (short, short) > ();
-            // TODO: 根据monLegacyList, 随机掉落物品
-            
+            // TODO: 根据monLegacyList, 随机掉落遗物
+
             EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList);
         }
         public void NotifyCharacterDropLegacy (E_Character charObj) {
-            // TODO: 角色掉落物品
+            var charBag = EM_Item.s_instance.GetBag (charObj.m_networkId);
+            if (charBag == null) return;
+            var bagItemList = charBag.m_ItemList;
+            List<E_Item> droppedItemList = new List<E_Item> ();
+            // TODO: 根据bagItemList (从角色bag中), 角色掉落遗物
+            EM_Item.s_instance.DropItemOntoGround (droppedItemList);
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();
