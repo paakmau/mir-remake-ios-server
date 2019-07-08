@@ -111,7 +111,7 @@
 					"ATTACK -3"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -230,7 +230,7 @@
 					"ATTACK -0.5"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 2,
@@ -258,7 +258,7 @@
 						10,
 						10
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -347,7 +347,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 8,
@@ -375,7 +375,7 @@
 						15,
 						15
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -495,7 +495,7 @@
 					"MAX_HP 50"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 25,
@@ -523,7 +523,7 @@
 						15,
 						15
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -612,7 +612,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 19,
@@ -640,7 +640,7 @@
 						5,
 						6
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -760,7 +760,7 @@
 					"MAX_HP 30"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 10
@@ -848,7 +848,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 16,
@@ -876,7 +876,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 18,
@@ -904,7 +904,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -1024,7 +1024,7 @@
 					"ATTACK -3.9"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -1143,7 +1143,7 @@
 					"ATTACK -3"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -1229,7 +1229,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 6,
@@ -1257,7 +1257,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 8,
@@ -1285,7 +1285,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 10,
@@ -1313,7 +1313,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 11,
@@ -1341,7 +1341,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -1459,7 +1459,7 @@
 					"ATTACK -3"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -1578,7 +1578,7 @@
 					"ATTACK -0.5"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 23,
@@ -1606,7 +1606,7 @@
 						4,
 						4
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -1695,7 +1695,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 15,
@@ -1723,7 +1723,7 @@
 						15,
 						15
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -1812,7 +1812,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 12,
@@ -1840,7 +1840,7 @@
 						23,
 						25
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -1960,7 +1960,7 @@
 					"ATTACK -2"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 4,
@@ -2108,7 +2108,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 19,
@@ -2136,7 +2136,7 @@
 						7,
 						7.5
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -2225,7 +2225,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 13,
@@ -2253,7 +2253,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 11,
@@ -2281,7 +2281,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -2401,7 +2401,7 @@
 					"ATTACK -4"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -2435,7 +2435,7 @@
 		"SkillAimType": "NOT_AIM_SELF_CIRCLE",
 		"CastRange": 0,
 		"TargetNumber": 20,
-		"DamageRadian": 0,
+		"DamageRadian": 250,
 		"SecondParameter": 0,
 		"Effect": {
 			"EffectDeltaHP": [
@@ -2520,7 +2520,7 @@
 					"ATTACK -3"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -2606,7 +2606,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 14,
@@ -2634,7 +2634,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 15,
@@ -2662,7 +2662,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 17,
@@ -2690,7 +2690,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -2808,7 +2808,7 @@
 					"MAGIC -3.4"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -2927,7 +2927,7 @@
 					"MAGIC -2.5"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 22,
@@ -2955,7 +2955,7 @@
 						3,
 						3
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -3044,7 +3044,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 9,
@@ -3072,7 +3072,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -3161,7 +3161,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 45
@@ -3280,7 +3280,7 @@
 					"MAGIC -3"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 20,
@@ -3308,7 +3308,7 @@
 						5,
 						5
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -3428,7 +3428,7 @@
 					"MAGIC -4.5"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 3,
@@ -3456,7 +3456,7 @@
 						3,
 						3
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -3545,7 +3545,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 1,
@@ -3573,7 +3573,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -3662,7 +3662,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 25,
@@ -3691,7 +3691,7 @@
 						15,
 						15
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -3811,7 +3811,7 @@
 					"MAGIC -3.4"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 5,
@@ -3957,7 +3957,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 7,
@@ -3985,7 +3985,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 9,
@@ -4013,7 +4013,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -4131,7 +4131,7 @@
 					"MAGIC -3.4"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -4219,7 +4219,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 24,
@@ -4247,7 +4247,7 @@
 						5,
 						5
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -4336,7 +4336,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 0,
@@ -4484,7 +4484,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 30
@@ -4603,7 +4603,7 @@
 					"MAGIC 0.05"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 25
@@ -4722,7 +4722,7 @@
 					"MAGIC 5.0"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
@@ -4810,7 +4810,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 25,
@@ -4838,7 +4838,7 @@
 						23,
 						25
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -4958,7 +4958,7 @@
 					"MAGIC -3"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 3
@@ -5077,7 +5077,7 @@
 					"MAGIC 2.5"
 				]
 			],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 5
@@ -5165,7 +5165,7 @@
 				0
 			],
 			"SelfHPStrategy": [],
-			"TargetHPStrategy": [],
+			
 			"StatusAttachArray": [
 				{
 					"StatusID": 9,
@@ -5193,7 +5193,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 13,
@@ -5221,7 +5221,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				},
 				{
 					"StatusID": 17,
@@ -5249,7 +5249,7 @@
 						30,
 						30
 					],
-					"ValueAffectionDict": []
+					"ValueAffectionDict": [[]]
 				}
 			]
 		},
@@ -5268,8 +5268,8 @@
 		"FatherID": [],
 		"ChildrenIDList": [],
 		"CampType": "ENEMY",
-		"SkillAimType": "AIM_CIRCLE",
-		"CastRange": 0,
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
 		"TargetNumber": 1,
 		"DamageRadian": 0,
 		"SecondParameter": 0,
@@ -5290,12 +5290,959 @@
 			],
 			"SelfHPStrategy": [
 				[
-					"ATTACK 1"
+					"ATTACK -1"
 				]
 			],
-			"TargetHPStrategy": [],
 			"StatusAttachArray": []
 		},
 		"CoolDownTime": 0
+	},
+	{
+		"SkillID": 41,
+		"Name": "撕咬",
+		"Details": "发动一次普通攻击，对目标造成基于物理攻击力的伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -2"
+				]
+			],
+			
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 0
+	},
+	{
+		"SkillID": 42,
+		"Name": "恐惧打击",
+		"Details": "发动一次攻击，对目标造成等同于魔法攻击力的伤害，并使其沉默。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "MAGIC",
+			"EffectDeltaMPType": "MAGIC",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"MAGIC -1"
+				]
+			],
+			
+			"StatusAttachArray": [{
+				"StatusID":20,
+				"Value":[0],
+				"LastingTime":[1.5],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 4
+	},
+	{
+		"SkillID": 43,
+		"Name": "横扫",
+		"Details": "发动一次普通攻击，对身边的敌方目标造成等同于物理攻击力的伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "NOT_AIM_SELF_CIRCLE",
+		"CastRange": 0,
+		"TargetNumber": 20,
+		"DamageRadian": 200,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -1"
+				]
+			],
+			
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 3
+	},
+	{
+		"SkillID": 44,
+		"Name": "协迫",
+		"Details": "在持续时间内提高目标受到的物理伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [0],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			
+			"StatusAttachArray": [{
+				"StatusID":23,
+				"Value":[10],
+				"LastingTime":[5],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 12
+	},
+	{
+		"SkillID": 45,
+		"Name": "寒霜打击",
+		"Details": "发动一次普通攻击，对目标造成等同于物理攻击力的伤害，并使其冻结。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -1"
+				]
+			],
+			
+			"StatusAttachArray": [{
+				"StatusID":22,
+				"Value":[0],
+				"LastingTime":[2],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 10
+	},
+	{
+		"SkillID": 46,
+		"Name": "寒冷刺骨",
+		"Details": "在持续时间内提高暴击率。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 0,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				0
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],			
+			"StatusAttachArray": [{
+				"StatusID":15,
+				"Value":[10],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 15
+	},
+	{
+		"SkillID": 47,
+		"Name": "冰霜强化",
+		"Details": "提高物理攻击力。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			"StatusAttachArray": [{
+				"StatusID":8,
+				"Value":[500],
+				"LastingTime":[15],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 35
+	},
+	{
+		"SkillID": 48,
+		"Name": "燃烧",
+		"Details": "在持续时间内造成魔法伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [0],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "MAGIC",
+			"EffectDeltaMPType": "MAGIC",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			
+			"StatusAttachArray": [{
+				"StatusID":5,
+				"Value":[5000],
+				"LastingTime":[4],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 12
+	},
+	{
+		"SkillID": 49,
+		"Name": "梦魇攻击",
+		"Details": "发动一次攻击，对目标造成基于魔法攻击力的伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "MAGIC",
+			"EffectDeltaMPType": "MAGIC",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"MAGIC -2.5"
+				]
+			],
+			
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 2.5
+	},
+	{
+		"SkillID": 50,
+		"Name": "强效防御",
+		"Details": "提高护甲和魔法抗性。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 0,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [0],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			
+			"StatusAttachArray": [{
+				"StatusID":10,
+				"Value":[50],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			},{
+				"StatusID":11,
+				"Value":[50],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 0
+	},
+	{
+		"SkillID": 51,
+		"Name": "暴戾打击",
+		"Details": "发动一次攻击，对目标造成大量物理伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -3.5"
+				]
+			],
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 5
+	},
+	{
+		"SkillID": 52,
+		"Name": "木之恢复",
+		"Details": "恢复生命值。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				20000
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "MAGIC",
+			"EffectDeltaMPType": "MAGIC",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 0
+	},
+	{
+		"SkillID": 53,
+		"Name": "土之守护",
+		"Details": "减少受到的伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [0],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			"StatusAttachArray": [{
+				"StatusID":25,
+				"Value":[30],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 25
+	},
+	{
+		"SkillID": 54,
+		"Name": "水之滋养",
+		"Details": "提高闪避率",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				0
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			"StatusAttachArray": [{
+				"StatusID":13,
+				"Value":[25],
+				"LastingTime":[5],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 15
+	},
+	{
+		"SkillID": 55,
+		"Name": "火之侵略",
+		"Details": "发动一次攻击，对目标造成基于魔法攻击力的伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "MAGIC",
+			"EffectDeltaMPType": "MAGIC",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"MAGIC -4.5"
+				]
+			],
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 7
+	},
+	{
+		"SkillID": 56,
+		"Name": "金之残暴",
+		"Details": "提高暴击率和暴击加成。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "SELF",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				0
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			"StatusAttachArray": [{
+				"StatusID":15,
+				"Value":[20],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			},{
+				"StatusID":15,
+				"Value":[40],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 25
+	},
+	{
+		"SkillID": 57,
+		"Name": "碎甲攻击",
+		"Details": "发动一次物理攻击，对目标造成等同于物理攻击力的伤害,并降低目标护甲",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -1"
+				]
+			],
+			"StatusAttachArray": [{
+				"StatusID":2,
+				"Value":[50],
+				"LastingTime":[6],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 10
+	},
+	{
+		"SkillID": 58,
+		"Name": "魔蚀攻击",
+		"Details": "发动一次普通攻击，对目标造成等同于魔法攻击力的伤害，并降低其魔法抗性。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "MAGIC",
+			"EffectDeltaMPType": "MAGIC",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"MAGIC -1"
+				]
+			],
+			"StatusAttachArray": [{
+				"StatusID":3,
+				"Value":[50],
+				"LastingTime":[6],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 10
+	},
+	{
+		"SkillID": 59,
+		"Name": "咆哮恐惧",
+		"Details": "对目标造成物理伤害并使目标晕眩。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -1"
+				]
+			],
+			"StatusAttachArray": [{
+				"StatusID":19,
+				"Value":[0],
+				"LastingTime":[3.5],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 9
+	},
+	{
+		"SkillID": 60,
+		"Name": "愤怒强化",
+		"Details": "提高物理攻击力和魔法攻击力。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				0
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[]
+			],
+			"StatusAttachArray": [{
+				"StatusID":8,
+				"Value":[1000],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			},{
+				"StatusID":9,
+				"Value":[1000],
+				"LastingTime":[10],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 18
+	},
+	{
+		"SkillID": 61,
+		"Name": "离火灭世",
+		"Details": "发动一次普通攻击，对目标造成基于物理和魔法攻击力的物理伤害。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -3",
+					"MAGIC -3"
+				]
+			],
+			"StatusAttachArray": []
+		},
+		"CoolDownTime": 6
 	}
 ]

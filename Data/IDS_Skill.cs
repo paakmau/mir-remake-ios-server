@@ -42,7 +42,10 @@ namespace MirRemakeBackend.Data {
             }
             res=new DO_Skill[faker];
             for (int i = ssm; i < faker+ssm; i++)
-            {
+            {   
+                /* if(occupation==OccupationType.ALL){
+                    Console.WriteLine(i);
+                }*/
                 DO_Skill skill = new DO_Skill();
                 skill.m_skillId = short.Parse(s_skillDatas[i]["SkillID"].ToString());
                 skill.m_skillMaxLevel = (short)s_skillDatas[i]["ManaCost"].Count;
@@ -64,13 +67,13 @@ namespace MirRemakeBackend.Data {
                     DO_SkillData skillData = new DO_SkillData();
                     skillData.m_skillLevel = (short)(j + 1);
                     int sad=j>=(i/10)?j:(i/10);
-                    if(i==40){
+                    if(i>=40){
                         skillData.m_upgradeCharacterLevelInNeed=1;
                     }
                     else{    
                         skillData.m_upgradeCharacterLevelInNeed = (short)(10 * sad + 1);
                     }
-                    if(i==40){
+                    if(i>=40){
                         skillData.m_upgradeMasterlyInNeed=0;
                     }
                     skillData.m_upgradeMoneyInNeed = GetMoney(j);
