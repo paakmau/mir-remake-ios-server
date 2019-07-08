@@ -166,9 +166,9 @@ namespace MirRemakeBackend.GameLogic {
 
                 // 处理物品掉落
                 if (target.m_UnitType == ActorUnitType.MONSTER)
-                    GL_MonsterItem.s_instance.NotifyDropLegacy (target as E_Monster);
+                    GL_Item.s_instance.NotifyMonsterDropLegacy (target as E_Monster);
                 if (target.m_UnitType == ActorUnitType.PLAYER)
-                    GL_CharacterItem.s_instance.NotifyDropLegacy (target as E_Character);
+                    GL_Item.s_instance.NotifyCharacterDropLegacy (target as E_Character);
 
                 // client
                 m_networkService.SendServerCommand (SC_ApplyAllDead.Instance (

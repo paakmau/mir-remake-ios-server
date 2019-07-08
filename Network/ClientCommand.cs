@@ -92,7 +92,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_USE_CONSUMABLE_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
             int itemRealId = reader.GetInt ();
-            GL_CharacterItem.s_instance.CommandApplyUseConsumableItem (netId, itemRealId);
+            GL_Item.s_instance.CommandApplyUseConsumableItem (netId, itemRealId);
         }
     }
     /// <summary>
@@ -102,7 +102,7 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_USE_EQUIPMENT_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
             int itemRealId = reader.GetInt ();
-            GL_CharacterItem.s_instance.CommandApplyUseEquipmentItem (netId, itemRealId);
+            GL_Item.s_instance.CommandApplyUseEquipmentItem (netId, itemRealId);
         }
     }
     /// <summary>
@@ -230,7 +230,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
-            GL_CharacterItem.s_instance.CommandGainItem (netId, itemId, num);
+            GL_Item.s_instance.CommandGainItem (netId, itemId, num);
         }
     }
 }

@@ -7,9 +7,9 @@ namespace MirRemakeBackend.GameLogic {
     /// 管理物品的使用, 存取 (背包, 仓库), 回收
     /// 装备强化, 附魔, 镶嵌
     /// </summary>
-    class GL_CharacterItem : GameLogicBase {
-        public static GL_CharacterItem s_instance;
-        public GL_CharacterItem (INetworkService netService) : base (netService) { }
+    class GL_Item : GameLogicBase {
+        public static GL_Item s_instance;
+        public GL_Item (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifyRemoveCharacter (int netId) {
@@ -18,7 +18,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandGainItem (int netId, short itemId, short num) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            NotifyGainItem (charObj, new List < (short, short) > {
+            NotifyCharacterGainItem (charObj, new List < (short, short) > {
                 (itemId, num)
             });
         }
@@ -30,7 +30,7 @@ namespace MirRemakeBackend.GameLogic {
             E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
             if (item == null) return;
             GL_UnitBattleAttribute.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, -1, charObj, charObj);
-            NotifyLostItem (charObj, item, 1, posInBag, bag);
+            NotifyCharacterLostItem (charObj, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -48,7 +48,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             // 装备穿上Attr
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
-            NotifySwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
+            NotifyCharacterSwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
@@ -59,7 +59,7 @@ namespace MirRemakeBackend.GameLogic {
         /// <summary>
         /// 失去确定位置的物品
         /// </summary>
-        public void NotifyLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
+        public void NotifyCharacterLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
             long realId = item.m_RealId;
@@ -75,13 +75,13 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                 charObj.m_networkId, new List<long> { realId }, new List<short> { curNum }));
         }
-        public void NotifySwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
+        public void NotifyCharacterSwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
             srcRepo.SetItem (tarItem, srcPos);
             tarRepo.SetItem (srcItem, tarPos);
             m_networkService.SendServerCommand (SC_ApplySelfMoveItem.Instance (
                 new List<int> { charObj.m_networkId }, srcRepo.m_repositoryPlace, srcPos, tarRepo.m_repositoryPlace, tarPos));
         }
-        public void NotifyGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
+        public void NotifyCharacterGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
             var bag = EM_Item.s_instance.GetBag (charObj.m_networkId);
             if (bag == null) return;
             // 放入背包
@@ -129,7 +129,14 @@ namespace MirRemakeBackend.GameLogic {
                 GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemId, realStoreNum);
             }
         }
-        public void NotifyDropLegacy (E_Character charObj) {
+        public void NotifyMonsterDropLegacy (E_Monster monObj) {
+            var monLegacyList = monObj.m_DropItemIdList;
+            List < (short, short) > dropItemIdAndNumList = new List < (short, short) > ();
+            // TODO: 根据monLegacyList, 随机掉落物品
+            
+            EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList);
+        }
+        public void NotifyCharacterDropLegacy (E_Character charObj) {
             // TODO: 角色掉落物品
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {

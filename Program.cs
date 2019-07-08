@@ -86,7 +86,7 @@ namespace MirRemakeBackend {
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
-            GL_CharacterItem.s_instance = new GL_CharacterItem (s_networkService);
+            GL_Item.s_instance = new GL_Item (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
             GL_Sight.s_instance = new GL_Sight (s_networkService);
@@ -100,7 +100,7 @@ namespace MirRemakeBackend {
                 GL_BattleSettle.s_instance,
                 GL_CharacterAction.s_instance,
                 GL_CharacterAttribute.s_instance,
-                GL_CharacterItem.s_instance,
+                GL_Item.s_instance,
                 GL_Mission.s_instance,
                 GL_MonsterAction.s_instance,
                 GL_Sight.s_instance,

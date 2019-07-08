@@ -50,7 +50,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Sight.s_instance.NotifyInitCharacter (newChar);
 
             // 道具
-            GL_CharacterItem.s_instance.NotifyInitCharacter (netId, charId);
+            GL_Item.s_instance.NotifyInitCharacter (netId, charId);
 
             // 技能
             GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
@@ -61,7 +61,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandRemoveCharacter (int netId) {
             GL_UnitBattleAttribute.s_instance.NotifyRemoveCharacter (netId);
             GL_Sight.s_instance.NotifyRemoveCharacter (netId);
-            GL_CharacterItem.s_instance.NotifyRemoveCharacter (netId);
+            GL_Item.s_instance.NotifyRemoveCharacter (netId);
             GL_Skill.s_instance.NotifyRemoveCharacter (netId);
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);
             // 释放NetId
