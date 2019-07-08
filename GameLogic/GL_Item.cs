@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
-
+using System;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理物品的使用, 存取 (背包, 仓库), 回收
@@ -129,10 +129,20 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void NotifyMonsterDropLegacy (E_Monster monObj) {
-            var monLegacyList = monObj.m_DropItemIdList;
+            Random ran=new Random();
+            IReadOnlyList<short> monLegacyList = monObj.m_DropItemIdList;
             List < (short, short) > dropItemIdAndNumList = new List < (short, short) > ();
-            // TODO: 根据monLegacyList, 随机掉落遗物
-
+            for (int i=0;i<monLegacyList.Count;i++){
+                short id=monLegacyList[i];
+                if(id>=30000){
+                    dropItemIdAndNumList.Add((id,(short)(ran.Next(1,2))));
+                }
+                else if(id>=20000){
+                    bool drop= ran.Next(0,1000)<=100;
+                    if(drop)
+                        dropItemIdAndNumList.Add((id,(short)1));
+                }
+            }
             EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList);
         }
         public void NotifyCharacterDropLegacy (E_Character charObj) {
