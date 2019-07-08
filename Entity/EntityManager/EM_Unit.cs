@@ -16,9 +16,10 @@ namespace MirRemakeBackend.Entity {
         private IDDS_CharacterPosition m_charPosDds;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
-        public EM_Unit (DEM_Unit dem, IDDS_Character dds) {
+        public EM_Unit (DEM_Unit dem, IDDS_Character dds, IDDS_CharacterPosition charPosDds) {
             m_dem = dem;
             m_dds = dds;
+            m_charPosDds = charPosDds;
         }
         public int GetMonsterNum () {
             return m_dem.GetMonsterNum ();
