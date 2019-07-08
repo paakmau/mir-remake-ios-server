@@ -92,18 +92,21 @@ namespace MirRemakeBackend.Entity {
         /// 若完全堆叠返回 -1  
         /// 未能完全存入返回 -2  
         /// </summary>
-        public short AutoStoreItem (E_Item item, out List < (short, E_Item) > posAndChangedItemList, out int storedNum, out E_EmptyItem oriEmptySlot) {
+        public short AutoStoreItem (short itemId, short itemNum, out List < (short, E_Item) > posAndChangedItemList, out short piledNum, out short realStoredNum, out E_EmptyItem oriEmptySlot) {
             posAndChangedItemList = new List < (short, E_Item) > ();
-            storedNum = 0;
+            piledNum = 0;
+            realStoredNum = 0;
             oriEmptySlot = null;
             // 堆叠
             for (int i = 0; i < m_itemList.Count; i++) {
                 var itemInRepo = m_itemList[i];
-                if (itemInRepo.m_ItemId == item.m_ItemId && itemInRepo.m_num != item.m_MaxNum) {
+                if (itemInRepo.m_ItemId == itemId && itemInRepo.m_num != itemInRepo.m_MaxNum) {
                     posAndChangedItemList.Add (((short) i, itemInRepo));
-                    short added = itemInRepo.AddNum (item.m_num);
-                    storedNum += added;
-                    if (item.RemoveNum (added))
+                    short added = itemInRepo.AddNum (itemNum);
+                    piledNum += added;
+                    realStoredNum = piledNum;
+                    itemNum -= added;
+                    if (itemNum == 0)
                         return -1;
                 }
             }
@@ -111,8 +114,7 @@ namespace MirRemakeBackend.Entity {
             for (short i = 0; i < m_itemList.Count; i++) {
                 if (m_itemList[i].m_IsEmpty) {
                     oriEmptySlot = m_itemList[i] as E_EmptyItem;
-                    m_itemList[i] = item;
-                    storedNum += item.m_num;
+                    realStoredNum += itemNum;
                     return i;
                 }
             }

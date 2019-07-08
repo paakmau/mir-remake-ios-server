@@ -12,10 +12,12 @@ namespace MirRemakeBackend.Entity {
         private const int c_equipmentRegionPoolSize = 400;
         private const int c_statusPoolSize = 4000;
         private const int c_missionPoolSize = 1000;
+        private const int c_groundItemPoolSize = 2000;
         public ObjectPool<E_Character> m_characterPool = new ObjectPool<E_Character> (c_characterPoolSize);
         public ObjectPool<E_Skill> m_skillPool = new ObjectPool<E_Skill> (c_skillPoolSize);
         public ObjectPool<E_Repository> m_repositoryPool = new ObjectPool<E_Repository> (c_repositoryPoolSize);
         public ObjectPool<E_EquipmentRegion> m_equipmentRegionPool = new ObjectPool<E_EquipmentRegion> (c_equipmentRegionPoolSize);
         public ObjectPool<E_Mission> m_missionPool = new ObjectPool<E_Mission> (c_missionPoolSize);
+        public ObjectPool<E_GroundItem> m_groundItemPool = new ObjectPool<E_GroundItem> (c_groundItemPoolSize);
     }
 }

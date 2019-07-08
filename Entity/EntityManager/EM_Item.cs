@@ -338,6 +338,20 @@ namespace MirRemakeBackend.Entity {
                 return res;
             }
         }
+        private class GroundItemIdManager {
+            private HashSet<long> m_groundItemIdSet = new HashSet<long> ();
+            private long m_groundItemIdCnt = 0;
+            public long AssignGroundItemId () {
+                long res = ++m_groundItemIdCnt;
+                while (m_groundItemIdSet.Contains (res))
+                    res = ++m_groundItemIdCnt;
+                m_groundItemIdSet.Add (res);
+                return res;
+            }
+            public void RecycleGroundItemId (long groundItemId) {
+                m_groundItemIdSet.Remove (groundItemId);
+            }
+        }
         public static EM_Item s_instance;
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
@@ -345,6 +359,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, E_Repository> m_bagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_storeHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
+        private GroundItemIdManager m_groundItemIdManager = new GroundItemIdManager ();
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
@@ -401,23 +416,6 @@ namespace MirRemakeBackend.Entity {
             RecycleItemList (equiped.GetAllItemList ());
         }
         /// <summary>
-        /// 根据itemId与num  
-        /// 初始化Item  
-        /// 返回Entity  
-        /// 不进入索引  
-        /// 无RealId  
-        /// </summary>
-        public List<E_Item> InitItemList (IReadOnlyList < (short, short) > itemIdAndNumList) {
-            var res = new List<E_Item> ();
-            for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                var idAndNum = itemIdAndNumList[i];
-                DE_Item itemDe = m_dem.GetItemById (idAndNum.Item1);
-                E_Item item = m_itemFactory.GetAndInitInstance (itemDe, idAndNum.Item2);
-                res.Add (item);
-            }
-            return res;
-        }
-        /// <summary>
         /// 获取装备区
         /// </summary>
         public E_EquipmentRegion GetEquiped (int netId) {
@@ -445,12 +443,16 @@ namespace MirRemakeBackend.Entity {
             m_storeHouseDict.TryGetValue (netId, out res);
             return res;
         }
-        public void CharacterGainItem (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
+        public E_Item CharacterGainItem (E_EmptyItem oriSlot, short itemId, short itemNum, int charId, ItemPlace ip, short pos) {
+            // 生成实例
+            DE_Item itemDe = m_dem.GetItemById (itemId);
+            E_Item item = m_itemFactory.GetAndInitInstance (itemDe, itemNum);
             // 持久层
             m_ddh.Delete (oriSlot);
             m_ddh.Insert (item, charId, ip, pos);
             // 回收实例
             RecycleItem (oriSlot);
+            return item;
         }
         public E_EmptyItem CharacterLoseItem (E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
@@ -464,12 +466,25 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
-        public void GenerateItemOnGround (IReadOnlyList<short> itemIdList) {
-            for (int i = 0; i < itemIdList.Count; i++)
-                GenerateItemOnGround (itemIdList[i]);
+        public List<E_Item> GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList) {
+            List<E_Item> res = new List<E_Item> (itemIdAndNumList.Count);
+            for (int i = 0; i < itemIdAndNumList.Count; i++)
+                res.Add (GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2));
+            return res;
         }
-        public void GenerateItemOnGround (short itemId) {
-            // TODO: 
+        /// <summary>
+        /// 创建地面物品
+        /// </summary>
+        public E_Item GenerateItemOnGround (short itemId, short num) {
+            DE_Item itemDe = m_dem.GetItemById (itemId);
+            var res = m_itemFactory.GetAndInitInstance (itemDe, num);
+            var groundItem = s_entityPool.m_groundItemPool.GetInstance ();
+            long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
+            // groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked ())
+            return res;
+        }
+        public void RemoveItemOnGround (E_GroundItem groundItem) {
+
         }
         private void RecycleItem (E_Item item) {
             m_itemFactory.RecycleItem (item);

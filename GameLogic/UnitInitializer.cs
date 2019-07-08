@@ -3,10 +3,10 @@ using MirRemakeBackend.Entity;
 
 namespace MirRemakeBackend.GameLogic {
     class UnitInitializer {
-        static class NetworkIdManager {
-            static private HashSet<int> m_unitNetIdSet = new HashSet<int> ();
-            static private int m_unitCnt = 0;
-            static public int AssignNetworkId () {
+        private class NetworkIdManager {
+            private HashSet<int> m_unitNetIdSet = new HashSet<int> ();
+            private int m_unitCnt = 0;
+            public int AssignNetworkId () {
                 // 分配NetworkId
                 while (true) {
                     ++m_unitCnt;
@@ -16,27 +16,28 @@ namespace MirRemakeBackend.GameLogic {
                 m_unitNetIdSet.Add (m_unitCnt);
                 return m_unitCnt;
             }
-            static public int[] AssignNetworkId (int num) {
+            public int[] AssignNetworkId (int num) {
                 int[] res = new int[num];
                 for (int i = 0; i < num; i++)
                     res[i] = AssignNetworkId ();
                 return res;
             }
-            static public void RemoveNetworkId (int netId) {
+            public void RecycleNetworkId (int netId) {
                 m_unitNetIdSet.Remove (netId);
             }
         }
         public static UnitInitializer s_instance;
+        private NetworkIdManager m_networkIdManager = new NetworkIdManager ();
         public UnitInitializer () { InitAllMonster (); }
         private void InitAllMonster () {
             int monNum = EM_Unit.s_instance.GetMonsterNum ();
-            int[] netIdArr = NetworkIdManager.AssignNetworkId (monNum);
+            int[] netIdArr = m_networkIdManager.AssignNetworkId (monNum);
 
             var mons = GL_UnitBattleAttribute.s_instance.NotifyInitAllMonster (netIdArr);
             GL_Sight.s_instance.NotifyInitAllMonster (mons);
         }
         public int AssignNetworkId () {
-            return NetworkIdManager.AssignNetworkId ();
+            return m_networkIdManager.AssignNetworkId ();
         }
         public void CommandInitCharacterId (int netId, int charId) {
             // 角色
@@ -64,7 +65,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Skill.s_instance.NotifyRemoveCharacter (netId);
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);
             // 释放NetId
-            NetworkIdManager.RemoveNetworkId (netId);
+            m_networkIdManager.RecycleNetworkId (netId);
         }
     }
 }

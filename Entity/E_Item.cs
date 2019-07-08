@@ -40,7 +40,7 @@ namespace MirRemakeBackend.Entity {
         public const int c_maxStrengthenNum = 10;
         public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
         public byte m_strengthenNum;
-        public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List<(ActorUnitConcreteAttributeType, int)> ();
+        public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List < (ActorUnitConcreteAttributeType, int) > ();
         private List<short> m_inlaidGemIdList = new List<short> ();
         public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
         public void ResetEquipmentInfo (byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
@@ -114,8 +114,18 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_GroundItem {
-        long m_groundId;
-        MyTimer.Time m_diappearTime;
-        E_Item m_item;
+        private long m_groundItemId;
+        public long m_GroundItemId { get { return m_groundItemId; } }
+        private MyTimer.Time m_disappearTime;
+        public MyTimer.Time m_DisappearTime { get { return m_disappearTime; } }
+        private E_Item m_item;
+        public E_Item m_Item { get { return m_item; } }
+        public long m_RealId { get { return m_item.m_RealId; } }
+        public bool m_HasRealId { get { return m_item.m_HasRealId; } }
+        public void Reset (long groundItemId, MyTimer.Time disappearTime, E_Item item) {
+            m_groundItemId = groundItemId;
+            m_disappearTime = disappearTime;
+            m_item = item;
+        }
     }
 }
