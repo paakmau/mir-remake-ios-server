@@ -86,6 +86,26 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 地面物品拾取
+    /// </summary>
+    class CC_ApplyPickUpItemOnGround : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_PICK_UP_ITEM_ON_GROUND; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long gndItemId = reader.GetLong ();
+            GL_Item.s_instance.CommandPickUpGroundItem (netId, gndItemId);
+        }
+    }
+    /// <summary>
+    /// 丢弃物品
+    /// </summary>
+    class CC_ApplyDropItemOntoGround : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DROP_ITEM_ONTO_GROUND; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long realId = reader.GetLong ();
+            GL_Item.s_instance.CommandDropItemOntoGround (netId, realId);
+        }
+    }
+    /// <summary>
     /// 使用消耗品
     /// </summary>
     class CC_ApplyUseConsumableItem : IClientCommand {

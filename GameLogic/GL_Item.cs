@@ -85,6 +85,12 @@ namespace MirRemakeBackend.GameLogic {
                 (itemId, num)
             });
         }
+        public void CommandPickUpGroundItem (int netId, long gndItemId) {
+            // TODO: 
+        }
+        public void CommandDropItemOntoGround (int netId, long realId) {
+            // TODO:
+        }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Repository bag = EM_Item.s_instance.GetBag (netId);
