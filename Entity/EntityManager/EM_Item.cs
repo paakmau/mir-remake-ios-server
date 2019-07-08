@@ -353,6 +353,7 @@ namespace MirRemakeBackend.Entity {
             }
         }
         public static EM_Item s_instance;
+        private const float c_groundItemDisappearItem = 15;
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
         private ItemDynamicDataHelper m_ddh;
@@ -466,8 +467,8 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
-        public List<E_Item> GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList) {
-            List<E_Item> res = new List<E_Item> (itemIdAndNumList.Count);
+        public List<E_GroundItem> GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList) {
+            List<E_GroundItem> res = new List<E_GroundItem> (itemIdAndNumList.Count);
             for (int i = 0; i < itemIdAndNumList.Count; i++)
                 res.Add (GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2));
             return res;
@@ -475,16 +476,37 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 创建地面物品
         /// </summary>
-        public E_Item GenerateItemOnGround (short itemId, short num) {
+        public E_GroundItem GenerateItemOnGround (short itemId, short num) {
             DE_Item itemDe = m_dem.GetItemById (itemId);
-            var res = m_itemFactory.GetAndInitInstance (itemDe, num);
+            var item = m_itemFactory.GetAndInitInstance (itemDe, num);
             var groundItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            // groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked ())
+            groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item);
+            return groundItem;
+        }
+        public List<E_GroundItem> DropItemOntoGround (List<E_Item> itemList) {
+            List<E_GroundItem> res = new List<E_GroundItem> (itemList.Count);
+            for (int i = 0; i < itemList.Count; i++)
+                res.Add (DropItemOntoGround (itemList[i]));
             return res;
         }
-        public void RemoveItemOnGround (E_GroundItem groundItem) {
-
+        public E_GroundItem DropItemOntoGround (E_Item item) {
+            E_GroundItem res = s_entityPool.m_groundItemPool.GetInstance ();
+            long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
+            res.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item);
+            return res;
+        }
+        public void ItemOnGroundDisappear (E_GroundItem groundItem) {
+            // 持久层
+            if (groundItem.m_HasRealId)
+                m_ddh.Delete (groundItem.m_Item);
+            // 回收
+            m_itemFactory.RecycleItem (groundItem.m_Item);
+            s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
+        }
+        public void ItemOnGroundPicked (E_GroundItem groundItem) {
+            // 回收
+            s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
         }
         private void RecycleItem (E_Item item) {
             m_itemFactory.RecycleItem (item);
