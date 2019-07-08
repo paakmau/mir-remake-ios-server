@@ -67,10 +67,10 @@ namespace MirRemakeBackend.GameLogic {
             // 实例 与 数据
             if (runOut) {
                 // 物品消失
-                var empty = EM_Item.s_instance.ItemLose (item, charObj.m_characterId, ItemPlace.BAG, pos);
+                var empty = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
                 repo.RemoveItemByRealId (empty);
             } else
-                EM_Item.s_instance.ItemUpdate (item, charObj.m_characterId, ItemPlace.BAG, pos);
+                EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
             // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
                 charObj.m_networkId, new List<long> { realId }, new List<short> { curNum }));
@@ -95,7 +95,7 @@ namespace MirRemakeBackend.GameLogic {
                 // 处理原有物品的堆叠
                 // dds 更新
                 for (int j = 0; j < changedItemList.Count; j++)
-                    EM_Item.s_instance.ItemUpdate (changedItemList[j].Item2, charObj.m_characterId, ItemPlace.BAG, changedItemList[j].Item1);
+                    EM_Item.s_instance.CharacterUpdateItem (changedItemList[j].Item2, charObj.m_characterId, ItemPlace.BAG, changedItemList[j].Item1);
                 // client
                 List<long> changedRealIdList = new List<long> (changedItemList.Count);
                 List<short> changedPosList = new List<short> (changedItemList.Count);
@@ -110,7 +110,7 @@ namespace MirRemakeBackend.GameLogic {
                 // 若该物品单独占有一格
                 if (storePos != -1 && storePos != -2) {
                     // 回收原有空插槽
-                    EM_Item.s_instance.ItemGain (oriBagSlot, itemList[i], charObj.m_characterId, ItemPlace.BAG, storePos);
+                    EM_Item.s_instance.CharacterGainItem (oriBagSlot, itemList[i], charObj.m_characterId, ItemPlace.BAG, storePos);
                     // 基础信息 client
                     m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
                         charObj.m_networkId,
@@ -127,6 +127,9 @@ namespace MirRemakeBackend.GameLogic {
                 // 通知 log
                 GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemList[i].m_ItemId, realStoreNum);
             }
+        }
+        public void NotifyDropLegacy (E_Character charObj) {
+            // TODO: 角色掉落物品
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();

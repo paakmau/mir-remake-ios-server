@@ -288,8 +288,14 @@ namespace MirRemakeBackend.Entity {
                     m_itemInfoReseterDict.Add (impl.m_ItemType, impl);
                 }
             }
+            /// <summary>
+            /// 返回realId  
+            /// 同时item的realId也会被更新
+            /// </summary>
             public long Insert (E_Item item, int charId, ItemPlace ip, short pos) {
-                return m_inserterDict[item.m_Type].Insert (m_dds, item, charId, ip, pos);
+                var res = m_inserterDict[item.m_Type].Insert (m_dds, item, charId, ip, pos);
+                item.ResetRealId (res);
+                return res;
             }
             public void Save (E_Item item, int charId, ItemPlace ip, short pos) {
                 m_saverDict[item.m_Type].Save (m_dds, item, charId, ip, pos);
@@ -339,6 +345,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, E_Repository> m_bagDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_Repository> m_storeHouseDict = new Dictionary<int, E_Repository> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
+        private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -438,25 +445,23 @@ namespace MirRemakeBackend.Entity {
             m_storeHouseDict.TryGetValue (netId, out res);
             return res;
         }
-        public void ItemGain (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
+        public void CharacterGainItem (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
             m_ddh.Delete (oriSlot);
-            var realId = m_ddh.Insert (item, charId, ip, pos);
-            item.ResetRealId (realId);
+            m_ddh.Insert (item, charId, ip, pos);
             // 回收实例
             RecycleItem (oriSlot);
         }
-        public E_EmptyItem ItemLose (E_Item item, int charId, ItemPlace ip, short pos) {
+        public E_EmptyItem CharacterLoseItem (E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
             m_ddh.Delete (item);
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
-            var realId = m_ddh.Insert (emptyItem, charId, ip, pos);
-            emptyItem.ResetRealId (realId);
+            m_ddh.Insert (emptyItem, charId, ip, pos);
             // 回收实例
             RecycleItem (item);
             return emptyItem;
         }
-        public void ItemUpdate (E_Item item, int charId, ItemPlace ip, short pos) {
+        public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
         private void RecycleItem (E_Item item) {
