@@ -8,10 +8,9 @@ namespace MirRemakeBackend.GameLogic {
     /// 升级, 属性点分配
     /// 装备相关属性
     /// </summary>
-    partial class GL_CharacterAttribute : GameLogicBase {
+    class GL_CharacterAttribute : GameLogicBase {
         public static GL_CharacterAttribute s_instance;
         const int c_maxLevel = 100;
-        CombatEffectivenessRank m_combatEfctRank = new CombatEffectivenessRank ();
         public GL_CharacterAttribute (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -45,8 +44,14 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandGetCombatEffectivenessRank (int netId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            var topCombatEfctRnkList = m_combatEfctRank.GetTopCombatEfctRnkList (10);
-            var myRank = m_combatEfctRank.GetRank (netId);
+            var topCombatEfctRnkCharIdList = EM_Rank.s_instance.GetTopCombatEfctRnkCharIdList (10);
+            var topCombatEfctRnkList = new List<NO_FightCapacityRankInfo> (topCombatEfctRnkCharIdList.Count);
+            for (int i = 0; i < topCombatEfctRnkCharIdList.Count; i++) {
+                int topCharId = topCombatEfctRnkCharIdList[i];
+                // TODO: 
+                topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "nzy", 80, (short) i, 23333, "nihao", (byte) 0));
+            }
+            var myRank = EM_Rank.s_instance.GetCombatEfctRank (charObj.m_characterId);
             m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, charObj.m_combatEffectiveness, myRank));
         }
         public void NotifyCombatEffectivenessChange (E_Character unit) {
