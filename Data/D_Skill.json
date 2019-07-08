@@ -6107,6 +6107,53 @@
 	},
 	{
 		"SkillID": 59,
+		"Name": "咆哮恐惧",
+		"Details": "对目标造成物理伤害并使目标晕眩。",
+		"ManaCost": [
+			0
+		],
+		"SingTime": 0,
+		"CastFrontTime": 0,
+		"CastBackTime": 1,
+		"FatherID": [],
+		"ChildrenIDList": [],
+		"CampType": "ENEMY",
+		"SkillAimType": "AIM_ONE_TARGET",
+		"CastRange": 200,
+		"TargetNumber": 1,
+		"DamageRadian": 0,
+		"SecondParameter": 0,
+		"Effect": {
+			"EffectDeltaHP": [
+				-50
+			],
+			"EffectDeltaMP": [
+				0
+			],
+			"EffectDeltaHPType": "PHYSICS",
+			"EffectDeltaMPType": "PHYSICS",
+			"HitRate": [
+				0
+			],
+			"CriticalRate": [
+				0
+			],
+			"SelfHPStrategy": [
+				[
+					"ATTACK -1"
+				]
+			],
+			"StatusAttachArray": [{
+				"StatusID":19,
+				"Value":[0],
+				"LastingTime":[3.5],
+				"ValueAffectionDict":[[]]
+			}]
+		},
+		"CoolDownTime": 9
+	},
+	{
+		"SkillID": 60,
 		"Name": "愤怒强化",
 		"Details": "提高物理攻击力和魔法攻击力。",
 		"ManaCost": [
@@ -6156,7 +6203,7 @@
 		"CoolDownTime": 18
 	},
 	{
-		"SkillID": 60,
+		"SkillID": 61,
 		"Name": "离火灭世",
 		"Details": "发动一次普通攻击，对目标造成基于物理和魔法攻击力的物理伤害。",
 		"ManaCost": [
