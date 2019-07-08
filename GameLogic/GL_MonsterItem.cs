@@ -11,7 +11,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void NotifyDropLegacy (E_Monster monObj) {
-            var dropItemIdList = monObj.m_DropItemIdList;
+            EM_Item.s_instance.GenerateItemOnGround (monObj.m_DropItemIdList);
         }
     }
 }

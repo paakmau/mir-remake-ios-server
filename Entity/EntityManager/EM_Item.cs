@@ -464,6 +464,13 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
+        public void GenerateItemOnGround (IReadOnlyList<short> itemIdList) {
+            for (int i = 0; i < itemIdList.Count; i++)
+                GenerateItemOnGround (itemIdList[i]);
+        }
+        public void GenerateItemOnGround (short itemId) {
+            // TODO: 
+        }
         private void RecycleItem (E_Item item) {
             m_itemFactory.RecycleItem (item);
         }
