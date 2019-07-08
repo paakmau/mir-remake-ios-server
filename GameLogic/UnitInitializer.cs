@@ -34,7 +34,7 @@ namespace MirRemakeBackend.GameLogic {
             int[] netIdArr = m_networkIdManager.AssignNetworkId (monNum);
 
             var mons = GL_UnitBattleAttribute.s_instance.NotifyInitAllMonster (netIdArr);
-            GL_Sight.s_instance.NotifyInitAllMonster (mons);
+            GL_CharacterSight.s_instance.NotifyInitAllMonster (mons);
         }
         public int AssignNetworkId () {
             return m_networkIdManager.AssignNetworkId ();
@@ -47,7 +47,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_UnitBattleAttribute.s_instance.NotifyInitCharacter (netId);
 
             // Sight
-            GL_Sight.s_instance.NotifyInitCharacter (newChar);
+            GL_CharacterSight.s_instance.NotifyInitCharacter (newChar);
 
             // 道具
             GL_Item.s_instance.NotifyInitCharacter (netId, charId);
@@ -61,7 +61,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandRemoveCharacter (int netId) {
             GL_CharacterAttribute.s_instance.NotifyRemoveCharacter (netId);
             GL_UnitBattleAttribute.s_instance.NotifyRemoveCharacter (netId);
-            GL_Sight.s_instance.NotifyRemoveCharacter (netId);
+            GL_CharacterSight.s_instance.NotifyRemoveCharacter (netId);
             GL_Item.s_instance.NotifyRemoveCharacter (netId);
             GL_Skill.s_instance.NotifyRemoveCharacter (netId);
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);

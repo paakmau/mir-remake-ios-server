@@ -6,11 +6,11 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 每帧计算视野
     /// </summary>
-    class GL_Sight : GameLogicBase {
-        public static GL_Sight s_instance;
+    class GL_CharacterSight : GameLogicBase {
+        public static GL_CharacterSight s_instance;
         private const float c_sightRadius = 12f;
         private const int c_maxUnitNumInSight = 20;
-        public GL_Sight (INetworkService netService) : base (netService) { }
+        public GL_CharacterSight (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             var en = EM_Unit.s_instance.GetCharacterEnumerator ();
             while (en.MoveNext ()) {

@@ -10,23 +10,35 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
+        private const float c_groundItemSightRadius = 12;
         public GL_Item (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 道具消失
-            var disappearedGroundItemIdList = new List<long> ();
-            var groundItemList = EM_Item.s_instance.GetRawGroundItemList ();
-            for (int i = groundItemList.Count - 1; i >= 0; i--)
-                if (MyTimer.CheckTimeUp (groundItemList[i].m_DisappearTime)) {
-                    var dsppGroundItem = groundItemList[i];
-                    groundItemList.RemoveAt (i);
+            var dspprGndItemIdSet = new HashSet<long> ();
+            var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
+            for (int i = gndItemList.Count - 1; i >= 0; i--)
+                if (MyTimer.CheckTimeUp (gndItemList[i].m_disappearTime)) {
+                    var dspprGroundItem = gndItemList[i];
+                    gndItemList.RemoveAt (i);
+                    dspprGndItemIdSet.Add (dspprGroundItem.m_groundItemId);
                 }
             // 地面道具视野
             var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+            var charDspprItemIdList = new List<long> ();
+            var charNewItemIdList = new List<long> ();
             while (charEn.MoveNext ()) {
                 var netId = charEn.Current.Key;
-                var sight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
-                if (sight == null) continue;
-                
+                var charObj = charEn.Current.Value;
+                charDspprItemIdList.Clear ();
+                charNewItemIdList.Clear ();
+
+                var oriSight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
+                if (oriSight == null) continue;
+                // 计算新视野
+                var newSight = new List<E_GroundItem> (oriSight.Count);
+                for (int i=0; i<gndItemList.Count; i++)
+                    if ((gndItemList[i].m_position - charObj.m_position).LengthSquared () <= c_groundItemSightRadius * c_groundItemSightRadius)
+                        newSight.Add (gndItemList[i]);
             }
         }
         public override void NetworkTick () { }
@@ -159,7 +171,7 @@ namespace MirRemakeBackend.GameLogic {
                         dropItemIdAndNumList.Add ((id, (short) 1));
                 }
             }
-            EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList);
+            EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList, monObj.m_position);
         }
         public void NotifyCharacterDropLegacy (E_Character charObj) {
             var charBag = EM_Item.s_instance.GetBag (charObj.m_networkId);
@@ -168,7 +180,7 @@ namespace MirRemakeBackend.GameLogic {
             List<E_Item> droppedItemList = new List<E_Item> ();
             // TODO: 根据bagItemList (从角色bag中), 角色掉落遗物
 
-            EM_Item.s_instance.DropItemOntoGround (droppedItemList);
+            EM_Item.s_instance.DropItemOntoGround (droppedItemList, charObj.m_position);
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();

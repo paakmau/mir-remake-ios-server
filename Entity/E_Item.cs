@@ -1,3 +1,4 @@
+using System.Numerics;
 using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
@@ -114,16 +115,15 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_GroundItem {
-        private long m_groundItemId;
-        public long m_GroundItemId { get { return m_groundItemId; } }
-        private MyTimer.Time m_disappearTime;
-        public MyTimer.Time m_DisappearTime { get { return m_disappearTime; } }
-        private E_Item m_item;
-        public E_Item m_Item { get { return m_item; } }
-        public void Reset (long groundItemId, MyTimer.Time disappearTime, E_Item item) {
+        public long m_groundItemId;
+        public MyTimer.Time m_disappearTime;
+        public E_Item m_item;
+        public Vector2 m_position;
+        public void Reset (long groundItemId, MyTimer.Time disappearTime, E_Item item, Vector2 pos) {
             m_groundItemId = groundItemId;
             m_disappearTime = disappearTime;
             m_item = item;
+            m_position = pos;
         }
     }
 }
