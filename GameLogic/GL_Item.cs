@@ -11,7 +11,23 @@ namespace MirRemakeBackend.GameLogic {
     class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
         public GL_Item (INetworkService netService) : base (netService) { }
-        public override void Tick (float dT) { }
+        public override void Tick (float dT) {
+            // 道具消失
+            var disappearedGroundItemIdList = new List<long> ();
+            var groundItemList = EM_Item.s_instance.GetRawGroundItemList ();
+            for (int i = groundItemList.Count - 1; i >= 0; i--)
+                if (MyTimer.CheckTimeUp (groundItemList[i].m_DisappearTime)) {
+                    var dsppGroundItem = groundItemList[i];
+                    groundItemList.RemoveAt (i);
+                }
+            // 地面道具视野
+            var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+            while (charEn.MoveNext ()) {
+                var netId = charEn.Current.Key;
+                var sight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
+                // if ()
+            }
+        }
         public override void NetworkTick () { }
         public void NotifyRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);

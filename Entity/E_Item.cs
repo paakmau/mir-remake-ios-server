@@ -120,8 +120,6 @@ namespace MirRemakeBackend.Entity {
         public MyTimer.Time m_DisappearTime { get { return m_disappearTime; } }
         private E_Item m_item;
         public E_Item m_Item { get { return m_item; } }
-        public long m_RealId { get { return m_item.m_RealId; } }
-        public bool m_HasRealId { get { return m_item.m_HasRealId; } }
         public void Reset (long groundItemId, MyTimer.Time disappearTime, E_Item item) {
             m_groundItemId = groundItemId;
             m_disappearTime = disappearTime;

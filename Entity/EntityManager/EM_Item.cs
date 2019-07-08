@@ -362,7 +362,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         private GroundItemIdManager m_groundItemIdManager = new GroundItemIdManager ();
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
-        private Dictionary<int, List<E_GroundItem>> m_groundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
+        private Dictionary<int, List<E_GroundItem>> m_characterGroundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -399,7 +399,7 @@ namespace MirRemakeBackend.Entity {
             m_equipmentRegionDict[netId] = eqRegion as E_EquipmentRegion;
 
             // 地面物品视野
-            m_groundItemSightDict.TryAdd (netId, new List<E_GroundItem> ());
+            m_characterGroundItemSightDict.TryAdd (netId, new List<E_GroundItem> ());
         }
         public void RemoveCharacter (int netId) {
             // 仓库
@@ -422,7 +422,7 @@ namespace MirRemakeBackend.Entity {
             RecycleItemList (equiped.GetAllItemList ());
 
             // 地面物品视野
-            m_groundItemSightDict.Remove(netId);
+            m_characterGroundItemSightDict.Remove (netId);
         }
         /// <summary>
         /// 获取装备区
@@ -506,7 +506,7 @@ namespace MirRemakeBackend.Entity {
         }
         public void ItemOnGroundDisappear (E_GroundItem groundItem) {
             // 持久层
-            if (groundItem.m_HasRealId)
+            if (groundItem.m_Item.m_HasRealId)
                 m_ddh.Delete (groundItem.m_Item);
             // 回收
             m_itemFactory.RecycleItem (groundItem.m_Item);
@@ -515,6 +515,14 @@ namespace MirRemakeBackend.Entity {
         public void ItemOnGroundPicked (E_GroundItem groundItem) {
             // 回收
             s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
+        }
+        public List<E_GroundItem> GetRawGroundItemList () {
+            return m_groundItemList;
+        }
+        public List<E_GroundItem> GetCharacterGroundItemRawSight (int netId) {
+            List<E_GroundItem> res;
+            m_characterGroundItemSightDict.TryGetValue (netId, out res);
+            return res;
         }
         private void RecycleItem (E_Item item) {
             m_itemFactory.RecycleItem (item);

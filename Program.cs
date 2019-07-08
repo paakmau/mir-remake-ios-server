@@ -93,6 +93,7 @@ namespace MirRemakeBackend {
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
             GL_Log.s_instance = new GL_Log (s_networkService);
+            GL_Chat.s_instance = new GL_Chat (s_networkService);
             // 单位初始化器
             UnitInitializer.s_instance = new UnitInitializer ();
             // 放入数组中
@@ -106,7 +107,8 @@ namespace MirRemakeBackend {
                 GL_Sight.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,
-                GL_Log.s_instance
+                GL_Log.s_instance,
+                GL_Chat.s_instance
             };
         }
     }
