@@ -40,7 +40,6 @@ namespace MirRemakeBackend.GameLogic {
             short posInBag = -1;
             var eq = bag.GetItemByRealId (realId, out posInBag) as E_EquipmentItem;
             if (eq == null) return;
-            // 通知角色属性逻辑
             // 该位置原有装备卸下
             var oriEq = eqRegion.GetItemByPosition ((short) eq.m_EquipmentPosition) as E_EquipmentItem;
             if (oriEq != null) {
