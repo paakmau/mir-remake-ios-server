@@ -59,6 +59,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
         }
         public void CommandRemoveCharacter (int netId) {
+            GL_CharacterAttribute.s_instance.NotifyRemoveCharacter (netId);
             GL_UnitBattleAttribute.s_instance.NotifyRemoveCharacter (netId);
             GL_Sight.s_instance.NotifyRemoveCharacter (netId);
             GL_Item.s_instance.NotifyRemoveCharacter (netId);
