@@ -13,9 +13,10 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_Item s_instance;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
+        private const float c_groundRenewableItemRefreshTime = 5;
         public GL_Item (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
-            // 道具消失
+            // 地面道具消失
             var dspprGndItemIdSet = new HashSet<long> ();
             var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
             for (int i = gndItemList.Count - 1; i >= 0; i--)
@@ -74,6 +75,8 @@ namespace MirRemakeBackend.GameLogic {
                 if (charShowItemList.Count != 0)
                     m_networkService.SendServerCommand (SC_ApplyGroundItemShow.Instance (netId, charShowItemList));
             }
+            // 地面可再生道具刷新
+            EM_Item.s_instance.RefreshRenewableItem ();
         }
         public override void NetworkTick () { }
         public void NotifyRemoveCharacter (int netId) {
