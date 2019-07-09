@@ -54,12 +54,13 @@ namespace MirRemakeBackend {
             IDS_Status statusDs = new DS_StatusImpl ();
             IDS_Skill skillDs = new DS_SkillImpl ();
             IDS_Item itemDs = new DS_ItemImpl ();
+            IDS_GroundItemMap gndItemDs = new DS_GroundItemMapImpl ();
             IDS_Mission misDs = new DS_MissionImpl ();
             // DataEntity
             DEM_Unit actorUnitDem = new DEM_Unit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
-            DEM_Item itemDem = new DEM_Item (itemDs);
+            DEM_Item itemDem = new DEM_Item (itemDs, gndItemDs);
             DEM_Mission misDem = new DEM_Mission (misDs);
             // DynamicDataService
             var ddsImpl = new DynamicDataServiceImpl ();

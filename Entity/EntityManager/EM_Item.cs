@@ -78,12 +78,13 @@ namespace MirRemakeBackend.Entity {
                 return m_poolDict[type].GetInstanceObj () as E_Item;
             }
             public E_EmptyItem GetEmptyItemInstance () {
-                return GetAndInitInstance (m_dem.GetEmptyItem (), 0) as E_EmptyItem;
+                return GetAndInitInstance (-1, 0) as E_EmptyItem;
             }
             /// <summary>
             /// 获得物品实例
             /// </summary>
-            public E_Item GetAndInitInstance (DE_Item de, short num) {
+            public E_Item GetAndInitInstance (short itemId, short num) {
+                var de = m_dem.GetItemById (itemId);
                 var initializer = m_itemInitializerDict[de.m_type];
                 var res = GetInstance (de.m_type);
                 initializer.Initialize (m_dem, res, de, num);
@@ -331,9 +332,8 @@ namespace MirRemakeBackend.Entity {
             private E_Item[] GetAndResetInstanceArr (List<DDO_Item> itemList, ItemInfoDdoCollections iidc) {
                 E_Item[] res = new E_Item[itemList.Count];
                 for (int i = 0; i < itemList.Count; i++) {
-                    var de = m_dem.GetItemById (itemList[i].m_itemId);
-                    var itemObj = m_fact.GetAndInitInstance (de, itemList[i].m_num);
-                    m_itemInfoReseterDict[de.m_type].ResetInfo (m_dem, iidc, itemList[i].m_realId, itemObj);
+                    var itemObj = m_fact.GetAndInitInstance (itemList[i].m_itemId, itemList[i].m_num);
+                    m_itemInfoReseterDict[itemObj.m_Type].ResetInfo (m_dem, iidc, itemList[i].m_realId, itemObj);
                     res[i] = itemObj;
                 }
                 return res;
@@ -364,10 +364,17 @@ namespace MirRemakeBackend.Entity {
         private GroundItemIdManager m_groundItemIdManager = new GroundItemIdManager ();
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
         private Dictionary<int, List<E_GroundItem>> m_characterGroundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
+        private List < (short, Vector2, MyTimer.Time) > m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > ();
+        private float c_renewableItemRefreshTime = 5;
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
             m_ddh = new ItemDynamicDataHelper (dem, dds, m_itemFactory);
+            // 可再生道具
+            var itemIdAndPosList = dem.GetAllRenewableItemList ();
+            m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > (itemIdAndPosList.Count);
+            for (int i = 0; i < itemIdAndPosList.Count; i++)
+                m_renewableItemList.Add ((m_renewableItemList[i].Item1, m_renewableItemList[i].Item2, MyTimer.s_CurTime.Ticked (c_renewableItemRefreshTime)));
         }
         /// <summary>初始化新的角色的所有物品</summary>
         public void InitCharacter (
@@ -449,8 +456,7 @@ namespace MirRemakeBackend.Entity {
         }
         public E_Item CharacterGainItem (E_EmptyItem oriSlot, short itemId, short itemNum, int charId, ItemPlace ip, short pos) {
             // 生成实例
-            DE_Item itemDe = m_dem.GetItemById (itemId);
-            E_Item item = m_itemFactory.GetAndInitInstance (itemDe, itemNum);
+            E_Item item = m_itemFactory.GetAndInitInstance (itemId, itemNum);
             CharacterGainItem (oriSlot, item, charId, ip, pos);
             return item;
         }
@@ -483,8 +489,7 @@ namespace MirRemakeBackend.Entity {
         /// 创建地面物品
         /// </summary>
         public E_GroundItem GenerateItemOnGround (short itemId, short num, int charId, Vector2 pos) {
-            DE_Item itemDe = m_dem.GetItemById (itemId);
-            var item = m_itemFactory.GetAndInitInstance (itemDe, num);
+            var item = m_itemFactory.GetAndInitInstance (itemId, num);
             var groundItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
             groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
@@ -526,6 +531,21 @@ namespace MirRemakeBackend.Entity {
             List<E_GroundItem> res;
             m_characterGroundItemSightDict.TryGetValue (netId, out res);
             return res;
+        }
+        public void RefreshRenewableItem () {
+            for (int i = 0; i < m_renewableItemList.Count; i++) {
+                var itemIdPosTime = m_renewableItemList[i];
+                if (MyTimer.CheckTimeUp (itemIdPosTime.Item3)) {
+                    short itemId = itemIdPosTime.Item1;
+                    Vector2 pos = itemIdPosTime.Item2;
+                    // 生成地面物品
+                    GenerateItemOnGround (itemId, 1, -1, pos);
+
+                    // 准备下一次刷新
+                    itemIdPosTime.Item3 = MyTimer.s_CurTime.Ticked (c_renewableItemRefreshTime);
+                    m_renewableItemList[i] = itemIdPosTime;
+                }
+            }
         }
     }
 }
