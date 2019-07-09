@@ -85,6 +85,7 @@ namespace MirRemakeBackend.Entity {
             /// </summary>
             public E_Item GetAndInitInstance (short itemId, short num) {
                 var de = m_dem.GetItemById (itemId);
+                if (de == null) return null;
                 var initializer = m_itemInitializerDict[de.m_type];
                 var res = GetInstance (de.m_type);
                 initializer.Initialize (m_dem, res, de, num);
@@ -333,6 +334,8 @@ namespace MirRemakeBackend.Entity {
                 E_Item[] res = new E_Item[itemList.Count];
                 for (int i = 0; i < itemList.Count; i++) {
                     var itemObj = m_fact.GetAndInitInstance (itemList[i].m_itemId, itemList[i].m_num);
+                    if (itemObj == null)
+                        itemObj = m_fact.GetEmptyItemInstance ();
                     m_itemInfoReseterDict[itemObj.m_Type].ResetInfo (m_dem, iidc, itemList[i].m_realId, itemObj);
                     res[i] = itemObj;
                 }
@@ -457,6 +460,8 @@ namespace MirRemakeBackend.Entity {
         public E_Item CharacterGainItem (E_EmptyItem oriSlot, short itemId, short itemNum, int charId, ItemPlace ip, short pos) {
             // 生成实例
             E_Item item = m_itemFactory.GetAndInitInstance (itemId, itemNum);
+            if (item == null)
+                item = m_itemFactory.GetEmptyItemInstance ();
             CharacterGainItem (oriSlot, item, charId, ip, pos);
             return item;
         }
@@ -479,21 +484,21 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
-        public List<E_GroundItem> GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 pos) {
-            List<E_GroundItem> res = new List<E_GroundItem> (itemIdAndNumList.Count);
+        public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 pos) {
             for (int i = 0; i < itemIdAndNumList.Count; i++)
-                res.Add (GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos));
-            return res;
+                GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
         }
         /// <summary>
         /// 创建地面物品
         /// </summary>
-        public E_GroundItem GenerateItemOnGround (short itemId, short num, int charId, Vector2 pos) {
+        public void GenerateItemOnGround (short itemId, short num, int charId, Vector2 pos) {
             var item = m_itemFactory.GetAndInitInstance (itemId, num);
-            var groundItem = s_entityPool.m_groundItemPool.GetInstance ();
+            if (item == null)
+                return;
+            var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
-            return groundItem;
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
+            m_groundItemList.Add (gndItem);
         }
         public List<E_EmptyItem> CharacterDropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
             var res = new List<E_EmptyItem> (itemList.Count);
