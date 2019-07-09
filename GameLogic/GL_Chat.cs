@@ -1,3 +1,4 @@
+using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
@@ -10,7 +11,24 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandSendMessage (int netId, ChattingChanelType channel, string msg, int toCharId) {
-            // TODO: Chat
+            var senderCharObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (senderCharObj == null)
+                return;
+            var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+            switch (channel) {
+                case ChattingChanelType.PRIVATE:
+                    while (charEn.MoveNext ()) {
+                        if (charEn.Current.Value.m_characterId == toCharId) {
+                            m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
+                            break;
+                        }
+                    }
+                    break;
+                case ChattingChanelType.WORLD:
+                    while (charEn.MoveNext ())
+                        m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
+                    break;
+            }
         }
     }
 }
