@@ -76,7 +76,7 @@ namespace MirRemakeBackend.GameLogic {
                     m_networkService.SendServerCommand (SC_ApplyGroundItemShow.Instance (netId, charShowItemList));
             }
             // 地面可再生道具刷新
-            
+            EM_Item.s_instance.RefreshRenewableItem ();
         }
         public override void NetworkTick () { }
         public void NotifyRemoveCharacter (int netId) {
