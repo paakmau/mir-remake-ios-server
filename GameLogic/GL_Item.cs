@@ -92,7 +92,7 @@ namespace MirRemakeBackend.GameLogic {
             if (gndItem == null || bag == null || charObj == null) return;
             var item = gndItem.m_item;
             if (item.m_HasRealId) {
-                EM_Item.s_instance.
+                // EM_Item.s_instance.
             }
             List< (short, E_Item) > posAndItemChanged;
             short piledNum, realStoredNum;

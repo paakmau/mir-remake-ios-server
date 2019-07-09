@@ -6,7 +6,6 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.Entity {
     abstract class E_RepositoryBase {
         public abstract ItemPlace m_repositoryPlace { get; }
-        public abstract int m_ItemCount { get; }
         public abstract List<E_Item> m_ItemList { get; }
         public abstract void Reset (E_Item[] itemArr);
         public abstract NO_Repository GetNo ();
@@ -26,7 +25,6 @@ namespace MirRemakeBackend.Entity {
     class E_Bag : E_RepositoryBase {
         public override ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
         protected List<E_Item> m_itemList = new List<E_Item> ();
-        public override int m_ItemCount { get { return m_itemList.Count; } }
         public override List<E_Item> m_ItemList { get { return m_itemList; } }
         public override void Reset (E_Item[] itemArr) {
             m_itemList.Clear ();
