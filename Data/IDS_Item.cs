@@ -107,8 +107,17 @@ namespace MirRemakeBackend.Data {
             return res;
         }
         public DO_Item[] GetAllMaterial () {
-            // TODO:
-            return new DO_Item[0];
+            string jsonFile = File.ReadAllText ("Data/D_Material.json");
+            JsonData s_itemDatas = JsonMapper.ToObject (jsonFile);
+            DO_Item[] res=new DO_Item[s_itemDatas.Count];
+            for (int i=0;i<s_itemDatas.Count;i++){
+                res[i].m_itemId=short.Parse(s_itemDatas[i]["ID"].ToString());
+                res[i].m_price=150;
+                res[i].m_maxNum=short.Parse(s_itemDatas[i]["MaxNum"].ToString());
+                res[i].m_quality=ItemQuality.COMMON;
+                res[i].m_type=ItemType.MATERIAL;
+            }
+            return res;
         }
     }
 }
