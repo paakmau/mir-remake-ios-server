@@ -5,11 +5,10 @@ using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     abstract class E_RepositoryBase {
-        public ItemPlace m_repositoryPlace;
-        protected void Reset (ItemPlace place) {
-            m_repositoryPlace = place;
-        }
-        public abstract void Reset (ItemPlace place, E_Item[] itemArr);
+        public abstract ItemPlace m_repositoryPlace { get; }
+        public abstract int m_ItemCount { get; }
+        public abstract List<E_Item> m_ItemList { get; }
+        public abstract void Reset (E_Item[] itemArr);
         public abstract NO_Repository GetNo ();
         public abstract E_Item GetItemByRealId (long realId);
         public abstract E_Item GetItemByPosition (short pos);
@@ -24,11 +23,12 @@ namespace MirRemakeBackend.Entity {
         /// </summary>
         public abstract E_Item RemoveItemByRealId (E_EmptyItem empty);
     }
-    class E_Repository : E_RepositoryBase {
-        private List<E_Item> m_itemList = new List<E_Item> ();
-        public List<E_Item> m_ItemList { get { return m_itemList; } }
-        public override void Reset (ItemPlace place, E_Item[] itemArr) {
-            base.Reset (place);
+    class E_Bag : E_RepositoryBase {
+        public override ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
+        protected List<E_Item> m_itemList = new List<E_Item> ();
+        public override int m_ItemCount { get { return m_itemList.Count; } }
+        public override List<E_Item> m_ItemList { get { return m_itemList; } }
+        public override void Reset (E_Item[] itemArr) {
             m_itemList.Clear ();
             foreach (var item in itemArr)
                 m_itemList.Add (item);
@@ -88,11 +88,13 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 存储一个Item  
         /// 背包内的因为插入而被修改的物品 (pos, obj) 列表  
+        /// </summary>
+        /// <return>
         /// 若item占用了一个槽位返回 pos  
         /// 若完全堆叠返回 -1  
         /// 未能完全存入返回 -2  
-        /// </summary>
-        public short AutoStoreItem (short itemId, short itemNum, out List < (short, E_Item) > posAndChangedItemList, out short piledNum, out short realStoredNum, out E_EmptyItem oriEmptySlot) {
+        /// </return>
+        public short AutoPileItemAndGetOccupiedPos (short itemId, short itemNum, out List < (short, E_Item) > posAndChangedItemList, out short piledNum, out short realStoredNum, out E_EmptyItem oriEmptySlot) {
             posAndChangedItemList = new List < (short, E_Item) > ();
             piledNum = 0;
             realStoredNum = 0;
@@ -121,73 +123,33 @@ namespace MirRemakeBackend.Entity {
             return -2;
         }
     }
-
-    class E_EquipmentRegion : E_RepositoryBase {
-        Dictionary<EquipmentPosition, E_EquipmentItem> m_equipPositionAndEquipmentDict = new Dictionary<EquipmentPosition, E_EquipmentItem> ();
-        public override void Reset (ItemPlace place, E_Item[] itemArr) {
-            base.Reset (place);
-            m_equipPositionAndEquipmentDict.Clear ();
-            foreach (var item in itemArr)
-                m_equipPositionAndEquipmentDict.Add (((E_EquipmentItem) item).m_EquipmentPosition, (E_EquipmentItem) item);
-        }
-        public override NO_Repository GetNo () {
-            List<NO_Item> itemList = new List<NO_Item> (m_equipPositionAndEquipmentDict.Count);
-            List<NO_EquipmentItemInfo> eqInfoList = new List<NO_EquipmentItemInfo> (m_equipPositionAndEquipmentDict.Count);
-            var en = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
-            while (en.MoveNext ()) {
-                itemList.Add (en.Current.GetItemNo ());
-                eqInfoList.Add (en.Current.GetEquipmentInfoNo ());
-            }
-            return new NO_Repository (itemList, eqInfoList);
-        }
-        public override E_Item GetItemByRealId (long realId) {
-            var en = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
-            while (en.MoveNext ()) {
-                if (en.Current.m_RealId == realId)
-                    return en.Current;
-            }
+    class E_StoreHouse : E_Bag {
+        public override ItemPlace m_repositoryPlace { get { return ItemPlace.STORE_HOUSE; } }
+    }
+    class E_EquipmentRegion : E_Bag {
+        public override ItemPlace m_repositoryPlace { get { return ItemPlace.EQUIPMENT_REGION; } }
+        public E_EquipmentItem GetEquipmentByEquipPosition (EquipmentPosition eqPos) {
+            for (int i = 0; i < m_itemList.Count; i++)
+                if ((m_itemList[i] as E_EquipmentItem).m_EquipmentPosition == eqPos)
+                    return m_itemList[i] as E_EquipmentItem;
             return null;
         }
-        public override E_Item GetItemByPosition (short pos) {
-            E_EquipmentItem res = null;
-            EquipmentPosition eqPos = (EquipmentPosition) pos;
-            m_equipPositionAndEquipmentDict.TryGetValue (eqPos, out res);
-            return res;
-        }
-        public override void SetItem (E_Item item, short pos) {
-            EquipmentPosition eqPos = (EquipmentPosition) pos;
-            m_equipPositionAndEquipmentDict[eqPos] = item as E_EquipmentItem;
-        }
-        public override E_Item RemoveItemByRealId (E_EmptyItem empty) {
-            var en = m_equipPositionAndEquipmentDict.GetEnumerator ();
-            while (en.MoveNext ()) {
-                if (en.Current.Value.m_RealId == empty.m_RealId) {
-                    var res = en.Current.Value;
-                    m_equipPositionAndEquipmentDict.Remove (en.Current.Key);
-                    return res;
-                }
-            }
-            return null;
-        }
-        public List<E_Item> GetAllItemList () {
-            List<E_Item> res = new List<E_Item> ();
-            var equipmentEn = m_equipPositionAndEquipmentDict.Values.GetEnumerator ();
-            while (equipmentEn.MoveNext ())
-                res.Add (equipmentEn.Current);
-            return res;
-        }
-        public Dictionary<EquipmentPosition, E_EquipmentItem>.Enumerator GetEquipedEn () {
-            return m_equipPositionAndEquipmentDict.GetEnumerator ();
-        }
-        public E_EquipmentItem GetEquipmentByEquipPosition (EquipmentPosition ePos) {
-            E_EquipmentItem res = null;
-            m_equipPositionAndEquipmentDict.TryGetValue (ePos, out res);
-            return res;
-        }
+        /// <summary>
+        /// 返回卸下的原装备
+        /// </summary>
         public E_EquipmentItem PutOnEquipment (E_EquipmentItem eq) {
-            E_EquipmentItem res = GetEquipmentByEquipPosition (eq.m_EquipmentPosition);
-            m_equipPositionAndEquipmentDict[eq.m_EquipmentPosition] = res;
-            return res;
+            int oriPos = -1;
+            E_Item res = null;
+            for (int i = 0; i < m_itemList.Count; i++)
+                if ((m_itemList[i] as E_EquipmentItem).m_EquipmentPosition == eq.m_EquipmentPosition) {
+                    oriPos = i;
+                    res = m_itemList[i];
+                }
+            if (oriPos != -1)
+                m_itemList[oriPos] = eq;
+            else
+                m_itemList.Add (eq);
+            return res as E_EquipmentItem;
         }
     }
 }

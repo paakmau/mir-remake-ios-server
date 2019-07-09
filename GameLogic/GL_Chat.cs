@@ -10,7 +10,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandSendMessage (int netId, ChattingChanelType channel, string msg, int toCharId) {
-
+            // TODO: Chat
         }
     }
 }

@@ -102,7 +102,8 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DROP_ITEM_ONTO_GROUND; } }
         public void Execute (NetDataReader reader, int netId) {
             long realId = reader.GetLong ();
-            GL_Item.s_instance.CommandDropItemOntoGround (netId, realId);
+            short num = reader.GetShort ();
+            GL_Item.s_instance.CommandDropItemOntoGround (netId, realId, num);
         }
     }
     /// <summary>

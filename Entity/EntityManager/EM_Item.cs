@@ -358,8 +358,8 @@ namespace MirRemakeBackend.Entity {
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
         private ItemDynamicDataHelper m_ddh;
-        private Dictionary<int, E_Repository> m_bagDict = new Dictionary<int, E_Repository> ();
-        private Dictionary<int, E_Repository> m_storeHouseDict = new Dictionary<int, E_Repository> ();
+        private Dictionary<int, E_Bag> m_bagDict = new Dictionary<int, E_Bag> ();
+        private Dictionary<int, E_StoreHouse> m_storeHouseDict = new Dictionary<int, E_StoreHouse> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
         private GroundItemIdManager m_groundItemIdManager = new GroundItemIdManager ();
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
@@ -385,42 +385,46 @@ namespace MirRemakeBackend.Entity {
                 return;
             }
             // 初始化背包, 仓库, 装备区
-            bag = s_entityPool.m_repositoryPool.GetInstance ();
-            storeHouse = s_entityPool.m_repositoryPool.GetInstance ();
+            bag = s_entityPool.m_bagPool.GetInstance ();
+            storeHouse = s_entityPool.m_storeHousePool.GetInstance ();
             eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
 
             E_Item[] itemInBag, itemInStoreHouse, itemEquiped;
             m_ddh.GetAndResetCharacterItemInstance (charId, out itemInBag, out itemInStoreHouse, out itemEquiped);
-            bag.Reset (ItemPlace.BAG, itemInBag);
-            storeHouse.Reset (ItemPlace.STORE_HOUSE, itemInStoreHouse);
-            eqRegion.Reset (ItemPlace.EQUIPMENT_REGION, itemEquiped);
+            bag.Reset (itemInBag);
+            storeHouse.Reset (itemInStoreHouse);
+            eqRegion.Reset (itemEquiped);
             // 索引各区域
-            m_bagDict[netId] = bag as E_Repository;
-            m_storeHouseDict[netId] = storeHouse as E_Repository;
+            m_bagDict[netId] = bag as E_Bag;
+            m_storeHouseDict[netId] = storeHouse as E_StoreHouse;
             m_equipmentRegionDict[netId] = eqRegion as E_EquipmentRegion;
 
             // 地面物品视野
             m_characterGroundItemSightDict.TryAdd (netId, new List<E_GroundItem> ());
         }
         public void RemoveCharacter (int netId) {
-            // 仓库
-            E_Repository bag;
+            E_Bag bag;
             m_bagDict.TryGetValue (netId, out bag);
-            E_Repository storeHouse;
+            E_StoreHouse storeHouse;
             m_storeHouseDict.TryGetValue (netId, out storeHouse);
             E_EquipmentRegion equiped;
             m_equipmentRegionDict.TryGetValue (netId, out equiped);
             if (bag == null || storeHouse == null || equiped == null)
                 return;
+            // 移除索引
             m_bagDict.Remove (netId);
             m_storeHouseDict.Remove (netId);
             m_equipmentRegionDict.Remove (netId);
-            s_entityPool.m_repositoryPool.RecycleInstance (bag);
-            s_entityPool.m_repositoryPool.RecycleInstance (storeHouse);
+            // 回收
+            for (int i=0; i<bag.m_ItemList.Count; i++)
+                m_itemFactory.RecycleItem (bag.m_ItemList[i]);
+            for (int i=0; i<storeHouse.m_ItemList.Count; i++)
+                m_itemFactory.RecycleItem (storeHouse.m_ItemList[i]);
+            for (int i=0; i<equiped.m_ItemList.Count; i++)
+                m_itemFactory.RecycleItem (equiped.m_ItemList[i]);
+            s_entityPool.m_bagPool.RecycleInstance (bag);
+            s_entityPool.m_storeHousePool.RecycleInstance (storeHouse);
             s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);
-            RecycleItemList (bag.m_ItemList);
-            RecycleItemList (storeHouse.m_ItemList);
-            RecycleItemList (equiped.GetAllItemList ());
 
             // 地面物品视野
             m_characterGroundItemSightDict.Remove (netId);
@@ -433,23 +437,13 @@ namespace MirRemakeBackend.Entity {
             m_equipmentRegionDict.TryGetValue (netId, out er);
             return er;
         }
-        public List<short> GetEquipedItemIdList (int netId) {
-            var res = new List<short> ();
-            res.Clear ();
-            var equips = GetEquiped (netId);
-            if (equips == null) return null;
-            var en = equips.GetEquipedEn ();
-            while (en.MoveNext ())
-                res.Add (en.Current.Value.m_ItemId);
-            return res;
-        }
-        public E_Repository GetBag (int netId) {
-            E_Repository res = null;
+        public E_Bag GetBag (int netId) {
+            E_Bag res = null;
             m_bagDict.TryGetValue (netId, out res);
             return res;
         }
-        public E_Repository GetStoreHouse (int netId) {
-            E_Repository res = null;
+        public E_StoreHouse GetStoreHouse (int netId) {
+            E_StoreHouse res = null;
             m_storeHouseDict.TryGetValue (netId, out res);
             return res;
         }
@@ -461,7 +455,7 @@ namespace MirRemakeBackend.Entity {
             m_ddh.Delete (oriSlot);
             m_ddh.Insert (item, charId, ip, pos);
             // 回收实例
-            RecycleItem (oriSlot);
+            m_itemFactory.RecycleItem (oriSlot);
             return item;
         }
         public E_EmptyItem CharacterLoseItem (E_Item item, int charId, ItemPlace ip, short pos) {
@@ -470,7 +464,7 @@ namespace MirRemakeBackend.Entity {
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
             m_ddh.Insert (emptyItem, charId, ip, pos);
             // 回收实例
-            RecycleItem (item);
+            m_itemFactory.RecycleItem (item);
             return emptyItem;
         }
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
@@ -493,13 +487,13 @@ namespace MirRemakeBackend.Entity {
             groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
             return groundItem;
         }
-        public List<E_GroundItem> DropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
+        public List<E_GroundItem> CharacterDropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
             List<E_GroundItem> res = new List<E_GroundItem> (itemList.Count);
             for (int i = 0; i < itemList.Count; i++)
-                res.Add (DropItemOntoGround (itemList[i], charId, pos));
+                res.Add (CharacterDropItemOntoGround (itemList[i], charId, pos));
             return res;
         }
-        public E_GroundItem DropItemOntoGround (E_Item item, int charId, Vector2 pos) {
+        public E_GroundItem CharacterDropItemOntoGround (E_Item item, int charId, Vector2 pos) {
             E_GroundItem res = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
             res.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
@@ -517,6 +511,12 @@ namespace MirRemakeBackend.Entity {
             // 回收
             s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
         }
+        public E_GroundItem GetGroundItem (long gndItemId) {
+            for (int i=0; i<m_groundItemList.Count; i++)
+                if (m_groundItemList[i].m_groundItemId == gndItemId)
+                    return m_groundItemList[i];
+            return null;
+        }
         public List<E_GroundItem> GetRawGroundItemList () {
             return m_groundItemList;
         }
@@ -524,13 +524,6 @@ namespace MirRemakeBackend.Entity {
             List<E_GroundItem> res;
             m_characterGroundItemSightDict.TryGetValue (netId, out res);
             return res;
-        }
-        private void RecycleItem (E_Item item) {
-            m_itemFactory.RecycleItem (item);
-        }
-        private void RecycleItemList (List<E_Item> itemList) {
-            for (int i = 0; i < itemList.Count; i++)
-                RecycleItem (itemList[i]);
         }
     }
 }

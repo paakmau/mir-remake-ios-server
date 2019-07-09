@@ -27,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            E_Repository bag = EM_Item.s_instance.GetBag (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null)
                 return;
             short pos;
