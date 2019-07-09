@@ -18,11 +18,12 @@ namespace MirRemakeBackend.Data {
             Random ran=new Random();
             s_itemPosDatas = JsonMapper.ToObject(jsonFile);
             ValueTuple<short,Vector2>[] res=new ValueTuple<short,Vector2>[s_itemPosDatas.Count*5];
-            for(int i=0;i<s_itemPosDatas.Count;i++){
+            for(int k=0;k<s_itemPosDatas.Count;k++){
                 for (int j=0;j<5;j++){
-                    res[i*5+j]=new ValueTuple<short,Vector2>(short.Parse(s_itemPosDatas["ID"].ToString()),
-                        new Vector2(float.Parse(s_itemPosDatas[i]["x"].ToString())+(float)ran.Next(-10000,10000)/10000,
-                            float.Parse(s_itemPosDatas[i]["y"].ToString())+(float)ran.Next(-10000,10000)/10000));
+                    int i=k*5+j;
+                    res[i]=new ValueTuple<short,Vector2>(short.Parse(s_itemPosDatas[k]["ID"].ToString()),
+                        new Vector2(float.Parse(s_itemPosDatas[k]["x"].ToString())+(float)ran.Next(-10000,10000)/10000,
+                            float.Parse(s_itemPosDatas[k]["y"].ToString())+(float)ran.Next(-10000,10000)/10000));
                 }
             }
             return res; 
