@@ -18,6 +18,7 @@ namespace MirRemakeBackend.DataEntity {
             var consumableDoArr = itemDs.GetAllConsumable ();
             var equipmentDoArr = itemDs.GetAllEquipment ();
             var gemDoArr = itemDs.GetAllGem ();
+            var materialDoArr = itemDs.GetAllMaterial ();
             foreach (var itemDo in consumableDoArr) {
                 m_itemDict.Add (itemDo.Item1.m_itemId, new DE_Item (itemDo.Item1));
                 m_consumableDict.Add (itemDo.Item1.m_itemId, new DE_ConsumableData (itemDo.Item2));

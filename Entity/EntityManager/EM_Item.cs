@@ -374,7 +374,7 @@ namespace MirRemakeBackend.Entity {
             var itemIdAndPosList = dem.GetAllRenewableItemList ();
             m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > (itemIdAndPosList.Count);
             for (int i = 0; i < itemIdAndPosList.Count; i++)
-                m_renewableItemList.Add ((m_renewableItemList[i].Item1, m_renewableItemList[i].Item2, MyTimer.s_CurTime.Ticked (c_renewableItemRefreshTime)));
+                m_renewableItemList.Add ((itemIdAndPosList[i].Item1, itemIdAndPosList[i].Item2, MyTimer.s_CurTime.Ticked (c_renewableItemRefreshTime)));
         }
         /// <summary>初始化新的角色的所有物品</summary>
         public void InitCharacter (

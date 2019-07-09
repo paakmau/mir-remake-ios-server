@@ -8,6 +8,7 @@ namespace MirRemakeBackend.Data {
         (DO_Item, DO_Equipment) [] GetAllEquipment (); //done
         (DO_Item, DO_Consumable) [] GetAllConsumable ();
         (DO_Item, DO_Gem) [] GetAllGem ();
+        DO_Item[] GetAllMaterial ();
     }
     class DS_ItemImpl : IDS_Item {
         private DO_Item[] items = null;
@@ -105,6 +106,9 @@ namespace MirRemakeBackend.Data {
             }
             return res;
         }
-
+        public DO_Item[] GetAllMaterial () {
+            // TODO:
+            return new DO_Item[0];
+        }
     }
 }
