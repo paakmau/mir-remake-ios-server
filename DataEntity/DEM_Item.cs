@@ -31,6 +31,8 @@ namespace MirRemakeBackend.DataEntity {
                 m_itemDict.Add (itemDo.Item1.m_itemId, new DE_Item (itemDo.Item1));
                 m_gemDict.Add (itemDo.Item1.m_itemId, new DE_GemData (itemDo.Item2));
             }
+            foreach (var itemDo in materialDoArr)
+                m_itemDict.Add (itemDo.m_itemId, new DE_Item (itemDo));
             m_itemDict.Add (-1, new DE_Item ());
 
             // 获取可再生Item
