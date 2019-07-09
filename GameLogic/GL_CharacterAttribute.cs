@@ -41,15 +41,15 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
-        public void CommandGetCombatEffectivenessRank (int netId) {
+        public void CommandGetCombatEffectivenessRank (int netId, OccupationType ocp) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            var topCombatEfctRnkCharIdList = EM_Rank.s_instance.GetTopCombatEfctRnkCharIdList (10);
-            var topCombatEfctRnkList = new List<NO_FightCapacityRankInfo> (topCombatEfctRnkCharIdList.Count);
-            for (int i = 0; i < topCombatEfctRnkCharIdList.Count; i++) {
-                int topCharId = topCombatEfctRnkCharIdList[i];
-                // TODO: 
-                topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "nzy", 80, (short) i, 23333, "nihao", (byte) 0));
+            var topCombatEfctRnkCharIdAndCombatEfctList = EM_Rank.s_instance.GetTopCombatEfctRnkCharIdAndCombatEfctList (10);
+            var topCombatEfctRnkList = new List<NO_FightCapacityRankInfo> (topCombatEfctRnkCharIdAndCombatEfctList.Count);
+            for (int i = 0; i < topCombatEfctRnkCharIdAndCombatEfctList.Count; i++) {
+                var topCharId = topCombatEfctRnkCharIdAndCombatEfctList[i].Item1;
+                var topCharCombatEfct = topCombatEfctRnkCharIdAndCombatEfctList[i].Item2;
+                topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "", 14, (short) i, topCharCombatEfct, "testFam", (byte) 0));
             }
             var myRank = EM_Rank.s_instance.GetCombatEfctRank (charObj.m_characterId);
             m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, charObj.m_combatEffectiveness, myRank));
