@@ -7,6 +7,7 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理物品的使用, 存取 (背包, 仓库), 回收
     /// 装备强化, 附魔, 镶嵌
+    /// TODO: GL_Item 太混乱了, 考虑把更多逻辑放入 EM_Item
     /// </summary>
     class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
@@ -86,21 +87,58 @@ namespace MirRemakeBackend.GameLogic {
             });
         }
         public void CommandPickUpGroundItem (int netId, long gndItemId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
             var bag = EM_Item.s_instance.GetBag (netId);
             var gndItem = EM_Item.s_instance.GetGroundItem (gndItemId);
-            if (gndItem == null || bag == null || charObj == null) return;
+            if (gndItem == null || bag == null || charId == -1) return;
             var item = gndItem.m_item;
-            if (item.m_HasRealId) {
-                // EM_Item.s_instance.
-            }
-            List< (short, E_Item) > posAndItemChanged;
+            List < (short, E_Item) > posAndItemChanged;
             short piledNum, realStoredNum;
-            E_EmptyItem oriEmptySlot;
-            bag.AutoPileItemAndGetOccupiedPos (item.m_ItemId, item.m_num, out posAndItemChanged, out piledNum, out realStoredNum, out oriEmptySlot);
+            E_EmptyItem oriSlot;
+            short pos = bag.AutoPileItemAndGetOccupiedPos (item.m_ItemId, item.m_num, out posAndItemChanged, out piledNum, out realStoredNum, out oriSlot);
+
+            // 更新Bag中原有
+            var itemRealIdList = new List<long> (posAndItemChanged.Count);
+            var itemNumList = new List<short> (posAndItemChanged.Count);
+            for (int i = 0; i < posAndItemChanged.Count; i++) {
+                itemRealIdList.Add (posAndItemChanged[i].Item2.m_RealId);
+                itemNumList.Add (posAndItemChanged[i].Item2.m_num);
+                // dds
+                EM_Item.s_instance.CharacterUpdateItem (posAndItemChanged[i].Item2, charId, ItemPlace.BAG, posAndItemChanged[i].Item1);
+            }
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, itemRealIdList, itemNumList));
+
+            // 整格放入
+            if (pos >= 0) {
+                bag.SetItem (item, pos);
+                EM_Item.s_instance.CharacterGainItem (oriSlot, item, charId, ItemPlace.BAG, pos);
+
+                // 基础信息 client
+                m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
+                    netId,
+                    new List<NO_Item> { item.GetItemNo () },
+                    new List<ItemPlace> { ItemPlace.BAG },
+                    new List<short> { pos }));
+                // 附加信息 (装备等) client TODO: 考虑改模式
+                if (item.m_Type == ItemType.EQUIPMENT)
+                    m_networkService.SendServerCommand (
+                        SC_ApplySelfUpdateEquipment.Instance (
+                            netId, item.m_RealId,
+                            (item as E_EquipmentItem).GetEquipmentInfoNo ()));
+            }
+
+            // 回收实例
+            EM_Item.s_instance.ItemOnGroundPicked (gndItem);
         }
         public void CommandDropItemOntoGround (int netId, long realId, short num) {
-            // TODO:
+            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var bag = EM_Item.s_instance.GetBag (netId);
+            if (bag == null || charObj == null) return;
+            var item = bag.GetItemByRealId (realId);
+            if (item == null) return;
+            var slot = EM_Item.s_instance.CharacterDropItemOntoGround (item, charObj.m_characterId, charObj.m_position);
+            bag.RemoveItemByRealId (realId, slot);
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -147,7 +185,7 @@ namespace MirRemakeBackend.GameLogic {
             if (runOut) {
                 // 物品消失
                 var empty = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
-                repo.RemoveItemByRealId (empty);
+                repo.RemoveItemByRealId (realId, empty);
             } else
                 EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
             // Client
@@ -189,7 +227,7 @@ namespace MirRemakeBackend.GameLogic {
 
                 // 若该物品单独占有一格
                 if (storePos != -1 && storePos != -2) {
-                    // 回收原有空插槽
+                    // 实例化 回收 持久层
                     var itemObj = EM_Item.s_instance.CharacterGainItem (oriBagSlot, itemId, itemNum, charObj.m_characterId, ItemPlace.BAG, storePos);
                     // 基础信息 client
                     m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (

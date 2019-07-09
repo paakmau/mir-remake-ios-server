@@ -8,19 +8,15 @@ namespace MirRemakeBackend.Entity {
         public abstract ItemPlace m_repositoryPlace { get; }
         public abstract List<E_Item> m_ItemList { get; }
         public abstract void Reset (E_Item[] itemArr);
+        public abstract void SetItem (E_Item item, short pos);
         public abstract NO_Repository GetNo ();
         public abstract E_Item GetItemByRealId (long realId);
         public abstract E_Item GetItemByPosition (short pos);
         /// <summary>
-        /// 直接在Pos位置覆盖放置item  
-        /// 不考虑原有道具
-        /// </summary>
-        public abstract void SetItem (E_Item item, short pos);
-        /// <summary>
         /// 从背包移除整格物品  
         /// 成功返回true
         /// </summary>
-        public abstract E_Item RemoveItemByRealId (E_EmptyItem empty);
+        public abstract E_Item RemoveItemByRealId (long realId, E_EmptyItem empty);
     }
     class E_Bag : E_RepositoryBase {
         public override ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
@@ -61,9 +57,9 @@ namespace MirRemakeBackend.Entity {
             resPos = -1;
             return null;
         }
-        public override E_Item RemoveItemByRealId (E_EmptyItem empty) {
+        public override E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
             for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_RealId == empty.m_RealId) {
+                if (m_itemList[i].m_RealId == realId) {
                     var res = m_itemList[i];
                     m_itemList[i] = empty;
                     return res;

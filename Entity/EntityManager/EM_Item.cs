@@ -1,7 +1,7 @@
-using System.Numerics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Util;
@@ -416,11 +416,11 @@ namespace MirRemakeBackend.Entity {
             m_storeHouseDict.Remove (netId);
             m_equipmentRegionDict.Remove (netId);
             // 回收
-            for (int i=0; i<bag.m_ItemList.Count; i++)
+            for (int i = 0; i < bag.m_ItemList.Count; i++)
                 m_itemFactory.RecycleItem (bag.m_ItemList[i]);
-            for (int i=0; i<storeHouse.m_ItemList.Count; i++)
+            for (int i = 0; i < storeHouse.m_ItemList.Count; i++)
                 m_itemFactory.RecycleItem (storeHouse.m_ItemList[i]);
-            for (int i=0; i<equiped.m_ItemList.Count; i++)
+            for (int i = 0; i < equiped.m_ItemList.Count; i++)
                 m_itemFactory.RecycleItem (equiped.m_ItemList[i]);
             s_entityPool.m_bagPool.RecycleInstance (bag);
             s_entityPool.m_storeHousePool.RecycleInstance (storeHouse);
@@ -451,12 +451,15 @@ namespace MirRemakeBackend.Entity {
             // 生成实例
             DE_Item itemDe = m_dem.GetItemById (itemId);
             E_Item item = m_itemFactory.GetAndInitInstance (itemDe, itemNum);
+            CharacterGainItem (oriSlot, item, charId, ip, pos);
+            return item;
+        }
+        public void CharacterGainItem (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
             m_ddh.Delete (oriSlot);
             m_ddh.Insert (item, charId, ip, pos);
             // 回收实例
             m_itemFactory.RecycleItem (oriSlot);
-            return item;
         }
         public E_EmptyItem CharacterLoseItem (E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
@@ -487,22 +490,21 @@ namespace MirRemakeBackend.Entity {
             groundItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
             return groundItem;
         }
-        public List<E_GroundItem> CharacterDropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
-            List<E_GroundItem> res = new List<E_GroundItem> (itemList.Count);
+        public List<E_EmptyItem> CharacterDropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
+            var res = new List<E_EmptyItem> (itemList.Count);
             for (int i = 0; i < itemList.Count; i++)
                 res.Add (CharacterDropItemOntoGround (itemList[i], charId, pos));
             return res;
         }
-        public E_GroundItem CharacterDropItemOntoGround (E_Item item, int charId, Vector2 pos) {
-            E_GroundItem res = s_entityPool.m_groundItemPool.GetInstance ();
+        public E_EmptyItem CharacterDropItemOntoGround (E_Item item, int charId, Vector2 pos) {
+            E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            res.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
-            return res;
+            m_ddh.Delete (item);
+            item.ResetRealId (-1);
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
+            return m_itemFactory.GetEmptyItemInstance ();
         }
         public void ItemOnGroundDisappear (E_GroundItem groundItem) {
-            // 持久层
-            if (groundItem.m_item.m_HasRealId)
-                m_ddh.Delete (groundItem.m_item);
             // 回收
             m_itemFactory.RecycleItem (groundItem.m_item);
             s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
@@ -512,7 +514,7 @@ namespace MirRemakeBackend.Entity {
             s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
         }
         public E_GroundItem GetGroundItem (long gndItemId) {
-            for (int i=0; i<m_groundItemList.Count; i++)
+            for (int i = 0; i < m_groundItemList.Count; i++)
                 if (m_groundItemList[i].m_groundItemId == gndItemId)
                     return m_groundItemList[i];
             return null;

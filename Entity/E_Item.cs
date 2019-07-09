@@ -74,7 +74,6 @@ namespace MirRemakeBackend.Entity {
     abstract class E_Item {
         private long m_realId;
         public long m_RealId { get { return m_realId; } }
-        public bool m_HasRealId { get { return m_realId != -1; } }
         public DE_Item m_itemDe;
         public short m_num;
         public short m_ItemId { get { return m_itemDe.m_id; } }
