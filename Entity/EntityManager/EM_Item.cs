@@ -517,12 +517,22 @@ namespace MirRemakeBackend.Entity {
             return m_itemFactory.GetEmptyItemInstance ();
         }
         public void ItemOnGroundDisappear (E_GroundItem groundItem) {
-            // 回收
-            m_itemFactory.RecycleItem (groundItem.m_item);
+            // 移除gndItem
+            for (int i = 0; i < m_groundItemList.Count; i++)
+                if (m_groundItemList[i] == groundItem)
+                    m_groundItemList.RemoveAt (i);
+            // 回收gndItem
             s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
+            // 销毁并回收Item
+            m_ddh.Delete (groundItem.m_item);
+            m_itemFactory.RecycleItem (groundItem.m_item);
         }
         public void ItemOnGroundPicked (E_GroundItem groundItem) {
-            // 回收
+            // 移除gndItem
+            for (int i = 0; i < m_groundItemList.Count; i++)
+                if (m_groundItemList[i] == groundItem)
+                    m_groundItemList.RemoveAt (i);
+            // 回收gndItem
             s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
         }
         public E_GroundItem GetGroundItem (long gndItemId) {
