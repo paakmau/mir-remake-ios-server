@@ -48,6 +48,9 @@ namespace MirRemakeBackend.Util {
                     return true;
                 return false;
             }
+            public override string ToString() {
+                return m_cycle.ToString () + " " + m_time.ToString ();
+            }
         }
         private static Time s_timer = new Time (0, 0f);
         public static Time s_CurTime { get { return s_timer; } }

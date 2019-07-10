@@ -13,7 +13,6 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_Item s_instance;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
-        private const float c_groundRenewableItemRefreshTime = 5;
         public GL_Item (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 地面道具消失

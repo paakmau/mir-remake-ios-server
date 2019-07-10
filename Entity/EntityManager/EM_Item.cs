@@ -369,6 +369,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, List<E_GroundItem>> m_characterGroundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
         private List < (short, Vector2, MyTimer.Time) > m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > ();
         private float c_renewableItemRefreshTime = 5;
+        private float c_renewableItemRefreshRadian = 5;
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -542,7 +543,7 @@ namespace MirRemakeBackend.Entity {
                 var itemIdPosTime = m_renewableItemList[i];
                 if (MyTimer.CheckTimeUp (itemIdPosTime.Item3)) {
                     short itemId = itemIdPosTime.Item1;
-                    Vector2 pos = itemIdPosTime.Item2;
+                    Vector2 pos = itemIdPosTime.Item2 + new Vector2 (MyRandom.NextFloat (0, c_renewableItemRefreshRadian), MyRandom.NextFloat (0, c_renewableItemRefreshRadian));
                     // 生成地面物品
                     GenerateItemOnGround (itemId, 1, -1, pos);
 
