@@ -357,7 +357,7 @@ namespace MirRemakeBackend.Entity {
             }
         }
         public static EM_Item s_instance;
-        private const float c_groundItemDisappearItem = 15;
+        private const float c_groundItemDisappearTime = 15;
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
         private ItemDynamicDataHelper m_ddh;
@@ -368,7 +368,8 @@ namespace MirRemakeBackend.Entity {
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
         private Dictionary<int, List<E_GroundItem>> m_characterGroundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
         private List < (short, Vector2, MyTimer.Time) > m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > ();
-        private float c_renewableItemRefreshTime = 15;
+        private float c_renewableItemRefreshTimeMin = 12;
+        private float c_renewableItemRefreshTimeMax = 18;
         private float c_renewableItemRefreshRadian = 15;
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
@@ -378,7 +379,7 @@ namespace MirRemakeBackend.Entity {
             var itemIdAndPosList = dem.GetAllRenewableItemList ();
             m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > (itemIdAndPosList.Count);
             for (int i = 0; i < itemIdAndPosList.Count; i++)
-                m_renewableItemList.Add ((itemIdAndPosList[i].Item1, itemIdAndPosList[i].Item2, MyTimer.s_CurTime.Ticked (c_renewableItemRefreshTime)));
+                m_renewableItemList.Add ((itemIdAndPosList[i].Item1, itemIdAndPosList[i].Item2, MyTimer.s_CurTime.Ticked (MyRandom.NextFloat (c_renewableItemRefreshTimeMin, c_renewableItemRefreshTimeMax))));
         }
         /// <summary>初始化新的角色的所有物品</summary>
         public void InitCharacter (
@@ -498,7 +499,7 @@ namespace MirRemakeBackend.Entity {
                 return;
             var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             m_groundItemList.Add (gndItem);
         }
         public List<E_EmptyItem> CharacterDropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
@@ -512,7 +513,7 @@ namespace MirRemakeBackend.Entity {
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
             m_ddh.Delete (item);
             item.ResetRealId (-1);
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearItem), item, charId, pos);
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             return m_itemFactory.GetEmptyItemInstance ();
         }
         public void ItemOnGroundDisappear (E_GroundItem groundItem) {
@@ -548,7 +549,7 @@ namespace MirRemakeBackend.Entity {
                     GenerateItemOnGround (itemId, 1, -1, pos);
 
                     // 准备下一次刷新
-                    itemIdPosTime.Item3 = MyTimer.s_CurTime.Ticked (c_renewableItemRefreshTime);
+                    itemIdPosTime.Item3 = MyTimer.s_CurTime.Ticked (MyRandom.NextFloat (c_renewableItemRefreshTimeMin, c_renewableItemRefreshTimeMax));
                     m_renewableItemList[i] = itemIdPosTime;
                 }
             }
