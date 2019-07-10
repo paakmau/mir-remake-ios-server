@@ -77,6 +77,19 @@ namespace MirRemakeBackend.GameLogic {
             public abstract void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList);
         }
         /// <summary>
+        /// 指向性单体
+        /// </summary>
+        private class ETC_AimOneTarget : EffectTargetChooserBase {
+            public override SkillAimType m_TargetAimType { get { return SkillAimType.AIM_ONE_TARGET; } }
+            public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
+                base.Reset (targetCamp, targetNum, parmList);
+            }
+            public override void GetEffectTargets (E_Unit self, SkillParam parm, List<E_Unit> resList) {
+                resList.Clear ();
+                resList.Add (parm.m_target);
+            }
+        }
+        /// <summary>
         /// 指向性圆形溅射
         /// </summary>
         private class ETC_AimCircle : EffectTargetChooserBase {
