@@ -26,7 +26,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_de = effectDe;
                 m_animId = animId;
                 // 计算命中
-                float hitRate = effectDe.m_hitRate * caster.m_HitRate * 0.01f;
+                float hitRate = (100 + effectDe.m_hitRate) * caster.m_HitRate * 0.01f;
                 m_hit = MyRandom.NextInt (1, 101) <= hitRate;
                 if (m_hit) {
                     // 计算基础伤害 (或能量剥夺)

@@ -24,8 +24,11 @@ namespace MirRemakeBackend.DataEntity {
         public int m_DamageReduction { get { return m_attrDict[ActorUnitConcreteAttributeType.DAMAGE_REDUCTION]; } }
         private DE_Unit (ValueTuple<ActorUnitConcreteAttributeType, int>[] attrArr) {
             var conAttrDict = new Dictionary<ActorUnitConcreteAttributeType, int> ();
+            var attrTypeArr = Enum.GetValues (typeof (ActorUnitConcreteAttributeType));
+            foreach (var attrType in attrTypeArr)
+                conAttrDict.Add ((ActorUnitConcreteAttributeType) attrType, 0);
             foreach (var item in attrArr)
-                conAttrDict.Add (item.Item1, item.Item2);
+                conAttrDict[item.Item1] = item.Item2;
             m_attrDict = conAttrDict;
         }
         public DE_Unit (DO_Monster monster) : this (monster.m_attrArr) { }
