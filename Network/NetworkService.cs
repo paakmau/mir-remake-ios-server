@@ -37,7 +37,8 @@ namespace MirRemakeBackend.Network {
         }
         private void ReceiveClientCommand (NetPacketReader reader, int clientNetId) {
             IClientCommand command = m_clientCommandDict[(NetworkToServerDataType) reader.GetByte ()];
-            Console.WriteLine ("CC: " + command.m_DataType);
+            if (command.m_DataType != NetworkToServerDataType.SET_POSITION)
+                Console.WriteLine ("CC: " + command.m_DataType);
             command.Execute (reader, clientNetId);
         }
         public void SendServerCommand (ServerCommandBase command) {
