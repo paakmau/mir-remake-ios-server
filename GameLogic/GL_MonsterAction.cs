@@ -8,6 +8,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     partial class GL_MonsterAction : GameLogicBase {
         public static GL_MonsterAction s_instance;
+        private Dictionary<SkillAimType, SkillParamGeneratorBase> m_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> ();
         private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
         public GL_MonsterAction (INetworkService netService) : base (netService) {
             var monEn = EM_Unit.s_instance.GetMonsterEn ();
@@ -15,6 +16,8 @@ namespace MirRemakeBackend.GameLogic {
                 var mfsm = new MFSM (monEn.Current.Value);
                 m_mfsmDict.Add (monEn.Current.Key, mfsm);
             }
+            // Mfsm 的构造
+            SkillParamGeneratorBase.Init();
         }
         public override void Tick (float dT) {
             // fsm控制AI
