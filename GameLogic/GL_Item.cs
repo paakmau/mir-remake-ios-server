@@ -16,14 +16,10 @@ namespace MirRemakeBackend.GameLogic {
         public GL_Item (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             // 地面道具消失
-            var dspprGndItemIdSet = new HashSet<long> ();
             var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
             for (int i = gndItemList.Count - 1; i >= 0; i--)
-                if (MyTimer.CheckTimeUp (gndItemList[i].m_disappearTime)) {
-                    var dspprGroundItem = gndItemList[i];
+                if (MyTimer.CheckTimeUp (gndItemList[i].m_disappearTime))
                     gndItemList.RemoveAt (i);
-                    dspprGndItemIdSet.Add (dspprGroundItem.m_groundItemId);
-                }
             // 地面道具视野
             var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
             var charDspprItemIdList = new List<long> ();
@@ -67,6 +63,9 @@ namespace MirRemakeBackend.GameLogic {
                     if (isNew)
                         charShowItemList.Add (newSight[i].GetNo ());
                 }
+                oriSight.Clear ();
+                for (int i = 0; i < newSight.Count; i++)
+                    oriSight.Add (newSight[i]);
 
                 // client
                 if (charDspprItemIdList.Count != 0)

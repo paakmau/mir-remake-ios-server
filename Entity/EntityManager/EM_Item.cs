@@ -368,8 +368,8 @@ namespace MirRemakeBackend.Entity {
         private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
         private Dictionary<int, List<E_GroundItem>> m_characterGroundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
         private List < (short, Vector2, MyTimer.Time) > m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > ();
-        private float c_renewableItemRefreshTime = 5;
-        private float c_renewableItemRefreshRadian = 5;
+        private float c_renewableItemRefreshTime = 15;
+        private float c_renewableItemRefreshRadian = 15;
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
