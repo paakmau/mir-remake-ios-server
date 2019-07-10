@@ -10,7 +10,11 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_CharacterSight s_instance;
         private const float c_sightRadius = 12f;
         private const int c_maxUnitNumInSight = 20;
-        public GL_CharacterSight (INetworkService netService) : base (netService) { }
+        public GL_CharacterSight (INetworkService netService) : base (netService) {
+            var monEn = EM_Unit.s_instance.GetMonsterEn ();
+            while (monEn.MoveNext ())
+                EM_Sight.s_instance.InitMonster (monEn.Current.Value);
+        }
         public override void Tick (float dT) {
             var en = EM_Unit.s_instance.GetCharacterEnumerator ();
             while (en.MoveNext ()) {
@@ -55,7 +59,7 @@ namespace MirRemakeBackend.GameLogic {
                         case ActorUnitType.PLAYER:
                             var eqList = EM_Item.s_instance.GetEquiped (charNowSight[i].m_networkId).m_ItemList;
                             List<short> eqIdList = new List<short> (eqList.Count);
-                            for (int j=0; j<eqList.Count; j++)
+                            for (int j = 0; j < eqList.Count; j++)
                                 eqIdList.Add (eqList[j].m_ItemId);
                             newCharNoAndEquipedIdList.Add ((
                                 (((E_Character) charNowSight[i]).GetNo ()),
@@ -106,9 +110,6 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () { }
-        public void NotifyInitAllMonster (E_Monster[] monObjArr) {
-            EM_Sight.s_instance.InitAllMonster (monObjArr);
-        }
         public void NotifyInitCharacter (E_Character charObj) {
             EM_Sight.s_instance.InitCharacter (charObj);
         }

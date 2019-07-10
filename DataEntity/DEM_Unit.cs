@@ -55,8 +55,5 @@ namespace MirRemakeBackend.DataEntity {
         public IReadOnlyList<ValueTuple<short, Vector2>> GetAllMonsterIdAndRespawnPosition () {
             return m_monsterIdAndRespawnPositionList;
         }
-        public int GetMonsterNum () {
-            return m_monsterIdAndRespawnPositionList.Count;
-        }
     }
 }

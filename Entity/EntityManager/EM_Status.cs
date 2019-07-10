@@ -75,12 +75,8 @@ namespace MirRemakeBackend.Entity {
             m_dem = dem;
             m_fact = new StatusFactory (dem);
         }
-        public void InitCharacterStatus (int netId) {
+        public void InitUnitStatus (int netId) {
             m_statusListDict.TryAdd (netId, new List<E_Status> ());
-        }
-        public void InitAllMonster (int[] netIdArr) {
-            foreach (var item in netIdArr)
-                m_statusListDict.TryAdd (item, new List<E_Status> ());
         }
         public void RemoveCharacterStatus (int netId) {
             List<E_Status> statusList = null;

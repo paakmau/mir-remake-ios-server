@@ -99,17 +99,19 @@ namespace MirRemakeBackend.GameLogic {
             short pos = bag.AutoPileItemAndGetOccupiedPos (item.m_ItemId, item.m_num, out posAndItemChanged, out piledNum, out realStoredNum, out oriSlot);
 
             // 更新Bag中原有
-            var itemRealIdList = new List<long> (posAndItemChanged.Count);
-            var itemNumList = new List<short> (posAndItemChanged.Count);
-            for (int i = 0; i < posAndItemChanged.Count; i++) {
-                itemRealIdList.Add (posAndItemChanged[i].Item2.m_RealId);
-                itemNumList.Add (posAndItemChanged[i].Item2.m_num);
-                // dds
-                EM_Item.s_instance.CharacterUpdateItem (posAndItemChanged[i].Item2, charId, ItemPlace.BAG, posAndItemChanged[i].Item1);
+            if (posAndItemChanged.Count != 0) {
+                var itemRealIdList = new List<long> (posAndItemChanged.Count);
+                var itemNumList = new List<short> (posAndItemChanged.Count);
+                for (int i = 0; i < posAndItemChanged.Count; i++) {
+                    itemRealIdList.Add (posAndItemChanged[i].Item2.m_RealId);
+                    itemNumList.Add (posAndItemChanged[i].Item2.m_num);
+                    // dds
+                    EM_Item.s_instance.CharacterUpdateItem (posAndItemChanged[i].Item2, charId, ItemPlace.BAG, posAndItemChanged[i].Item1);
+                }
+                // client
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, itemRealIdList, itemNumList));
             }
-            // client
-            m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, itemRealIdList, itemNumList));
-
+            
             // 整格放入
             if (pos >= 0) {
                 bag.SetItem (item, pos);

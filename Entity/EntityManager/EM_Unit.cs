@@ -10,21 +10,44 @@ namespace MirRemakeBackend.Entity {
     /// 怪物不需要内存池因为每个怪物都需要Respawn且不会永久消失  
     /// </summary>
     class EM_Unit : EntityManagerBase {
+        private class NetworkIdManager {
+            private HashSet<int> m_unitNetIdSet = new HashSet<int> ();
+            private int m_unitCnt = 0;
+            public int AssignNetworkId () {
+                // 分配NetworkId
+                while (true) {
+                    ++m_unitCnt;
+                    if (!m_unitNetIdSet.Contains (m_unitCnt))
+                        break;
+                }
+                m_unitNetIdSet.Add (m_unitCnt);
+                return m_unitCnt;
+            }
+            public int[] AssignNetworkId (int num) {
+                int[] res = new int[num];
+                for (int i = 0; i < num; i++)
+                    res[i] = AssignNetworkId ();
+                return res;
+            }
+            public void RecycleNetworkId (int netId) {
+                m_unitNetIdSet.Remove (netId);
+            }
+        }
         public static EM_Unit s_instance;
         private DEM_Unit m_dem;
         private IDDS_Character m_dds;
         private IDDS_CharacterPosition m_charPosDds;
+        private NetworkIdManager m_networkIdManager = new NetworkIdManager ();
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
         public EM_Unit (DEM_Unit dem, IDDS_Character dds, IDDS_CharacterPosition charPosDds) {
             m_dem = dem;
             m_dds = dds;
             m_charPosDds = charPosDds;
-        }
-        public int GetMonsterNum () {
-            return m_dem.GetMonsterNum ();
-        }
-        public E_Monster[] InitAllMonster (int[] netIdArr) {
+
+            // 初始化所有的怪物
+            var monIdAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
+            var netIdArr = m_networkIdManager.AssignNetworkId (monIdAndPosList.Count);
             var res = new E_Monster[netIdArr.Length];
             // 实例化所有的怪物
             var idAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
@@ -36,7 +59,9 @@ namespace MirRemakeBackend.Entity {
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
                 res[i] = monster;
             }
-            return res;
+        }
+        public int AssignNetworkId () {
+            return m_networkIdManager.AssignNetworkId ();
         }
         /// <summary>
         /// 从数据库读取角色信息  
@@ -69,6 +94,8 @@ namespace MirRemakeBackend.Entity {
                 return;
             m_networkIdAndCharacterDict.Remove (netId);
             s_entityPool.m_characterPool.RecycleInstance (charObj);
+            // 释放NetId
+            m_networkIdManager.RecycleNetworkId (netId);
         }
         public E_Monster GetMonsterByNetworkId (int netId) {
             E_Monster res = null;

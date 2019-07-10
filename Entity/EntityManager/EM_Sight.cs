@@ -24,11 +24,9 @@ namespace MirRemakeBackend.Entity {
             m_netIdAndUnitVisibleDict.TryAdd (charObj.m_networkId, charObj);
             m_unitInSightCharacterDict.TryAdd (charObj.m_networkId, new HashSet<int> { charObj.m_networkId });
         }
-        public void InitAllMonster (E_Monster[] mons) {
-            foreach (var mon in mons) {
-                m_netIdAndUnitVisibleDict.Add (mon.m_networkId, mon);
-                m_unitInSightCharacterDict.TryAdd (mon.m_networkId, new HashSet<int> { });
-            }
+        public void InitMonster (E_Monster mon) {
+            m_netIdAndUnitVisibleDict.Add (mon.m_networkId, mon);
+            m_unitInSightCharacterDict.TryAdd (mon.m_networkId, new HashSet<int> { });
         }
         /// <summary>
         /// 移除一个角色的视野信息, 并移除可视单位
@@ -37,7 +35,7 @@ namespace MirRemakeBackend.Entity {
             // 移除角色在其他单位中的视野 (仅inSightChar)
             var charSight = GetCharacterRawSight (netId);
             if (charSight == null) return;
-            for (int i = 0; i<charSight.Count; i++) {
+            for (int i = 0; i < charSight.Count; i++) {
                 var unitInSightChar = GetRawUnitInSightCharacter (charSight[i].m_networkId);
                 if (unitInSightChar == null) continue;
                 unitInSightChar.Remove (netId);

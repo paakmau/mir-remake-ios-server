@@ -24,6 +24,10 @@ namespace MirRemakeBackend.GameLogic {
                 var sh = impl.GetConstructor (Type.EmptyTypes).Invoke (null) as IStatusHandler;
                 m_statusHandlerDict.Add (sh.m_Type, sh);
             }
+            // 初始化Status
+            var monEn = EM_Unit.s_instance.GetMonsterEn ();
+            while (monEn.MoveNext ())
+                EM_Status.s_instance.InitUnitStatus (monEn.Current.Key);
         }
         public override void Tick (float dT) {
             // 移除超时的状态
@@ -123,13 +127,8 @@ namespace MirRemakeBackend.GameLogic {
                 ));
             }
         }
-        public E_Monster[] NotifyInitAllMonster (int[] netIdArr) {
-            var mons = EM_Unit.s_instance.InitAllMonster (netIdArr);
-            EM_Status.s_instance.InitAllMonster (netIdArr);
-            return mons;
-        }
         public void NotifyInitCharacter (int netId) {
-            EM_Status.s_instance.InitCharacterStatus (netId);
+            EM_Status.s_instance.InitUnitStatus (netId);
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Status.s_instance.RemoveCharacterStatus (netId);
