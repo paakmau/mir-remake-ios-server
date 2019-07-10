@@ -35,7 +35,7 @@ namespace MirRemakeBackend.Entity {
             // 读取已接任务
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
-                if (ddoList[i].m_status == MissionStatus.ACCEPTED) continue;
+                if (ddoList[i].m_status != MissionStatus.ACCEPTED) continue;
                 E_Mission mis = s_entityPool.m_missionPool.GetInstance ();
                 mis.Reset (m_dem.GetMissionById (ddoList[i].m_missionId), ddoList[i]);
                 acceptedMissionDict[ddoList[i].m_missionId] = mis;
