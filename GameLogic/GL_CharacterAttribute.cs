@@ -93,7 +93,8 @@ namespace MirRemakeBackend.GameLogic {
                 newChar.m_Spirit,
                 newChar.m_TotalMainPoint,
                 newChar.m_VirtualCurrency,
-                newChar.m_ChargeCurrency));
+                newChar.m_ChargeCurrency,
+                newChar.m_position));
             return newChar;
         }
         public void NotifyRemoveCharacter (int netId) {
