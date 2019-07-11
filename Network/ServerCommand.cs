@@ -58,6 +58,7 @@ namespace MirRemakeBackend.Network {
         private long m_virtualCy;
         /// <summary> 充值币 </summary>
         private long m_chargeCy;
+        private Vector2 m_pos;
         public static SC_InitSelfAttribute Instance (
             int netId,
             OccupationType ocp,
@@ -69,7 +70,8 @@ namespace MirRemakeBackend.Network {
             short spirit,
             short m_totalMainPoint,
             long virtualCy,
-            long chargeCy
+            long chargeCy,
+            Vector2 pos
         ) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_ocp = ocp;
@@ -82,6 +84,7 @@ namespace MirRemakeBackend.Network {
             s_instance.m_totalMainPoint = m_totalMainPoint;
             s_instance.m_virtualCy = virtualCy;
             s_instance.m_chargeCy = chargeCy;
+            s_instance.m_pos = pos;
             return s_instance;
         }
         private SC_InitSelfAttribute () { }
@@ -96,6 +99,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_totalMainPoint);
             writer.Put (m_virtualCy);
             writer.Put (m_chargeCy);
+            writer.Put (m_pos);
         }
     }
     /// <summary>
