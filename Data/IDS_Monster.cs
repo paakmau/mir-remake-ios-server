@@ -31,9 +31,16 @@ namespace MirRemakeBackend.Data {
                 }
                 monster.m_attrArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_monsterDatas[durex]["ConcreteAttributionTable"].Count];
                 for (int x = 0; x < s_monsterDatas[durex]["ConcreteAttributionTable"].Count; x++)
-                {
-                    monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                        ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[0]), int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]));
+                {   
+                    ActorUnitConcreteAttributeType type=(ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType),s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[0]);
+                    if(type==ActorUnitConcreteAttributeType.ATTACK || type==ActorUnitConcreteAttributeType.MAGIC){
+                        monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                            (type, int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1])/2);
+                    }
+                    else{
+                        monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                            (type, int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]));
+                    }
                 }
                 monster.m_monsterType=(MonsterType)int.Parse(s_monsterDatas[durex]["Type"].ToString());
                 res[durex] = monster;
