@@ -85,6 +85,15 @@ namespace MirRemakeBackend.GameLogic {
                     // xjb计算仇恨
                     if (m_deltaHp < 0)
                         m_hatred = -m_deltaHp;
+                    target.m_curHp=target.m_curHp+m_deltaHp;
+                    target.m_curMp=target.m_curMp+m_deltaMp;
+
+                    if(m_deltaHp<0){
+                        //caster.m_curHp=(caster.m_curHp+m_deltaHp*caster.m_lifeSteal)>caster.m_MaxHp?caster.m_MaxHp:caster.m_curHp+m_deltaHp*caster.m_lifeSteal;
+
+
+                    }
+                    
                 }
             }
             public NO_Effect GetNo () {
