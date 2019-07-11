@@ -19,6 +19,7 @@ namespace MirRemakeBackend.DataEntity {
         public int m_CriticalBonus { get { return m_attrDict[ActorUnitConcreteAttributeType.CRITICAL_BONUS]; } }
         public int m_HitRate { get { return m_attrDict[ActorUnitConcreteAttributeType.HIT_RATE]; } }
         public int m_DodgeRate { get { return m_attrDict[ActorUnitConcreteAttributeType.DODGE_RATE]; } }
+        public int m_LifeSteal { get { return m_attrDict[ActorUnitConcreteAttributeType.LIFE_STEAL]; } }
         public int m_PhysicsVulernability { get { return m_attrDict[ActorUnitConcreteAttributeType.PHYSICS_VULERNABILITY]; } }
         public int m_MagicVulernability { get { return m_attrDict[ActorUnitConcreteAttributeType.MAGIC_VULERNABILITY]; } }
         public int m_DamageReduction { get { return m_attrDict[ActorUnitConcreteAttributeType.DAMAGE_REDUCTION]; } }

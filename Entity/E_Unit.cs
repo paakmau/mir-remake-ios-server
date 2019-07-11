@@ -82,6 +82,10 @@ namespace MirRemakeBackend.Entity {
                 get { return m_attrDict[ActorUnitConcreteAttributeType.DODGE_RATE]; }
                 set { m_attrDict[ActorUnitConcreteAttributeType.DODGE_RATE] = value; }
             }
+            public int m_LifeSteal {
+                get { return m_attrDict[ActorUnitConcreteAttributeType.LIFE_STEAL]; }
+                set { m_attrDict[ActorUnitConcreteAttributeType.LIFE_STEAL] = value; }
+            }
             public int m_PhysicsVulernability {
                 get { return m_attrDict[ActorUnitConcreteAttributeType.PHYSICS_VULERNABILITY]; }
                 set { m_attrDict[ActorUnitConcreteAttributeType.PHYSICS_VULERNABILITY] = value; }
@@ -122,6 +126,7 @@ namespace MirRemakeBackend.Entity {
         public virtual int m_CriticalBonus { get { return m_battleConcreteAttr.m_CriticalBonus + m_unitDe.m_CriticalBonus; } }
         public virtual int m_HitRate { get { return m_battleConcreteAttr.m_HitRate + m_unitDe.m_HitRate; } }
         public virtual int m_DodgeRate { get { return m_battleConcreteAttr.m_DodgeRate + m_unitDe.m_DodgeRate; } }
+        public virtual int m_LifeSteal { get { return m_battleConcreteAttr.m_LifeSteal + m_unitDe.m_LifeSteal; } }
         public virtual int m_PhysicsVulernability { get { return m_battleConcreteAttr.m_PhysicsVulernability + m_unitDe.m_PhysicsVulernability; } }
         public virtual int m_MagicVulernability { get { return m_battleConcreteAttr.m_MagicVulernability + m_unitDe.m_MagicVulernability; } }
         public virtual int m_DamageReduction { get { return m_battleConcreteAttr.m_DamageReduction + m_unitDe.m_DamageReduction; } }
@@ -246,6 +251,7 @@ namespace MirRemakeBackend.Entity {
         public override int m_CriticalBonus { get { return m_equipConcreteAttr.m_CriticalBonus + m_mainPointConcreteAttr.m_CriticalBonus + base.m_CriticalBonus; } }
         public override int m_HitRate { get { return m_equipConcreteAttr.m_HitRate + m_mainPointConcreteAttr.m_HitRate + base.m_HitRate; } }
         public override int m_DodgeRate { get { return m_equipConcreteAttr.m_DodgeRate + m_mainPointConcreteAttr.m_DodgeRate + base.m_DodgeRate; } }
+        public override int m_LifeSteal { get { return m_equipConcreteAttr.m_LifeSteal + m_mainPointConcreteAttr.m_LifeSteal + base.m_LifeSteal; } }
         public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
         public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
         public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
