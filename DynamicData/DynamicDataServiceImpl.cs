@@ -113,6 +113,9 @@ namespace MirRemakeBackend.DynamicData {
             cmd = "insert into `item` values(null," + item.m_itemId + "," + item.m_characterId + "," + item.m_num + ",\"" + item.m_place.ToString () + "\"," + item.m_position + ");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
+            if(ds.Tables[0].Rows.Count==0){
+                throw new Exception();
+            }
             return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
         public void UpdateEquipmentInfo (DDO_EquipmentInfo eq) {
@@ -209,6 +212,9 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
+            if(dt.Rows.Count==0){
+                throw new Exception();
+            }
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
             character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [0]));
             character.m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [1]));
@@ -325,6 +331,9 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
+            if(dt.Rows.Count==0){
+                throw new Exception();
+            }
             float x=float.Parse (dt.Rows[0]["x"].ToString ());
             float y=float.Parse (dt.Rows[0]["y"].ToString ());
             DDO_CharacterPosition cp=new DDO_CharacterPosition(charId,new System.Numerics.Vector2(x,y));
