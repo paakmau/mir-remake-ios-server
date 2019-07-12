@@ -245,6 +245,9 @@ namespace MirRemakeBackend.DataEntity {
     class DE_MissionTargetTalkToNpc {
         public readonly short m_id;
         public readonly short m_npcId;
+        public DE_MissionTargetTalkToNpc (DO_MissionTargetTalkToNpcData mtDo) {
+            m_id = mtDo.m_Id;
+        }
     }
     class DE_MissionTargetKillMonster {
         public readonly short m_id;

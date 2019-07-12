@@ -100,21 +100,21 @@ namespace MirRemakeBackend.Data {
 
             s_killMonster=new DO_MissionTargetKillMonsterData[killMonsterData.Count];
             for(int i=0;i<killMonsterData.Count;i++){
-                s_killMonster[i].m_Id=short.Parse(killMonsterData[i]["ID"].ToString());
+                s_killMonster[i].m_id=short.Parse(killMonsterData[i]["ID"].ToString());
                 s_killMonster[i].m_targetMonsterId=short.Parse(killMonsterData[i]["MonsterID"].ToString());
                 s_killMonster[i].m_targetNum=short.Parse(killMonsterData[i]["Num"].ToString());
             }
             
             s_gainItem=new DO_MissionTargetGainItemData[gainItemData.Count];
             for(int i=0;i<gainItemData.Count;i++){
-                s_gainItem[i].m_Id=short.Parse(gainItemData[i]["ID"].ToString());
+                s_gainItem[i].m_id=short.Parse(gainItemData[i]["ID"].ToString());
                 s_gainItem[i].m_targetItemId=short.Parse(gainItemData[i]["ItemID"].ToString());
                 s_gainItem[i].m_targetNum=short.Parse(gainItemData[i]["Num"].ToString());
             }
 
             s_levelUpSkill=new DO_MissionTargetLevelUpSkillData[levelUpSkillData.Count];
             for(int i=0;i<levelUpSkillData.Count;i++){
-                s_levelUpSkill[i].m_Id=short.Parse(levelUpSkillData[i]["ID"].ToString());
+                s_levelUpSkill[i].m_id=short.Parse(levelUpSkillData[i]["ID"].ToString());
                 s_levelUpSkill[i].m_targetSkillId=short.Parse(levelUpSkillData[i]["SkillID"].ToString());
                 s_levelUpSkill[i].m_targetLevel=short.Parse(levelUpSkillData[i]["Level"].ToString());
             }

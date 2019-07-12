@@ -120,29 +120,25 @@ namespace MirRemakeBackend.Data {
 
     struct DO_MissionTargetGainItemData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.GAIN_ITEM; } }
-        public short m_Id { get { return m_id; } set { m_id = value; } }
-        short m_id;
+        public short m_id;
         public short m_targetItemId;
         public short m_targetNum;
     }
     struct DO_MissionTargetKillMonsterData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.KILL_MONSTER; } }
-        short m_id;
-        public short m_Id { get { return m_id; } set { m_id = value; } }
+        public short m_id;
         public short m_targetMonsterId;
         public short m_targetNum;
     }
     struct DO_MissionTargetLevelUpSkillData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.LEVEL_UP_SKILL; } }
-        short m_id;
-        public short m_Id { get { return m_id; } set { m_id = value; } }
+        public short m_id;
         public short m_targetSkillId;
         public short m_targetLevel;
     }
     struct DO_MissionTargetTalkToNpcData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.TALK_TO_NPC; } }
-        short m_id;
-        public short m_Id { get { return m_id; } set { m_id = value; } }
+        public short m_id;
         public short m_targetNpcId;
         // 与NPC的对话
         public string[] m_conversation;
