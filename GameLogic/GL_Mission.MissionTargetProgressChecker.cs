@@ -56,7 +56,7 @@ namespace MirRemakeBackend.GameLogic {
                     return curProgs;
                 if (misId != log.m_misId)
                     return curProgs;
-                if (target.m_npcId != log.m_npcId)
+                if (target.m_tarId != log.m_misTarId)
                     return curProgs;
                 return 1;
             }

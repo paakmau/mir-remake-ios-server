@@ -56,10 +56,10 @@ namespace MirRemakeBackend.GameLogic
             }
         }
         public override void NetworkTick () { }
-        public void CommandApplyTalkToNpc (int netId, short npcId, short missionId) {
+        public void CommandApplyTalkToNpc (int netId, short misId, short misTarId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            GL_Log.s_instance.NotifyLog (GameLogType.TALK_TO_NPC, netId, npcId, missionId);
+            GL_Log.s_instance.NotifyLog (GameLogType.TALK_TO_NPC, netId, misId, misTarId);
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

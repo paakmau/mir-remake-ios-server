@@ -37,9 +37,9 @@ namespace MirRemakeBackend.Entity {
             m_curTick = GetNextTick (m_curTick);
             GetRawLogsCurTick ().Clear ();
         }
-        public E_Log CreateLog (GameLogType type, int parm1, int parm2, int parm3) {
+        public E_Log CreateLog (GameLogType type, int netId, int parm1, int parm2, int parm3) {
             var log = m_logFactory.GetLogInstance (type);
-            log.Reset (parm1, parm2, parm3);
+            log.Reset (netId, parm1, parm2, parm3);
             return log;
         }
     }
