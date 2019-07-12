@@ -5,10 +5,20 @@ using System;
 namespace MirRemakeBackend.Data {
     interface IDS_Mission {
         DO_Mission[] GetAllMission ();
+        DO_MissionTargetArrangement GetAllMissionDatas();
     }
     class DS_MissionImpl : IDS_Mission
     {
         private JsonData s_missionDatas;
+        private JsonData s_allData;
+        private MissionTargetKillMonsterData[] s_killMonster;
+        private JsonData killMonsterData;
+        private MissionTargetGainItemData[] s_gainItem;
+        private JsonData gainItemData;
+        private MissionTargetLevelUpSkillData[] s_levelUpSkill;
+        private JsonData levelUpSkillData;
+        private MissionTargetTalkToNpcData[] s_talkToNPC;
+        private JsonData talkToNPCData;
         public DO_Mission[] GetAllMission()
         {
             string jsonFile = File.ReadAllText("Data/D_Mission.json");
@@ -59,15 +69,14 @@ namespace MirRemakeBackend.Data {
                 mission.m_childrenMissionArr[i] = (short.Parse(tempData[i].ToString()));
             }
             tempData = s_missionDatas[ID]["MissionTarget"];
-            mission.m_missionTargetArr = new ValueTuple<MissionTargetType, short, int>[tempData.Count];
+            mission.m_missionTargetArr = new ValueTuple<MissionTargetType, short>[tempData.Count];
             for (int i = 0; i < tempData.Count; i++)
             {
                 String tempstr1 = tempData[i][0].ToString();
                 MissionTargetType mt = (MissionTargetType)Enum.Parse(typeof(MissionTargetType), tempstr1);
-                short parameter1 = short.Parse(tempData[i][1].ToString().Split(' ')[0]);
-                int parameter2 = int.Parse(tempData[i][1].ToString().Split(' ')[1]);
+                short parameter1 = short.Parse(tempData[i][1].ToString());
 
-                mission.m_missionTargetArr[i] = new ValueTuple<MissionTargetType, short, int>(mt, parameter1, parameter2);
+                mission.m_missionTargetArr[i] = new ValueTuple<MissionTargetType, short>(mt, parameter1);
 
 
             }
@@ -79,6 +88,47 @@ namespace MirRemakeBackend.Data {
                 mission.m_bonusItemIdAndNumArr[i]=(short.Parse(tempData[i].ToString().Split(' ')[0]), short.Parse(tempData[i].ToString().Split(' ')[1]));
             }
             return mission;
+        }
+        public DO_MissionTargetArrangement GetAllMissionDatas(){
+            string jsonFile = File.ReadAllText("Data/D_MissionTarget.json");
+            s_allData = JsonMapper.ToObject(jsonFile);
+
+            killMonsterData=s_allData["KILL_MONSTER"];
+            gainItemData=s_allData["GAIN_ITEM"];
+            levelUpSkillData=s_allData["LEVEL_UP_SKILL"];
+            talkToNPCData=s_allData["TALK_TO_NPC"];
+
+            s_killMonster=new MissionTargetKillMonsterData[killMonsterData.Count];
+            for(int i=0;i<killMonsterData.Count;i++){
+                s_killMonster[i].m_Id=short.Parse(killMonsterData[i]["ID"].ToString());
+                s_killMonster[i].m_targetMonsterId=short.Parse(killMonsterData[i]["MonsterID"].ToString());
+                s_killMonster[i].m_targetNum=short.Parse(killMonsterData[i]["Num"].ToString());
+            }
+            
+            s_gainItem=new MissionTargetGainItemData[gainItemData.Count];
+            for(int i=0;i<gainItemData.Count;i++){
+                s_gainItem[i].m_Id=short.Parse(gainItemData[i]["ID"].ToString());
+                s_gainItem[i].m_targetItemId=short.Parse(gainItemData[i]["ItemID"].ToString());
+                s_gainItem[i].m_targetNum=short.Parse(gainItemData[i]["Num"].ToString());
+            }
+
+            s_levelUpSkill=new MissionTargetLevelUpSkillData[levelUpSkillData.Count];
+            for(int i=0;i<levelUpSkillData.Count;i++){
+                s_levelUpSkill[i].m_Id=short.Parse(levelUpSkillData[i]["ID"].ToString());
+                s_levelUpSkill[i].m_targetSkillId=short.Parse(levelUpSkillData[i]["SkillID"].ToString());
+                s_levelUpSkill[i].m_targetLevel=short.Parse(levelUpSkillData[i]["Level"].ToString());
+            }
+
+            s_talkToNPC=new MissionTargetTalkToNpcData[talkToNPCData.Count];
+            for(int i=0;i<talkToNPCData.Count;i++){
+                s_talkToNPC[i].m_targetNpcId=short.Parse(talkToNPCData[i]["NPCID"].ToString());
+                s_talkToNPC[i].m_conversation=new string[talkToNPCData[i]["Conversation"].Count];
+                for(int j=0;j<talkToNPCData[i]["Conversation"].Count;j++){
+                    s_talkToNPC[i].m_conversation[i]=talkToNPCData[i]["Conversation"][j].ToString();
+                }
+            }
+
+            return new DO_MissionTargetArrangement(s_killMonster,s_gainItem,s_levelUpSkill,s_talkToNPC);
         }
     }
 }
