@@ -4,10 +4,10 @@ using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
-    class E_Mission {
+    abstract class E_Mission {
         private DE_Mission m_dataEntity;
         public (int, int) [] m_misTargetProgressArr;
-        public IReadOnlyList < (MissionTargetType, short, int) > m_MisTarget { get { return m_dataEntity.m_targetAndParamList; } }
+        public IReadOnlyList < (MissionTargetType, short) > m_MisTargetList { get { return m_dataEntity.m_targetList; } }
         public short m_MissionId { get { return m_dataEntity.m_id; } }
         public IReadOnlyList<short> m_ChildrenIdList { get { return m_dataEntity.m_childrenIdList; } }
         public long m_BonusVirtualCurrency { get { return m_dataEntity.m_bonusVirtualCurrency; } }
@@ -40,4 +40,5 @@ namespace MirRemakeBackend.Entity {
             return new DDO_Mission (m_MissionId, charId, status, progList);
         }
     }
+
 }
