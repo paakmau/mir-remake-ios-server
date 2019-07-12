@@ -65,7 +65,7 @@ namespace MirRemakeBackend.Network {
         REQUIRE_REFRESH_FIGHT_CAPACITY_RANK,
         // 技能升级
         APPLY_UPDATE_SKILL_LEVEL,
-        // 地面物品扔拾; 背包物品 使用, 交易
+        // 地面物品扔拾; 背包物品 使用, 交易等
         APPLY_PICK_UP_ITEM_ON_GROUND,
         APPLY_DROP_ITEM_ONTO_GROUND,
         APPLY_USE_CONSUMABLE_ITEM,
