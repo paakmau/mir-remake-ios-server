@@ -246,22 +246,38 @@ namespace MirRemakeBackend.DataEntity {
         public readonly short m_id;
         public readonly short m_npcId;
         public DE_MissionTargetTalkToNpc (DO_MissionTargetTalkToNpcData mtDo) {
-            m_id = mtDo.m_Id;
+            m_id = mtDo.m_id;
+            m_npcId = mtDo.m_targetNpcId;
         }
     }
     class DE_MissionTargetKillMonster {
         public readonly short m_id;
         public readonly short m_monsterId;
-        public readonly short m_num;
+        public readonly short m_targetNum;
+        public DE_MissionTargetKillMonster (DO_MissionTargetKillMonsterData mtDo) {
+            m_id = mtDo.m_id;
+            m_monsterId = mtDo.m_targetMonsterId;
+            m_targetNum = mtDo.m_targetNum;
+        }
     }
     class DE_MissionTargetGainItem {
         public readonly short m_id;
         public readonly short m_itemId;
-        public readonly short m_num;
+        public readonly short m_targetNum;
+        public DE_MissionTargetGainItem (DO_MissionTargetGainItemData mtDo) {
+            m_id = mtDo.m_id;
+            m_itemId = mtDo.m_targetItemId;
+            m_targetNum = mtDo.m_targetNum;
+        }
     }
     class DE_MissionTargetLevelUpSkill {
         public readonly short m_id;
         public readonly short m_skillId;
-        public readonly short m_lv;
+        public readonly short m_targetLv;
+        public DE_MissionTargetLevelUpSkill (DO_MissionTargetLevelUpSkillData mtDo) {
+            m_id = mtDo.m_id;
+            m_skillId = mtDo.m_targetLevel;
+            m_targetLv = mtDo.m_targetLevel;
+        }
     }
 }
