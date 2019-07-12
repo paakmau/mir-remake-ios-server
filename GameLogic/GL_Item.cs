@@ -255,7 +255,12 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < monLegacyList.Count; i++) {
                 short id = monLegacyList[i];
                 if (id >= 30000) {
-                    dropItemIdAndNumList.Add ((id, (short) (MyRandom.NextInt (1, 2))));
+                    if(id==30003){
+                        dropItemIdAndNumList.Add ((id, (short)1));
+                    }
+                    else{
+                        dropItemIdAndNumList.Add ((id, (short)(MyRandom.NextInt(1,2))));
+                    }
                 } else if (id >= 20000) {
                     bool drop = MyRandom.NextInt (0, 1000) <= 100;
                     if (drop)
