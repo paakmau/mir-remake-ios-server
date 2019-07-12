@@ -5,7 +5,7 @@ using System;
 namespace MirRemakeBackend.Data {
     interface IDS_Mission {
         DO_Mission[] GetAllMission ();
-        DO_MissionTargetArrangement GetAllMissionDatas();
+        ValueTuple<DO_MissionTargetKillMonsterData[],DO_MissionTargetGainItemData[],DO_MissionTargetLevelUpSkillData[],DO_MissionTargetTalkToNpcData[]> GetAllMissionDatas();
     }
     class DS_MissionImpl : IDS_Mission
     {
@@ -127,8 +127,10 @@ namespace MirRemakeBackend.Data {
                     s_talkToNPC[i].m_conversation[i]=talkToNPCData[i]["Conversation"][j].ToString();
                 }
             }
-
-            return new DO_MissionTargetArrangement(s_killMonster,s_gainItem,s_levelUpSkill,s_talkToNPC);
+            ValueTuple<DO_MissionTargetKillMonsterData[],DO_MissionTargetGainItemData[],DO_MissionTargetLevelUpSkillData[],DO_MissionTargetTalkToNpcData[]> res=
+                new ValueTuple<DO_MissionTargetKillMonsterData[],DO_MissionTargetGainItemData[],DO_MissionTargetLevelUpSkillData[],DO_MissionTargetTalkToNpcData[]>
+                (s_killMonster,s_gainItem,s_levelUpSkill,s_talkToNPC);
+            return res;
         }
     }
 }

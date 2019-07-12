@@ -144,17 +144,4 @@ namespace MirRemakeBackend.Data {
         public string[] m_conversation;
     }
 
-    struct DO_MissionTargetArrangement {
-        public readonly DO_MissionTargetKillMonsterData[] m_killMonster;
-        public readonly DO_MissionTargetGainItemData[] m_gainItem;
-        public readonly DO_MissionTargetLevelUpSkillData[] m_levelUpSkill;
-        public readonly DO_MissionTargetTalkToNpcData[] m_talkToNPC;
-
-        public DO_MissionTargetArrangement (DO_MissionTargetKillMonsterData[] monster, DO_MissionTargetGainItemData[] item, DO_MissionTargetLevelUpSkillData[] skill, DO_MissionTargetTalkToNpcData[] talk) {
-            m_killMonster = monster;
-            m_gainItem = item;
-            m_levelUpSkill = skill;
-            m_talkToNPC = talk;
-        }
-    }
 }
