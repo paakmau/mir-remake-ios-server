@@ -89,7 +89,7 @@ namespace MirRemakeBackend.Data {
             }
             return mission;
         }
-        public DO_MissionTargetArrangement GetAllMissionDatas(){
+        public ValueTuple<DO_MissionTargetKillMonsterData[],DO_MissionTargetGainItemData[],DO_MissionTargetLevelUpSkillData[],DO_MissionTargetTalkToNpcData[]>GetAllMissionDatas(){
             string jsonFile = File.ReadAllText("Data/D_MissionTarget.json");
             s_allData = JsonMapper.ToObject(jsonFile);
 
