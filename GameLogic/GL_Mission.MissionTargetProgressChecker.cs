@@ -1,0 +1,66 @@
+using System;
+using MirRemakeBackend.Entity;
+
+namespace MirRemakeBackend.GameLogic {
+    partial class GL_Mission {
+        private interface IMissionTargetProgressChecker {
+            MissionTargetType m_Type { get; }
+            int GetNewProgress (int netId, int misId, IMissionTarget itarget, int curProgs, E_Log logBase);
+        }
+        private class MTPC_KillMonster : IMissionTargetProgressChecker {
+            public MissionTargetType m_Type { get { return MissionTargetType.KILL_MONSTER; } }
+            public int GetNewProgress (int netId, int misId, IMissionTarget itarget, int curProgs, E_Log logBase) {
+                var target = itarget as E_MissionTargetKillMonster;
+                var log = logBase as E_KillMonsterLog;
+                if (log == null) return curProgs;
+                if (netId != log.m_killerNetId)
+                    return curProgs;
+                if (target.m_MonId != log.m_monId)
+                    return curProgs;
+                return Math.Min (target.m_TargetNum, curProgs + 1);
+            }
+        }
+        private class MTPC_LevelUpSkill : IMissionTargetProgressChecker {
+            public MissionTargetType m_Type { get { return MissionTargetType.LEVEL_UP_SKILL; } }
+            public int GetNewProgress (int netId, int misId, IMissionTarget itarget, int curProgs, E_Log logBase) {
+                var target = itarget as E_MissionTargetLevelUpSkill;
+                var log = logBase as E_LevelUpSkillLog;
+                if (log == null) return curProgs;
+                if (netId != log.m_netId)
+                    return curProgs;
+                if (target.m_SkillId != log.m_skillId)
+                    return curProgs;
+                return log.m_skillLv;
+            }
+        }
+        private class MTPC_GainItem : IMissionTargetProgressChecker {
+            public MissionTargetType m_Type { get { return MissionTargetType.GAIN_ITEM; } }
+            public int GetNewProgress (int netId, int misId, IMissionTarget itarget, int curProgs, E_Log logBase) {
+                var target = itarget as E_MissionTargetGainItem;
+                var log = logBase as E_GainItemLog;
+                if (log == null) return curProgs;
+                if (netId != log.m_netId)
+                    return curProgs;
+                if (target.m_ItemId != log.m_itemId)
+                    return curProgs;
+                return curProgs + log.m_deltaNum;
+            }
+        }
+        private class MTPC_TalkToNpc : IMissionTargetProgressChecker {
+            public MissionTargetType m_Type { get { return MissionTargetType.TALK_TO_NPC; } }
+            public int GetNewProgress (int netId, int misId, IMissionTarget itarget, int curProgs, E_Log logBase) {
+                var target = itarget as E_MissionTargetTalkToNpc;
+                var log = logBase as E_TalkToNpcLog;
+                if (log == null) return curProgs;
+                if (netId != log.m_netId)
+                    return curProgs;
+                if (misId != log.m_misId)
+                    return curProgs;
+                if (target.m_npcId != log.m_npcId)
+                    return curProgs;
+                return 1;
+            }
+        }
+
+    }
+}

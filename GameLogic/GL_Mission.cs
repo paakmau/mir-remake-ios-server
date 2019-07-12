@@ -4,65 +4,12 @@ using System.Linq;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
-namespace MirRemakeBackend.GameLogic {
+namespace MirRemakeBackend.GameLogic
+{
     /// <summary>
     /// 管理任务的接受, 放弃, 完成, 进度
     /// </summary>
-    class GL_Mission : GameLogicBase {
-        private interface IMissionTargetProgressChecker {
-            MissionTargetType m_Type { get; }
-            int GetNewProgress (int netId, int misId, (MissionTargetType, short, int) target, int curProgs, E_Log logBase);
-        }
-        private class MTPC_KillMonster : IMissionTargetProgressChecker {
-            public MissionTargetType m_Type { get { return MissionTargetType.KILL_MONSTER; } }
-            public int GetNewProgress (int netId, int misId, (MissionTargetType, short, int) target, int curProgs, E_Log logBase) {
-                var log = logBase as E_KillMonsterLog;
-                if (log == null) return curProgs;
-                if (netId != log.m_killerNetId)
-                    return curProgs;
-                if (target.Item2 != log.m_monId)
-                    return curProgs;
-                return Math.Min (target.Item3, curProgs + 1);
-            }
-        }
-        private class MTPC_LevelUpSkill : IMissionTargetProgressChecker {
-            public MissionTargetType m_Type { get { return MissionTargetType.LEVEL_UP_SKILL; } }
-            public int GetNewProgress (int netId, int misId, (MissionTargetType, short, int) target, int curProgs, E_Log logBase) {
-                var log = logBase as E_LevelUpSkillLog;
-                if (log == null) return curProgs;
-                if (netId != log.m_netId)
-                    return curProgs;
-                if (target.Item2 != log.m_skillId)
-                    return curProgs;
-                return log.m_skillLv;
-            }
-        }
-        private class MTPC_GainItem : IMissionTargetProgressChecker {
-            public MissionTargetType m_Type { get { return MissionTargetType.GAIN_ITEM; } }
-            public int GetNewProgress (int netId, int misId, (MissionTargetType, short, int) target, int curProgs, E_Log logBase) {
-                var log = logBase as E_GainItemLog;
-                if (log == null) return curProgs;
-                if (netId != log.m_netId)
-                    return curProgs;
-                if (target.Item2 != log.m_itemId)
-                    return curProgs;
-                return curProgs + log.m_deltaNum;
-            }
-        }
-        private class MTPC_TalkToNpc : IMissionTargetProgressChecker {
-            public MissionTargetType m_Type { get { return MissionTargetType.TALK_TO_NPC; } }
-            public int GetNewProgress (int netId, int misId, (MissionTargetType, short, int) target, int curProgs, E_Log logBase) {
-                var log = logBase as E_TalkToNpcLog;
-                if (log == null) return curProgs;
-                if (netId != log.m_netId)
-                    return curProgs;
-                if (misId != log.m_misId)
-                    return curProgs;
-                if (target.Item2 != log.m_npcId)
-                    return curProgs;
-                return 1;
-            }
-        }
+    partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;
         private Dictionary<MissionTargetType, IMissionTargetProgressChecker> m_progressCheckerDict = new Dictionary<MissionTargetType, IMissionTargetProgressChecker> ();
         public GL_Mission (INetworkService ns) : base (ns) {
@@ -88,17 +35,16 @@ namespace MirRemakeBackend.GameLogic {
                     while (misEn.MoveNext ()) {
                         var misId = misEn.Current.Key;
                         var misObj = misEn.Current.Value;
-                        var misTars = misObj.m_MisTarget;
-                        var misProgs = misObj.m_misTargetProgressArr;
+                        var misTars = misObj.m_tarList;
                         bool dirty = false;
                         for (int j = 0; j < misTars.Count; j++) {
-                            var checker = m_progressCheckerDict[misTars[j].Item1];
-                            var curProgs = misProgs[j].Item1;
+                            var checker = m_progressCheckerDict[misTars[j].m_Type];
+                            var curProgs = misTars[j].m_Progress;
                             var newProgs = checker.GetNewProgress (charNetId, misId, misTars[j], curProgs, logObj);
                             // 任务进度更新
                             if (curProgs != newProgs) {
                                 // client
-                                misProgs[j].Item1 = newProgs;
+                                misTars[j].m_Progress = newProgs;
                                 dirty = true;
                                 m_networkService.SendServerCommand (SC_ApplySelfMissionProgress.Instance (charNetId, misId, (byte) j, newProgs));
                             }
@@ -160,12 +106,6 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Mission.s_instance.RemoveCharacter (netId);
-        }
-        private void UpdateMissionProgress (E_Mission mis, int i, int deltaV, int netId) {
-            mis.m_misTargetProgressArr[i].Item1++;
-            // client
-            m_networkService.SendServerCommand (SC_ApplySelfMissionProgress.Instance (
-                netId, mis.m_MissionId, (byte) i, mis.m_misTargetProgressArr[i].Item1));
         }
     }
 }

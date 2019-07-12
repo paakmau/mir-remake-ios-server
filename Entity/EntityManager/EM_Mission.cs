@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Util;
@@ -8,7 +10,78 @@ namespace MirRemakeBackend.Entity {
     /// 索引所有Character的可接, 不可接, 已接任务
     /// </summary>
     class EM_Mission : EntityManagerBase {
+        private class MissionFactory {
+            private interface IMissionTargetReseter {
+                MissionTargetType m_Type { get; }
+                void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem);
+            }
+            private class MTR_TalkToNpc : IMissionTargetReseter {
+                public MissionTargetType m_Type { get { return MissionTargetType.TALK_TO_NPC; } }
+                public void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem) {
+                    var de = dem.GetMissionTargetTalkToNpcById (tarId);
+                    (resMt as E_MissionTargetTalkToNpc).Reset (de.m_npcId);
+                }
+            }
+            private class MTR_KillMonster : IMissionTargetReseter {
+                public MissionTargetType m_Type { get { return MissionTargetType.KILL_MONSTER; } }
+                public void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem) {
+                    var de = dem.GetMissionTargetKillMonster (tarId);
+                    (resMt as E_MissionTargetKillMonster).Reset (de, progress);
+                }
+            }
+            private class MTR_GainItem : IMissionTargetReseter {
+                public MissionTargetType m_Type { get { return MissionTargetType.GAIN_ITEM; } }
+                public void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem) {
+                    var de = dem.GetMissionTargetGainItem (tarId);
+                    (resMt as E_MissionTargetGainItem).Reset (de, progress);
+                }
+            }
+            private class MTR_LevelUpSkill : IMissionTargetReseter {
+                public MissionTargetType m_Type { get { return MissionTargetType.LEVEL_UP_SKILL; } }
+                public void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem) {
+                    var de = dem.GetMissionTargetLevelUpSkill (tarId);
+                    (resMt as E_MissionTargetLevelUpSkill).Reset (de, progress);
+                }
+            }
+            private const int c_missionPoolSize = 400;
+            private const int c_misTarPoolSize = 400;
+            private DEM_Mission m_dem;
+            private ObjectPool<E_Mission> m_misPool = new ObjectPool<E_Mission> (c_missionPoolSize);
+            private Dictionary<MissionTargetType, ObjectPool> m_misTarPoolDict = new Dictionary<MissionTargetType, ObjectPool> () { { MissionTargetType.GAIN_ITEM, new ObjectPool<E_MissionTargetGainItem> (c_misTarPoolSize) }, { MissionTargetType.KILL_MONSTER, new ObjectPool<E_MissionTargetKillMonster> (c_misTarPoolSize) }, { MissionTargetType.LEVEL_UP_SKILL, new ObjectPool<E_MissionTargetLevelUpSkill> (c_misTarPoolSize) }, { MissionTargetType.TALK_TO_NPC, new ObjectPool<E_MissionTargetTalkToNpc> (c_misTarPoolSize) } };
+            private Dictionary<MissionTargetType, IMissionTargetReseter> m_misTarReseterDict = new Dictionary<MissionTargetType, IMissionTargetReseter> ();
+            public MissionFactory (DEM_Mission dem) {
+                m_dem = dem;
+                // 实例化所有 MTR 接口的实现类
+                var type = typeof (IMissionTargetReseter);
+                var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && type.IsAssignableFrom (p));
+                foreach (var implType in implTypes) {
+                    IMissionTargetReseter implObj = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IMissionTargetReseter;
+                    m_misTarReseterDict.Add (implObj.m_Type, implObj);
+                }
+            }
+            public E_Mission GetInstance (short misId, List<int> misTarProgressList) {
+                var res = m_misPool.GetInstance ();
+                var de = m_dem.GetMissionById (misId);
+                var misTarList = new List<IMissionTarget> (de.m_targetList.Count);
+                for (int i = 0; i < de.m_targetList.Count; i++) {
+                    var type = de.m_targetList[i].Item1;
+                    var tarId = de.m_targetList[i].Item2;
+                    var progress = (misTarProgressList == null || misTarProgressList.Count <= i) ? 0 : misTarProgressList[i];
+                    var tar = m_misTarPoolDict[type].GetInstanceObj () as IMissionTarget;
+                    m_misTarReseterDict[type].Reset (tar, tarId, progress, m_dem);
+                    misTarList.Add (tar);
+                }
+                res.Reset (de, misTarList);
+                return res;
+            }
+            public void RecycleInstance (E_Mission mis) {
+                for (int i = 0; i < mis.m_tarList.Count; i++)
+                    m_misTarPoolDict[mis.m_tarList[i].m_Type].RecycleInstance (mis.m_tarList[i]);
+                m_misPool.RecycleInstance (mis);
+            }
+        }
         public static EM_Mission s_instance;
+        private MissionFactory m_fact;
         private DEM_Mission m_dem;
         private IDDS_Mission m_dds;
         /// <summary>已接任务</summary>
@@ -17,7 +90,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, HashSet<short>> m_acceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
-        public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_dds = dds; }
+        public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_fact = new MissionFactory (dem); m_dds = dds; }
         public void InitCharacter (int netId, int charId, out List<short> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
@@ -36,8 +109,7 @@ namespace MirRemakeBackend.Entity {
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
                 if (ddoList[i].m_status != MissionStatus.ACCEPTED) continue;
-                E_Mission mis = s_entityPool.m_missionPool.GetInstance ();
-                mis.Reset (m_dem.GetMissionById (ddoList[i].m_missionId), ddoList[i]);
+                E_Mission mis = m_fact.GetInstance (ddoList[i].m_missionId, ddoList[i].m_missionTargetProgressList);
                 acceptedMissionDict[ddoList[i].m_missionId] = mis;
             }
             m_acceptedMissionDict.Add (netId, acceptedMissionDict);
@@ -49,11 +121,10 @@ namespace MirRemakeBackend.Entity {
             m_unacceptableMissionDict.Add (netId, unacceptableMissionSet);
             for (int i = 0; i < ddoList.Count; i++) {
                 if (ddoList[i].m_status == MissionStatus.ACCEPTED) continue;
-                var de = m_dem.GetMissionById (ddoList[i].m_missionId);
                 if (ddoList[i].m_status == MissionStatus.ACCEPTABLE)
-                    acceptableMissionSet.Add (de.m_id);
+                    acceptableMissionSet.Add (ddoList[i].m_missionId);
                 else
-                    unacceptableMissionSet.Add (de.m_id);
+                    unacceptableMissionSet.Add (ddoList[i].m_missionId);
             }
 
             // 返回
@@ -70,7 +141,7 @@ namespace MirRemakeBackend.Entity {
             m_acceptedMissionDict.Remove (netId);
             var mEn = mDict.Values.GetEnumerator ();
             while (mEn.MoveNext ())
-                s_entityPool.m_missionPool.RecycleInstance (mEn.Current);
+                m_fact.RecycleInstance (mEn.Current);
         }
         public Dictionary<int, Dictionary<short, E_Mission>>.Enumerator GetAllCharMisEn () {
             return m_acceptedMissionDict.GetEnumerator ();
@@ -99,8 +170,7 @@ namespace MirRemakeBackend.Entity {
             if (!acceptableSet.Contains (misId))
                 return null;
             // 实例化任务
-            E_Mission mis = s_entityPool.m_missionPool.GetInstance ();
-            mis.Reset (m_dem.GetMissionById (misId));
+            E_Mission mis = m_fact.GetInstance (misId, null);
             // 处理可接 已接
             acceptableSet.Remove (misId);
             acceptedDict[misId] = mis;
@@ -126,7 +196,7 @@ namespace MirRemakeBackend.Entity {
                 return;
             // 交付任务 并 回收实例
             acceptedDict.Remove (mis.m_MissionId);
-            s_entityPool.m_missionPool.RecycleInstance (mis);
+            m_fact.RecycleInstance (mis);
             // 后续任务解锁
             resNewAcceptableMis = new List<short> ();
             resNewUnacceptableMis = new List<short> ();
@@ -158,11 +228,11 @@ namespace MirRemakeBackend.Entity {
                 return;
             // 放弃任务 并 回收实例
             acceptedDict.Remove (mis.m_MissionId);
-            s_entityPool.m_missionPool.RecycleInstance (mis);
+            m_fact.RecycleInstance (mis);
             acceptableSet.Add (mis.m_MissionId);
 
             // 持久化
-            m_dds.UpdateMission (mis.GetDdo(charId, MissionStatus.ACCEPTABLE));
+            m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTABLE));
         }
         public void UpdateMission (int charId, E_Mission mis) {
             m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
