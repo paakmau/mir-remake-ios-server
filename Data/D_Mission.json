@@ -141,7 +141,7 @@
 	"BonusMoney":600,
 	"BonusExperience":1100,
 	"BonusItems":["0 5"],
-	"MissionTarget":[["GAIN_ITEMS","0"]]
+	"MissionTarget":[["GAIN_ITEM","0"]]
 },{
 	"MissionID":9,
 	"Title":"炼金术师",
@@ -173,7 +173,7 @@
 	"BonusMoney":700,
 	"BonusExperience":1300,
 	"BonusItems":["0 5"],
-	"MissionTarget":[["GAIN_ITEMS","0"]]
+	"MissionTarget":[["GAIN_ITEM","0"]]
 },{
 	"MissionID":11,
 	"Title":"技能提升",
@@ -188,8 +188,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20023 1","20029 1","20043"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","0"]]
+	"BonusItems":["20023 1","20029 1","20043 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","0"]]
 },{
 	"MissionID":12,
 	"Title":"技能提升",
@@ -204,8 +204,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20243 1","20249 1","20263"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","1"]]
+	"BonusItems":["20243 1","20249 1","20263 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","1"]]
 },{
 	"MissionID":13,
 	"Title":"技能提升",
@@ -220,8 +220,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20463 1","20469 1","20483"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","2"]]
+	"BonusItems":["20463 1","20469 1","20483 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","2"]]
 },{
 	"MissionID":14,
 	"Title":"技能提升",
@@ -236,8 +236,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20683 1","20689 1","20803"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","3"]]
+	"BonusItems":["20683 1","20689 1","20803 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","3"]]
 },{
 	"MissionID":15,
 	"Title":"恐惧魔王",
@@ -301,7 +301,7 @@
 	"BonusMoney":1500,
 	"BonusExperience":1700,
 	"BonusItems":["1 5"],
-	"MissionTarget":[["GAIN_ITEMS","2"]]
+	"MissionTarget":[["GAIN_ITEM","2"]]
 },{
 	"MissionID":19,
 	"Title":"强力混合",
@@ -397,7 +397,7 @@
 	"BonusMoney":3300,
 	"BonusExperience":3400,
 	"BonusItems":["2 5"],
-	"MissionTarget":[["GAIN_ITEMS","4"]]
+	"MissionTarget":[["GAIN_ITEM","4"]]
 },{
 	"MissionID":25,
 	"Title":"蜥蜴腹鳞",
@@ -413,7 +413,7 @@
 	"BonusMoney":3700,
 	"BonusExperience":3500,
 	"BonusItems":["2 5"],
-	"MissionTarget":[["GAIN_ITEMS","5"]]
+	"MissionTarget":[["GAIN_ITEM","5"]]
 },{
 	"MissionID":26,
 	"Title":"最后一样材料",
@@ -445,7 +445,7 @@
 	"BonusMoney":4500,
 	"BonusExperience":3700,
 	"BonusItems":["2 5"],
-	"MissionTarget":[["GAIN_ITEMS","6"]]
+	"MissionTarget":[["GAIN_ITEM","6"]]
 },{
 	"MissionID":28,
 	"Title":"收集乌鸡蛋",
@@ -461,7 +461,7 @@
 	"BonusMoney":5150,
 	"BonusExperience":3800,
 	"BonusItems":["2 5"],
-	"MissionTarget":[["GAIN_ITEMS","7"]]
+	"MissionTarget":[["GAIN_ITEM","7"]]
 },{
 	"MissionID":29,
 	"Title":"奇怪的文字",
@@ -525,7 +525,7 @@
 	"BonusMoney":7750,
 	"BonusExperience":6000,
 	"BonusItems":["2 5"],
-	"MissionTarget":[["GAIN_ITEMS","30008 5"]]
+	"MissionTarget":[["GAIN_ITEM","8"]]
 },{
 	"MissionID":33,
 	"Title":"程家兄弟（二）",
@@ -556,7 +556,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":9700,
 	"BonusExperience":8000,
-	"BonusItems":["20067 1","20073 1","20087"],
+	"BonusItems":["20067 1","20073 1","20087 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":35,
@@ -572,7 +572,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":10350,
 	"BonusExperience":9000,
-	"BonusItems":["20287 1","20293 1","20307"],
+	"BonusItems":["20287 1","20293 1","20307 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":36,
@@ -588,7 +588,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":10350,
 	"BonusExperience":9000,
-	"BonusItems":["20407 1","20413 1","20427"],
+	"BonusItems":["20407 1","20413 1","20427 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":37,
@@ -604,7 +604,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":9700,
 	"BonusExperience":9000,
-	"BonusItems":["20627 1","20633 1","20647"],
+	"BonusItems":["20627 1","20633 1","20647 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":38,
@@ -637,7 +637,7 @@
 	"BonusMoney":11300,
 	"BonusExperience":10000,
 	"BonusItems":["3 5"],
-	"MissionTarget":[["GAIN_ITEMS","9"]]
+	"MissionTarget":[["GAIN_ITEM","9"]]
 },{
 	"MissionID":40,
 	"Title":"冰脉石",
@@ -717,7 +717,7 @@
 	"BonusMoney":15300,
 	"BonusExperience":15000,
 	"BonusItems":["3 5"],
-	"MissionTarget":[["GAIN_ITEMS","11"]]
+	"MissionTarget":[["GAIN_ITEM","11"]]
 },{
 	"MissionID":45,
 	"Title":"请来援手",
@@ -781,7 +781,7 @@
 	"BonusMoney":18700,
 	"BonusExperience":20500,
 	"BonusItems":["4 5"],
-	"MissionTarget":[["GAIN_ITEMS","12"]]
+	"MissionTarget":[["GAIN_ITEM","12"]]
 },{
 	"MissionID":49,
 	"Title":"冰霜教主",
@@ -893,7 +893,7 @@
 	"BonusMoney":25700,
 	"BonusExperience":31000,
 	"BonusItems":["4 5"],
-	"MissionTarget":[["GAIN_ITEMS","13"]]
+	"MissionTarget":[["GAIN_ITEM","13"]]
 },{
 	"MissionID":56,
 	"Title":"垂死之人",
@@ -925,7 +925,7 @@
 	"BonusMoney":27700,
 	"BonusExperience":35000,
 	"BonusItems":["5 5"],
-	"MissionTarget":[["GAIN_ITEMS","14"]]
+	"MissionTarget":[["GAIN_ITEM","14"]]
 },{
 	"MissionID":58,
 	"Title":"乐于助人的奖赏",
@@ -940,7 +940,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":28700,
 	"BonusExperience":37500,
-	"BonusItems":["20111 1","20117 1","20131"],
+	"BonusItems":["20111 1","20117 1","20131 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":59,
@@ -956,7 +956,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":29700,
 	"BonusExperience":40000,
-	"BonusItems":["20331 ","20337 1","20351"],
+	"BonusItems":["20331 1","20337 1","20351 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":60,
@@ -972,7 +972,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":29700,
 	"BonusExperience":40000,
-	"BonusItems":["20551 1","20557 1","20571"],
+	"BonusItems":["20551 1","20557 1","20571 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":61,
@@ -988,7 +988,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":29700,
 	"BonusExperience":40000,
-	"BonusItems":["20671 1","20677 1","20691"],
+	"BonusItems":["20671 1","20677 1","20691 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":62,
@@ -1069,7 +1069,7 @@
 	"BonusMoney":33700,
 	"BonusExperience":50000,
 	"BonusItems":["5 5"],
-	"MissionTarget":[["GAIN_ITEMS","15"]]
+	"MissionTarget":[["GAIN_ITEM","15"]]
 },{
 	"MissionID":67,
 	"Title":"多谢相助",
@@ -1181,7 +1181,7 @@
 	"BonusMoney":42050,
 	"BonusExperience":69500,
 	"BonusItems":["6 5"],
-	"MissionTarget":[["GAIN_ITEMS","16"]]
+	"MissionTarget":[["GAIN_ITEM","16"]]
 },{
 	"MissionID":74,
 	"Title":"以绝后患",
@@ -1261,7 +1261,7 @@
 	"BonusMoney":49300,
 	"BonusExperience":87000,
 	"BonusItems":["6 5"],
-	"MissionTarget":[["GAIN_ITEMS","17"]]
+	"MissionTarget":[["GAIN_ITEM","17"]]
 },{
 	"MissionID":79,
 	"Title":"传达捷报",
@@ -1341,7 +1341,7 @@
 	"BonusMoney":56550,
 	"BonusExperience":104500,
 	"BonusItems":["7 5"],
-	"MissionTarget":[["GAIN_ITEMS","18"]]
+	"MissionTarget":[["GAIN_ITEM","18"]]
 },{
 	"MissionID":84,
 	"Title":"城中恶霸",
@@ -1373,7 +1373,7 @@
 	"BonusMoney":59450,
 	"BonusExperience":118500,
 	"BonusItems":["7 5"],
-	"MissionTarget":[["GAIN_ITEMS","19"]]
+	"MissionTarget":[["GAIN_ITEM","19"]]
 },{
 	"MissionID":86,
 	"Title":"城门禁卫",
@@ -1533,7 +1533,7 @@
 	"BonusMoney":77450,
 	"BonusExperience":155000,
 	"BonusItems":["8 5"],
-	"MissionTarget":[["GAIN_ITEMS","20"]]
+	"MissionTarget":[["GAIN_ITEM","20"]]
 },{
 	"MissionID":96,
 	"Title":"木阵枢",

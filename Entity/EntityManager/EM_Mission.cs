@@ -55,7 +55,7 @@ namespace MirRemakeBackend.Entity {
                 var type = typeof (IMissionTargetReseter);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => p.IsClass && type.IsAssignableFrom (p));
                 foreach (var implType in implTypes) {
-                    IMissionTargetReseter implObj = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IMissionTargetReseter;
+                    IMissionTargetReseter implObj = implType.GetConstructor (Type.EmptyTypes).Invoke (null) as IMissionTargetReseter;
                     m_misTarReseterDict.Add (implObj.m_Type, implObj);
                 }
             }

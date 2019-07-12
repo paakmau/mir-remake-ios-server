@@ -111,8 +111,10 @@ namespace MirRemakeBackend.Data {
             }
 
             m_talkToNPC = new DO_MissionTargetTalkToNpcData[talkToNPCData.Count];
-            for (int i = 0; i < talkToNPCData.Count; i++)
+            for (int i = 0; i < talkToNPCData.Count; i++) {
+                m_talkToNPC[i].m_id = short.Parse (talkToNPCData[i]["ID"].ToString ());
                 m_talkToNPC[i].m_targetNpcId = short.Parse (talkToNPCData[i]["NPCID"].ToString ());
+            }
             ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[], DO_MissionTargetTalkToNpcData[]> res =
                 new ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[], DO_MissionTargetTalkToNpcData[]>
                 (m_killMonster, m_gainItem, m_levelUpSkill, m_talkToNPC);
