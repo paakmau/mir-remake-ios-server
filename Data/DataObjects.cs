@@ -118,47 +118,47 @@ namespace MirRemakeBackend.Data {
         public ValueTuple<short, ValueTuple<CurrencyType, int>[]> m_itemIdAndPrice;
     }
 
-    struct MissionTargetGainItemData : I_MissionTargetData {
+    struct DO_MissionTargetGainItemData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.GAIN_ITEM; } }
-        public short m_Id { get { return m_id; }set {m_id=value;} }
+        public short m_Id { get { return m_id; } set { m_id = value; } }
         short m_id;
         public short m_targetItemId;
         public short m_targetNum;
     }
-    struct MissionTargetKillMonsterData : I_MissionTargetData {
+    struct DO_MissionTargetKillMonsterData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.KILL_MONSTER; } }
         short m_id;
-        public short m_Id { get { return m_id; }set {m_id=value;} }
+        public short m_Id { get { return m_id; } set { m_id = value; } }
         public short m_targetMonsterId;
         public short m_targetNum;
     }
-    struct MissionTargetLevelUpSkillData : I_MissionTargetData {
+    struct DO_MissionTargetLevelUpSkillData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.LEVEL_UP_SKILL; } }
         short m_id;
-        public short m_Id { get { return m_id; } set {m_id=value;}}
+        public short m_Id { get { return m_id; } set { m_id = value; } }
         public short m_targetSkillId;
         public short m_targetLevel;
     }
-    struct MissionTargetTalkToNpcData : I_MissionTargetData {
+    struct DO_MissionTargetTalkToNpcData {
         public MissionTargetType m_TargetType { get { return MissionTargetType.TALK_TO_NPC; } }
         short m_id;
-        public short m_Id { get { return m_id; }set {m_id=value;} }
+        public short m_Id { get { return m_id; } set { m_id = value; } }
         public short m_targetNpcId;
         // 与NPC的对话
         public string[] m_conversation;
     }
 
-    struct DO_MissionTargetArrangement{
-        public readonly MissionTargetKillMonsterData[] m_killMonster;
-        public readonly MissionTargetGainItemData[] m_gainItem;
-        public readonly MissionTargetLevelUpSkillData[] m_levelUpSkill;
-        public readonly MissionTargetTalkToNpcData[] m_talkToNPC;
+    struct DO_MissionTargetArrangement {
+        public readonly DO_MissionTargetKillMonsterData[] m_killMonster;
+        public readonly DO_MissionTargetGainItemData[] m_gainItem;
+        public readonly DO_MissionTargetLevelUpSkillData[] m_levelUpSkill;
+        public readonly DO_MissionTargetTalkToNpcData[] m_talkToNPC;
 
-        public DO_MissionTargetArrangement(MissionTargetKillMonsterData[] monster,MissionTargetGainItemData[] item, MissionTargetLevelUpSkillData[] skill, MissionTargetTalkToNpcData[] talk){
-            m_killMonster=monster;
-            m_gainItem=item;
-            m_levelUpSkill=skill;
-            m_talkToNPC=talk;
+        public DO_MissionTargetArrangement (DO_MissionTargetKillMonsterData[] monster, DO_MissionTargetGainItemData[] item, DO_MissionTargetLevelUpSkillData[] skill, DO_MissionTargetTalkToNpcData[] talk) {
+            m_killMonster = monster;
+            m_gainItem = item;
+            m_levelUpSkill = skill;
+            m_talkToNPC = talk;
         }
     }
 }

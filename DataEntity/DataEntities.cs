@@ -227,7 +227,7 @@ namespace MirRemakeBackend.DataEntity {
         /// 例: 与Npc交流 Id参数为NpcId 数值参数为1  
         /// 例: 击杀怪物 Id参数为怪物Id 数值参数为要击杀的怪物数量  
         /// </summary>
-        public readonly IReadOnlyList < (MissionTargetType, short, int) > m_targetAndParamList;
+        public readonly IReadOnlyList < (MissionTargetType, short) > m_targetIdList;
         public readonly long m_bonusVirtualCurrency;
         public readonly int m_bonusExperience;
         public readonly IReadOnlyList < (short, short) > m_bonusItemIdAndNumList;
@@ -236,10 +236,29 @@ namespace MirRemakeBackend.DataEntity {
             m_occupation = mDo.m_missionOccupation;
             m_levelInNeed = mDo.m_levelInNeed;
             m_childrenIdList = new List<short> (mDo.m_childrenMissionArr);
-            m_targetAndParamList = new List<ValueTuple<MissionTargetType, short, int>> (mDo.m_missionTargetArr);
+            m_targetIdList = new List<ValueTuple<MissionTargetType, short>> (mDo.m_missionTargetArr);
             m_bonusVirtualCurrency = mDo.m_bonusMoney;
             m_bonusExperience = mDo.m_bonusExperience;
             m_bonusItemIdAndNumList = new List<ValueTuple<short, short>> (mDo.m_bonusItemIdAndNumArr);
         }
+    }
+    class DE_MissionTargetTalkToNpc {
+        public readonly short m_id;
+        public readonly short m_npcId;
+    }
+    class DE_MissionTargetKillMonster {
+        public readonly short m_id;
+        public readonly short m_monsterId;
+        public readonly short m_num;
+    }
+    class DE_MissionTargetGainItem {
+        public readonly short m_id;
+        public readonly short m_itemId;
+        public readonly short m_num;
+    }
+    class DE_MissionTargetLevelUpSkill {
+        public readonly short m_id;
+        public readonly short m_skillId;
+        public readonly short m_lv;
     }
 }
