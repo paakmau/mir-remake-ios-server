@@ -148,6 +148,54 @@ namespace MirRemakeBackend.Network {
             GL_Mall.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
         }
     }
+    class CC_ApplyBuildEquipment : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUILD_EQUIPMENT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            byte matNum = reader.GetByte ();
+            var matArr = new (short, short) [matNum];
+            for (int i = 0; i < matNum; i++) {
+                short itemId = reader.GetShort ();
+                short itemNum = reader.GetShort ();
+                matArr[i] = (itemId, itemNum);
+            }
+            GL_Item.s_instance.CommandApplyBuildEquipment (netId, matArr);
+        }
+    }
+    class CC_ApplyStrengthenEquipment : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_STRENGTHEN_EQUPMENT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long realId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyStrengthenEquipment (netId, realId);
+        }
+    }
+    class CC_ApplyEnchantEquipment : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ENCHANT_EQUIPMENT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            // TODO: 附魔需要新的 DDS 接口
+        }
+    }
+    class CC_ApplyInlayGemInEquipment : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_INLAY_GEM_IN_EQUIPMENT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long equipmentRealId = reader.GetLong ();
+            long gemRealId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyInlayGemInEquipment (netId, equipmentRealId, gemRealId);
+        }
+    }
+    class CC_ApplyMakeHoleInEquipment : IClientCommand {
+        public NetworkToServerDataType m_DataType { get {return NetworkToServerDataType.APPLY_MAKE_HOLE_IN_EQUIPMENT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long equipmentRealId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyMakeHoleInEquipment (netId, equipmentRealId);
+        }
+    }
+    class CC_ApplyDisjointEquipment : IClientCommand {
+        public NetworkToServerDataType m_DataType { get {return NetworkToServerDataType.APPLY_DISJOINT_EQUIPMENT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long equipmentRealId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyDisjointEquipment (netId, equipmentRealId);
+        }
+    }
     /// <summary>
     /// 接受任务
     /// </summary>

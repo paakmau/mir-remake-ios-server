@@ -170,6 +170,21 @@ namespace MirRemakeBackend.GameLogic {
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
             NotifyCharacterSwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
+        public void CommandApplyBuildEquipment (int netId, (short, short)[] matArr) {
+            // TODO: 打造装备
+        }
+        public void CommandApplyStrengthenEquipment (int netId, long realId) {
+            // TODO: 强化装备
+        }
+        public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
+            // TODO: 镶嵌宝石
+        }
+        public void CommandApplyMakeHoleInEquipment (int netId, long eqRealId) {
+            // TODO: 装备打孔
+        }
+        public void CommandApplyDisjointEquipment (int netId, long eqRealId) {
+            // TODO: 分解装备
+        }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
             EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
