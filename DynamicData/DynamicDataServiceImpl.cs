@@ -344,7 +344,7 @@ namespace MirRemakeBackend.DynamicData {
             cmd = "select * from `user` where user_name=\"" + username + "\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            if (ds.Tables[0].Rows.Count != 0) {
+            if (ds.Tables[0].Rows.Count == 0) {
                 resUser = default (DDO_User);
                 return false;
             }
@@ -357,6 +357,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet ();
             cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\" where `userid`=" + ddo.m_playerId + ";";
             string database = "legend";
+            //Console.WriteLine(cmd);
             pool.ExecuteSql (database, cmd);
         }
 
@@ -364,11 +365,19 @@ namespace MirRemakeBackend.DynamicData {
             DDO_User temp = new DDO_User (0, "", "");
             if (!GetUserByUsername (ddo.m_username, out temp)) {
                 string cmd;
-                DataSet ds = new DataSet ();
+                DataSet ds = new DataSet (); <<
+                <<<<< HEAD
                 cmd = "insert into `user` values(null,\"" + ddo.m_username + "\"+,\"" + ddo.m_pwd + "\");select last_insert_id();";
                 string database = "legend";
                 pool.ExecuteSql (database, cmd, ds);
-                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
+                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ()); ==
+                == == =
+                cmd = "insert into `user` values(null,\"" + ddo.m_username + "\",\"" + ddo.m_pwd + "\");select last_insert_id();";
+                string database = "legend";
+                //Console.WriteLine(cmd);
+                pool.ExecuteSql (database, cmd, ds);
+                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ()); >>
+                >>>>> 063 d08ac69c32b4f1a4a0bf295d148416a0c6de0
             }
             return -1;
         }

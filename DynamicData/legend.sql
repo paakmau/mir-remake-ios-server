@@ -56,7 +56,7 @@ create table `mission`(
 
 DROP TABLE IF EXISTS `character_position`;
 CREATE TABLE `character_position` (
-  `charid` int NOT NULL,
+  `charid` int NOT NULL AUTO_INCREMENT,
   `x` VARCHAR(20),
   `y` VARCHAR(20),
    primary key (`charid`)
