@@ -1,6 +1,7 @@
 namespace MirRemakeBackend.Network {
     enum NetworkToClientDataType : byte {
         // 未进入游戏
+        INIT_SELF_NETWORK_ID,
         INIT_SELF_REGISTER,
         INIT_SELF_LOGIN,
         INIT_SELF_CREATE_CHARACTER,
