@@ -102,6 +102,14 @@ namespace MirRemakeBackend.Network {
             m_inlaidGemIdList = gemIdList;
         }
     }
+    struct NO_EnchantmentItemInfo {
+        public long m_realId;
+        public IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_attrList;
+        public NO_EnchantmentItemInfo (long realId, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > attrList) {
+            m_realId = realId;
+            m_attrList = attrList;
+        }
+    }
     struct NO_Repository {
         public IReadOnlyList<NO_Item> m_itemList;
         public IReadOnlyList<NO_EquipmentItemInfo> m_equipmentInfoList;
@@ -252,6 +260,25 @@ namespace MirRemakeBackend.Network {
             for (int i = 0; i < gemNum; i++)
                 gemIdList.Add (reader.GetShort ());
             return new NO_EquipmentItemInfo (realId, strengthNum, enchantAttrList, gemIdList);
+        }
+        public static void Put (this NetDataWriter writer, NO_EnchantmentItemInfo enchantmentInfo) {
+            writer.Put (enchantmentInfo.m_realId);
+            writer.Put ((byte) enchantmentInfo.m_attrList.Count);
+            for (int i = 0; i < enchantmentInfo.m_attrList.Count; i++) {
+                writer.Put ((byte) enchantmentInfo.m_attrList[i].Item1);
+                writer.Put (enchantmentInfo.m_attrList[i].Item2);
+            }
+        }
+        public static NO_EnchantmentItemInfo GetEnchantmentItemInfo (this NetDataReader reader) {
+            long realId = reader.GetLong ();
+            byte enchantAttrNum = reader.GetByte ();
+            var enchantAttrList = new List < (ActorUnitConcreteAttributeType, int) > (enchantAttrNum);
+            for (int i = 0; i < enchantAttrNum; i++) {
+                ActorUnitConcreteAttributeType attrType = (ActorUnitConcreteAttributeType) reader.GetByte ();
+                int attrValue = reader.GetInt ();
+                enchantAttrList.Add ((attrType, attrValue));
+            }
+            return new NO_EnchantmentItemInfo (realId, enchantAttrList);
         }
         public static void Put (this NetDataWriter writer, NO_Repository repo) {
             writer.Put ((byte) repo.m_itemList.Count);

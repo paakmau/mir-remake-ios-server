@@ -51,6 +51,12 @@ namespace MirRemakeBackend.Entity {
                     ((E_GemItem) resItem).Reset (de, gemDe);
                 }
             }
+            private class II_Enchantment : IItemInitializer {
+                public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
+                public void Initialize (DEM_Item dem, E_Item resItem, DE_Item de, short num) {
+                    ((E_EnchantmentItem) resItem).Reset (de);
+                }
+            }
             #endregion
             private DEM_Item m_dem;
             private Dictionary<ItemType, ObjectPool> m_poolDict = new Dictionary<ItemType, ObjectPool> ();
@@ -63,6 +69,7 @@ namespace MirRemakeBackend.Entity {
                 m_poolDict.Add (ItemType.CONSUMABLE, new ObjectPool<E_ConsumableItem> (c_poolSize));
                 m_poolDict.Add (ItemType.EQUIPMENT, new ObjectPool<E_EquipmentItem> (c_poolSize));
                 m_poolDict.Add (ItemType.GEM, new ObjectPool<E_GemItem> (c_poolSize));
+                m_poolDict.Add (ItemType.ENCHANTMENT, new ObjectPool<E_EnchantmentItem> (c_poolSize));
                 // 实例化所有 IItemInitializer 的子类
                 var baseType = typeof (IItemInitializer);
                 var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
@@ -129,6 +136,13 @@ namespace MirRemakeBackend.Entity {
                     return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
                 }
             }
+            private class II_Enchantment : IItemInserter {
+                public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
+                public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    dds.InsertEnchantmentInfo ((item as E_EnchantmentItem).GetEnchantmentDdoInfo (charId));
+                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                }
+            }
             #endregion
             #region ItemSaver
             private interface IItemSaver {
@@ -157,13 +171,20 @@ namespace MirRemakeBackend.Entity {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
                 public void Save (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
                     dds.UpdateItem (item.GetItemDdo (charId, ip, pos));
-                    dds.UpdateEquipmentInfo (((E_EquipmentItem) item).GetEquipmentInfoDdo (charId));
+                    dds.UpdateEquipmentInfo ((item as E_EquipmentItem).GetEquipmentInfoDdo (charId));
                 }
             }
             private class IS_Gem : IItemSaver {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
                 public void Save (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
                     dds.UpdateItem (item.GetItemDdo (charId, ip, pos));
+                }
+            }
+            private class IS_Enchantment : IItemSaver {
+                public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
+                public void Save (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    dds.UpdateItem (item.GetItemDdo (charId, ip, pos));
+                    dds.UpdateEnchantmentInfo ((item as E_EnchantmentItem).GetEnchantmentDdoInfo (charId));
                 }
             }
             #endregion
@@ -201,6 +222,13 @@ namespace MirRemakeBackend.Entity {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
                     dds.DeleteItemByRealId (item.m_RealId);
+                }
+            }
+            private class ID_Enchantment : IItemDeleter {
+                public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
+                public void Delete (IDDS_Item dds, E_Item item) {
+                    dds.DeleteItemByRealId (item.m_RealId);
+                    dds.DeleteEnchantmentInfoByRealId (item.m_RealId);
                 }
             }
             #endregion
@@ -242,12 +270,19 @@ namespace MirRemakeBackend.Entity {
                     for (int i = 0; i < eqDdo.m_inlaidGemIdList.Count; i++)
                         gemList.Add (dem.GetGemById (eqDdo.m_inlaidGemIdList[i]));
                     resItem.ResetRealId (realId);
-                    ((E_EquipmentItem) resItem).ResetEquipmentInfo (eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, gemList);
+                    (resItem as E_EquipmentItem).ResetEquipmentData (eqDdo.m_strengthNum, eqDdo.m_enchantAttr, eqDdo.m_inlaidGemIdList, gemList);
                 }
             }
             private class IIR_Gem : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
                 public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) { resItem.ResetRealId (realId); }
+            }
+            private class IIR_Enchantment : IItemInfoReseter {
+                public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
+                public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) {
+                    resItem.ResetRealId (realId);
+                    // TODO: 
+                }
             }
             #endregion
             private DEM_Item m_dem;

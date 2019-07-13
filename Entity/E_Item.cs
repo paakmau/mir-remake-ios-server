@@ -1,6 +1,6 @@
-using System.Numerics;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
@@ -20,39 +20,49 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_GemItem : E_Item {
-        public DE_GemData m_gemDe;
         public override ItemType m_Type { get { return ItemType.GEM; } }
+        private DE_GemData m_gemDe;
+        public IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_AttrList { get { return m_gemDe.m_attrList; } }
         public void Reset (DE_Item itemDe, DE_GemData gemDe) {
             base.Reset (itemDe, 1);
             m_gemDe = gemDe;
         }
     }
+    class E_EnchantmentItem : E_Item {
+        public override ItemType m_Type { get { return ItemType.ENCHANTMENT; } }
+        public List < (ActorUnitConcreteAttributeType, int) > m_attrList;
+        public void Reset (DE_Item itemDe) {
+            base.Reset (itemDe, 1);
+        }
+        public void ResetEnchantmentData (List < (ActorUnitConcreteAttributeType, int) > attrList) {
+            m_attrList.Clear ();
+            for (int i = 0; i < attrList.Count; i++)
+                m_attrList.Add (attrList[i]);
+        }
+        public DDO_EnchantmentInfo GetEnchantmentDdoInfo (int charId) {
+            return new DDO_EnchantmentInfo (m_RealId, charId, m_attrList);
+        }
+        public NO_EnchantmentItemInfo GetEnchantmentNoInfo () {
+            return new NO_EnchantmentItemInfo (m_RealId, m_attrList);
+        }
+    }
     class E_ConsumableItem : E_Item {
-        public DE_ConsumableData m_consumableDe;
         public override ItemType m_Type { get { return ItemType.CONSUMABLE; } }
+        public DE_ConsumableData m_consumableDe;
         public void Reset (DE_Item itemDe, DE_ConsumableData consDe, short num) {
             base.Reset (itemDe, num);
             m_consumableDe = consDe;
         }
     }
     class E_EquipmentItem : E_Item {
-        public DE_EquipmentData m_equipmentDe;
         public override ItemType m_Type { get { return ItemType.EQUIPMENT; } }
+        public DE_EquipmentData m_equipmentDe;
         public const int c_maxStrengthenNum = 10;
         public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
         public byte m_strengthenNum;
         public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List < (ActorUnitConcreteAttributeType, int) > ();
         private List<short> m_inlaidGemIdList = new List<short> ();
         public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
-        public void ResetEquipmentInfo (byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
-            m_strengthenNum = strNum;
-            m_enchantAttrList.Clear ();
-            m_enchantAttrList.AddRange (enchantAttr);
-            m_inlaidGemIdList.Clear ();
-            m_inlaidGemIdList.AddRange (inlaidGemIdList);
-            m_inlaidGemList.Clear ();
-            m_inlaidGemList.AddRange (inlaidGemList);
-        }
         public void Reset (DE_Item itemDe, DE_EquipmentData eqDe) {
             base.Reset (itemDe, 1);
             m_equipmentDe = eqDe;
@@ -60,6 +70,15 @@ namespace MirRemakeBackend.Entity {
             m_enchantAttrList.Clear ();
             m_inlaidGemIdList.Clear ();
             m_inlaidGemList.Clear ();
+        }
+        public void ResetEquipmentData (byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
+            m_strengthenNum = strNum;
+            m_enchantAttrList.Clear ();
+            m_enchantAttrList.AddRange (enchantAttr);
+            m_inlaidGemIdList.Clear ();
+            m_inlaidGemIdList.AddRange (inlaidGemIdList);
+            m_inlaidGemList.Clear ();
+            m_inlaidGemList.AddRange (inlaidGemList);
         }
         public DDO_EquipmentInfo GetEquipmentInfoDdo (int charId) {
             return new DDO_EquipmentInfo (m_RealId, charId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);

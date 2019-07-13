@@ -69,7 +69,12 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_EnchantmentInfo {
         public long m_realId;
         public int m_characterId;
-        public (ActorUnitConcreteAttributeType, int) [] m_enchantAttr;
+        public (ActorUnitConcreteAttributeType, int) [] m_attrList;
+        public DDO_EnchantmentInfo (long realId, int charId, List < (ActorUnitConcreteAttributeType, int) > attrList) {
+            m_realId = realId;
+            m_characterId = charId;
+            m_attrList = attrList.ToArray ();
+        }
     }
     struct DDO_Item {
         public long m_realId;

@@ -211,9 +211,9 @@ namespace MirRemakeBackend.DataEntity {
         }
     }
     class DE_GemData {
-        public readonly IReadOnlyList<ValueTuple<ActorUnitConcreteAttributeType, int>> m_attrList;
+        public readonly IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_attrList;
         public DE_GemData (DO_Gem gemDo) {
-            m_attrList = new List<ValueTuple<ActorUnitConcreteAttributeType, int>> (gemDo.m_equipmentAttributeArr);
+            m_attrList = new List < (ActorUnitConcreteAttributeType, int) > (gemDo.m_equipmentAttributeArr);
         }
     }
     class DE_Mission {
