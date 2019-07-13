@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character,IDDS_CharacterPosition,IDDS_User {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_CharacterPosition, IDDS_User {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -113,8 +113,8 @@ namespace MirRemakeBackend.DynamicData {
             cmd = "insert into `item` values(null," + item.m_itemId + "," + item.m_characterId + "," + item.m_num + ",\"" + item.m_place.ToString () + "\"," + item.m_position + ");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
-            if(ds.Tables[0].Rows.Count==0){
-                throw new Exception();
+            if (ds.Tables[0].Rows.Count == 0) {
+                throw new Exception ();
             }
             return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
@@ -212,8 +212,8 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
-            if(dt.Rows.Count==0){
-                throw new Exception();
+            if (dt.Rows.Count == 0) {
+                throw new Exception ();
             }
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
             character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [0]));
@@ -227,7 +227,7 @@ namespace MirRemakeBackend.DynamicData {
             character.m_occupation = (OccupationType) Enum.Parse (typeof (OccupationType), dt.Rows[0]["occupation"].ToString ());
             character.m_experience = int.Parse (dt.Rows[0]["experience"].ToString ());
             character.m_characterId = int.Parse (dt.Rows[0]["characterid"].ToString ());
-            character.m_name=dt.Rows[0]["name"].ToString();
+            character.m_name = dt.Rows[0]["name"].ToString ();
             return character;
         }
         public void UpdateCharacter (DDO_Character charObj) {
@@ -238,7 +238,7 @@ namespace MirRemakeBackend.DynamicData {
                 charObj.m_distributedMainAttrPointArr[2].Item2.ToString () + " " +
                 charObj.m_distributedMainAttrPointArr[3].Item2.ToString () + "\"";
             cmd = "update `character` set `level`=" + charObj.m_level + ",experience=" +
-                charObj.m_experience + ",currency=" + currencyArr + ",giftpoints=" + giftPoints +",`name`=\""+charObj.m_name+"\" where characterid=" + charObj.m_characterId + ";";
+                charObj.m_experience + ",currency=" + currencyArr + ",giftpoints=" + giftPoints + ",`name`=\"" + charObj.m_name + "\" where characterid=" + charObj.m_characterId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -307,77 +307,73 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
 
         }
-        
-        
-        public void UpdateCharacterPosition(DDO_CharacterPosition cp){
+
+        public void UpdateCharacterPosition (DDO_CharacterPosition cp) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "update character_position set `x`=\""+cp.m_position.X + "\",`y`=\""+cp.m_position.Y+"\" where charid="+cp.m_characterId +";";
+            cmd = "update character_position set `x`=\"" + cp.m_position.X + "\",`y`=\"" + cp.m_position.Y + "\" where charid=" + cp.m_characterId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-        public void InsertCharacterPosition(DDO_CharacterPosition cp){
+        public void InsertCharacterPosition (DDO_CharacterPosition cp) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "insert into character_position values("+cp.m_characterId+",\""+cp.m_position.X+"\",\""+cp.m_position.Y+"\");";
+            cmd = "insert into character_position values(" + cp.m_characterId + ",\"" + cp.m_position.X + "\",\"" + cp.m_position.Y + "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
 
-        public DDO_CharacterPosition GetCharacterPosition(int charId){
+        public DDO_CharacterPosition GetCharacterPosition (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
             cmd = "select * from character_position where charid=" + charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
-            if(dt.Rows.Count==0){
-                throw new Exception();
+            if (dt.Rows.Count == 0) {
+                throw new Exception ();
             }
-            float x=float.Parse (dt.Rows[0]["x"].ToString ());
-            float y=float.Parse (dt.Rows[0]["y"].ToString ());
-            DDO_CharacterPosition cp=new DDO_CharacterPosition(charId,new System.Numerics.Vector2(x,y));
+            float x = float.Parse (dt.Rows[0]["x"].ToString ());
+            float y = float.Parse (dt.Rows[0]["y"].ToString ());
+            DDO_CharacterPosition cp = new DDO_CharacterPosition (charId, new System.Numerics.Vector2 (x, y));
             return cp;
         }
-        public bool GetUserByUsername (string username, out DDO_User resUser){
+        public bool GetUserByUsername (string username, out DDO_User resUser) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "select * from `user` where user_name=\""+username+"\";";
+            cmd = "select * from `user` where user_name=\"" + username + "\";";
             string database = "legend";
-            pool.ExecuteSql (database, cmd,ds);
-            if(ds.Tables[0].Rows.Count!=0){
-                resUser=default;
+            pool.ExecuteSql (database, cmd, ds);
+            if (ds.Tables[0].Rows.Count != 0) {
+                resUser = default (DDO_User);
                 return false;
             }
-            resUser=new DDO_User(int.Parse(ds.Tables[0].Rows[0]["userid"].ToString()),ds.Tables[0].Rows[0]["user_name"].ToString(),ds.Tables[0].Rows[0]["password"].ToString() );
+            resUser = new DDO_User (int.Parse (ds.Tables[0].Rows[0]["userid"].ToString ()), ds.Tables[0].Rows[0]["user_name"].ToString (), ds.Tables[0].Rows[0]["password"].ToString ());
             return true;
         }
-        
-        public void UpdateUser(DDO_User ddo){
+
+        public void UpdateUser (DDO_User ddo) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "update user set `user_name`=\""+ddo.m_username+"\",`password`=\""+ddo.m_pwd+"\" where `userid`="+ddo.m_playerId+";";
+            cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\" where `userid`=" + ddo.m_playerId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
 
-        public int InsertUser(DDO_User ddo){
-            DDO_User temp=new DDO_User(0,"","");
-            if(!GetUserByUsername(ddo.m_username,out temp)){
+        public int InsertUser (DDO_User ddo) {
+            DDO_User temp = new DDO_User (0, "", "");
+            if (!GetUserByUsername (ddo.m_username, out temp)) {
                 string cmd;
                 DataSet ds = new DataSet ();
-                cmd = "insert into `user` values(null,\""+ddo.m_username+"\"+,\""+ddo.m_pwd+"\");select last_insert_id();";
+                cmd = "insert into `user` values(null,\"" + ddo.m_username + "\"+,\"" + ddo.m_pwd + "\");select last_insert_id();";
                 string database = "legend";
-                pool.ExecuteSql (database, cmd,ds);
-                return int.Parse(ds.Tables[0].Rows[0]["last_insert_id()"].ToString());
+                pool.ExecuteSql (database, cmd, ds);
+                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
             }
             return -1;
         }
-        
-        
-        
-        
-        private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr(JsonData attr) {
+
+        private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
                 res[j] = new ValueTuple<ActorUnitConcreteAttributeType, int>
@@ -399,7 +395,6 @@ namespace MirRemakeBackend.DynamicData {
             res = res + "]";
             return res;
         }
-        
-        
+
     }
 }
