@@ -345,8 +345,8 @@ namespace MirRemakeBackend.DynamicData {
             cmd = "select * from `user` where user_name=\""+username+"\";";
             string database = "legend";
             pool.ExecuteSql (database, cmd,ds);
-            if(ds.Tables[0].Rows.Count!=0){
-                resUser=default;
+            if(ds.Tables[0].Rows.Count==0){
+                resUser=default(DDO_User);
                 return false;
             }
             resUser=new DDO_User(int.Parse(ds.Tables[0].Rows[0]["userid"].ToString()),ds.Tables[0].Rows[0]["user_name"].ToString(),ds.Tables[0].Rows[0]["password"].ToString() );
@@ -358,6 +358,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet ();
             cmd = "update user set `user_name`=\""+ddo.m_username+"\",`password`=\""+ddo.m_pwd+"\" where `userid`="+ddo.m_playerId+";";
             string database = "legend";
+            //Console.WriteLine(cmd);
             pool.ExecuteSql (database, cmd);
         }
 
@@ -366,8 +367,9 @@ namespace MirRemakeBackend.DynamicData {
             if(!GetUserByUsername(ddo.m_username,out temp)){
                 string cmd;
                 DataSet ds = new DataSet ();
-                cmd = "insert into `user` values(null,\""+ddo.m_username+"\"+,\""+ddo.m_pwd+"\");select last_insert_id();";
+                cmd = "insert into `user` values(null,\""+ddo.m_username+"\",\""+ddo.m_pwd+"\");select last_insert_id();";
                 string database = "legend";
+                //Console.WriteLine(cmd);
                 pool.ExecuteSql (database, cmd,ds);
                 return int.Parse(ds.Tables[0].Rows[0]["last_insert_id()"].ToString());
             }
