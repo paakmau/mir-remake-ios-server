@@ -43,6 +43,21 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_success);
         }
     }
+    class SC_InitSelfCreateCharacter : ServerCommandBase {
+        private static readonly SC_InitSelfCreateCharacter s_instance = new SC_InitSelfCreateCharacter ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_CREATE_CHARACTER; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private bool m_success;
+        public static SC_InitSelfCreateCharacter Instance (int netId, bool success) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            return s_instance;
+        }
+        private SC_InitSelfCreateCharacter () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_success);
+        }
+    }
     /// <summary>
     /// 初始化属性点与等级
     /// </summary>

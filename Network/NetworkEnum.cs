@@ -1,8 +1,9 @@
 namespace MirRemakeBackend.Network {
     enum NetworkToClientDataType : byte {
-        // 初始化相关
-        INIT_SELF_LOGIN,
+        // 未进入游戏
         INIT_SELF_REGISTER,
+        INIT_SELF_LOGIN,
+        INIT_SELF_CREATE_CHARACTER,
         INIT_SELF_ATTRIBUTE,
         INIT_SELF_SKILL,
         INIT_SELF_MISSION,
@@ -52,9 +53,10 @@ namespace MirRemakeBackend.Network {
         SEND_MESSAGE
     }
     enum NetworkToServerDataType : byte {
-        // 创建角色
-        CREATE_CHARACTER,
-        // 初始化
+        // 未进入游戏阶段
+        INIT_REGISTER,
+        INIT_LOGIN,
+        INIT_CREATE_CHARACTER,
         INIT_CHARACTER_ID,
         // 同步位置
         SET_POSITION,
