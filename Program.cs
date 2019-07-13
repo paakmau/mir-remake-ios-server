@@ -64,6 +64,7 @@ namespace MirRemakeBackend {
             DEM_Mission misDem = new DEM_Mission (misDs);
             // DynamicDataService
             var ddsImpl = new DynamicDataServiceImpl ();
+            IDDS_User userDds = null;
             IDDS_Character charDds = ddsImpl;
             IDDS_CharacterPosition charPosDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
@@ -80,7 +81,7 @@ namespace MirRemakeBackend {
             EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds, charPosDds);
             EM_Log.s_instance = new EM_Log ();
             // 角色创建器
-            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), charDds, charPosDds, skillDds, misDds, itemDds, s_networkService);
+            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charPosDds, skillDds, misDds, itemDds, s_networkService);
         }
         static void InitGameLogic () {
             // 单位初始化器

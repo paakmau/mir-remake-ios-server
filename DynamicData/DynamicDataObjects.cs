@@ -4,9 +4,9 @@ using System.Numerics;
 
 namespace MirRemakeBackend.DynamicData {
     struct DDO_User {
-        public int playerId;
-        public string username;
-        public string pwd;
+        public int m_playerId;
+        public string m_username;
+        public string m_pwd;
     }
     struct DDO_Character {
         public int m_characterId;

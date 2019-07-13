@@ -1,5 +1,5 @@
-using System.Numerics;
 using System.Collections.Generic;
+using System.Numerics;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
@@ -8,6 +8,7 @@ namespace MirRemakeBackend.CharacterCreate {
     class User {
         public static User s_instance;
         private INetworkService m_netService;
+        private IDDS_User m_userDds;
         private IDDS_Character m_charDds;
         private IDDS_CharacterPosition m_charPosDds;
         private IDDS_Skill m_skillDds;
@@ -15,8 +16,9 @@ namespace MirRemakeBackend.CharacterCreate {
         private IDDS_Item m_itemDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
             m_netService = ns;
+            m_userDds = userDds;
             m_charDds = charDds;
             m_charPosDds = charPosDds;
             m_skillDds = skillDds;
@@ -46,7 +48,8 @@ namespace MirRemakeBackend.CharacterCreate {
             // TODO:
         }
         public void CommandLogin (string username, string pwd) {
-            // TODO:
+            var userDdo = m_userDds.GetUserByUsername (username);
+            // if (userDdo.)
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // 角色 dds
