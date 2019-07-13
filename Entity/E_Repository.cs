@@ -39,7 +39,7 @@ namespace MirRemakeBackend.Entity {
         }
         public override E_Item GetItemByRealId (long realId) {
             for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_RealId == realId)
+                if (m_itemList[i].m_realId == realId)
                     return m_itemList[i];
             return null;
         }
@@ -50,7 +50,7 @@ namespace MirRemakeBackend.Entity {
         }
         public E_Item GetItemByRealId (long realId, out short resPos) {
             for (short i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_RealId == realId) {
+                if (m_itemList[i].m_realId == realId) {
                     resPos = i;
                     return m_itemList[i];
                 }
@@ -59,7 +59,7 @@ namespace MirRemakeBackend.Entity {
         }
         public override E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
             for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_RealId == realId) {
+                if (m_itemList[i].m_realId == realId) {
                     var res = m_itemList[i];
                     m_itemList[i] = empty;
                     return res;

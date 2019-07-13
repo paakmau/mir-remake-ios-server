@@ -103,7 +103,7 @@ namespace MirRemakeBackend.GameLogic {
                 var itemRealIdList = new List<long> (posAndItemChanged.Count);
                 var itemNumList = new List<short> (posAndItemChanged.Count);
                 for (int i = 0; i < posAndItemChanged.Count; i++) {
-                    itemRealIdList.Add (posAndItemChanged[i].Item2.m_RealId);
+                    itemRealIdList.Add (posAndItemChanged[i].Item2.m_realId);
                     itemNumList.Add (posAndItemChanged[i].Item2.m_num);
                     // dds
                     EM_Item.s_instance.CharacterUpdateItem (posAndItemChanged[i].Item2, charId, ItemPlace.BAG, posAndItemChanged[i].Item1);
@@ -111,7 +111,7 @@ namespace MirRemakeBackend.GameLogic {
                 // client
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, itemRealIdList, itemNumList));
             }
-            
+
             // 整格放入
             if (pos >= 0) {
                 bag.SetItem (item, pos);
@@ -127,7 +127,7 @@ namespace MirRemakeBackend.GameLogic {
                 if (item.m_Type == ItemType.EQUIPMENT)
                     m_networkService.SendServerCommand (
                         SC_ApplySelfUpdateEquipment.Instance (
-                            netId, item.m_RealId,
+                            netId, item.m_realId,
                             (item as E_EquipmentItem).GetEquipmentInfoNo ()));
             }
 
@@ -170,17 +170,71 @@ namespace MirRemakeBackend.GameLogic {
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
             NotifyCharacterSwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
-        public void CommandApplyBuildEquipment (int netId, (short, short)[] matArr) {
+        public void CommandApplyBuildEquipment (int netId, (short, short) [] matArr) {
             // TODO: 打造装备
         }
+        /// <summary> 强化装备 </summary>
         public void CommandApplyStrengthenEquipment (int netId, long realId) {
-            // TODO: 强化装备
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            short eqPos;
+            var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
+            if (eq == null) return;
+            if (eq.m_strengthenNum == E_EquipmentItem.c_maxStrengthenNum) return;
+            var curCy = charObj.m_VirtualCurrency;
+            long needCy = (1L << eq.m_strengthenNum) * 80L;
+            if (needCy > curCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            // 强化
+            eq.m_strengthenNum++;
+            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
+        /// <summary> 镶嵌宝石 </summary>
         public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
-            // TODO: 镶嵌宝石
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            short eqPos, gemPos;
+            var eq = bag.GetItemByRealId (eqRealId, out eqPos) as E_EquipmentItem;
+            var gem = bag.GetItemByRealId (gemRealId, out gemPos) as E_GemItem;
+            if (eq == null || gem == null) return;
+            int gemInlayPos = -1;
+            for (int i = 0; i < eq.m_inlaidGemList.Count; i++)
+                if (eq.m_inlaidGemList[i] == null) {
+                    gemInlayPos = i;
+                    break;
+                }
+            if (gemInlayPos == -1) return;
+            var curCy = charObj.m_VirtualCurrency;
+            long needCy = (1L << (int) gem.m_Quality) * (1L << (eq.m_LevelInNeed >> 5));
+            if (needCy > curCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            // 失去宝石
+            var emptyItem = EM_Item.s_instance.CharacterLoseItem (gem, charObj.m_characterId, ItemPlace.BAG, gemPos);
+            bag.RemoveItemByPosition (gemPos, emptyItem);
+            // 镶嵌
+            eq.m_inlaidGemList[gemInlayPos] = gem.m_gemDe;
+            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
-        public void CommandApplyMakeHoleInEquipment (int netId, long eqRealId) {
-            // TODO: 装备打孔
+        /// <summary> 装备打孔 </summary>
+        public void CommandApplyMakeHoleInEquipment (int netId, long realId) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            short eqPos;
+            var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
+            if (eq == null) return;
+            long curCy = charObj.m_VirtualCurrency;
+            long needCy = (1L << eq.m_inlaidGemList.Count) * 100;
+            if (needCy > curCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            // 打孔
+            eq.m_inlaidGemList.Add (null);
+            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
         public void CommandApplyDisjointEquipment (int netId, long eqRealId) {
             // TODO: 分解装备
@@ -197,7 +251,7 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyCharacterLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
-            long realId = item.m_RealId;
+            long realId = item.m_realId;
             short curNum = item.m_num;
             // 实例 与 数据
             if (runOut) {
@@ -236,7 +290,7 @@ namespace MirRemakeBackend.GameLogic {
                 List<long> changedRealIdList = new List<long> (changedItemList.Count);
                 List<short> changedPosList = new List<short> (changedItemList.Count);
                 for (int j = 0; j < changedItemList.Count; j++) {
-                    changedRealIdList.Add (changedItemList[i].Item2.m_RealId);
+                    changedRealIdList.Add (changedItemList[i].Item2.m_realId);
                     changedPosList.Add (changedItemList[i].Item1);
                 }
                 if (changedItemList.Count != 0)
@@ -257,7 +311,7 @@ namespace MirRemakeBackend.GameLogic {
                     if (itemObj.m_Type == ItemType.EQUIPMENT)
                         m_networkService.SendServerCommand (
                             SC_ApplySelfUpdateEquipment.Instance (
-                                charObj.m_networkId, itemObj.m_RealId,
+                                charObj.m_networkId, itemObj.m_realId,
                                 ((E_EquipmentItem) itemObj).GetEquipmentInfoNo ()));
                 }
                 // 通知 log
@@ -270,11 +324,10 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < monLegacyList.Count; i++) {
                 short id = monLegacyList[i];
                 if (id >= 30000) {
-                    if(id==30003){
-                        dropItemIdAndNumList.Add ((id, (short)1));
-                    }
-                    else{
-                        dropItemIdAndNumList.Add ((id, (short)(MyRandom.NextInt(1,2))));
+                    if (id == 30003) {
+                        dropItemIdAndNumList.Add ((id, (short) 1));
+                    } else {
+                        dropItemIdAndNumList.Add ((id, (short) (MyRandom.NextInt (1, 2))));
                     }
                 } else if (id >= 20000) {
                     bool drop = MyRandom.NextInt (0, 1000) <= 100;
@@ -298,7 +351,7 @@ namespace MirRemakeBackend.GameLogic {
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();
             // 处理强化与基础属性
-            var attrList = eqObj.m_equipmentDe.m_attrList;
+            var attrList = eqObj.m_RawAttrList;
             for (int i = 0; i < attrList.Count; i++)
                 res.Add ((attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2)));
             // 处理附魔

@@ -196,39 +196,39 @@ namespace MirRemakeBackend.Entity {
             private class ID_Empty : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.EMPTY; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_RealId);
+                    dds.DeleteItemByRealId (item.m_realId);
                 }
             }
             private class ID_Material : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.MATERIAL; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_RealId);
+                    dds.DeleteItemByRealId (item.m_realId);
                 }
             }
             private class ID_Consumable : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.CONSUMABLE; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_RealId);
+                    dds.DeleteItemByRealId (item.m_realId);
                 }
             }
             private class ID_Equipment : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_RealId);
-                    dds.DeleteEquipmentInfoByRealId (item.m_RealId);
+                    dds.DeleteItemByRealId (item.m_realId);
+                    dds.DeleteEquipmentInfoByRealId (item.m_realId);
                 }
             }
             private class ID_Gem : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.GEM; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_RealId);
+                    dds.DeleteItemByRealId (item.m_realId);
                 }
             }
             private class ID_Enchantment : IItemDeleter {
                 public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
                 public void Delete (IDDS_Item dds, E_Item item) {
-                    dds.DeleteItemByRealId (item.m_RealId);
-                    dds.DeleteEnchantmentInfoByRealId (item.m_RealId);
+                    dds.DeleteItemByRealId (item.m_realId);
+                    dds.DeleteEnchantmentInfoByRealId (item.m_realId);
                 }
             }
             #endregion

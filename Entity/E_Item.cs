@@ -21,7 +21,7 @@ namespace MirRemakeBackend.Entity {
     }
     class E_GemItem : E_Item {
         public override ItemType m_Type { get { return ItemType.GEM; } }
-        private DE_GemData m_gemDe;
+        public DE_GemData m_gemDe;
         public IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_AttrList { get { return m_gemDe.m_attrList; } }
         public void Reset (DE_Item itemDe, DE_GemData gemDe) {
             base.Reset (itemDe, 1);
@@ -40,10 +40,10 @@ namespace MirRemakeBackend.Entity {
                 m_attrList.Add (attrList[i]);
         }
         public DDO_EnchantmentInfo GetEnchantmentDdoInfo (int charId) {
-            return new DDO_EnchantmentInfo (m_RealId, charId, m_attrList);
+            return new DDO_EnchantmentInfo (m_realId, charId, m_attrList);
         }
         public NO_EnchantmentItemInfo GetEnchantmentNoInfo () {
-            return new NO_EnchantmentItemInfo (m_RealId, m_attrList);
+            return new NO_EnchantmentItemInfo (m_realId, m_attrList);
         }
     }
     class E_ConsumableItem : E_Item {
@@ -56,16 +56,20 @@ namespace MirRemakeBackend.Entity {
     }
     class E_EquipmentItem : E_Item {
         public override ItemType m_Type { get { return ItemType.EQUIPMENT; } }
-        public DE_EquipmentData m_equipmentDe;
+        private DE_EquipmentData m_eqDe;
         public const int c_maxStrengthenNum = 10;
-        public EquipmentPosition m_EquipmentPosition { get { return m_equipmentDe.m_equipPosition; } }
+        public EquipmentPosition m_EquipmentPosition { get { return m_eqDe.m_equipPosition; } }
+        public short m_LevelInNeed { get { return m_eqDe.m_equipLevelInNeed; } }
         public byte m_strengthenNum;
+        /// <summary> 装备原始属性 </summary>
+        public IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_RawAttrList { get { return m_eqDe.m_attrList; } }
         public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List < (ActorUnitConcreteAttributeType, int) > ();
         private List<short> m_inlaidGemIdList = new List<short> ();
+        /// <summary> 若为 null, 则为插槽 </summary>
         public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
         public void Reset (DE_Item itemDe, DE_EquipmentData eqDe) {
             base.Reset (itemDe, 1);
-            m_equipmentDe = eqDe;
+            m_eqDe = eqDe;
             m_strengthenNum = 0;
             m_enchantAttrList.Clear ();
             m_inlaidGemIdList.Clear ();
@@ -81,22 +85,22 @@ namespace MirRemakeBackend.Entity {
             m_inlaidGemList.AddRange (inlaidGemList);
         }
         public DDO_EquipmentInfo GetEquipmentInfoDdo (int charId) {
-            return new DDO_EquipmentInfo (m_RealId, charId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
+            return new DDO_EquipmentInfo (m_realId, charId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
         }
         public NO_EquipmentItemInfo GetEquipmentInfoNo () {
-            return new NO_EquipmentItemInfo (m_RealId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
+            return new NO_EquipmentItemInfo (m_realId, m_strengthenNum, m_enchantAttrList, m_inlaidGemIdList);
         }
         public int CalcStrengthenedAttr (int value) {
-            return (int) (value * (1 + m_strengthenNum / c_maxStrengthenNum * m_equipmentDe.m_attrWave));
+            return (int) (value * (1 + m_strengthenNum / c_maxStrengthenNum * m_eqDe.m_attrWave));
         }
     }
     abstract class E_Item {
-        private long m_realId;
-        public long m_RealId { get { return m_realId; } }
-        public DE_Item m_itemDe;
+        public abstract ItemType m_Type { get; }
+        public long m_realId;
+        private DE_Item m_itemDe;
         public short m_num;
         public short m_ItemId { get { return m_itemDe.m_id; } }
-        public abstract ItemType m_Type { get; }
+        public ItemQuality m_Quality { get { return m_itemDe.m_quality; } }
         public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
         public long m_Price { get { return m_itemDe.m_price; } }
         public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
