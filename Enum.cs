@@ -115,7 +115,8 @@ namespace MirRemakeBackend {
         CONSUMABLE,
         MATERIAL,
         EQUIPMENT,
-        GEM
+        GEM,
+        ENCHANTMENT
     }
     /// <summary>
     /// 道具所在的位置

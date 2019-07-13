@@ -66,6 +66,8 @@ namespace MirRemakeBackend.DynamicData {
             m_inlaidGemIdList = inlaidGemIds;
         }
     }
+    struct DDO_EnchantmentInfo {
+    }
     struct DDO_Item {
         public long m_realId;
         public short m_itemId;

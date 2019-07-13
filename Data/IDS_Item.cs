@@ -9,6 +9,7 @@ namespace MirRemakeBackend.Data {
         (DO_Item, DO_Consumable) [] GetAllConsumable ();
         (DO_Item, DO_Gem) [] GetAllGem ();
         DO_Item[] GetAllMaterial ();
+        DO_Item[] GetAllEnchantment ();
     }
     class DS_ItemImpl : IDS_Item {
         private DO_Item[] items = null;
