@@ -156,6 +156,40 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
 
+        public void UpdateEnchantmentInfo(DDO_EnchantmentInfo e){
+            string cmd="update `enchantment` set `enchant_attr`=\""+GetString(e.m_enchantAttr)+"\" where `realid`="+e.m_realId+" and `charid`="+e.m_characterId+";";
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+
+        public void DeleteEnchantmentInfoByRealId (long realId){
+            string cmd="delete from `enchantment` where `realid`="+realId+";";
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+
+        public void InsertEnchantmentInfo (DDO_EnchantmentInfo enchantmentInfo){
+            string cmd="insert into `enchantment` values(null,"+enchantmentInfo.m_characterId+",\""+GetString(enchantmentInfo.m_enchantAttr)+"\");";
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        public List<DDO_EnchantmentInfo> GetAllEnchantmentByCharacterId (int charId){
+            List<DDO_EnchantmentInfo> res=new List<DDO_EnchantmentInfo>();
+            string cmd="select * from `enchantment` where `charid`="+charId+";";
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            DataTable dt=ds.Tables[0];
+            for(int i=0;i<dt.Rows.Count;i++){
+                DDO_EnchantmentInfo e=new DDO_EnchantmentInfo();
+                e.m_realId=long.Parse(dt.Rows[i]["realid"].ToString());
+                e.m_characterId=int.Parse(dt.Rows[i]["charid"].ToString());
+                e.m_enchantAttr=GetAttr(dt.Rows[i]["enchant_attr"].ToString());
+                res.Add(e);
+            }
+            return res;
+        }
+
         public List<DDO_Skill> GetSkillListByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();

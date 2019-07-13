@@ -19,9 +19,9 @@ namespace MirRemakeBackend.Data {
         private JsonData s_equipmentDatas;
         private JsonData s_consumableDatas;
         private JsonData s_gemDatas;
-        public DO_Item[] GetAllItem () {
-            return items;
-        }
+        private JsonData s_enchantmentDatas;
+
+
         public (DO_Item, DO_Equipment) [] GetAllEquipment () {
             string jsonFile = File.ReadAllText ("Data/D_Equipment.json");
             s_equipmentDatas = JsonMapper.ToObject (jsonFile);
@@ -119,6 +119,20 @@ namespace MirRemakeBackend.Data {
                 res[i].m_type=ItemType.MATERIAL;
             }
             return res;
+        }
+
+        public DO_Item[] GetAllEnchantment(){
+            string jsonFile = File.ReadAllText("Data/D_EnchantMent.json");
+            s_enchantmentDatas=JsonMapper.ToObject(jsonFile);
+            DO_Item[] result=new DO_Item[s_enchantmentDatas.Count];
+            for(int i=0;i<s_enchantmentDatas.Count;i++){
+                result[i].m_itemId=short.Parse(s_enchantmentDatas[i]["ID"].ToString());
+                result[i].m_quality=(ItemQuality)Enum.Parse(typeof(ItemQuality),s_enchantmentDatas[i]["Quality"].ToString());
+                result[i].m_price = 100*(2*(int)(result[i].m_quality)+1);
+                result[i].m_type = ItemType.ENCHANTMENT;
+                result[i].m_maxNum = 1;
+            }
+            return result;
         }
     }
 }

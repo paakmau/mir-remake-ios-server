@@ -76,3 +76,11 @@ create table `vip`(
   `vip_level` int NOT NULL,
   primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `enchantment`;
+create table `enchantment`( 
+  `realid` int NOT NULL AUTO_INCREMENT,
+  `charid` int NOT NULL,
+  `enchant_attr` VARCHAR(255),
+  primary key (`realid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
