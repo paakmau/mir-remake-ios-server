@@ -1,7 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+
 namespace MirRemakeBackend.DynamicData {
+    struct DDO_User {
+        public int playerId;
+        public string username;
+        public string pwd;
+    }
     struct DDO_Character {
         public int m_characterId;
         public short m_level;

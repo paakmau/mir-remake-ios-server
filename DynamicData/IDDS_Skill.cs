@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Data;
-using System;
 
 namespace MirRemakeBackend.DynamicData {
     interface IDDS_Skill {

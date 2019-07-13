@@ -5,8 +5,8 @@ using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.CharacterCreate {
-    class CharacterCreator {
-        public static CharacterCreator s_instance;
+    class User {
+        public static User s_instance;
         private INetworkService m_netService;
         private IDDS_Character m_charDds;
         private IDDS_CharacterPosition m_charPosDds;
@@ -15,7 +15,7 @@ namespace MirRemakeBackend.CharacterCreate {
         private IDDS_Item m_itemDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public CharacterCreator (IDS_Skill skillDs, IDS_Mission misDs, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
             m_netService = ns;
             m_charDds = charDds;
             m_charPosDds = charPosDds;
@@ -41,6 +41,12 @@ namespace MirRemakeBackend.CharacterCreate {
                     foreach (var ocp in ocpArr)
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
+        }
+        public void CommandRegister (string username, string pwd) {
+            // TODO:
+        }
+        public void CommandLogin (string username, string pwd) {
+            // TODO:
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // 角色 dds

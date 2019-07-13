@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System;
-using System.Data;
 namespace MirRemakeBackend.DynamicData {
     interface IDDS_Character {
         /// <summary>

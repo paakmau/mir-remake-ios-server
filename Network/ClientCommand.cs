@@ -12,7 +12,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             int playerId = reader.GetInt ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
-            CharacterCreator.s_instance.CommandCreateCharacter (playerId, ocp);
+            User.s_instance.CommandCreateCharacter (playerId, ocp);
         }
     }
     /// <summary>
