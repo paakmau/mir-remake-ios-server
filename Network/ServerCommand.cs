@@ -10,6 +10,21 @@ namespace MirRemakeBackend.Network {
         public IReadOnlyList<int> m_toClientList;
         public abstract void PutData (NetDataWriter writer);
     }
+    class SC_InitSelfNetworkId : ServerCommandBase {
+        private static readonly SC_InitSelfNetworkId s_instance = new SC_InitSelfNetworkId ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_netId;
+        public static SC_InitSelfNetworkId Instance (int netId) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_netId = netId;
+            return s_instance;
+        }
+        private SC_InitSelfNetworkId () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_netId);
+        }
+    }
     class SC_InitSelfLogin : ServerCommandBase {
         private static readonly SC_InitSelfLogin s_instance = new SC_InitSelfLogin ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_LOGIN; } }

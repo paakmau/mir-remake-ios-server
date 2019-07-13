@@ -5,9 +5,6 @@ namespace MirRemakeBackend.GameLogic {
     class UnitInitializer {
         public static UnitInitializer s_instance;
         public UnitInitializer () { }
-        public int AssignNetworkId () {
-            return EM_Unit.s_instance.AssignNetworkId ();
-        }
         public void CommandInitCharacterId (int netId, int charId) {
             // 角色
             var newChar = GL_CharacterAttribute.s_instance.NotifyInitCharacter (netId, charId);
