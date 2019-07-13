@@ -69,3 +69,10 @@ create table `user`(
   `password` VARCHAR(155) NOT NULL,
   primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `vip`;
+create table `vip`( 
+  `userid` int NOT NULL AUTO_INCREMENT,
+  `vip_level` int NOT NULL,
+  primary key (`userid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

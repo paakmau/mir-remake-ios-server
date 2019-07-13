@@ -351,16 +351,12 @@ namespace MirRemakeBackend.DynamicData {
             resUser = new DDO_User (int.Parse (ds.Tables[0].Rows[0]["userid"].ToString ()), ds.Tables[0].Rows[0]["user_name"].ToString (), ds.Tables[0].Rows[0]["password"].ToString ());
             return true;
         }
-
         public void UpdateUser (DDO_User ddo) {
             string cmd;
-            DataSet ds = new DataSet ();
             cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\" where `userid`=" + ddo.m_playerId + ";";
             string database = "legend";
-            //Console.WriteLine(cmd);
             pool.ExecuteSql (database, cmd);
         }
-
         public int InsertUser (DDO_User ddo) {
             DDO_User temp = new DDO_User (0, "", "");
             if (!GetUserByUsername (ddo.m_username, out temp)) {
@@ -375,6 +371,32 @@ namespace MirRemakeBackend.DynamicData {
             return -1;
         }
 
+        public void InsertVipCard (DDO_VipCard vipCard){
+            string cmd;
+            cmd = "insert into `vip` values("+vipCard.m_playerId+","+vipCard.m_vipLevel+");";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
+        public DDO_VipCard GetVipCardByPlayerId (int playerId){
+            string cmd;
+            DataSet ds=new DataSet();
+            cmd="";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd,ds);
+            DataTable dt=ds.Tables[0];
+            if(dt.Rows.Count==0){
+                throw new Exception();
+            }
+            DDO_VipCard res =new DDO_VipCard(int.Parse(dt.Rows[0]["userid"].ToString()),int.Parse(dt.Rows[0]["vip_card"].ToString()));
+            return res;
+        }
+        public void UpdateVipCard (DDO_VipCard vipCard){
+            string cmd;
+            cmd = "update `vip` set `vip_level`="+vipCard.m_vipLevel+" where `userid`="+vipCard.m_playerId+";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
+        
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
