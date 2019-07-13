@@ -28,7 +28,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             int playerId = reader.GetInt ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
-            User.s_instance.CommandCreateCharacter (playerId, ocp);
+            User.s_instance.CommandCreateCharacter (netId, playerId, ocp);
         }
     }
     /// <summary>
@@ -199,14 +199,14 @@ namespace MirRemakeBackend.Network {
         }
     }
     class CC_ApplyMakeHoleInEquipment : IClientCommand {
-        public NetworkToServerDataType m_DataType { get {return NetworkToServerDataType.APPLY_MAKE_HOLE_IN_EQUIPMENT; } }
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_MAKE_HOLE_IN_EQUIPMENT; } }
         public void Execute (NetDataReader reader, int netId) {
             long equipmentRealId = reader.GetLong ();
             GL_Item.s_instance.CommandApplyMakeHoleInEquipment (netId, equipmentRealId);
         }
     }
     class CC_ApplyDisjointEquipment : IClientCommand {
-        public NetworkToServerDataType m_DataType { get {return NetworkToServerDataType.APPLY_DISJOINT_EQUIPMENT; } }
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DISJOINT_EQUIPMENT; } }
         public void Execute (NetDataReader reader, int netId) {
             long equipmentRealId = reader.GetLong ();
             GL_Item.s_instance.CommandApplyDisjointEquipment (netId, equipmentRealId);

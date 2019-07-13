@@ -59,7 +59,7 @@ namespace MirRemakeBackend.CharacterCreate {
             else
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId));
         }
-        public void CommandCreateCharacter (int playerId, OccupationType ocp) {
+        public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp) {
             // 角色 dds
             int charId = m_charDds.CreateCharacter (ocp);
             m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
@@ -78,6 +78,7 @@ namespace MirRemakeBackend.CharacterCreate {
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
             for (short i = 0; i < storeHouseSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
+            m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true));
         }
     }
 }
