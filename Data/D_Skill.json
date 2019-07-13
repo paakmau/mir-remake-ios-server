@@ -24,7 +24,7 @@
 		],
 		"CampType": "ENEMY",
 		"SkillAimType": "NOT_AIM_SELF_RECT",
-		"CastRange": 800,
+		"CastRange": 400,
 		"TargetNumber": 20,
 		"DamageRadian": 800,
 		"SecondParameter": 200,
