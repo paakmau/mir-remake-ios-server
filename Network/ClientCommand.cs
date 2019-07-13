@@ -1,5 +1,5 @@
 using LiteNetLib.Utils;
-using MirRemakeBackend.CharacterCreate;
+using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {

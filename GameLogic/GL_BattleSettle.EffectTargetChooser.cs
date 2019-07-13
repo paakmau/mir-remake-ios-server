@@ -18,7 +18,7 @@ namespace MirRemakeBackend.GameLogic {
             // 技能作用目标的阵营
             public CampType m_targetCamp;
             // 作用对象数量
-            public byte m_targetNumber;
+            protected byte m_targetNumber;
             protected bool TryGetAimParamValue (IReadOnlyList < (SkillAimParamType, float) > parmList, SkillAimParamType type, out float value) {
                 for (int i = 0; i < parmList.Count; i++)
                     if (parmList[i].Item1 == type) {
@@ -95,7 +95,7 @@ namespace MirRemakeBackend.GameLogic {
         private class ETC_AimCircle : EffectTargetChooserBase {
             public override SkillAimType m_TargetAimType { get { return SkillAimType.AIM_CIRCLE; } }
             // 伤害半径
-            public float m_radius;
+            private float m_radius;
             public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
                 base.Reset (targetCamp, targetNum, parmList);
                 TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
@@ -115,7 +115,7 @@ namespace MirRemakeBackend.GameLogic {
         private class ETC_NotAimSelfCircle : EffectTargetChooserBase {
             public override SkillAimType m_TargetAimType { get { return SkillAimType.NOT_AIM_SELF_CIRCLE; } }
             // 伤害半径
-            public float m_radius;
+            private float m_radius;
             public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
                 base.Reset (targetCamp, targetNum, parmList);
                 TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
@@ -130,7 +130,7 @@ namespace MirRemakeBackend.GameLogic {
         private class ETC_NotAimCircle : EffectTargetChooserBase {
             public override SkillAimType m_TargetAimType { get { return SkillAimType.NOT_AIM_CIRCLE; } }
             // 伤害半径
-            public float m_radius;
+            private float m_radius;
             public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
                 base.Reset (targetCamp, targetNum, parmList);
                 TryGetAimParamValue (parmList, SkillAimParamType.RADIUS, out m_radius);
@@ -145,9 +145,9 @@ namespace MirRemakeBackend.GameLogic {
         private class ETC_NotAimSelfRect : EffectTargetChooserBase {
             public override SkillAimType m_TargetAimType { get { return SkillAimType.NOT_AIM_SELF_RECT; } }
             // 伤害长度
-            public float m_length;
+            private float m_length;
             // 伤害宽度
-            public float m_width;
+            private float m_width;
             public override void Reset (CampType targetCamp, byte targetNum, IReadOnlyList<ValueTuple<SkillAimParamType, float>> parmList) {
                 base.Reset (targetCamp, targetNum, parmList);
                 TryGetAimParamValue (parmList, SkillAimParamType.LENGTH, out m_length);

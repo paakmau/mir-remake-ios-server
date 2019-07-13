@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Entity;
+using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 
-namespace MirRemakeBackend.CharacterCreate {
+namespace MirRemakeBackend.EnterGame {
     class User {
         public static User s_instance;
         private INetworkService m_netService;
@@ -43,6 +45,15 @@ namespace MirRemakeBackend.CharacterCreate {
                     foreach (var ocp in ocpArr)
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
+        }
+        public int AssignNetworkId () {
+            return EM_Unit.s_instance.AssignNetworkId ();
+        }
+        public void CommandConnect (int netId) {
+            m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId));
+        }
+        public void CommandDisconnect (int netId) {
+            UnitInitializer.s_instance.CommandRemoveCharacter (netId);
         }
         public void CommandRegister (int netId, string username, string pwd) {
             var playId = m_userDds.InsertUser (new DDO_User (-1, username, pwd));

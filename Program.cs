@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using MirRemakeBackend.CharacterCreate;
+using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
