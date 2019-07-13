@@ -53,10 +53,19 @@ create table `mission`(
   `status` VARCHAR(255) NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `character_position`;
 CREATE TABLE `character_position` (
   `charid` int NOT NULL,
   `x` VARCHAR(20),
   `y` VARCHAR(20),
    primary key (`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `user`;
+create table `user`( 
+  `userid` int NOT NULL AUTO_INCREMENT,
+  `user_name` VARCHAR(155) NOT NULL,
+  `password` VARCHAR(155) NOT NULL,
+  primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
