@@ -363,7 +363,7 @@ namespace MirRemakeBackend.DynamicData {
 
         public int InsertUser(DDO_User ddo){
             DDO_User temp=new DDO_User(0,"","");
-            if(!GetUserByUsername(ddo.m_username,out temp){
+            if(!GetUserByUsername(ddo.m_username,out temp)){
                 string cmd;
                 DataSet ds = new DataSet ();
                 cmd = "insert into `user` values(null,\""+ddo.m_username+"\"+,\""+ddo.m_pwd+"\");select last_insert_id();";
