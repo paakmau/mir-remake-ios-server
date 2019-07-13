@@ -26,7 +26,7 @@
 		"SkillAimType": "NOT_AIM_SELF_RECT",
 		"CastRange": 400,
 		"TargetNumber": 20,
-		"DamageRadian": 800,
+		"DamageRadian": 400,
 		"SecondParameter": 200,
 		"Effect": {
 			"EffectDeltaHP": [
