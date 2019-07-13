@@ -191,6 +191,29 @@ namespace MirRemakeBackend.GameLogic {
             eq.m_strengthenNum++;
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
+        public void CommandApplyEnchantEquipment (int netId, long eqRealId, long enchantmentRealId) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            short eqPos, encmPos;
+            var eq = bag.GetItemByRealId (eqRealId, out eqPos) as E_EquipmentItem;
+            var encm = bag.GetItemByRealId (enchantmentRealId, out encmPos) as E_EnchantmentItem;
+            if (eq == null || encm == null) return;
+            // 判断钱充足
+            var curCy = charObj.m_VirtualCurrency;
+            long needCy = (1L << (int) encm.m_Quality) * (1L << (eq.m_LevelInNeed >> 4)) * 3L;
+            if (needCy > curCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            // 失去附魔符
+            var emptyItem = EM_Item.s_instance.CharacterLoseItem (encm, charObj.m_characterId, ItemPlace.BAG, encmPos);
+            bag.RemoveItemByPosition (encmPos, emptyItem);
+            // 附魔
+            eq.m_enchantAttrList.Clear ();
+            for (int i=0; i<encm.m_attrList.Count; i++)
+                eq.m_enchantAttrList.Add (encm.m_attrList[i]);
+            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+        }
         /// <summary> 镶嵌宝石 </summary>
         public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -200,6 +223,11 @@ namespace MirRemakeBackend.GameLogic {
             var eq = bag.GetItemByRealId (eqRealId, out eqPos) as E_EquipmentItem;
             var gem = bag.GetItemByRealId (gemRealId, out gemPos) as E_GemItem;
             if (eq == null || gem == null) return;
+            // 判断钱充足
+            var curCy = charObj.m_VirtualCurrency;
+            long needCy = (1L << (int) gem.m_Quality) * (1L << (eq.m_LevelInNeed >> 5));
+            if (needCy > curCy) return;
+            // 有插槽
             int gemInlayPos = -1;
             for (int i = 0; i < eq.m_inlaidGemList.Count; i++)
                 if (eq.m_inlaidGemList[i] == null) {
@@ -207,9 +235,6 @@ namespace MirRemakeBackend.GameLogic {
                     break;
                 }
             if (gemInlayPos == -1) return;
-            var curCy = charObj.m_VirtualCurrency;
-            long needCy = (1L << (int) gem.m_Quality) * (1L << (eq.m_LevelInNeed >> 5));
-            if (needCy > curCy) return;
             // 花钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
             // 失去宝石

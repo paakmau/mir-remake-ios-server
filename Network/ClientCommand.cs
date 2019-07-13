@@ -187,7 +187,9 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyEnchantEquipment : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ENCHANT_EQUIPMENT; } }
         public void Execute (NetDataReader reader, int netId) {
-            // TODO: 附魔需要新的 DDS 接口
+            long equipmentRealId = reader.GetLong ();
+            long enchantmentRealId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyEnchantEquipment (netId, equipmentRealId, enchantmentRealId);
         }
     }
     class CC_ApplyInlayGemInEquipment : IClientCommand {
