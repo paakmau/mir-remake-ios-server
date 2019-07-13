@@ -69,15 +69,14 @@ namespace MirRemakeBackend.Network {
             // 超过连接上限
             if (m_netIdAndPeerDict.Count >= c_maxClientNum)
                 return;
-            // 分配NetId
+            // 分配 NetId
             int netId = UnitInitializer.s_instance.AssignNetworkId ();
 
-            // 索引并保存peer
+            // 索引并保存 peer
             m_peerIdAndNetworkIdDict[peer.Id] = netId;
             m_networkIdAndPeerIdDict[netId] = peer.Id;
             m_netIdAndPeerDict[netId] = peer;
             // 发送NetId
-            SendServerCommand (SC_InitSelfNetworkId.Instance (new List<int> { netId }, netId));
             Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
