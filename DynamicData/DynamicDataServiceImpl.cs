@@ -173,6 +173,23 @@ namespace MirRemakeBackend.DynamicData {
             string database="legend";
             pool.ExecuteSql(database,cmd);
         }
+        public List<DDO_EnchantmentInfo> GetAllEnchantmentByCharacterId (int charId){
+            List<DDO_EnchantmentInfo> res=new List<DDO_EnchantmentInfo>();
+            string cmd="select * from `enchantment` where `charid`="+charId+";";
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            DataTable dt=ds.Tables[0];
+            for(int i=0;i<dt.Rows.Count;i++){
+                DDO_EnchantmentInfo e=new DDO_EnchantmentInfo();
+                e.m_realId=long.Parse(dt.Rows[i]["realid"].ToString());
+                e.m_characterId=int.Parse(dt.Rows[i]["charid"].ToString());
+                e.m_enchantAttr=GetAttr(dt.Rows[i]["enchant_attr"].ToString());
+                res.Add(e);
+            }
+            return res;
+        }
+
         public List<DDO_Skill> GetSkillListByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
