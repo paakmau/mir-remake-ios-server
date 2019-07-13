@@ -365,19 +365,12 @@ namespace MirRemakeBackend.DynamicData {
             DDO_User temp = new DDO_User (0, "", "");
             if (!GetUserByUsername (ddo.m_username, out temp)) {
                 string cmd;
-                DataSet ds = new DataSet (); <<
-                <<<<< HEAD
-                cmd = "insert into `user` values(null,\"" + ddo.m_username + "\"+,\"" + ddo.m_pwd + "\");select last_insert_id();";
-                string database = "legend";
-                pool.ExecuteSql (database, cmd, ds);
-                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ()); ==
-                == == =
+                DataSet ds = new DataSet ();
                 cmd = "insert into `user` values(null,\"" + ddo.m_username + "\",\"" + ddo.m_pwd + "\");select last_insert_id();";
                 string database = "legend";
                 //Console.WriteLine(cmd);
                 pool.ExecuteSql (database, cmd, ds);
-                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ()); >>
-                >>>>> 063 d08ac69c32b4f1a4a0bf295d148416a0c6de0
+                return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
             }
             return -1;
         }
