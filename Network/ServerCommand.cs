@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
@@ -12,23 +10,37 @@ namespace MirRemakeBackend.Network {
         public IReadOnlyList<int> m_toClientList;
         public abstract void PutData (NetDataWriter writer);
     }
-
-    /// <summary>
-    /// 初始化NetId
-    /// </summary>
-    class SC_InitSelfNetworkId : ServerCommandBase {
-        private static readonly SC_InitSelfNetworkId s_instance = new SC_InitSelfNetworkId ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
+    class SC_InitSelfLogin : ServerCommandBase {
+        private static readonly SC_InitSelfLogin s_instance = new SC_InitSelfLogin ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_LOGIN; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private int m_networkId;
-        public static SC_InitSelfNetworkId Instance (IReadOnlyList<int> toClientList, int netId) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_networkId = netId;
+        private bool m_success;
+        private int m_playerId;
+        public static SC_InitSelfLogin Instance (int netId, bool success, int playerId) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            s_instance.m_playerId = playerId;
             return s_instance;
         }
-        private SC_InitSelfNetworkId () { }
+        private SC_InitSelfLogin () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put (m_networkId);
+            writer.Put (m_success);
+            writer.Put (m_playerId);
+        }
+    }
+    class SC_InitSelfRegister : ServerCommandBase {
+        private static readonly SC_InitSelfRegister s_instance = new SC_InitSelfRegister ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_REGISTER; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private bool m_success;
+        public static SC_InitSelfRegister Instance (int netId, bool success) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            return s_instance;
+        }
+        private SC_InitSelfRegister () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_success);
         }
     }
     /// <summary>

@@ -44,14 +44,20 @@ namespace MirRemakeBackend.CharacterCreate {
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
         }
-        public void CommandRegister (string username, string pwd) {
-            m_userDds.InsertUser (new DDO_User (-1, username, pwd));
+        public void CommandRegister (int netId, string username, string pwd) {
+            var playId = m_userDds.InsertUser (new DDO_User (-1, username, pwd));
+            if (playId == -1)
+                m_netService.SendServerCommand (SC_InitSelfRegister.Instance (netId, false));
+            else
+                m_netService.SendServerCommand (SC_InitSelfRegister.Instance (netId, true));
         }
-        public void CommandLogin (string username, string pwd) {
-            // var userDdo = m_userDds.GetUserByUsername (username);
-            // if (userDdo.m_pwd == pwd) {
-            //     // TODO: 
-            // }
+        public void CommandLogin (int netId, string username, string pwd) {
+            DDO_User userDdo;
+            var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
+            if (!hasUser || userDdo.m_pwd != pwd)
+                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, false, userDdo.m_playerId));
+            else
+                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId));
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // 角色 dds

@@ -1,7 +1,8 @@
 namespace MirRemakeBackend.Network {
     enum NetworkToClientDataType : byte {
         // 初始化相关
-        INIT_SELF_NETWORK_ID,
+        INIT_SELF_LOGIN,
+        INIT_SELF_REGISTER,
         INIT_SELF_ATTRIBUTE,
         INIT_SELF_SKILL,
         INIT_SELF_MISSION,

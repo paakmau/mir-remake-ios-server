@@ -11,19 +11,14 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandInitCharacterId (int netId, int charId) {
             // 角色
             var newChar = GL_CharacterAttribute.s_instance.NotifyInitCharacter (netId, charId);
-
             // 单位战斗属性
             GL_UnitBattleAttribute.s_instance.NotifyInitCharacter (netId);
-
             // Sight
             GL_CharacterSight.s_instance.NotifyInitCharacter (newChar);
-
             // 道具
             GL_Item.s_instance.NotifyInitCharacter (netId, charId);
-
             // 技能
             GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
-
             // 任务
             GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
         }
