@@ -48,10 +48,10 @@ namespace MirRemakeBackend.CharacterCreate {
             m_userDds.InsertUser (new DDO_User (-1, username, pwd));
         }
         public void CommandLogin (string username, string pwd) {
-            var userDdo = m_userDds.GetUserByUsername (username);
-            if (userDdo.m_pwd == pwd) {
-                // TODO: 
-            }
+            // var userDdo = m_userDds.GetUserByUsername (username);
+            // if (userDdo.m_pwd == pwd) {
+            //     // TODO: 
+            // }
         }
         public void CommandCreateCharacter (int playerId, OccupationType ocp) {
             // 角色 dds

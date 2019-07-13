@@ -1,6 +1,6 @@
 namespace MirRemakeBackend.DynamicData {
     interface IDDS_User {
-        DDO_User GetUserByUsername (string username);
+        bool GetUserByUsername (string username, out DDO_User resUser);
         void UpdateUser (DDO_User ddo);
         /// <summary>
         /// 创建一个用户  
