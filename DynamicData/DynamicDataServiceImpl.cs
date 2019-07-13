@@ -339,13 +339,45 @@ namespace MirRemakeBackend.DynamicData {
             DDO_CharacterPosition cp=new DDO_CharacterPosition(charId,new System.Numerics.Vector2(x,y));
             return cp;
         }
+        public bool GetUserByUsername (string username, out DDO_User resUser){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "select * from `user` where user_name=\""+username+"\";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd,ds);
+            if(ds.Tables[0].Rows.Count!=0){
+                resUser=default;
+                return false;
+            }
+            resUser=new DDO_User(int.Parse(ds.Tables[0].Rows[0]["userid"].ToString()),ds.Tables[0].Rows[0]["user_name"].ToString(),ds.Tables[0].Rows[0]["password"].ToString() );
+            return true;
+        }
+        
+        public void UpdateUser(DDO_User ddo){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "update user set `user_name`=\""+ddo.m_username+"\",`password`=\""+ddo.m_pwd+"\" where `userid`="+ddo.m_playerId+";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
+
+        public int InsertUser(DDO_User ddo){
+            DDO_User temp=new DDO_User(0,"","");
+            if(!GetUserByUsername(ddo.m_username,out temp){
+                string cmd;
+                DataSet ds = new DataSet ();
+                cmd = "insert into `user` values(null,\""+ddo.m_username+"\"+,\""+ddo.m_pwd+"\");select last_insert_id();";
+                string database = "legend";
+                pool.ExecuteSql (database, cmd,ds);
+                return int.Parse(ds.Tables[0].Rows[0]["last_insert_id()"].ToString());
+            }
+            return -1;
+        }
         
         
         
         
-        
-        
-        private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
+        private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr(JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
                 res[j] = new ValueTuple<ActorUnitConcreteAttributeType, int>
