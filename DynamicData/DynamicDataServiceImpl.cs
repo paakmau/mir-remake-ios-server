@@ -403,6 +403,7 @@ namespace MirRemakeBackend.DynamicData {
                 return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
             }
             catch(Exception e){
+                Console.Write(e.StackTrace);
                 return -1;
             }
         }
