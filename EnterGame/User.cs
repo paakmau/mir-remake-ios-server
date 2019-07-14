@@ -87,13 +87,16 @@ namespace MirRemakeBackend.EnterGame {
             var misIdList = m_ocpInitMisIdDict[ocp];
             for (int i = 0; i < misIdList.Count; i++)
                 m_misDds.InsertMission (new DDO_Mission (misIdList[i], charId, MissionStatus.ACCEPTABLE, new List<int> ()));
-            // 背包和仓库 dds
+            // 背包, 仓库, equipment dds
             short bagSize = 3;
             short storeHouseSize = 6;
+            short eqSize = 10;
             for (short i = 0; i < bagSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
             for (short i = 0; i < storeHouseSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
+            for (short i = 0; i<eqSize; i++)
+                m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.EQUIPMENT_REGION, i));
             m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true));
         }
     }
