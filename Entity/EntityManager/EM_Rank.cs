@@ -24,7 +24,7 @@ namespace MirRemakeBackend.Entity {
         }
         private AVLTree<CombatEffectiveItem> m_rankTree = new AVLTree<CombatEffectiveItem> ();
         private Dictionary<int, int> m_charIdAndOriCombatEfctDict = new Dictionary<int, int> ();
-        public void InitAllCharacter (List < (int, int) > charIdAndCombatEfctList) {
+        public void LoadAllCharacter (List < (int, int) > charIdAndCombatEfctList) {
             for (int i = 0; i < charIdAndCombatEfctList.Count; i++)
                 UpdateCharCombatEfct (charIdAndCombatEfctList[i].Item1, charIdAndCombatEfctList[i].Item2);
         }
@@ -36,10 +36,11 @@ namespace MirRemakeBackend.Entity {
             m_charIdAndOriCombatEfctDict[charId] = combatEfct;
         }
         public List < (int, int) > GetTopCombatEfctRnkCharIdAndCombatEfctList (int num) {
-            var res = new List < (int, int) > ();
+            var res = new List < (int, int) > (num);
             for (int i = 0; i < num; i++) {
                 var v = m_rankTree.GetKElementInOrder (i);
-                res.Add ((v.m_charId, v.m_combatEfct));
+                if (v != null)
+                    res.Add ((v.m_charId, v.m_combatEfct));
             }
             return res;
         }
