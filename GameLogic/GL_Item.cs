@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
@@ -7,13 +9,21 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理物品的使用, 存取 (背包, 仓库), 回收
     /// 装备强化, 附魔, 镶嵌
-    /// TODO: GL_Item 太混乱了, 考虑把更多逻辑放入 EM_Item
     /// </summary>
-    class GL_Item : GameLogicBase {
+    partial class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
-        public GL_Item (INetworkService netService) : base (netService) { }
+        private Dictionary<ItemType, IItemInfoNetworkSender> m_netSenderDict = new Dictionary<ItemType, IItemInfoNetworkSender> ();
+        public GL_Item (INetworkService netService) : base (netService) {
+            // 实例化所有 IItemInitializer 的子类
+            var baseType = typeof (IItemInfoNetworkSender);
+            var implTypes = AppDomain.CurrentDomain.GetAssemblies ().SelectMany (s => s.GetTypes ()).Where (p => !p.IsAbstract && baseType.IsAssignableFrom (p));
+            foreach (var type in implTypes) {
+                IItemInfoNetworkSender impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemInfoNetworkSender;
+                m_netSenderDict.Add (impl.m_Type, impl);
+            }
+        }
         public override void Tick (float dT) {
             // 地面道具消失
             var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
@@ -123,12 +133,8 @@ namespace MirRemakeBackend.GameLogic {
                     new List<NO_Item> { item.GetItemNo () },
                     new List<ItemPlace> { ItemPlace.BAG },
                     new List<short> { pos }));
-                // 附加信息 (装备等) client TODO: 考虑改模式
-                if (item.m_Type == ItemType.EQUIPMENT)
-                    m_networkService.SendServerCommand (
-                        SC_ApplySelfUpdateEquipment.Instance (
-                            netId, item.m_realId,
-                            (item as E_EquipmentItem).GetEquipmentInfoNo ()));
+                // 附加信息 (装备等) client
+                m_netSenderDict[item.m_Type].SendItemInfo (item, netId, m_networkService);
             }
 
             // 回收实例
@@ -210,7 +216,7 @@ namespace MirRemakeBackend.GameLogic {
             bag.RemoveItemByPosition (encmPos, emptyItem);
             // 附魔
             eq.m_enchantAttrList.Clear ();
-            for (int i=0; i<encm.m_attrList.Count; i++)
+            for (int i = 0; i < encm.m_attrList.Count; i++)
                 eq.m_enchantAttrList.Add (encm.m_attrList[i]);
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
@@ -229,8 +235,8 @@ namespace MirRemakeBackend.GameLogic {
             if (needCy > curCy) return;
             // 有插槽
             int gemInlayPos = -1;
-            for (int i = 0; i < eq.m_inlaidGemList.Count; i++)
-                if (eq.m_inlaidGemList[i] == null) {
+            for (int i = 0; i < eq.m_InlaidGemList.Count; i++)
+                if (eq.m_InlaidGemList[i] == null) {
                     gemInlayPos = i;
                     break;
                 }
@@ -241,7 +247,7 @@ namespace MirRemakeBackend.GameLogic {
             var emptyItem = EM_Item.s_instance.CharacterLoseItem (gem, charObj.m_characterId, ItemPlace.BAG, gemPos);
             bag.RemoveItemByPosition (gemPos, emptyItem);
             // 镶嵌
-            eq.m_inlaidGemList[gemInlayPos] = gem.m_gemDe;
+            eq.InlayGem (gemInlayPos, gem.m_ItemId, gem.m_gemDe);
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
         /// <summary> 装备打孔 </summary>
@@ -253,16 +259,37 @@ namespace MirRemakeBackend.GameLogic {
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
             long curCy = charObj.m_VirtualCurrency;
-            long needCy = (1L << eq.m_inlaidGemList.Count) * 100;
+            long needCy = (1L << eq.m_InlaidGemList.Count) * 100;
             if (needCy > curCy) return;
             // 花钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
             // 打孔
-            eq.m_inlaidGemList.Add (null);
+            eq.MakeHole ();
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
-        public void CommandApplyDisjointEquipment (int netId, long eqRealId) {
-            // TODO: 分解装备
+        /// <summary> 装备分解 </summary>
+        public void CommandApplyDisjointEquipment (int netId, long realId) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            short eqPos;
+            var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
+            if (eq == null) return;
+            long curCy = charObj.m_VirtualCurrency;
+            long needCy = (1L << (eq.m_LevelInNeed >> 4)) * 12L;
+            if (needCy > curCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            // 失去装备
+            var emptyItem = EM_Item.s_instance.CharacterLoseItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            bag.RemoveItemByPosition (eqPos, emptyItem);
+            // 获得附魔符
+            var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
+            for (int i = 0; i < eq.m_RawAttrList.Count; i++)
+                if (MyRandom.NextInt (0, 10) >= 5)
+                    attrList.Add (eq.m_RawAttrList[i]);
+            var ecmt = EM_Item.s_instance.CharacterGainEnchantmentItem (emptyItem, 29000, attrList, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            bag.SetItem (ecmt, eqPos);
         }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
@@ -332,12 +359,8 @@ namespace MirRemakeBackend.GameLogic {
                         new List<NO_Item> { itemObj.GetItemNo () },
                         new List<ItemPlace> { ItemPlace.BAG },
                         new List<short> { storePos }));
-                    // 附加信息 (装备等) client TODO: 考虑改模式
-                    if (itemObj.m_Type == ItemType.EQUIPMENT)
-                        m_networkService.SendServerCommand (
-                            SC_ApplySelfUpdateEquipment.Instance (
-                                charObj.m_networkId, itemObj.m_realId,
-                                ((E_EquipmentItem) itemObj).GetEquipmentInfoNo ()));
+                    // 附加信息 (装备等) client
+                    m_netSenderDict[itemObj.m_Type].SendItemInfo (itemObj, charObj.m_networkId, m_networkService);
                 }
                 // 通知 log
                 GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemId, realStoreNum);
@@ -384,7 +407,7 @@ namespace MirRemakeBackend.GameLogic {
             foreach (var attr in enchantAttr)
                 res.Add ((attr.Item1, k * attr.Item2));
             // 处理镶嵌
-            var gemList = eqObj.m_inlaidGemList;
+            var gemList = eqObj.m_InlaidGemList;
             for (int i = 0; i < gemList.Count; i++) {
                 var gemDe = gemList[i];
                 for (int j = 0; j < gemDe.m_attrList.Count; j++)

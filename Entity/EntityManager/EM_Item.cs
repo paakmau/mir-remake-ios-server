@@ -494,6 +494,14 @@ namespace MirRemakeBackend.Entity {
             m_storeHouseDict.TryGetValue (netId, out res);
             return res;
         }
+        public E_EnchantmentItem CharacterGainEnchantmentItem (E_EmptyItem oriSlot, short itemId, List < (ActorUnitConcreteAttributeType, int) > attrList, int charId, ItemPlace ip, short pos) {
+            E_EnchantmentItem item = m_itemFactory.GetAndInitInstance (itemId, 1) as E_EnchantmentItem;
+            if (item == null)
+                return null;
+            item.ResetEnchantmentData (attrList);
+            CharacterGainItem (oriSlot, item, charId, ip, pos);
+            return item;
+        }
         public E_Item CharacterGainItem (E_EmptyItem oriSlot, short itemId, short itemNum, int charId, ItemPlace ip, short pos) {
             // 生成实例
             E_Item item = m_itemFactory.GetAndInitInstance (itemId, itemNum);

@@ -66,7 +66,8 @@ namespace MirRemakeBackend.Entity {
         public List < (ActorUnitConcreteAttributeType, int) > m_enchantAttrList = new List < (ActorUnitConcreteAttributeType, int) > ();
         private List<short> m_inlaidGemIdList = new List<short> ();
         /// <summary> 若为 null, 则为插槽 </summary>
-        public List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
+        private List<DE_GemData> m_inlaidGemList = new List<DE_GemData> ();
+        public IReadOnlyList<DE_GemData> m_InlaidGemList { get { return m_inlaidGemList; } }
         public void Reset (DE_Item itemDe, DE_EquipmentData eqDe) {
             base.Reset (itemDe, 1);
             m_eqDe = eqDe;
@@ -92,6 +93,16 @@ namespace MirRemakeBackend.Entity {
         }
         public int CalcStrengthenedAttr (int value) {
             return (int) (value * (1 + m_strengthenNum / c_maxStrengthenNum * m_eqDe.m_attrWave));
+        }
+        public void InlayGem (int pos, short gemId, DE_GemData gem) {
+            if (m_inlaidGemIdList.Count <= pos)
+                return;
+            m_inlaidGemIdList[pos] = gemId;
+            m_inlaidGemList[pos] = gem;
+        }
+        public void MakeHole () {
+            m_inlaidGemIdList.Add (-1);
+            m_inlaidGemList.Add (null);
         }
     }
     abstract class E_Item {
