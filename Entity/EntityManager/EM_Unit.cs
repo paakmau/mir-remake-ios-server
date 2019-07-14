@@ -72,7 +72,13 @@ namespace MirRemakeBackend.Entity {
             E_Character newChar = null;
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
-            var charDdo = m_dds.GetCharacterById (charId);
+            DDO_Character charDdo;
+            try {
+                charDdo = m_dds.GetCharacterById (charId);
+            } catch (Exception e) {
+                Console.WriteLine (e);
+                return null;
+            }
             newChar = s_entityPool.m_characterPool.GetInstance ();
             DE_Character charDe;
             DE_Unit unitDe;

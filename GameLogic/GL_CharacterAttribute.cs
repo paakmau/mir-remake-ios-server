@@ -93,6 +93,8 @@ namespace MirRemakeBackend.GameLogic {
         }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
+            if (newChar == null)
+                return null;
             MainPointToConAttr (newChar);
             NotifyCombatEffectivenessChange (newChar);
             // client
