@@ -157,7 +157,7 @@ namespace MirRemakeBackend.DynamicData {
         }
 
         public void UpdateEnchantmentInfo(DDO_EnchantmentInfo e){
-            string cmd="update `enchantment` set `enchant_attr`=\""+GetString(e.m_attrList)+"\" where `realid`="+e.m_realId+" and `charid`="+e.m_characterId+";";
+            string cmd="update `enchantment` set `enchant_attr`=\""+GetString(e.m_attrList)+"\" where `realid`="+e.m_realId+";";
             string database="legend";
             pool.ExecuteSql(database,cmd);
         }

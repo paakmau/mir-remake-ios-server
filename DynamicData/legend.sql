@@ -23,6 +23,8 @@ create table `skill`(
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE UNIQUE INDEX `charid` ON `skill`(`charid`);
+
 DROP TABLE IF EXISTS `item`;
 create table `item`(
   `realid` int NOT NULL AUTO_INCREMENT,
@@ -34,6 +36,8 @@ create table `item`(
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE UNIQUE INDEX `charid` ON `item`(`charid`);
+
 DROP TABLE IF EXISTS `equipment`;
 CREATE table `equipment`(
   `realid` int not null AUTO_INCREMENT,
@@ -44,6 +48,8 @@ CREATE table `equipment`(
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE UNIQUE INDEX `charid` ON `equipment`(`charid`);
+
 DROP TABLE IF EXISTS `mission`;
 create table `mission`(
   `realid` int NOT NULL AUTO_INCREMENT,
@@ -53,6 +59,7 @@ create table `mission`(
   `status` VARCHAR(255) NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX `charid` ON `mission`(`charid`);
 
 DROP TABLE IF EXISTS `character_position`;
 CREATE TABLE `character_position` (
@@ -70,6 +77,8 @@ create table `user`(
   primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE UNIQUE INDEX `user_name` ON `user`(`user_name`);
+
 DROP TABLE IF EXISTS `vip`;
 create table `vip`( 
   `userid` int NOT NULL AUTO_INCREMENT,
@@ -84,3 +93,4 @@ create table `enchantment`(
   `enchant_attr` VARCHAR(255),
   primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX `charid` ON `enchantment`(`charid`);
