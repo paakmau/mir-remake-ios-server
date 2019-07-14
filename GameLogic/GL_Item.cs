@@ -144,10 +144,27 @@ namespace MirRemakeBackend.GameLogic {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             var bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null || charObj == null) return;
-            var item = bag.GetItemByRealId (realId);
+            short itemPos;
+            var item = bag.GetItemByRealId (realId, out itemPos);
             if (item == null) return;
-            var slot = EM_Item.s_instance.CharacterDropItemOntoGround (item, charObj.m_characterId, charObj.m_position);
-            bag.RemoveItemByRealId (realId, slot);
+            if (item.m_num < num) return;
+            // TODO: 这里无法处理丢弃装备
+            EM_Item.s_instance.GenerateItemOnGround (
+                new List < (short, short) > () {
+                    (item.m_ItemId, num)
+                },
+                charObj.m_characterId,
+                charObj.m_position
+            );
+            item.m_num -= num;
+            if (item.m_num == 0) {
+                var slot = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, ItemPlace.BAG, itemPos);
+                bag.RemoveItemByRealId (realId, slot);
+            } else {
+                EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, itemPos);
+            }
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, new List<long> () { realId }, new List<short> () { item.m_num }));
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -394,7 +411,6 @@ namespace MirRemakeBackend.GameLogic {
             // TODO: 根据bagItemList (从角色bag中), 角色掉落遗物
 
             int charId = (killer.m_UnitType == ActorUnitType.PLAYER) ? ((E_Character) killer).m_characterId : -1;
-            EM_Item.s_instance.CharacterDropItemOntoGround (droppedItemList, charId, charObj.m_position);
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();

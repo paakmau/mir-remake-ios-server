@@ -61,7 +61,10 @@ namespace MirRemakeBackend.Network {
         }
         public void OnNetworkLatencyUpdate (NetPeer peer, int latency) { }
         public void OnNetworkReceive (NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod) {
-            ReceiveClientCommand (reader, m_peerIdAndNetworkIdDict[peer.Id]);
+            int netId;
+            if (!m_peerIdAndNetworkIdDict.TryGetValue (peer.Id, out netId))
+                return;
+            ReceiveClientCommand (reader, netId);
             reader.Recycle ();
         }
         public void OnNetworkReceiveUnconnected (IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType) { }

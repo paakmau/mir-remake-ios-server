@@ -545,19 +545,15 @@ namespace MirRemakeBackend.Entity {
             gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             m_groundItemList.Add (gndItem);
         }
-        public List<E_EmptyItem> CharacterDropItemOntoGround (List<E_Item> itemList, int charId, Vector2 pos) {
-            var res = new List<E_EmptyItem> (itemList.Count);
-            for (int i = 0; i < itemList.Count; i++)
-                res.Add (CharacterDropItemOntoGround (itemList[i], charId, pos));
-            return res;
-        }
         public E_EmptyItem CharacterDropItemOntoGround (E_Item item, int charId, Vector2 pos) {
-            E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
-            long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            m_ddh.Delete (item);
-            item.ResetRealId (-1);
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
-            return m_itemFactory.GetEmptyItemInstance ();
+            // E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
+            // long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
+            // m_ddh.Delete (item);
+            // item.ResetRealId (-1);
+            // gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
+            // return m_itemFactory.GetEmptyItemInstance ();
+            // TODO: 解决装备掉落问题
+            return null;
         }
         public void ItemOnGroundDisappear (E_GroundItem groundItem) {
             // 移除gndItem
