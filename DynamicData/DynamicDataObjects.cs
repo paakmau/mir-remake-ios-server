@@ -130,4 +130,8 @@ namespace MirRemakeBackend.DynamicData {
             m_position=pos;
         }
     }
+    struct DDO_CombatEfct {
+        public int m_charId;
+        public int m_combatEfct;
+    }
 }
