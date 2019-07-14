@@ -143,8 +143,8 @@ namespace MirRemakeBackend.Entity {
         public DDO_Item GetItemDdo (int charId, ItemPlace place, short pos) {
             return new DDO_Item (m_realId, m_ItemId, charId, m_num, place, pos);
         }
-        public NO_Item GetItemNo () {
-            return new NO_Item (m_realId, m_ItemId, m_num);
+        public NO_Item GetItemNo (ItemPlace ip, short pos) {
+            return new NO_Item (ip, pos, m_realId, m_ItemId, m_num);
         }
     }
     class E_GroundItem {

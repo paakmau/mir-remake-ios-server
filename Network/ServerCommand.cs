@@ -628,92 +628,27 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 获得物品
+    /// 更新物品数量  
+    /// 数量为0则为丢弃
     /// </summary>
-    class SC_ApplySelfGainItem : ServerCommandBase {
-        private static SC_ApplySelfGainItem s_instance = new SC_ApplySelfGainItem ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_GAIN_ITEM; } }
+    class SC_ApplySelfUpdateItem : ServerCommandBase {
+        private static SC_ApplySelfUpdateItem s_instance = new SC_ApplySelfUpdateItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_Item> m_itemList;
-        private IReadOnlyList<ItemPlace> m_itemPlaceList;
-        private IReadOnlyList<short> m_itemPositionList;
-        public static SC_ApplySelfGainItem Instance (
+        public static SC_ApplySelfUpdateItem Instance (
             int netId,
-            IReadOnlyList<NO_Item> gainedItemList,
-            IReadOnlyList<ItemPlace> placeList,
-            IReadOnlyList<short> posList
+            IReadOnlyList<NO_Item> itemList
         ) {
             s_instance.m_toClientList = new List<int> { netId };
-            s_instance.m_itemList = gainedItemList;
-            s_instance.m_itemPlaceList = placeList;
-            s_instance.m_itemPositionList = posList;
+            s_instance.m_itemList = itemList;
             return s_instance;
         }
-        private SC_ApplySelfGainItem () { }
+        private SC_ApplySelfUpdateItem () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_itemList.Count);
             for (int i = 0; i < m_itemList.Count; i++)
                 writer.Put (m_itemList[i]);
-            for (int i = 0; i < m_itemList.Count; i++)
-                writer.Put ((byte) m_itemPlaceList[i]);
-            for (int i = 0; i < m_itemList.Count; i++)
-                writer.Put (m_itemPositionList[i]);
-        }
-    }
-    /// <summary>
-    /// 更新物品数量  
-    /// 数量为0则为丢弃
-    /// </summary>
-    class SC_ApplySelfUpdateItemNum : ServerCommandBase {
-        private static SC_ApplySelfUpdateItemNum s_instance = new SC_ApplySelfUpdateItemNum ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_ITEM_NUM; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private IReadOnlyList<long> m_itemRealIdList;
-        private IReadOnlyList<short> m_itemNumList;
-        public static SC_ApplySelfUpdateItemNum Instance (
-            int netId,
-            IReadOnlyList<long> itemRealIdList,
-            IReadOnlyList<short> itemNumList
-        ) {
-            s_instance.m_toClientList = new List<int> { netId };
-            s_instance.m_itemRealIdList = itemRealIdList;
-            s_instance.m_itemNumList = itemNumList;
-            return s_instance;
-        }
-        private SC_ApplySelfUpdateItemNum () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_itemRealIdList.Count);
-            for (int i = 0; i < m_itemRealIdList.Count; i++) {
-                writer.Put (m_itemRealIdList[i]);
-                writer.Put (m_itemNumList[i]);
-            }
-        }
-    }
-    /// <summary>
-    /// 交换物品位置
-    /// </summary>
-    class SC_ApplySelfMoveItem : ServerCommandBase {
-        private static SC_ApplySelfMoveItem s_instance = new SC_ApplySelfMoveItem ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MOVE_ITEM; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private ItemPlace m_srcPlace;
-        private short m_srcPosition;
-        private ItemPlace m_tarPlace;
-        private short m_tarPosition;
-        public static SC_ApplySelfMoveItem Instance (IReadOnlyList<int> toClientList, ItemPlace srcPlace, short srcPos, ItemPlace tarPlace, short tarPos) {
-            s_instance.m_toClientList = toClientList;
-            s_instance.m_srcPlace = srcPlace;
-            s_instance.m_srcPosition = srcPos;
-            s_instance.m_tarPlace = tarPlace;
-            s_instance.m_tarPosition = tarPos;
-            return s_instance;
-        }
-        private SC_ApplySelfMoveItem () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put ((byte) m_srcPlace);
-            writer.Put (m_srcPosition);
-            writer.Put ((byte) m_tarPlace);
-            writer.Put (m_tarPosition);
         }
     }
     /// <summary>

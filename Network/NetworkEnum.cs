@@ -30,9 +30,7 @@ namespace MirRemakeBackend.Network {
         APPLY_ALL_STATUS,
         APPLY_ALL_DEAD,
         // 持有的物品 货币
-        APPLY_SELF_UPDATE_ITEM_NUM,
-        APPLY_SELF_GAIN_ITEM,
-        APPLY_SELF_MOVE_ITEM,
+        APPLY_SELF_UPDATE_ITEM,
         APPLY_SELF_UPDATE_EQUIPMENT,
         APPLY_SELF_UPDATE_ENCHANTMENT,
         APPLY_SELF_CURRENCY,

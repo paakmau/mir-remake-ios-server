@@ -110,16 +110,14 @@ namespace MirRemakeBackend.GameLogic {
 
             // 更新Bag中原有
             if (posAndItemChanged.Count != 0) {
-                var itemRealIdList = new List<long> (posAndItemChanged.Count);
-                var itemNumList = new List<short> (posAndItemChanged.Count);
+                var itemNoList = new List<NO_Item> (posAndItemChanged.Count);
                 for (int i = 0; i < posAndItemChanged.Count; i++) {
-                    itemRealIdList.Add (posAndItemChanged[i].Item2.m_realId);
-                    itemNumList.Add (posAndItemChanged[i].Item2.m_num);
+                    itemNoList.Add (posAndItemChanged[i].Item2.GetItemNo (ItemPlace.BAG, posAndItemChanged[i].Item1));
                     // dds
                     EM_Item.s_instance.CharacterUpdateItem (posAndItemChanged[i].Item2, charId, ItemPlace.BAG, posAndItemChanged[i].Item1);
                 }
                 // client
-                m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, itemRealIdList, itemNumList));
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, itemNoList));
             }
 
             // 整格放入
@@ -128,11 +126,9 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Item.s_instance.CharacterGainItem (oriSlot, item, charId, ItemPlace.BAG, pos);
 
                 // 基础信息 client
-                m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                     netId,
-                    new List<NO_Item> { item.GetItemNo () },
-                    new List<ItemPlace> { ItemPlace.BAG },
-                    new List<short> { pos }));
+                    new List<NO_Item> { item.GetItemNo (ItemPlace.BAG, pos) }));
                 // 附加信息 (装备等) client
                 m_netSenderDict[item.m_Type].SendItemInfo (item, netId, m_networkService);
             }
@@ -160,11 +156,12 @@ namespace MirRemakeBackend.GameLogic {
             if (item.m_num == 0) {
                 var slot = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, ItemPlace.BAG, itemPos);
                 bag.RemoveItemByRealId (realId, slot);
+                item = slot;
             } else {
                 EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, itemPos);
             }
             // client
-            m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (netId, new List<long> () { realId }, new List<short> () { item.m_num }));
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new List<NO_Item> () { item.GetItemNo (ItemPlace.BAG, itemPos) }));
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -330,14 +327,14 @@ namespace MirRemakeBackend.GameLogic {
             } else
                 EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
             // Client
-            m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
-                charObj.m_networkId, new List<long> { realId }, new List<short> { curNum }));
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
+                charObj.m_networkId, new List<NO_Item> { item.GetItemNo (ItemPlace.BAG, pos) }));
         }
         public void NotifyCharacterSwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
             srcRepo.SetItem (tarItem, srcPos);
             tarRepo.SetItem (srcItem, tarPos);
-            m_networkService.SendServerCommand (SC_ApplySelfMoveItem.Instance (
-                new List<int> { charObj.m_networkId }, srcRepo.m_repositoryPlace, srcPos, tarRepo.m_repositoryPlace, tarPos));
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (charObj.m_networkId,
+                new List<NO_Item> { srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos), tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos) }));
         }
         public void NotifyCharacterGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
             var bag = EM_Item.s_instance.GetBag (charObj.m_networkId);
@@ -356,26 +353,21 @@ namespace MirRemakeBackend.GameLogic {
                 for (int j = 0; j < changedItemList.Count; j++)
                     EM_Item.s_instance.CharacterUpdateItem (changedItemList[j].Item2, charObj.m_characterId, ItemPlace.BAG, changedItemList[j].Item1);
                 // client
-                List<long> changedRealIdList = new List<long> (changedItemList.Count);
-                List<short> changedPosList = new List<short> (changedItemList.Count);
-                for (int j = 0; j < changedItemList.Count; j++) {
-                    changedRealIdList.Add (changedItemList[i].Item2.m_realId);
-                    changedPosList.Add (changedItemList[i].Item1);
-                }
-                if (changedItemList.Count != 0)
-                    m_networkService.SendServerCommand (SC_ApplySelfUpdateItemNum.Instance (
-                        charObj.m_networkId, changedRealIdList, changedPosList));
+                List<NO_Item> changedItemNoList = new List<NO_Item> (changedItemList.Count);
+                for (int j = 0; j < changedItemList.Count; j++)
+                    changedItemNoList.Add (changedItemList[i].Item2.GetItemNo (ItemPlace.BAG, changedItemList[i].Item1));
+                if (changedItemNoList.Count != 0)
+                    m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
+                        charObj.m_networkId, changedItemNoList));
 
                 // 若该物品单独占有一格
                 if (storePos != -1 && storePos != -2) {
                     // 实例化 回收 持久层
                     var itemObj = EM_Item.s_instance.CharacterGainItem (oriBagSlot, itemId, itemNum, charObj.m_characterId, ItemPlace.BAG, storePos);
                     // 基础信息 client
-                    m_networkService.SendServerCommand (SC_ApplySelfGainItem.Instance (
+                    m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                         charObj.m_networkId,
-                        new List<NO_Item> { itemObj.GetItemNo () },
-                        new List<ItemPlace> { ItemPlace.BAG },
-                        new List<short> { storePos }));
+                        new List<NO_Item> { itemObj.GetItemNo (ItemPlace.BAG, storePos) }));
                     // 附加信息 (装备等) client
                     m_netSenderDict[itemObj.m_Type].SendItemInfo (itemObj, charObj.m_networkId, m_networkService);
                 }
