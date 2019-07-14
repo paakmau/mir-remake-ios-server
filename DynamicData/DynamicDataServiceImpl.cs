@@ -393,7 +393,7 @@ namespace MirRemakeBackend.DynamicData {
         }
         public int InsertUser (DDO_User ddo) {
             DDO_User temp = new DDO_User (0, "", "");
-            if (!GetUserByUsername (ddo.m_username, out temp)) {
+            try{
                 string cmd;
                 DataSet ds = new DataSet ();
                 cmd = "insert into `user` values(null,\"" + ddo.m_username + "\",\"" + ddo.m_pwd + "\");select last_insert_id();";
@@ -402,7 +402,9 @@ namespace MirRemakeBackend.DynamicData {
                 pool.ExecuteSql (database, cmd, ds);
                 return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
             }
-            return -1;
+            catch(Exception e){
+                return -1;
+            }
         }
 
         public void InsertVipCard (DDO_VipCard vipCard){
