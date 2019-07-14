@@ -82,10 +82,6 @@ namespace MirRemakeBackend {
             EM_Log.s_instance = new EM_Log ();
             // 角色创建器
             User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charPosDds, skillDds, misDds, itemDds, s_networkService);
-
-            // TODO: 测试用
-            User.s_instance.CommandCreateCharacter (1, 15, OccupationType.MAGE);
-            Console.WriteLine("Done");
         }
         static void InitGameLogic () {
             // 单位初始化器

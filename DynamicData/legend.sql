@@ -13,8 +13,6 @@ CREATE TABLE `character` (
    primary key (`characterid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-insert into `character` values(-1,"NAN",0,0,0,"","","");
-
 DROP TABLE IF EXISTS `skill`;
 create table `skill`( 
   `realid` int NOT NULL AUTO_INCREMENT,
@@ -26,8 +24,6 @@ create table `skill`(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX `charid` ON `skill`(`charid`);
-
-insert into `skill` values(0,-1,-1,0,0);
 
 DROP TABLE IF EXISTS `item`;
 create table `item`(
@@ -42,8 +38,6 @@ create table `item`(
 
 CREATE INDEX `charid` ON `item`(`charid`);
 
-insert into `item` values(-1,-1,-1,0,"",-1);
-
 DROP TABLE IF EXISTS `equipment`;
 CREATE table `equipment`(
   `realid` int not null AUTO_INCREMENT,
@@ -53,8 +47,6 @@ CREATE table `equipment`(
   `enchant_attr` VARCHAR(255) NOT NULL,
    primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-insert into `equipment` values(-1,-1,0,"","");
 
 CREATE INDEX `charid` ON `equipment`(`charid`);
 
