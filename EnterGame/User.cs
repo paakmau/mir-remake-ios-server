@@ -6,6 +6,9 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 
+/// <summary>
+/// 处理进入游戏之前的逻辑
+/// </summary>
 namespace MirRemakeBackend.EnterGame {
     class User {
         public static User s_instance;
@@ -45,6 +48,8 @@ namespace MirRemakeBackend.EnterGame {
                     foreach (var ocp in ocpArr)
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
+            
+            // 出事排行榜加载
         }
         public int AssignNetworkId () {
             return EM_Unit.s_instance.AssignNetworkId ();

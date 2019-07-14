@@ -65,31 +65,11 @@ namespace MirRemakeBackend.GameLogic {
                 var topCharCombatEfct = topCombatEfctRnkCharIdAndCombatEfctList[i].Item2;
                 topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "", 14, (short) i, topCharCombatEfct, "testFam", (byte) 0));
             }
-            var myRank = EM_Rank.s_instance.GetCombatEfctRank (charObj.m_characterId);
-            m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, charObj.m_combatEffectiveness, myRank));
+            var myCombatEfctAndRank = EM_Rank.s_instance.GetCombatEfctAndRank (charObj.m_characterId);
+            m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, myCombatEfctAndRank.Item2));
         }
-        public void NotifyCombatEffectivenessChange (E_Character unit) {
-            double res = 0;
-            switch (unit.m_Occupation) {
-                case OccupationType.WARRIOR:
-                    res = Math.Pow (unit.m_Attack, 1.5);
-                    break;
-                case OccupationType.ROGUE:
-                    res = 2.5 * Math.Pow (unit.m_Attack, 1.5);
-                    break;
-                case OccupationType.MAGE:
-                    res = 0.8 * Math.Pow (unit.m_Intelligence, 1.5);
-                    break;
-                case OccupationType.TAOIST:
-                    res = 1.3 * Math.Pow (unit.m_Intelligence, 1.5);
-                    break;
-            }
-            res = res + Math.Pow (unit.m_MaxHp, 0.5) * 0.5;
-            res = res + Math.Pow (unit.m_MaxMp, 0.4) * 0.3;
-            res = res + Math.Pow (unit.m_Defence * unit.m_Agility, 0.75);
-            res = res * (1 + 0.72 * unit.m_CriticalRate * 0.01 * unit.m_CriticalBonus);
-            res = res * unit.m_HitRate / (1 - unit.m_DodgeRate * 0.01f) * 0.01f;
-            unit.m_combatEffectiveness = (int) (res);
+        public void NotifyCombatEffectivenessChange (E_Character charObj) {
+            EM_Rank.s_instance.UpdateCharCombatEfct (charObj);
         }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
