@@ -70,21 +70,30 @@ namespace MirRemakeBackend {
     /// </summary>
     enum SkillAimType : byte {
         /// <summary>指向性圆形</summary>
-        AIM_CIRCLE,
+        AIM_CIRCLE = 1,
         /// <summary>指向性自身出发的矩形</summary>
-        AIM_SELF_RECT,
+        AIM_SELF_RECT = 2,
         /// <summary>指向性自身出发的扇形</summary>
-        AIM_SELF_SECTOR,
+        AIM_SELF_SECTOR = 4,
         /// <summary>非指向性圆形</summary>
-        NOT_AIM_CIRCLE,
+        NOT_AIM_CIRCLE = 8,
         /// <summary>非指向性自身出发的矩形</summary>
-        NOT_AIM_SELF_RECT,
+        NOT_AIM_SELF_RECT = 16,
         /// <summary>非指向性自身出发的圆形</summary>
-        NOT_AIM_SELF_CIRCLE,
+        NOT_AIM_SELF_CIRCLE = 32,
         /// <summary>非指向性自身出发的扇形</summary>
-        NOT_AIM_SELF_SECTOR,
+        NOT_AIM_SELF_SECTOR = 64,
         /// <summary>指向性单体</summary>
-        AIM_ONE_TARGET
+        AIM_ONE_TARGET = 128,
+        ALL = 255,
+        AIM = AIM_CIRCLE | AIM_ONE_TARGET | AIM_SELF_RECT | AIM_SELF_SECTOR,
+        NOT_AIM = NOT_AIM_CIRCLE | NOT_AIM_SELF_CIRCLE | NOT_AIM_SELF_RECT | NOT_AIM_SELF_SECTOR,
+        SELF = AIM_SELF_RECT | AIM_SELF_SECTOR | NOT_AIM_SELF_CIRCLE | NOT_AIM_SELF_RECT |NOT_AIM_SELF_SECTOR,
+        NOT_SELF = AIM_CIRCLE | NOT_AIM_CIRCLE | AIM_ONE_TARGET,
+        ONE_TARGET = AIM_ONE_TARGET,
+        CIRCLE = AIM_CIRCLE | NOT_AIM_CIRCLE | NOT_AIM_SELF_CIRCLE,
+        RECT = AIM_SELF_RECT | NOT_AIM_SELF_RECT,
+        SECTOR = AIM_SELF_SECTOR | NOT_AIM_SELF_SECTOR
     }
     /// <summary>
     /// 技能瞄准的参数类型
