@@ -31,7 +31,7 @@ namespace MirRemakeBackend.Entity {
             var itemNoList = new List<NO_Item> (m_itemList.Count);
             var equipInfoNoList = new List<NO_EquipmentItemInfo> ();
             for (int i = 0; i < m_itemList.Count; i++) {
-                itemNoList.Add (m_itemList[i].GetItemNo ());
+                itemNoList.Add (m_itemList[i].GetItemNo (m_repositoryPlace, (short) i));
                 if (m_itemList[i].m_Type == ItemType.EQUIPMENT)
                     equipInfoNoList.Add (((E_EquipmentItem) m_itemList[i]).GetEquipmentInfoNo ());
             }
