@@ -717,7 +717,7 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 交换物品位置
+    /// 更新装备信息
     /// </summary>
     class SC_ApplySelfUpdateEquipment : ServerCommandBase {
         private static SC_ApplySelfUpdateEquipment s_instance = new SC_ApplySelfUpdateEquipment ();
@@ -735,6 +735,27 @@ namespace MirRemakeBackend.Network {
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_realId);
             writer.Put (m_eqInfo);
+        }
+    }
+    /// <summary>
+    /// 更新装备信息
+    /// </summary>
+    class SC_ApplySelfUpdateEnchantment : ServerCommandBase {
+        private static SC_ApplySelfUpdateEnchantment s_instance = new SC_ApplySelfUpdateEnchantment ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_ENCHANTMENT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private long m_realId;
+        private NO_EnchantmentItemInfo m_ecmtInfo;
+        public static SC_ApplySelfUpdateEnchantment Instance (int netId, long realId, NO_EnchantmentItemInfo ecmtInfo) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_realId = realId;
+            s_instance.m_ecmtInfo = ecmtInfo;
+            return s_instance;
+        }
+        private SC_ApplySelfUpdateEnchantment () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_realId);
+            writer.Put (m_ecmtInfo);
         }
     }
     /// <summary>

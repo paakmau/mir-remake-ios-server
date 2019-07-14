@@ -34,6 +34,7 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_GAIN_ITEM,
         APPLY_SELF_MOVE_ITEM,
         APPLY_SELF_UPDATE_EQUIPMENT,
+        APPLY_SELF_UPDATE_ENCHANTMENT,
         APPLY_SELF_CURRENCY,
         // 地面物品
         APPLY_GROUND_ITEM_SHOW,

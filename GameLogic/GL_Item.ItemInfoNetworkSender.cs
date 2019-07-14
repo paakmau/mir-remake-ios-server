@@ -18,7 +18,11 @@ namespace MirRemakeBackend.GameLogic {
         private class IINS_Enchantment : IItemInfoNetworkSender {
             public ItemType m_Type { get { return ItemType.ENCHANTMENT; } }
             public void SendItemInfo (E_Item item, int netId, INetworkService ns) {
-                // TODO:
+                ns.SendServerCommand (
+                    SC_ApplySelfUpdateEnchantment.Instance (
+                        netId,
+                        item.m_realId,
+                        (item as E_EnchantmentItem).GetEnchantmentNoInfo ()));
             }
         }
         private class IINS_Equipment : IItemInfoNetworkSender {
@@ -26,7 +30,8 @@ namespace MirRemakeBackend.GameLogic {
             public void SendItemInfo (E_Item item, int netId, INetworkService ns) {
                 ns.SendServerCommand (
                     SC_ApplySelfUpdateEquipment.Instance (
-                        netId, item.m_realId,
+                        netId,
+                        item.m_realId,
                         (item as E_EquipmentItem).GetEquipmentInfoNo ()));
             }
         }
