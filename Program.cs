@@ -85,6 +85,7 @@ namespace MirRemakeBackend {
 
             // TODO: 测试用
             User.s_instance.CommandCreateCharacter (1, 15, OccupationType.MAGE);
+            Console.WriteLine("Done");
         }
         static void InitGameLogic () {
             // 单位初始化器
