@@ -41,7 +41,7 @@ namespace MirRemakeBackend.GameLogic {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Skill skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             E_Unit targetObj = EM_Sight.s_instance.GetUnitVisibleByNetworkId (parmNo.m_targetNetworkId);
-            if (charObj == null || skill == null || targetObj == null) return;
+            if (charObj == null || skill == null) return;
             if (skill.m_skillLevel == 0) return;
             List<E_Unit> targetList = new List<E_Unit> ();
             for (int i = 0; i < hitTargetNetIdArr.Length; i++) {
