@@ -22,7 +22,7 @@ namespace MirRemakeBackend.EnterGame {
         private IDDS_CombatEfct m_combatEfctDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns, IDDS_CombatEfct combatEfctDds) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
             m_netService = ns;
             m_userDds = userDds;
             m_charDds = charDds;
