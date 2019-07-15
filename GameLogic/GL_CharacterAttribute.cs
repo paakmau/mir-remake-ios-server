@@ -63,7 +63,7 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < topCombatEfctRnkCharIdAndCombatEfctList.Count; i++) {
                 var topCharId = topCombatEfctRnkCharIdAndCombatEfctList[i].Item1;
                 var topCharCombatEfct = topCombatEfctRnkCharIdAndCombatEfctList[i].Item2;
-                topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "", 14, (short) i, topCharCombatEfct, "testFam", (byte) 0));
+                topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "匿名", 14, (short) i, topCharCombatEfct, "无", (byte) 0));
             }
             var myCombatEfctAndRank = EM_Rank.s_instance.GetCombatEfctAndRank (charObj.m_characterId);
             m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, myCombatEfctAndRank.Item2));
