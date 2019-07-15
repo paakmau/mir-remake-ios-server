@@ -5299,7 +5299,7 @@
 		"SecondParameter": 0,
 		"Effect": {
 			"EffectDeltaHP": [
-				-50
+				-5
 			],
 			"EffectDeltaMP": [
 				0
@@ -5341,7 +5341,7 @@
 		"SecondParameter": 0,
 		"Effect": {
 			"EffectDeltaHP": [
-				-50
+				-15
 			],
 			"EffectDeltaMP": [
 				0
