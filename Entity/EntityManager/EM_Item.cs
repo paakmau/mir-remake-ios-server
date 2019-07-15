@@ -240,10 +240,8 @@ namespace MirRemakeBackend.Entity {
                     for (int i = 0; i < eqInfoDdoList.Count; i++)
                         m_eqInfoDict.Add (eqInfoDdoList[i].m_realId, eqInfoDdoList[i]);
                 }
-                public DDO_EquipmentInfo GetEquipment (long realId) {
-                    DDO_EquipmentInfo res;
-                    m_eqInfoDict.TryGetValue (realId, out res);
-                    return res;
+                public bool TryGetEquipment (long realId, out DDO_EquipmentInfo resInfo) {
+                    return m_eqInfoDict.TryGetValue (realId, out resInfo);
                 }
             }
             private interface IItemInfoReseter {
@@ -265,7 +263,12 @@ namespace MirRemakeBackend.Entity {
             private class IIR_Equipment : IItemInfoReseter {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
                 public void ResetInfo (DEM_Item dem, ItemInfoDdoCollections collct, long realId, E_Item resItem) {
-                    var eqDdo = collct.GetEquipment (realId);
+                    DDO_EquipmentInfo eqDdo;
+                    if (!collct.TryGetEquipment (realId, out eqDdo)) {
+                        resItem.ResetRealId (realId);
+                        (resItem as E_EquipmentItem).ResetEquipmentData (0, new (ActorUnitConcreteAttributeType, int) [0], new List<short> (), new List<DE_GemData> ());
+                        return;
+                    }
                     var gemList = new List<DE_GemData> (eqDdo.m_inlaidGemIdList.Count);
                     for (int i = 0; i < eqDdo.m_inlaidGemIdList.Count; i++)
                         gemList.Add (dem.GetGemById (eqDdo.m_inlaidGemIdList[i]));
