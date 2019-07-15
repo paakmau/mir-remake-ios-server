@@ -36,11 +36,11 @@ namespace MirRemakeBackend.Data {
                     int num=int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]);
                     if(type==ActorUnitConcreteAttributeType.ATTACK || type==ActorUnitConcreteAttributeType.MAGIC){
                         monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                            (type, int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1])/2);
+                            (type, num/2);
                     }
                     else if(type==ActorUnitConcreteAttributeType.MAX_HP){
                         monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                            (type, num/2);
+                            (type, (int)(num*0.4));
                     }
                     else{
                         monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
