@@ -19,9 +19,10 @@ namespace MirRemakeBackend.EnterGame {
         private IDDS_Skill m_skillDds;
         private IDDS_Mission m_misDds;
         private IDDS_Item m_itemDds;
+        private IDDS_CombatEfct m_combatEfctDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, INetworkService ns, IDDS_CombatEfct combatEfctDds) {
             m_netService = ns;
             m_userDds = userDds;
             m_charDds = charDds;
@@ -29,6 +30,7 @@ namespace MirRemakeBackend.EnterGame {
             m_skillDds = skillDds;
             m_misDds = misDds;
             m_itemDds = itemDds;
+            m_combatEfctDds = combatEfctDds;
             // 初始技能加载
             OccupationType[] ocpArr = new OccupationType[] { OccupationType.MAGE, OccupationType.ROGUE, OccupationType.TAOIST, OccupationType.WARRIOR };
             foreach (var ocp in ocpArr) {
@@ -97,6 +99,8 @@ namespace MirRemakeBackend.EnterGame {
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
             for (short i = 0; i<eqSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.EQUIPMENT_REGION, i));
+            // 战斗力排行 dds
+            m_combatEfctDds.InsertMixCombatEfct (new DDO_CombatEfct (charId, 0));
             m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true));
         }
     }

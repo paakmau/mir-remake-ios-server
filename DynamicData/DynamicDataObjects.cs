@@ -133,5 +133,9 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_CombatEfct {
         public int m_charId;
         public int m_combatEfct;
+        public DDO_CombatEfct (int charId, int combatEfct) {
+            m_charId = charId;
+            m_combatEfct = combatEfct;
+        }
     }
 }

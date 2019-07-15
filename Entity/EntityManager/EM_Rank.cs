@@ -27,9 +27,12 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, int> m_charIdAndOriCombatEfctDict = new Dictionary<int, int> ();
         public EM_Rank (IDDS_CombatEfct dds) { m_dds = dds; }
         public void LoadAllCharacter () {
-            // TODO: 等yzj完成
-            var ddoList = m_dds.GetAllMixCombatEfct ();
-            
+            var ddoArr = m_dds.GetAllMixCombatEfct ();
+            foreach (var ddo in ddoArr)
+                UpdateCharCombatEfct (ddo.m_charId, ddo.m_combatEfct);
+        }
+        public void SaveCharacter (int charId, int combatEfct) {
+            m_dds.UpdateMixCombatEfct (new DDO_CombatEfct (charId, combatEfct));
         }
         public void UpdateCharCombatEfct (int charId, OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
             var combatEfct = AttrToCombatEfct (ocp, atk, intl, maxHp, maxMp, def, agl, criticalRate, criticalBonus, hitRate, dodgeRate);
