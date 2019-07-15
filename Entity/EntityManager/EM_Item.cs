@@ -235,7 +235,8 @@ namespace MirRemakeBackend.Entity {
             #region ItemInfoReseter
             private class ItemInfoDdoCollections {
                 private Dictionary<long, DDO_EquipmentInfo> m_eqInfoDict = new Dictionary<long, DDO_EquipmentInfo> ();
-                public void Reset (List<DDO_EquipmentInfo> eqInfoDdoList) {
+                private Dictionary<long, DDO_EnchantmentInfo> m_ecmtInfoDict = new Dictionary<long, DDO_EnchantmentInfo> ();
+                public void Reset (List<DDO_EquipmentInfo> eqInfoDdoList, List<DDO_EnchantmentInfo> ecmtInfoDdoList) {
                     m_eqInfoDict.Clear ();
                     for (int i = 0; i < eqInfoDdoList.Count; i++)
                         m_eqInfoDict.Add (eqInfoDdoList[i].m_realId, eqInfoDdoList[i]);
@@ -352,6 +353,7 @@ namespace MirRemakeBackend.Entity {
                 resStoreHouse = null;
                 resEquiped = null;
                 var eqInfoList = m_dds.GetAllEquipmentByCharacterId (charId);
+                var ecmtInfoList = m_dds.GetAllEnchantmentByCharacterId (charId);
                 var bagList = m_dds.GetBagByCharacterId (charId);
                 var storeHouseList = m_dds.GetStoreHouseByCharacterId (charId);
                 var equipedList = m_dds.GetEquipmentRegionByCharacterId (charId);
@@ -362,7 +364,7 @@ namespace MirRemakeBackend.Entity {
                 storeHouseList.Sort ((a, b) => { return a.m_position - b.m_position; });
                 equipedList.Sort ((a, b) => { return a.m_position - b.m_position; });
                 // 获取实例
-                m_itemInfoDdoCollections.Reset (eqInfoList);
+                m_itemInfoDdoCollections.Reset (eqInfoList, ecmtInfoList);
                 resBag = GetAndResetInstanceArr (bagList, m_itemInfoDdoCollections);
                 resStoreHouse = GetAndResetInstanceArr (storeHouseList, m_itemInfoDdoCollections);
                 resEquiped = GetAndResetInstanceArr (equipedList, m_itemInfoDdoCollections);
