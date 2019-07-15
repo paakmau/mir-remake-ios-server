@@ -99,5 +99,7 @@ DROP TABLE IF EXISTS `combat_effect`;
 create table `combat_effect`( 
   `charid` int NOT NULL,
   `combat` int,
+  `name` VARCHAR(45) NOT NULL,
+  `occupation` VARCHAR(45) NOT NULL,
   primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
