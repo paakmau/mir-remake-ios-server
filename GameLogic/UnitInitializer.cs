@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 
 namespace MirRemakeBackend.GameLogic {
@@ -29,9 +28,6 @@ namespace MirRemakeBackend.GameLogic {
             GL_Item.s_instance.NotifyRemoveCharacter (netId);
             GL_Skill.s_instance.NotifyRemoveCharacter (netId);
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);
-        }
-        public void InitAllMonster () {
-
         }
     }
 }

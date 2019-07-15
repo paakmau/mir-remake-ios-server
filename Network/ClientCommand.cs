@@ -20,7 +20,9 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
             string pwd = reader.GetString ();
-            User.s_instance.CommandRegister (netId, username, pwd);
+            string pwdProtectProblem = reader.GetString ();
+            string pwdProtectAnswer = reader.GetString ();;
+            User.s_instance.CommandRegister (netId, username, pwd, pwdProtectProblem, pwdProtectAnswer);
         }
     }
     class CC_InitCreateCharacter : IClientCommand {

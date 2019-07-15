@@ -7,10 +7,14 @@ namespace MirRemakeBackend.DynamicData {
         public int m_playerId;
         public string m_username;
         public string m_pwd;
-        public DDO_User (int playerId, string username, string pwd) {
+        public string m_pwdProtectProblem;
+        public string m_pwdProtectAnswer;
+        public DDO_User (int playerId, string username, string pwd, string pwdProtectProblem, string pwdProtectAnswer) {
             m_playerId = playerId;
             m_username = username;
             m_pwd = pwd;
+            m_pwdProtectProblem = pwdProtectProblem;
+            m_pwdProtectAnswer = pwdProtectAnswer;
         }
     }
     struct DDO_VipCard {

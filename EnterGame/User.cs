@@ -62,8 +62,8 @@ namespace MirRemakeBackend.EnterGame {
         public void CommandDisconnect (int netId) {
             UnitInitializer.s_instance.CommandRemoveCharacter (netId);
         }
-        public void CommandRegister (int netId, string username, string pwd) {
-            var playId = m_userDds.InsertUser (new DDO_User (-1, username, pwd));
+        public void CommandRegister (int netId, string username, string pwd, string pwdProtectProblem, string pwdProtectAnswer) {
+            var playId = m_userDds.InsertUser (new DDO_User (-1, username, pwd, pwdProtectProblem, pwdProtectAnswer));
             if (playId == -1)
                 m_netService.SendServerCommand (SC_InitSelfRegister.Instance (netId, false));
             else

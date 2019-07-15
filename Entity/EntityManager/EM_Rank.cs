@@ -24,10 +24,10 @@ namespace MirRemakeBackend.Entity {
             }
         }
         private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
-        // private AVLTree<CombatEffectiveItem> m_RankTree = new AVLTree<CombatEffectiveItem> ();
-        // private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
-        // private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
-        // private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
+        private AVLTree<CombatEffectiveItem> m_warriorRankTree = new AVLTree<CombatEffectiveItem> ();
+        private AVLTree<CombatEffectiveItem> m_rogueRankTree = new AVLTree<CombatEffectiveItem> ();
+        private AVLTree<CombatEffectiveItem> m_mageRankTree = new AVLTree<CombatEffectiveItem> ();
+        private AVLTree<CombatEffectiveItem> m_taoistRankTree = new AVLTree<CombatEffectiveItem> ();
         private Dictionary<int, int> m_charIdAndOriCombatEfctDict = new Dictionary<int, int> ();
         public EM_Rank (IDDS_CombatEfct dds) {
             m_dds = dds;
@@ -36,7 +36,7 @@ namespace MirRemakeBackend.Entity {
         public void LoadAllCharacter () {
             var ddoArr = m_dds.GetAllMixCombatEfct ();
             foreach (var ddo in ddoArr)
-                UpdateCharCombatEfct (ddo.m_charId, ddo.m_combatEfct);
+                UpdateCharCombatEfct (ddo.m_charId, ddo.m_combatEfct, ddo.m_ocp);
         }
         public void RemoveCharacter (E_Character charObj) {
             int combatEfct;
@@ -45,27 +45,80 @@ namespace MirRemakeBackend.Entity {
         }
         public void UpdateCharCombatEfct (int charId, OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
             var combatEfct = AttrToCombatEfct (ocp, atk, intl, maxHp, maxMp, def, agl, criticalRate, criticalBonus, hitRate, dodgeRate);
-            UpdateCharCombatEfct (charId, combatEfct);
+            UpdateCharCombatEfct (charId, combatEfct, ocp);
         }
-        private void UpdateCharCombatEfct (int charId, int combatEfct) {
+        private void UpdateCharCombatEfct (int charId, int combatEfct, OccupationType ocp) {
             int oriCombatEfct;
             m_charIdAndOriCombatEfctDict.TryGetValue (charId, out oriCombatEfct);
             m_allRankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
             m_allRankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
+            switch (ocp) {
+                case OccupationType.WARRIOR:
+                    m_warriorRankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
+                    m_warriorRankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.ROGUE:
+                    m_rogueRankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
+                    m_rogueRankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.MAGE:
+                    m_mageRankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
+                    m_mageRankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.TAOIST:
+                    m_taoistRankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
+                    m_taoistRankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+            }
             m_charIdAndOriCombatEfctDict[charId] = combatEfct;
         }
-        public List < (int, int) > GetTopCombatEfctRnkCharIdAndCombatEfctList (int num) {
+        public List < (int, int) > GetTopCombatEfctRnkCharIdAndCombatEfctList (OccupationType ocp, int num) {
             var res = new List < (int, int) > (num);
             for (int i = 0; i < num; i++) {
-                var v = m_allRankTree.GetKElementInOrder (i);
+                CombatEffectiveItem v = null;
+                switch (ocp) {
+                    case OccupationType.ALL:
+                        v = m_allRankTree.GetKElementInOrder (i);
+                        break;
+                    case OccupationType.WARRIOR:
+                        v = m_warriorRankTree.GetKElementInOrder (i);
+                        break;
+                    case OccupationType.ROGUE:
+                        v = m_rogueRankTree.GetKElementInOrder (i);
+                        break;
+                    case OccupationType.MAGE:
+                        v = m_mageRankTree.GetKElementInOrder (i);
+                        break;
+                    case OccupationType.TAOIST:
+                        v = m_taoistRankTree.GetKElementInOrder (i);
+                        break;
+                }
                 if (v != null)
                     res.Add ((v.m_charId, v.m_combatEfct));
             }
             return res;
         }
-        public (int, int) GetCombatEfctAndRank (int charId) {
+        public (int, int) GetCombatEfctAndRank (OccupationType ocp, int charId, OccupationType myOcp) {
             var combatEfct = m_charIdAndOriCombatEfctDict[charId];
-            var rank = m_allRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+            if (myOcp != ocp) return (combatEfct, -1);
+            int rank = -1;
+            switch (ocp) {
+                case OccupationType.ALL:
+                    rank = m_allRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.WARRIOR:
+                    rank = m_warriorRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.ROGUE:
+                    rank = m_rogueRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.MAGE:
+                    rank = m_mageRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+                case OccupationType.TAOIST:
+                    rank = m_taoistRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+                    break;
+            }
             return (combatEfct, rank);
         }
         private int AttrToCombatEfct (OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
