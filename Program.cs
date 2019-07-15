@@ -70,12 +70,13 @@ namespace MirRemakeBackend {
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
+            IDDS_CombatEfct combatEfctDds = ddsImpl;
             // EntityManager
             EM_Camp.s_instance = new EM_Camp ();
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
             EM_Mission.s_instance = new EM_Mission (misDem, misDds);
             EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
-            EM_Rank.s_instance = new EM_Rank ();
+            EM_Rank.s_instance = new EM_Rank (combatEfctDds);
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);

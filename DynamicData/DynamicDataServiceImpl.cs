@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_CharacterPosition, IDDS_User {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_CharacterPosition, IDDS_User, IDDS_CombatEfct {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -156,36 +156,36 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
 
-        public void UpdateEnchantmentInfo(DDO_EnchantmentInfo e){
-            string cmd="update `enchantment` set `enchant_attr`=\""+GetString(e.m_attrList)+"\" where `realid`="+e.m_realId+";";
-            string database="legend";
-            pool.ExecuteSql(database,cmd);
+        public void UpdateEnchantmentInfo (DDO_EnchantmentInfo e) {
+            string cmd = "update `enchantment` set `enchant_attr`=\"" + GetString (e.m_attrList) + "\" where `realid`=" + e.m_realId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
         }
 
-        public void DeleteEnchantmentInfoByRealId (long realId){
-            string cmd="delete from `enchantment` where `realid`="+realId+";";
-            string database="legend";
-            pool.ExecuteSql(database,cmd);
+        public void DeleteEnchantmentInfoByRealId (long realId) {
+            string cmd = "delete from `enchantment` where `realid`=" + realId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
         }
 
-        public void InsertEnchantmentInfo (DDO_EnchantmentInfo enchantmentInfo){
-            string cmd="insert into `enchantment` values(null,"+enchantmentInfo.m_characterId+",\""+GetString(enchantmentInfo.m_attrList)+"\");";
-            string database="legend";
-            pool.ExecuteSql(database,cmd);
+        public void InsertEnchantmentInfo (DDO_EnchantmentInfo enchantmentInfo) {
+            string cmd = "insert into `enchantment` values(null," + enchantmentInfo.m_characterId + ",\"" + GetString (enchantmentInfo.m_attrList) + "\");";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
         }
-        public List<DDO_EnchantmentInfo> GetAllEnchantmentByCharacterId (int charId){
-            List<DDO_EnchantmentInfo> res=new List<DDO_EnchantmentInfo>();
-            string cmd="select * from `enchantment` where `charid`="+charId+";";
-            string database="legend";
-            DataSet ds=new DataSet();
-            pool.ExecuteSql(database,cmd,ds);
-            DataTable dt=ds.Tables[0];
-            for(int i=0;i<dt.Rows.Count;i++){
-                DDO_EnchantmentInfo e=new DDO_EnchantmentInfo();
-                e.m_realId=long.Parse(dt.Rows[i]["realid"].ToString());
-                e.m_characterId=int.Parse(dt.Rows[i]["charid"].ToString());
-                e.m_attrList=GetAttr(dt.Rows[i]["enchant_attr"].ToString());
-                res.Add(e);
+        public List<DDO_EnchantmentInfo> GetAllEnchantmentByCharacterId (int charId) {
+            List<DDO_EnchantmentInfo> res = new List<DDO_EnchantmentInfo> ();
+            string cmd = "select * from `enchantment` where `charid`=" + charId + ";";
+            string database = "legend";
+            DataSet ds = new DataSet ();
+            pool.ExecuteSql (database, cmd, ds);
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                DDO_EnchantmentInfo e = new DDO_EnchantmentInfo ();
+                e.m_realId = long.Parse (dt.Rows[i]["realid"].ToString ());
+                e.m_characterId = int.Parse (dt.Rows[i]["charid"].ToString ());
+                e.m_attrList = GetAttr (dt.Rows[i]["enchant_attr"].ToString ());
+                res.Add (e);
             }
             return res;
         }
@@ -393,7 +393,7 @@ namespace MirRemakeBackend.DynamicData {
         }
         public int InsertUser (DDO_User ddo) {
             DDO_User temp = new DDO_User (0, "", "");
-            try{
+            try {
                 string cmd;
                 DataSet ds = new DataSet ();
                 cmd = "insert into `user` values(null,\"" + ddo.m_username + "\",\"" + ddo.m_pwd + "\");select last_insert_id();";
@@ -401,63 +401,62 @@ namespace MirRemakeBackend.DynamicData {
                 //Console.WriteLine(cmd);
                 pool.ExecuteSql (database, cmd, ds);
                 return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
-            }
-            catch(Exception e){
-                Console.Write(e.StackTrace);
+            } catch (Exception e) {
+                Console.Write (e.StackTrace);
                 return -1;
             }
         }
 
-        public void InsertVipCard (DDO_VipCard vipCard){
+        public void InsertVipCard (DDO_VipCard vipCard) {
             string cmd;
-            cmd = "insert into `vip` values("+vipCard.m_playerId+","+vipCard.m_vipLevel+");";
+            cmd = "insert into `vip` values(" + vipCard.m_playerId + "," + vipCard.m_vipLevel + ");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-        public DDO_VipCard GetVipCardByPlayerId (int playerId){
+        public DDO_VipCard GetVipCardByPlayerId (int playerId) {
             string cmd;
-            DataSet ds=new DataSet();
-            cmd="";
+            DataSet ds = new DataSet ();
+            cmd = "";
             string database = "legend";
-            pool.ExecuteSql (database, cmd,ds);
-            DataTable dt=ds.Tables[0];
-            if(dt.Rows.Count==0){
-                throw new Exception();
+            pool.ExecuteSql (database, cmd, ds);
+            DataTable dt = ds.Tables[0];
+            if (dt.Rows.Count == 0) {
+                throw new Exception ();
             }
-            DDO_VipCard res =new DDO_VipCard(int.Parse(dt.Rows[0]["userid"].ToString()),int.Parse(dt.Rows[0]["vip_card"].ToString()));
+            DDO_VipCard res = new DDO_VipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_card"].ToString ()));
             return res;
         }
-        public void UpdateVipCard (DDO_VipCard vipCard){
+        public void UpdateVipCard (DDO_VipCard vipCard) {
             string cmd;
-            cmd = "update `vip` set `vip_level`="+vipCard.m_vipLevel+" where `userid`="+vipCard.m_playerId+";";
+            cmd = "update `vip` set `vip_level`=" + vipCard.m_vipLevel + " where `userid`=" + vipCard.m_playerId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-        
-        public void InsertMixCombatEfct (DDO_CombatEfct mixCombatEfct){
-            string cmd="insert into `combat_effect` values("+mixCombatEfct.m_charId+","+mixCombatEfct.m_combatEfct+");";
-            string database="legend";
-            pool.ExecuteSql(database,cmd);
+
+        public void InsertMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
+            string cmd = "insert into `combat_effect` values(" + mixCombatEfct.m_charId + "," + mixCombatEfct.m_combatEfct + ");";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
         }
-        public void UpdateMixCombatEfct (DDO_CombatEfct mixCombatEfct){
-            string cmd="update `combat_effect` set `combat`="+mixCombatEfct.m_combatEfct+" where `charid`="+mixCombatEfct.m_charId+";";
-            string database="legend";
-            pool.ExecuteSql(database,cmd);
+        public void UpdateMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
+            string cmd = "update `combat_effect` set `combat`=" + mixCombatEfct.m_combatEfct + " where `charid`=" + mixCombatEfct.m_charId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
         }
-        public DDO_CombatEfct[] GetAllMixCombatEfct (){
-            string cmd="select * from `combat_effect`;";
-            string database="legend";
-            DataSet ds=new DataSet();
-            pool.ExecuteSql(database,cmd,ds);
-            DataTable dt=ds.Tables[0];
-            DDO_CombatEfct[] res=new DDO_CombatEfct[dt.Rows.Count];
-            for(int i=0;i<dt.Rows.Count;i++){
-                res[i].m_charId=int.Parse(dt.Rows[i]["charid"].ToString());
-                res[i].m_combatEfct=int.Parse(dt.Rows[i]["combat"].ToString());
+        public DDO_CombatEfct[] GetAllMixCombatEfct () {
+            string cmd = "select * from `combat_effect`;";
+            string database = "legend";
+            DataSet ds = new DataSet ();
+            pool.ExecuteSql (database, cmd, ds);
+            DataTable dt = ds.Tables[0];
+            DDO_CombatEfct[] res = new DDO_CombatEfct[dt.Rows.Count];
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                res[i].m_charId = int.Parse (dt.Rows[i]["charid"].ToString ());
+                res[i].m_combatEfct = int.Parse (dt.Rows[i]["combat"].ToString ());
             }
             return res;
         }
-        
+
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
