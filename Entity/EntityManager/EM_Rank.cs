@@ -23,9 +23,12 @@ namespace MirRemakeBackend.Entity {
                 return m_charId - b.m_charId;
             }
         }
-        private AVLTree<CombatEffectiveItem> m_rankTree = new AVLTree<CombatEffectiveItem> ();
+        private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
+        // private AVLTree<CombatEffectiveItem> m_RankTree = new AVLTree<CombatEffectiveItem> ();
+        // private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
+        // private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
+        // private AVLTree<CombatEffectiveItem> m_allRankTree = new AVLTree<CombatEffectiveItem> ();
         private Dictionary<int, int> m_charIdAndOriCombatEfctDict = new Dictionary<int, int> ();
-        private Dictionary<int, int> m_netIdAndCharIdDict = new Dictionary<int, int> ();
         public EM_Rank (IDDS_CombatEfct dds) {
             m_dds = dds;
             LoadAllCharacter ();
@@ -35,16 +38,10 @@ namespace MirRemakeBackend.Entity {
             foreach (var ddo in ddoArr)
                 UpdateCharCombatEfct (ddo.m_charId, ddo.m_combatEfct);
         }
-        public void InitCharacter (int netId, int charId) {
-            m_netIdAndCharIdDict[netId] = charId;
-        }
-        public void RemoveCharacter (int netId) {
-            int charId;
-            if (!m_netIdAndCharIdDict.TryGetValue (netId, out charId)) return;
+        public void RemoveCharacter (E_Character charObj) {
             int combatEfct;
-            if (!m_charIdAndOriCombatEfctDict.TryGetValue (charId, out combatEfct)) return;
-            m_dds.UpdateMixCombatEfct (new DDO_CombatEfct (charId, combatEfct));
-            m_netIdAndCharIdDict.Remove (netId);
+            if (!m_charIdAndOriCombatEfctDict.TryGetValue (charObj.m_characterId, out combatEfct)) return;
+            m_dds.UpdateMixCombatEfct (new DDO_CombatEfct (charObj.m_characterId, charObj.m_Occupation, charObj.m_name, combatEfct));
         }
         public void UpdateCharCombatEfct (int charId, OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
             var combatEfct = AttrToCombatEfct (ocp, atk, intl, maxHp, maxMp, def, agl, criticalRate, criticalBonus, hitRate, dodgeRate);
@@ -53,14 +50,14 @@ namespace MirRemakeBackend.Entity {
         private void UpdateCharCombatEfct (int charId, int combatEfct) {
             int oriCombatEfct;
             m_charIdAndOriCombatEfctDict.TryGetValue (charId, out oriCombatEfct);
-            m_rankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
-            m_rankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
+            m_allRankTree.Remove (new CombatEffectiveItem (charId, oriCombatEfct));
+            m_allRankTree.Insert (new CombatEffectiveItem (charId, combatEfct));
             m_charIdAndOriCombatEfctDict[charId] = combatEfct;
         }
         public List < (int, int) > GetTopCombatEfctRnkCharIdAndCombatEfctList (int num) {
             var res = new List < (int, int) > (num);
             for (int i = 0; i < num; i++) {
-                var v = m_rankTree.GetKElementInOrder (i);
+                var v = m_allRankTree.GetKElementInOrder (i);
                 if (v != null)
                     res.Add ((v.m_charId, v.m_combatEfct));
             }
@@ -68,7 +65,7 @@ namespace MirRemakeBackend.Entity {
         }
         public (int, int) GetCombatEfctAndRank (int charId) {
             var combatEfct = m_charIdAndOriCombatEfctDict[charId];
-            var rank = m_rankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
+            var rank = m_allRankTree.GetIndexOfElement (new CombatEffectiveItem (charId, combatEfct));
             return (combatEfct, rank);
         }
         private int AttrToCombatEfct (OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {

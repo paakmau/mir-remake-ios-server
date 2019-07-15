@@ -77,9 +77,9 @@ namespace MirRemakeBackend.EnterGame {
             else
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId));
         }
-        public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp) {
+        public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
             // 角色 dds
-            int charId = m_charDds.CreateCharacter (ocp);
+            int charId = m_charDds.CreateCharacter (ocp, name);
             m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];
@@ -100,7 +100,7 @@ namespace MirRemakeBackend.EnterGame {
             for (short i = 0; i<eqSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.EQUIPMENT_REGION, i));
             // 战斗力排行 dds
-            m_combatEfctDds.InsertMixCombatEfct (new DDO_CombatEfct (charId, 0));
+            m_combatEfctDds.InsertMixCombatEfct (new DDO_CombatEfct (charId, ocp, name, 0));
             m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true));
         }
     }
