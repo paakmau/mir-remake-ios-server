@@ -73,6 +73,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
+            EM_Rank.s_instance.InitCharacter (netId, charId);
             if (newChar == null)
                 return null;
             MainPointToConAttr (newChar);
@@ -95,6 +96,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Unit.s_instance.RemoveCharacter (netId);
+            EM_Rank.s_instance.RemoveCharacter (netId);
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)

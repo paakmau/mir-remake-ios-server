@@ -25,14 +25,26 @@ namespace MirRemakeBackend.Entity {
         }
         private AVLTree<CombatEffectiveItem> m_rankTree = new AVLTree<CombatEffectiveItem> ();
         private Dictionary<int, int> m_charIdAndOriCombatEfctDict = new Dictionary<int, int> ();
-        public EM_Rank (IDDS_CombatEfct dds) { m_dds = dds; }
+        private Dictionary<int, int> m_netIdAndCharIdDict = new Dictionary<int, int> ();
+        public EM_Rank (IDDS_CombatEfct dds) {
+            m_dds = dds;
+            LoadAllCharacter ();
+        }
         public void LoadAllCharacter () {
             var ddoArr = m_dds.GetAllMixCombatEfct ();
             foreach (var ddo in ddoArr)
                 UpdateCharCombatEfct (ddo.m_charId, ddo.m_combatEfct);
         }
-        public void SaveCharacter (int charId, int combatEfct) {
+        public void InitCharacter (int netId, int charId) {
+            m_netIdAndCharIdDict[netId] = charId;
+        }
+        public void RemoveCharacter (int netId) {
+            int charId;
+            if (!m_netIdAndCharIdDict.TryGetValue (netId, out charId)) return;
+            int combatEfct;
+            if (!m_charIdAndOriCombatEfctDict.TryGetValue (charId, out combatEfct)) return;
             m_dds.UpdateMixCombatEfct (new DDO_CombatEfct (charId, combatEfct));
+            m_netIdAndCharIdDict.Remove (netId);
         }
         public void UpdateCharCombatEfct (int charId, OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
             var combatEfct = AttrToCombatEfct (ocp, atk, intl, maxHp, maxMp, def, agl, criticalRate, criticalBonus, hitRate, dodgeRate);
