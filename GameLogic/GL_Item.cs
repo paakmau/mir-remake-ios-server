@@ -290,20 +290,21 @@ namespace MirRemakeBackend.GameLogic {
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
             long curCy = charObj.m_VirtualCurrency;
-            long needCy = (1L << (eq.m_LevelInNeed >> 4)) * 12L;
-            if (needCy > curCy) return;
-            // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
             // 失去装备
             var emptyItem = EM_Item.s_instance.CharacterLoseItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
             bag.RemoveItemByPosition (eqPos, emptyItem);
-            // 获得附魔符
-            var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
-            for (int i = 0; i < eq.m_RawAttrList.Count; i++)
-                if (MyRandom.NextInt (0, 10) >= 5)
-                    attrList.Add (eq.m_RawAttrList[i]);
-            var ecmt = EM_Item.s_instance.CharacterGainEnchantmentItem (emptyItem, 29000, attrList, charObj.m_characterId, ItemPlace.BAG, eqPos);
-            bag.SetItem (ecmt, eqPos);
+            // 得到钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -gainCy);
+            // 可能获得附魔符
+            if (MyRandom.NextInt (0, 100) == 0) {
+                var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
+                for (int i = 0; i < eq.m_RawAttrList.Count; i++)
+                    if (MyRandom.NextInt (0, 10) >= 5)
+                        attrList.Add (eq.m_RawAttrList[i]);
+                var ecmt = EM_Item.s_instance.CharacterGainEnchantmentItem (emptyItem, 29000, attrList, charObj.m_characterId, ItemPlace.BAG, eqPos);
+                bag.SetItem (ecmt, eqPos);
+            }
         }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
