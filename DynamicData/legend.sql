@@ -94,3 +94,10 @@ create table `enchantment`(
   primary key (`realid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX `charid` ON `enchantment`(`charid`);
+
+DROP TABLE IF EXISTS `combat_effect`;
+create table `combat_effect`( 
+  `charid` int NOT NULL,
+  `combat` int,
+  primary key (`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

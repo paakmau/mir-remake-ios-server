@@ -434,6 +434,30 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
         
+        public void InsertMixCombatEfct (DDO_CombatEfct mixCombatEfct){
+            string cmd="insert into `combat_effect` values("+mixCombatEfct.m_charId+","+mixCombatEfct.m_combatEfct+");";
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        public void UpdateMixCombatEfct (DDO_CombatEfct mixCombatEfct){
+            string cmd="update `combat_effect` set `combat`="+mixCombatEfct.m_combatEfct+" where `charid`="+mixCombatEfct.m_charId+";";
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        public DDO_CombatEfct[] GetAllMixCombatEfct (){
+            string cmd="select * from `combat_effect`;";
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            DataTable dt=ds.Tables[0];
+            DDO_CombatEfct[] res=new DDO_CombatEfct[dt.Rows.Count];
+            for(int i=0;i<dt.Rows.Count;i++){
+                res[i].m_charId=int.Parse(dt.Rows[i]["charid"].ToString());
+                res[i].m_combatEfct=int.Parse(dt.Rows[i]["combat"].ToString());
+            }
+            return res;
+        }
+        
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
