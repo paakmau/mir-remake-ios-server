@@ -228,11 +228,11 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-        public int CreateCharacter (OccupationType occupation) {
+        public int CreateCharacter (OccupationType occupation,String name) {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "insert into `character` values (null,\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\",NULL);select last_insert_id();";
+            cmd = "insert into `character` values (null,\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\",\""+name+"\");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables[0];
@@ -434,12 +434,12 @@ namespace MirRemakeBackend.DynamicData {
         }
 
         public void InsertMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
-            string cmd = "insert into `combat_effect` values(" + mixCombatEfct.m_charId + "," + mixCombatEfct.m_combatEfct + ");";
+            string cmd = "insert into `combat_effect` values(" + mixCombatEfct.m_charId + "," + mixCombatEfct.m_combatEfct +",\""+mixCombatEfct.m_name+"\",\"+"+"mixCombatEfct.m_ocp.ToString()"+ "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
         public void UpdateMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
-            string cmd = "update `combat_effect` set `combat`=" + mixCombatEfct.m_combatEfct + " where `charid`=" + mixCombatEfct.m_charId + ";";
+            string cmd = "update `combat_effect` set `combat`=" + mixCombatEfct.m_combatEfct + ",`name`="+mixCombatEfct.m_name+", `occupation`="+mixCombatEfct.m_ocp.ToString()+" where `charid`=" + mixCombatEfct.m_charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -453,6 +453,8 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 0; i < dt.Rows.Count; i++) {
                 res[i].m_charId = int.Parse (dt.Rows[i]["charid"].ToString ());
                 res[i].m_combatEfct = int.Parse (dt.Rows[i]["combat"].ToString ());
+                res[i].m_name=dt.Rows[i]["name"].ToString();
+                res[i].m_ocp=(OccupationType)Enum.Parse(typeof(OccupationType),dt.Rows[i]["occupation"].ToString());
             }
             return res;
         }

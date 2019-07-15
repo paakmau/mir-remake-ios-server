@@ -144,7 +144,7 @@ namespace MirRemakeBackend.Data {
             if (x == 0) {
                 return 125;
             }
-            return GetMoney(x - 1) * 2;
+            return (int)(GetMoney(x - 1) * 1.5);
         }
     }
 }
