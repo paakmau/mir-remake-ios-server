@@ -487,7 +487,7 @@ namespace MirRemakeBackend.DynamicData {
 
         //COMBAT EFFECT
         public void InsertMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
-            string cmd = "insert into `combat_effect` values(" + mixCombatEfct.m_charId + "," + mixCombatEfct.m_combatEfct +",\""+mixCombatEfct.m_name+"\",\"+"+"mixCombatEfct.m_ocp.ToString()"+ "\");";
+            string cmd = "insert into `combat_effect` values(" + mixCombatEfct.m_charId + "," + mixCombatEfct.m_combatEfct +",\""+mixCombatEfct.m_name+"\",\""+mixCombatEfct.m_ocp.ToString()+ "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
