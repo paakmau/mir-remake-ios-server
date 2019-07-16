@@ -308,7 +308,7 @@ namespace MirRemakeBackend.DynamicData {
                 res[i].m_experience = int.Parse (dt.Rows[i]["experience"].ToString ());
                 res[i].m_characterId = int.Parse (dt.Rows[i]["characterid"].ToString ());
                 res[i].m_name = dt.Rows[i]["name"].ToString ();
-                res[i].m_playerId=int.Parse(dt.Rows[i]["playerid"].ToString());
+                res[i].m_playerId=playerid;
             }
             return res;
         }
