@@ -72,16 +72,35 @@ namespace MirRemakeBackend.EnterGame {
         public void CommandLogin (int netId, string username, string pwd) {
             DDO_User userDdo;
             var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
-            if (!hasUser || userDdo.m_pwd != pwd)
-                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, false, userDdo.m_playerId));
-            else
+            if (hasUser && userDdo.m_pwd == pwd)
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId));
+            else
+                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, false, -1));
         }
         public void CommandModifyPassword (int netId, string username, string oldPwd, string newPwd) {
-            // TODO:
+            DDO_User userDdo;
+            var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
+            if (hasUser && userDdo.m_pwd == oldPwd) {
+                // TODO: 修改密码
+                m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, true));
+            }
+            else
+                m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, false));
         }
-        public void CommandFindPassword (int netId, string username, string pwdProtectProblem, string pwdProtectAnswer, string newPwd) {
-            // TODO:
+        public void CommandGetPwdProtectProblem (int netId, string username) {
+            DDO_User userDdo;
+            var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
+            // TODO: 获取密保问题
+        }
+        public void CommandFindPassword (int netId, string username, string pwdProtectAnswer, string newPwd) {
+            DDO_User userDdo;
+            var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
+            if (hasUser && userDdo.m_pwdProtectAnswer == pwdProtectAnswer) {
+                // TODO: 修改密码
+                m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, true));
+            }
+            else
+                m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, false));
         }
         public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
             // 角色 dds

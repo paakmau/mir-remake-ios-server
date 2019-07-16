@@ -34,14 +34,20 @@ namespace MirRemakeBackend.Network {
             User.s_instance.CommandModifyPassword (netId, username, oldPwd, newPwd);
         }
     }
+    class CC_InitGetPasswordProtectionProblem : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_GET_PASSWORD_PROTECT_PROBLEM; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string username = reader.GetString ();
+            User.s_instance.CommandGetPwdProtectProblem (netId, username);
+        }
+    }
     class CC_InitFindPassword : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_FIND_PASSWORD; } }
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
-            string pwdProtectProblem = reader.GetString ();
             string pwdProtectAnswer = reader.GetString ();
             string newPwd = reader.GetString ();
-            User.s_instance.CommandFindPassword (netId, username, pwdProtectProblem, pwdProtectAnswer, newPwd);
+            User.s_instance.CommandFindPassword (netId, username, pwdProtectAnswer, newPwd);
         }
     }
     class CC_InitCreateCharacter : IClientCommand {

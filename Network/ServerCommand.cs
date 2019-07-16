@@ -58,6 +58,24 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_playerId);
         }
     }
+    class SC_InitSelfGetPasswordProtectProblem : ServerCommandBase {
+        private static readonly SC_InitSelfGetPasswordProtectProblem s_instance = new SC_InitSelfGetPasswordProtectProblem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_GET_PASSWORD_PROTECT_PROBLEM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private bool m_success;
+        private string m_problem;
+        public static SC_InitSelfGetPasswordProtectProblem Instance (int netId, bool success, string problem) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            s_instance.m_problem = problem;
+            return s_instance;
+        }
+        private SC_InitSelfGetPasswordProtectProblem () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_success);
+            writer.Put (m_problem);
+        }
+    }
     class SC_InitSelfFindPassword : ServerCommandBase {
         private static readonly SC_InitSelfFindPassword s_instance = new SC_InitSelfFindPassword ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_FIND_PASSWORD; } }
