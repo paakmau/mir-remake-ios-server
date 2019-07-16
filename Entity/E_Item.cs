@@ -34,7 +34,7 @@ namespace MirRemakeBackend.Entity {
         public void Reset (DE_Item itemDe) {
             base.Reset (itemDe, 1);
         }
-        public void ResetEnchantmentData (List < (ActorUnitConcreteAttributeType, int) > attrList) {
+        public void ResetEnchantmentData (IReadOnlyList < (ActorUnitConcreteAttributeType, int) > attrList) {
             m_attrList.Clear ();
             for (int i = 0; i < attrList.Count; i++)
                 m_attrList.Add (attrList[i]);

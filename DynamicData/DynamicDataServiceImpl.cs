@@ -162,7 +162,7 @@ namespace MirRemakeBackend.DynamicData {
 
         //ENCHANTMENT
         public void UpdateEnchantmentInfo (DDO_EnchantmentInfo e) {
-            string cmd = "update `enchantment` set `enchant_attr`=\"" + GetString (e.m_attrList) + "\" where `realid`=" + e.m_realId + ";";
+            string cmd = "update `enchantment` set `enchant_attr`=\"" + GetString (e.m_attrArr) + "\" where `realid`=" + e.m_realId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -172,7 +172,7 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
         public void InsertEnchantmentInfo (DDO_EnchantmentInfo enchantmentInfo) {
-            string cmd = "insert into `enchantment` values(null," + enchantmentInfo.m_characterId + ",\"" + GetString (enchantmentInfo.m_attrList) + "\");";
+            string cmd = "insert into `enchantment` values(null," + enchantmentInfo.m_characterId + ",\"" + GetString (enchantmentInfo.m_attrArr) + "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -187,7 +187,7 @@ namespace MirRemakeBackend.DynamicData {
                 DDO_EnchantmentInfo e = new DDO_EnchantmentInfo ();
                 e.m_realId = long.Parse (dt.Rows[i]["realid"].ToString ());
                 e.m_characterId = int.Parse (dt.Rows[i]["charid"].ToString ());
-                e.m_attrList = GetAttr (dt.Rows[i]["enchant_attr"].ToString ());
+                e.m_attrArr = GetAttr (dt.Rows[i]["enchant_attr"].ToString ());
                 res.Add (e);
             }
             return res;

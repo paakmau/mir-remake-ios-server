@@ -39,7 +39,7 @@ namespace MirRemakeBackend.DynamicData {
         /// </summary>
         public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
         public string m_name;
-        public DDO_Character (int playerId, int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr,string name) {
+        public DDO_Character (int playerId, int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr, string name) {
             m_playerId = playerId;
             m_characterId = charId;
             m_level = level;
@@ -47,7 +47,7 @@ namespace MirRemakeBackend.DynamicData {
             m_experience = exp;
             m_currencyArr = currencyArr;
             m_distributedMainAttrPointArr = attrPointArr;
-            m_name=name;
+            m_name = name;
         }
     }
     struct DDO_EquipmentInfo {
@@ -77,11 +77,11 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_EnchantmentInfo {
         public long m_realId;
         public int m_characterId;
-        public (ActorUnitConcreteAttributeType, int) [] m_attrList;
+        public (ActorUnitConcreteAttributeType, int)[] m_attrArr;
         public DDO_EnchantmentInfo (long realId, int charId, List < (ActorUnitConcreteAttributeType, int) > attrList) {
             m_realId = realId;
             m_characterId = charId;
-            m_attrList = attrList.ToArray ();
+            m_attrArr = attrList.ToArray ();
         }
     }
     struct DDO_Item {
@@ -130,12 +130,12 @@ namespace MirRemakeBackend.DynamicData {
             m_missionTargetProgressList = misProgList;
         }
     }
-    struct DDO_CharacterPosition{
+    struct DDO_CharacterPosition {
         public int m_characterId;
         public Vector2 m_position;
-        public DDO_CharacterPosition(int charId, Vector2 pos){
-            m_characterId=charId;
-            m_position=pos;
+        public DDO_CharacterPosition (int charId, Vector2 pos) {
+            m_characterId = charId;
+            m_position = pos;
         }
     }
     struct DDO_CombatEfct {
