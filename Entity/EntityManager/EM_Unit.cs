@@ -40,6 +40,7 @@ namespace MirRemakeBackend.Entity {
         private NetworkIdManager m_networkIdManager = new NetworkIdManager ();
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
+        private Dictionary<int, E_Monster> m_networkIdAndBossDict = new Dictionary<int, E_Monster> ();
         public EM_Unit (DEM_Unit dem, IDDS_Character dds, IDDS_CharacterPosition charPosDds) {
             m_dem = dem;
             m_dds = dds;
@@ -58,6 +59,8 @@ namespace MirRemakeBackend.Entity {
                 monster.Reset (netIdArr[i], idAndPosList[i].Item2, deTuple.Item1, deTuple.Item2);
                 m_networkIdAndMonsterDict[netIdArr[i]] = monster;
                 res[i] = monster;
+                if (monster.m_MonsterType == MonsterType.BOSS || monster.m_MonsterType == MonsterType.FINAL_BOSS)
+                    m_networkIdAndBossDict.Add (monster.m_networkId, monster);
             }
         }
         public int AssignNetworkId () {
@@ -102,11 +105,6 @@ namespace MirRemakeBackend.Entity {
             s_entityPool.m_characterPool.RecycleInstance (charObj);
             // 释放NetId
             m_networkIdManager.RecycleNetworkId (netId);
-        }
-        public E_Monster GetMonsterByNetworkId (int netId) {
-            E_Monster res = null;
-            m_networkIdAndMonsterDict.TryGetValue (netId, out res);
-            return res;
         }
         public E_Character GetCharacterByNetworkId (int netId) {
             E_Character res = null;
