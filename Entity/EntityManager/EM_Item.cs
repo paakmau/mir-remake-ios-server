@@ -534,9 +534,11 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
-        public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 pos) {
-            for (int i = 0; i < itemIdAndNumList.Count; i++)
+        public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
+            for (int i = 0; i < itemIdAndNumList.Count; i++) {
+                var pos = centerPos + new Vector2 (MyRandom.NextFloat (0, 0.2f), MyRandom.NextFloat (0, 0.2f));
                 GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
+            }
         }
         /// <summary>
         /// 创建地面物品
