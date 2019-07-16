@@ -4,7 +4,7 @@ namespace MirRemakeBackend.DynamicData {
         /// 创建一个角色
         /// </summary>
         /// <returns>角色的id</returns>
-        int CreateCharacter (OccupationType occupation, string name);
+        int CreateCharacter (int playerId, OccupationType occupation, string name);
         DDO_Character GetCharacterById (int characterId);
         void UpdateCharacter (DDO_Character charObj);
         DDO_Character[] GetCharacterByPlayerId (int playerId);
