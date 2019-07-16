@@ -26,7 +26,7 @@ namespace MirRemakeBackend.Network {
         }
     }
     class CC_InitModifyPassword : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_LOGIN; } }
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_MODIFY_PASSWORD; } }
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
             string oldPwd = reader.GetString ();

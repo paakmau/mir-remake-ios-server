@@ -3,6 +3,12 @@ using System.Numerics;
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend.Network {
+    // struct NO_Character {
+    //     public int m_charId;
+    //     public OccupationType m_ocp;
+    //     public string m_name;
+    //     public short m_level;
+    // }
     struct NO_SkillParam {
         public int m_targetNetworkId;
         public Vector2 m_direction;
