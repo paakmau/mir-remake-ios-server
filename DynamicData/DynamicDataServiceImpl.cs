@@ -392,7 +392,6 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
         public int InsertUser (DDO_User ddo) {
-            DDO_User temp = new DDO_User (0, "", "","","");
             try {
                 string cmd;
                 DataSet ds = new DataSet ();
