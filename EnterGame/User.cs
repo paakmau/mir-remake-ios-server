@@ -81,7 +81,8 @@ namespace MirRemakeBackend.EnterGame {
             DDO_User userDdo;
             var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
             if (hasUser && userDdo.m_pwd == oldPwd) {
-                // TODO: 修改密码
+                userDdo.m_pwd = newPwd;
+                m_userDds.UpdateUser (userDdo);
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, true));
             }
             else
@@ -90,13 +91,17 @@ namespace MirRemakeBackend.EnterGame {
         public void CommandGetPwdProtectProblem (int netId, string username) {
             DDO_User userDdo;
             var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
-            // TODO: 获取密保问题
+            if (hasUser)
+                m_netService.SendServerCommand (SC_InitSelfGetPasswordProtectProblem.Instance (netId, true, userDdo.m_pwdProtectProblem));
+            else
+                m_netService.SendServerCommand (SC_InitSelfGetPasswordProtectProblem.Instance (netId, false, string.Empty));
         }
         public void CommandFindPassword (int netId, string username, string pwdProtectAnswer, string newPwd) {
             DDO_User userDdo;
             var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
             if (hasUser && userDdo.m_pwdProtectAnswer == pwdProtectAnswer) {
-                // TODO: 修改密码
+                userDdo.m_pwd = newPwd;
+                m_userDds.UpdateUser (userDdo);
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, true));
             }
             else
