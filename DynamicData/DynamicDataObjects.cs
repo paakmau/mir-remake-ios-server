@@ -20,12 +20,15 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_VipCard {
         public int m_playerId;
         public int m_vipLevel;
-        public DDO_VipCard (int playerId, int vipLevel) {
+        public long m_chargeMoney;
+        public DDO_VipCard (int playerId, int vipLevel, long chargeMoney) {
             m_playerId = playerId;
             m_vipLevel = vipLevel;
+            m_chargeMoney = chargeMoney;
         }
     }
     struct DDO_Character {
+        public int m_playerId;
         public int m_characterId;
         public short m_level;
         public OccupationType m_occupation;
@@ -36,7 +39,8 @@ namespace MirRemakeBackend.DynamicData {
         /// </summary>
         public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
         public string m_name;
-        public DDO_Character (int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr,string name) {
+        public DDO_Character (int playerId, int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr,string name) {
+            m_playerId = playerId;
             m_characterId = charId;
             m_level = level;
             m_occupation = oc;

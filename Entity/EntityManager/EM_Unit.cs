@@ -85,7 +85,7 @@ namespace MirRemakeBackend.Entity {
             DE_CharacterData charDataDe;
             m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out charDe, out unitDe, out charDataDe);
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charId, charDe, unitDe, charDataDe, charDdo);
+            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo);
             // 角色位置读取数据库
             newChar.m_position = m_charPosDds.GetCharacterPosition (charId).m_position;
             return newChar;

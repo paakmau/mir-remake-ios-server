@@ -50,7 +50,7 @@ namespace MirRemakeBackend.EnterGame {
                     foreach (var ocp in ocpArr)
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
-            
+
             // 出事排行榜加载
         }
         public int AssignNetworkId () {
@@ -72,10 +72,15 @@ namespace MirRemakeBackend.EnterGame {
         public void CommandLogin (int netId, string username, string pwd) {
             DDO_User userDdo;
             var hasUser = m_userDds.GetUserByUsername (username, out userDdo);
-            if (hasUser && userDdo.m_pwd == pwd)
-                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId));
-            else
-                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, false, -1));
+            if (hasUser && userDdo.m_pwd == pwd) {
+                // 获取角色列表
+                var charArr = m_charDds.GetCharacterByPlayerId (userDdo.m_playerId);
+                List<NO_LoginCharacter> loginCharNoList = new List<NO_LoginCharacter> (charArr.Length);
+                foreach (var charDdo in charArr)
+                    loginCharNoList.Add (new NO_LoginCharacter (charDdo.m_characterId, charDdo.m_occupation, charDdo.m_name, charDdo.m_level));
+                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId, loginCharNoList));
+            } else
+                m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, false, -1, new List<NO_LoginCharacter> ()));
         }
         public void CommandModifyPassword (int netId, string username, string oldPwd, string newPwd) {
             DDO_User userDdo;
@@ -84,8 +89,7 @@ namespace MirRemakeBackend.EnterGame {
                 userDdo.m_pwd = newPwd;
                 m_userDds.UpdateUser (userDdo);
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, true));
-            }
-            else
+            } else
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, false));
         }
         public void CommandGetPwdProtectProblem (int netId, string username) {
@@ -103,8 +107,7 @@ namespace MirRemakeBackend.EnterGame {
                 userDdo.m_pwd = newPwd;
                 m_userDds.UpdateUser (userDdo);
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, true));
-            }
-            else
+            } else
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, false));
         }
         public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
@@ -127,7 +130,7 @@ namespace MirRemakeBackend.EnterGame {
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
             for (short i = 0; i < storeHouseSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
-            for (short i = 0; i<eqSize; i++)
+            for (short i = 0; i < eqSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.EQUIPMENT_REGION, i));
             // 战斗力排行 dds
             m_combatEfctDds.InsertMixCombatEfct (new DDO_CombatEfct (charId, ocp, name, 0));

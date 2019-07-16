@@ -200,6 +200,7 @@ namespace MirRemakeBackend.Entity {
         private DE_Character m_characterDe;
         private DE_CharacterData m_characterDataDe;
         public override ActorUnitType m_UnitType { get { return ActorUnitType.PLAYER; } }
+        public int m_playerId;
         public int m_characterId;
         public string m_name;
         public OccupationType m_Occupation { get { return m_characterDe.m_occupation; } }
@@ -254,12 +255,13 @@ namespace MirRemakeBackend.Entity {
         public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
         public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
         public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
-        public void Reset (int netId, int charId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo) {
+        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_characterDataDe = charDataDe;
             m_networkId = netId;
-            m_characterId = charId;
+            m_playerId = charDdo.m_playerId;
+            m_characterId = charDdo.m_characterId;
             m_experience = charDdo.m_experience;
             foreach (var c in charDdo.m_currencyArr)
                 m_currencyDict[c.Item1] = c.Item2;
@@ -304,7 +306,7 @@ namespace MirRemakeBackend.Entity {
             pointArr[1] = (ActorUnitMainAttributeType.INTELLIGENCE, m_Intelligence);
             pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);
             pointArr[3] = (ActorUnitMainAttributeType.SPIRIT, m_Spirit);
-            return new DDO_Character (m_characterId, m_Level, m_Occupation, m_experience, currencyArr, pointArr, m_name);
+            return new DDO_Character (m_playerId, m_characterId, m_Level, m_Occupation, m_experience, currencyArr, pointArr, m_name);
         }
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);
