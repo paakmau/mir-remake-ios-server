@@ -3,12 +3,18 @@ using System.Numerics;
 using LiteNetLib.Utils;
 
 namespace MirRemakeBackend.Network {
-    // struct NO_Character {
-    //     public int m_charId;
-    //     public OccupationType m_ocp;
-    //     public string m_name;
-    //     public short m_level;
-    // }
+    struct NO_LoginCharacter {
+        public int m_charId;
+        public OccupationType m_ocp;
+        public string m_name;
+        public short m_level;
+        public NO_LoginCharacter (int charId, OccupationType ocp, string name, short lv) {
+            m_charId = charId;
+            m_ocp = ocp;
+            m_name = name;
+            m_level = lv;
+        }
+    }
     struct NO_SkillParam {
         public int m_targetNetworkId;
         public Vector2 m_direction;
@@ -156,6 +162,19 @@ namespace MirRemakeBackend.Network {
         }
         public static Vector2 GetVector2 (this NetDataReader reader) {
             return new Vector2 (reader.GetFloat (), reader.GetFloat ());
+        }
+        public static void Put (this NetDataWriter writer, NO_LoginCharacter value) {
+            writer.Put (value.m_charId);
+            writer.Put ((byte) value.m_ocp);
+            writer.Put (value.m_name);
+            writer.Put (value.m_level);
+        }
+        public static NO_LoginCharacter GetLoginCharacter (this NetDataReader reader) {
+            int charId = reader.GetInt ();
+            OccupationType ocp = (OccupationType) reader.GetByte ();
+            string name = reader.GetString ();
+            short lv = reader.GetShort ();
+            return new NO_LoginCharacter (charId, ocp, name, lv);
         }
         public static void Put (this NetDataWriter writer, NO_SkillParam value) {
             writer.Put (value.m_targetNetworkId);

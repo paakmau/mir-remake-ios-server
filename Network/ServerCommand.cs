@@ -46,16 +46,21 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private bool m_success;
         private int m_playerId;
-        public static SC_InitSelfLogin Instance (int netId, bool success, int playerId) {
+        private IReadOnlyList<NO_LoginCharacter> m_loginCharList;
+        public static SC_InitSelfLogin Instance (int netId, bool success, int playerId, IReadOnlyList<NO_LoginCharacter> loginCharList) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_success = success;
             s_instance.m_playerId = playerId;
+            s_instance.m_loginCharList = loginCharList;
             return s_instance;
         }
         private SC_InitSelfLogin () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_success);
             writer.Put (m_playerId);
+            writer.Put ((byte) m_loginCharList.Count);
+            for (int i = 0; i < m_loginCharList.Count; i++)
+                writer.Put (m_loginCharList[i]);
         }
     }
     class SC_InitSelfGetPasswordProtectProblem : ServerCommandBase {
