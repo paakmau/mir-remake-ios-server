@@ -73,13 +73,25 @@ namespace MirRemakeBackend.Network {
             m_level = lv;
         }
     }
+    struct NO_MallClass {
+        public byte m_mallClassId;
+        public string m_mallName;
+        public List<NO_MallItem> m_mallItemList;
+        public NO_MallClass (byte mallClassId, string mallName, List<NO_MallItem> itemList) {
+            m_mallClassId = mallClassId;
+            m_mallName = mallName;
+            m_mallItemList = itemList;
+        }
+    }
     struct NO_MallItem {
+        public int m_mallItemId;
         public short m_itmeId;
         /// <summary> 为-1则为不可用虚拟币支付 </summary>
         public long m_virtualCyPrice;
         /// <summary> 为-1则为不可用充值币支付 </summary>
         public long m_chargeCyPrice;
-        public NO_MallItem (short itemId, long virtualCyPrice, long chargeCyPrice) {
+        public NO_MallItem (int mallItemId, short itemId, long virtualCyPrice, long chargeCyPrice) {
+            m_mallItemId = mallItemId;
             m_itmeId = itemId;
             m_virtualCyPrice = virtualCyPrice;
             m_chargeCyPrice = chargeCyPrice;
@@ -248,16 +260,34 @@ namespace MirRemakeBackend.Network {
             short lv = reader.GetShort ();
             return new NO_Character (netId, pos, ocp, lv);
         }
+        public static void Put (this NetDataWriter writer, NO_MallClass mallClass) {
+            writer.Put (mallClass.m_mallClassId);
+            writer.Put (mallClass.m_mallName);
+            writer.Put ((byte) mallClass.m_mallItemList.Count);
+            for (int i = 0; i < mallClass.m_mallItemList.Count; i++)
+                writer.Put (mallClass.m_mallItemList[i]);
+        }
+        public static NO_MallClass GetMallClass (this NetDataReader reader) {
+            byte mallClassId = reader.GetByte ();
+            string mallName = reader.GetString ();
+            byte mallItemCnt = reader.GetByte ();
+            List<NO_MallItem> itemList = new List<NO_MallItem> (mallItemCnt);
+            for (int i = 0; i < mallItemCnt; i++)
+                itemList[i] = reader.GetMallItem ();
+            return new NO_MallClass (mallClassId, mallName, itemList);
+        }
         public static void Put (this NetDataWriter writer, NO_MallItem mallItem) {
+            writer.Put (mallItem.m_mallItemId);
             writer.Put (mallItem.m_itmeId);
             writer.Put (mallItem.m_virtualCyPrice);
             writer.Put (mallItem.m_chargeCyPrice);
         }
-        public static NO_MallItem GetMallItem(this NetDataReader reader) {
+        public static NO_MallItem GetMallItem (this NetDataReader reader) {
+            int mallItemId = reader.GetInt ();
             short itemId = reader.GetShort ();
             long virtualCyPrice = reader.GetLong ();
             long chargeCyPrice = reader.GetLong ();
-            return new NO_MallItem (itemId, virtualCyPrice, chargeCyPrice);
+            return new NO_MallItem (mallItemId, itemId, virtualCyPrice, chargeCyPrice);
         }
         public static void Put (this NetDataWriter writer, NO_GroundItem gndItem) {
             writer.Put (gndItem.m_groundItemId);

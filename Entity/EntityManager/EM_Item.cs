@@ -299,17 +299,9 @@ namespace MirRemakeBackend.Entity {
             }
         }
         private class GroundItemIdManager {
-            private HashSet<long> m_groundItemIdSet = new HashSet<long> ();
             private long m_groundItemIdCnt = 0;
             public long AssignGroundItemId () {
-                long res = ++m_groundItemIdCnt;
-                while (m_groundItemIdSet.Contains (res))
-                    res = ++m_groundItemIdCnt;
-                m_groundItemIdSet.Add (res);
-                return res;
-            }
-            public void RecycleGroundItemId (long groundItemId) {
-                m_groundItemIdSet.Remove (groundItemId);
+                return ++m_groundItemIdCnt;
             }
         }
         public static EM_Item s_instance;
