@@ -73,6 +73,18 @@ namespace MirRemakeBackend.Network {
             m_level = lv;
         }
     }
+    struct NO_MallItem {
+        public short m_itmeId;
+        /// <summary> 为-1则为不可用虚拟币支付 </summary>
+        public long m_virtualCyPrice;
+        /// <summary> 为-1则为不可用充值币支付 </summary>
+        public long m_chargeCyPrice;
+        public NO_MallItem (short itemId, long virtualCyPrice, long chargeCyPrice) {
+            m_itmeId = itemId;
+            m_virtualCyPrice = virtualCyPrice;
+            m_chargeCyPrice = chargeCyPrice;
+        }
+    }
     struct NO_GroundItem {
         public long m_groundItemId;
         public short m_itemId;
@@ -235,6 +247,17 @@ namespace MirRemakeBackend.Network {
             OccupationType ocp = (OccupationType) reader.GetByte ();
             short lv = reader.GetShort ();
             return new NO_Character (netId, pos, ocp, lv);
+        }
+        public static void Put (this NetDataWriter writer, NO_MallItem mallItem) {
+            writer.Put (mallItem.m_itmeId);
+            writer.Put (mallItem.m_virtualCyPrice);
+            writer.Put (mallItem.m_chargeCyPrice);
+        }
+        public static NO_MallItem GetMallItem(this NetDataReader reader) {
+            short itemId = reader.GetShort ();
+            long virtualCyPrice = reader.GetLong ();
+            long chargeCyPrice = reader.GetLong ();
+            return new NO_MallItem (itemId, virtualCyPrice, chargeCyPrice);
         }
         public static void Put (this NetDataWriter writer, NO_GroundItem gndItem) {
             writer.Put (gndItem.m_groundItemId);

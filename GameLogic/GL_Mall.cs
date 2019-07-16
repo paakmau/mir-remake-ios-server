@@ -13,15 +13,15 @@ namespace MirRemakeBackend.GameLogic {
         List<long> m_allMallItemVirtualPriceList;
         public GL_Mall (DEM_Item itemDem, IDS_Mall mallDs, INetworkService ns) : base (ns) {
             m_itemDem = itemDem;
-            var allMallItem = mallDs.GetMallItems ();
-            for (int i=0; i<allMallItem.Count; i++) {
-                m_allMallItemIdList.Add (allMallItem[i].m_itemIdAndPrice.Item1);
-                foreach (var cy in allMallItem[i].m_itemIdAndPrice.Item2)
-                    if (cy.Item1 == CurrencyType.VIRTUAL) {
-                        m_allMallItemVirtualPriceList.Add (cy.Item2);
-                        break;
-                    }
-            }
+            // var allMallItem = mallDs.GetMallItems ();
+            // for (int i=0; i<allMallItem.Count; i++) {
+            //     m_allMallItemIdList.Add (allMallItem[i].m_itemIdAndPrice.Item1);
+            //     foreach (var cy in allMallItem[i].m_itemIdAndPrice.Item2)
+            //         if (cy.Item1 == CurrencyType.VIRTUAL) {
+            //             m_allMallItemVirtualPriceList.Add (cy.Item2);
+            //             break;
+            //         }
+            // }
         }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
@@ -49,8 +49,8 @@ namespace MirRemakeBackend.GameLogic {
                 (itemId, num)
             });
         }
-        public void CommandRequireShoppingMallNormal (int netId) {
-            m_networkService.SendServerCommand (SC_SendShoppingMallNormal.Instance (netId, m_allMallItemIdList, m_allMallItemVirtualPriceList));
+        public void CommandRequireShoppingMall (int netId) {
+            // TODO: 商城信息发送
         }
     }
 }

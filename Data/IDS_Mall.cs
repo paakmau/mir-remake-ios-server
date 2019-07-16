@@ -6,7 +6,8 @@ namespace MirRemakeBackend.Data
 {
     interface IDS_Mall
     {
-        List<DO_MallItem> GetMallItems();
+        List<DO_MallItemClass> GetAllMallItemClass();
+        List<DO_MallItem> GetAllMallItem();
     }
     class DS_MallImpl : IDS_Mall{
         public List<DO_MallItem> GetMallItems(){

@@ -93,8 +93,7 @@ namespace MirRemakeBackend.Network {
         APPLY_CANCEL_MISSION,
         APPLY_TALK_TO_MISSION_NPC,
         // 获取商城信息
-        REQUIRE_SHOPPING_MALL_NORMAL,
-        REQUIRE_SHOPPING_MALL_CAMPAIGN,
+        REQUIRE_SHOPPING_MALL,
         // 发送消息
         REQUIRE_SEND_MESSAGE,
         // 测试相关

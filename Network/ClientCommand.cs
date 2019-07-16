@@ -287,18 +287,9 @@ namespace MirRemakeBackend.Network {
     /// 获取商场 常规商品列表
     /// </summary>
     class CC_RequireShoppingMallNormal : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL_NORMAL; } }
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL; } }
         public void Execute (NetDataReader reader, int netId) {
-            // TODO: 普通商城
-        }
-    }
-    /// <summary>
-    /// 获取商城 活动商品列表
-    /// </summary>
-    class CC_RequireShoppingMallCampaign : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL_CAMPAIGN; } }
-        public void Execute (NetDataReader reader, int netId) {
-            // TODO: 活动商城
+            GL_Mall.s_instance.CommandRequireShoppingMall (netId);
         }
     }
     /// <summary>

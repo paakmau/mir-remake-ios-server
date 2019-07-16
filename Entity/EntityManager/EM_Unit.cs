@@ -69,7 +69,7 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 从数据库读取角色信息  
         /// 并在场景中索引新接入的角色  
-        /// 若场景中已存在该角色, 则直接返回
+        /// 若场景中已存在该角色, 则直接返回  
         /// </summary>
         public E_Character InitCharacter (int netId, int charId) {
             E_Character newChar = null;

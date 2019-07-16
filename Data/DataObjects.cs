@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 namespace MirRemakeBackend.Data {
     struct DO_Monster {
@@ -133,7 +134,14 @@ namespace MirRemakeBackend.Data {
         public short m_id;
         public short m_targetNpcId;
     }
+    struct DO_MallItemClass {
+        public byte m_mallItemClassId;
+        public string m_mallItemClassName;
+    }
     struct DO_MallItem {
-        public ValueTuple<short, ValueTuple<CurrencyType, int>[]> m_itemIdAndPrice;
+        public short m_itemId;
+        public byte m_mallItemClassId;
+        public long m_virtualCyPrice;
+        public long m_chargeCyPrice;
     }
 }
