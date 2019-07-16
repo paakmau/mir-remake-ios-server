@@ -20,7 +20,7 @@ namespace MirRemakeBackend.Data {
             string jsonFile = File.ReadAllText("Data/D_Skill.json");
             s_skillDatas = JsonMapper.ToObject(jsonFile);
             
-            int faker=(s_skillDatas.Count-1)/4;
+            int faker=10;
             int ssm=-1;
             switch (occupation){
                 case(OccupationType.WARRIOR):
@@ -66,7 +66,7 @@ namespace MirRemakeBackend.Data {
                 {
                     DO_SkillData skillData = new DO_SkillData();
                     skillData.m_skillLevel = (short)(j + 1);
-                    int sad=j>=(i/10)?j:(i/10);
+                    int sad=j>=(i%10)?j:(i%10);
                     if(i>=40){
                         skillData.m_upgradeCharacterLevelInNeed=1;
                     }
