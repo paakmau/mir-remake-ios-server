@@ -945,12 +945,17 @@ namespace MirRemakeBackend.Network {
         private static SC_SendShoppingMall s_instance = new SC_SendShoppingMall ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_SHOPPING_MALL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        public static SC_SendShoppingMall Instance (int netId, IReadOnlyList<short> itemIdList, IReadOnlyList<long> itemVirtualCurrencyPriceList) {
+        private IReadOnlyList<NO_MallClass> m_mallClassList;
+        public static SC_SendShoppingMall Instance (int netId, IReadOnlyList<NO_MallClass> mallClassList) {
             s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_mallClassList = mallClassList;
             return s_instance;
         }
         private SC_SendShoppingMall () { }
         public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_mallClassList.Count);
+            for (int i = 0; i < m_mallClassList.Count; i++)
+                writer.Put (m_mallClassList[i]);
         }
     }
     class SC_SendMessage : ServerCommandBase {
