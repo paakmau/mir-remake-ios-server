@@ -86,8 +86,9 @@ namespace MirRemakeBackend.DynamicData {
                 string gems = dt.Rows[i]["gem_list"].ToString ();
                 equipment.m_inlaidGemIdList = new List<short> ();
                 if (gems.Length != 0) {
-                    for (int j = 0; j < gems.Split (' ').Length; j++) {
-                        equipment.m_inlaidGemIdList.Add (short.Parse (gems.Split (' ') [j]));
+                    string[] s=gems.Split(' ');
+                    for (int j = 0; j <s.Length; j++) {
+                        equipment.m_inlaidGemIdList.Add (short.Parse (s[j]));
                     }
                 }
                 JsonData attr = JsonMapper.ToObject (dt.Rows[i]["enchant_attr"].ToString ());
@@ -259,13 +260,15 @@ namespace MirRemakeBackend.DynamicData {
                 throw new Exception ();
             }
             character.m_currencyArr = new ValueTuple<CurrencyType, long>[2];
-            character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [0]));
-            character.m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[0]["currency"].ToString ().Split (' ') [1]));
+            String[] strings=dt.Rows[0]["currency"].ToString ().Split (' ') ;
+            character.m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (strings[0]));
+            character.m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (strings[1]));
             character.m_distributedMainAttrPointArr = new ValueTuple<ActorUnitMainAttributeType, short>[4];
-            character.m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.STRENGTH, short.Parse (dt.Rows[0]["giftpoints"].ToString ().Split (' ') [0]));
-            character.m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.AGILITY, short.Parse (dt.Rows[0]["giftpoints"].ToString ().Split (' ') [1]));
-            character.m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.INTELLIGENCE, short.Parse (dt.Rows[0]["giftpoints"].ToString ().Split (' ') [2]));
-            character.m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.SPIRIT, short.Parse (dt.Rows[0]["giftpoints"].ToString ().Split (' ') [3]));
+            strings=dt.Rows[0]["giftpoints"].ToString ().Split (' ');
+            character.m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.STRENGTH, short.Parse ( strings[0]));
+            character.m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.AGILITY, short.Parse (strings[1]));
+            character.m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.INTELLIGENCE, short.Parse (strings[2]));
+            character.m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.SPIRIT, short.Parse (strings[3]));
             character.m_level = short.Parse (dt.Rows[0]["level"].ToString ());
             character.m_occupation = (OccupationType) Enum.Parse (typeof (OccupationType), dt.Rows[0]["occupation"].ToString ());
             character.m_experience = int.Parse (dt.Rows[0]["experience"].ToString ());
@@ -296,13 +299,15 @@ namespace MirRemakeBackend.DynamicData {
             DDO_Character[] res=new DDO_Character[dt.Rows.Count];
             for(int i=0;i<dt.Rows.Count;i++){
                 res[i].m_currencyArr = new ValueTuple<CurrencyType, long>[2];
-                res[i].m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[i]["currency"].ToString ().Split (' ') [0]));
-                res[i].m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[i]["currency"].ToString ().Split (' ') [1]));
+                String[] strings=dt.Rows[i]["currency"].ToString ().Split (' ') ;
+                res[i].m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (strings [0]));
+                res[i].m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (strings[1]));
                 res[i].m_distributedMainAttrPointArr = new ValueTuple<ActorUnitMainAttributeType, short>[4];
-                res[i].m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.STRENGTH, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [0]));
-                res[i].m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.AGILITY, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [1]));
-                res[i].m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.INTELLIGENCE, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [2]));
-                res[i].m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.SPIRIT, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [3]));
+                strings=dt.Rows[0]["giftpoints"].ToString ().Split (' ');
+                res[i].m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.STRENGTH, short.Parse (strings[0]));
+                res[i].m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.AGILITY, short.Parse (strings[1]));
+                res[i].m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.INTELLIGENCE, short.Parse (strings[2]));
+                res[i].m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.SPIRIT, short.Parse (strings[3]));
                 res[i].m_level = short.Parse (dt.Rows[0]["level"].ToString ());
                 res[i].m_occupation = (OccupationType) Enum.Parse (typeof (OccupationType), dt.Rows[i]["occupation"].ToString ());
                 res[i].m_experience = int.Parse (dt.Rows[i]["experience"].ToString ());

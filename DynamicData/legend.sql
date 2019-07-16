@@ -108,3 +108,13 @@ create table `combat_effect`(
   `occupation` VARCHAR(45) NOT NULL,
   primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `mall`;
+create table `mall`(
+  `itemid` int NOT NULL,
+  `classid` int NOT NULL,
+  `charge_price` int NOT NULL,
+  `virtal_price` int NOT NULL,
+  primary key (`itemid`)
+)
+CREATE INDEX `classid` ON `mall`(`itemid`);

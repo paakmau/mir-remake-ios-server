@@ -137,6 +137,10 @@ namespace MirRemakeBackend.Data {
     struct DO_MallItemClass {
         public byte m_mallItemClassId;
         public string m_mallItemClassName;
+        public DO_MallItemClass(byte classid,string name){
+            m_mallItemClassId=classid;
+            m_mallItemClassName=name;
+        }
     }
     struct DO_MallItem {
         public short m_itemId;

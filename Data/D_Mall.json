@@ -1,31 +1,96 @@
 [{
     "ItemId":9,
+    "ClassId":0,
+    "ClassName":"战斗消耗品",
     "Price":[150,15000]
 },{
     "ItemId":19,
+    "ClassId":0,
+    "ClassName":"战斗消耗品",
     "Price":[150,15000]
 },{
     "ItemId":29,
+    "ClassId":1,
+    "ClassName":"战斗力提升道具",
     "Price":[150,15000]
 },{
     "ItemId":39,
+    "ClassId":0,
+    "ClassName":"战斗消耗品",
     "Price":[150,15000]
 },{
     "ItemId":49,
+    "ClassId":0,
+    "ClassName":"战斗消耗品",
     "Price":[250,25000]
 },{
     "ItemId":59,
+    "ClassId":1,
+    "ClassName":"战斗力提升道具",
     "Price":[350,35000]
 },{
     "ItemId":69,
+    "ClassId":1,
+    "ClassName":"战斗力提升道具",
     "Price":[350,35000]
 },{
     "ItemId":79,
+    "ClassId":1,
+    "ClassName":"战斗力提升道具",
     "Price":[350,35000]
 },{
     "ItemId":89,
+    "ClassId":1,
+    "ClassName":"战斗力提升道具",
     "Price":[350,35000]
 },{
     "ItemId":99,
+    "ClassId":1,
+    "ClassName":"战斗力提升道具",
     "Price":[350,35000]
+},{
+    "ItemId":20204,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20204,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20218,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20424,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20438,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20644,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20658,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20864,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
+},{
+    "ItemId":20878,
+    "ClassId":2,
+    "ClassName":"豪华装备",
+    "Price":[15000,250000]
 }]
