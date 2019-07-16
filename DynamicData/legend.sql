@@ -4,6 +4,7 @@ use legend;
 DROP TABLE IF EXISTS `character`;
 CREATE TABLE `character` (
   `characterid` int NOT NULL AUTO_INCREMENT,
+  `playerid` int NOT NULL,
   `occupation` VARCHAR(255) NOT NULL,
   `level` int DEFAULT NULL,
   `experience` int DEFAULT NULL,
@@ -12,6 +13,7 @@ CREATE TABLE `character` (
   `name` varchar(255) DEFAULT NULL,
    primary key (`characterid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `playedid` ON `character`(`playerid`);
 
 DROP TABLE IF EXISTS `skill`;
 create table `skill`( 
@@ -85,6 +87,7 @@ DROP TABLE IF EXISTS `vip`;
 create table `vip`( 
   `userid` int NOT NULL AUTO_INCREMENT,
   `vip_level` int NOT NULL,
+  `charge_money` int NOT NULL,
   primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

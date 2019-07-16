@@ -15,6 +15,7 @@ namespace MirRemakeBackend.DynamicData {
             sqlConfig.server = "localhost";
             pool = new SQLPool (sqlConfig);
         }
+        // ITEM
         public List<DDO_Item> GetBagByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
@@ -156,18 +157,19 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
 
+
+
+        //ENCHANTMENT
         public void UpdateEnchantmentInfo (DDO_EnchantmentInfo e) {
             string cmd = "update `enchantment` set `enchant_attr`=\"" + GetString (e.m_attrList) + "\" where `realid`=" + e.m_realId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-
         public void DeleteEnchantmentInfoByRealId (long realId) {
             string cmd = "delete from `enchantment` where `realid`=" + realId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-
         public void InsertEnchantmentInfo (DDO_EnchantmentInfo enchantmentInfo) {
             string cmd = "insert into `enchantment` values(null," + enchantmentInfo.m_characterId + ",\"" + GetString (enchantmentInfo.m_attrList) + "\");";
             string database = "legend";
@@ -207,6 +209,8 @@ namespace MirRemakeBackend.DynamicData {
             }
             return res;
         }
+
+        //SKILL
         public void UpdateSkill (DDO_Skill ddo) {
             int charId = ddo.m_characterId;
             string cmd;
@@ -228,16 +232,21 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
-        public int CreateCharacter (OccupationType occupation,String name) {
+        
+        
+
+        //CHARACTER
+        public int CreateCharacter (int playerid,OccupationType occupation,String name) {
             string cmd;
             DataSet ds = new DataSet ();
             DataTable dt = new DataTable ();
-            cmd = "insert into `character` values (null,\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\",\""+name+"\");select last_insert_id();";
+            cmd = "insert into `character` values (null,"+playerid+",\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\",\""+name+"\");select last_insert_id();";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             dt = ds.Tables[0];
             return int.Parse (dt.Rows[0]["last_insert_id()"].ToString ());
         }
+        
         public DDO_Character GetCharacterById (int characterId) {
             DDO_Character character = new DDO_Character ();
             string cmd;
@@ -262,6 +271,7 @@ namespace MirRemakeBackend.DynamicData {
             character.m_experience = int.Parse (dt.Rows[0]["experience"].ToString ());
             character.m_characterId = int.Parse (dt.Rows[0]["characterid"].ToString ());
             character.m_name = dt.Rows[0]["name"].ToString ();
+            character.m_playerId=int.Parse(dt.Rows[0]["playerid"].ToString());
             return character;
         }
         public void UpdateCharacter (DDO_Character charObj) {
@@ -276,7 +286,35 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
+        public DDO_Character[] GetCharacterByPlayerId(int playerid){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "select * from `character` where playerid=" + playerid + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd, ds);
+            DataTable dt = ds.Tables[0];
+            DDO_Character[] res=new DDO_Character[dt.Rows.Count];
+            for(int i=0;i<dt.Rows.Count;i++){
+                res[i].m_currencyArr = new ValueTuple<CurrencyType, long>[2];
+                res[i].m_currencyArr[0] = new ValueTuple<CurrencyType, long> (CurrencyType.VIRTUAL, long.Parse (dt.Rows[i]["currency"].ToString ().Split (' ') [0]));
+                res[i].m_currencyArr[1] = new ValueTuple<CurrencyType, long> (CurrencyType.CHARGE, long.Parse (dt.Rows[i]["currency"].ToString ().Split (' ') [1]));
+                res[i].m_distributedMainAttrPointArr = new ValueTuple<ActorUnitMainAttributeType, short>[4];
+                res[i].m_distributedMainAttrPointArr[0] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.STRENGTH, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [0]));
+                res[i].m_distributedMainAttrPointArr[1] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.AGILITY, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [1]));
+                res[i].m_distributedMainAttrPointArr[2] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.INTELLIGENCE, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [2]));
+                res[i].m_distributedMainAttrPointArr[3] = new ValueTuple<ActorUnitMainAttributeType, short> (ActorUnitMainAttributeType.SPIRIT, short.Parse (dt.Rows[i]["giftpoints"].ToString ().Split (' ') [3]));
+                res[i].m_level = short.Parse (dt.Rows[0]["level"].ToString ());
+                res[i].m_occupation = (OccupationType) Enum.Parse (typeof (OccupationType), dt.Rows[i]["occupation"].ToString ());
+                res[i].m_experience = int.Parse (dt.Rows[i]["experience"].ToString ());
+                res[i].m_characterId = int.Parse (dt.Rows[i]["characterid"].ToString ());
+                res[i].m_name = dt.Rows[i]["name"].ToString ();
+                res[i].m_playerId=int.Parse(dt.Rows[i]["playerid"].ToString());
+            }
+            return res;
+        }
 
+
+        //MISSION
         public List<DDO_Mission> GetMissionListByCharacterId (int charId) {
             string cmd;
             DataSet ds = new DataSet ();
@@ -342,6 +380,9 @@ namespace MirRemakeBackend.DynamicData {
 
         }
 
+
+
+        //CHARACTER POSITION
         public void UpdateCharacterPosition (DDO_CharacterPosition cp) {
             string cmd;
             DataSet ds = new DataSet ();
@@ -372,6 +413,9 @@ namespace MirRemakeBackend.DynamicData {
             DDO_CharacterPosition cp = new DDO_CharacterPosition (charId, new System.Numerics.Vector2 (x, y));
             return cp;
         }
+
+
+        //USER
         public bool GetUserByUsername (string username, out DDO_User resUser) {
             string cmd;
             DataSet ds = new DataSet ();
@@ -406,9 +450,11 @@ namespace MirRemakeBackend.DynamicData {
             }
         }
 
+
+        ///VIPCARD
         public void InsertVipCard (DDO_VipCard vipCard) {
             string cmd;
-            cmd = "insert into `vip` values(" + vipCard.m_playerId + "," + vipCard.m_vipLevel + ");";
+            cmd = "insert into `vip` values(" + vipCard.m_playerId + "," + vipCard.m_vipLevel + ","+vipCard.m_chargeMoney+");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
@@ -422,16 +468,19 @@ namespace MirRemakeBackend.DynamicData {
             if (dt.Rows.Count == 0) {
                 throw new Exception ();
             }
-            DDO_VipCard res = new DDO_VipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_card"].ToString ()));
+            DDO_VipCard res = new DDO_VipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_card"].ToString ()),long.Parse(dt.Rows[0]["charge_money"].ToString()));
             return res;
         }
         public void UpdateVipCard (DDO_VipCard vipCard) {
             string cmd;
-            cmd = "update `vip` set `vip_level`=" + vipCard.m_vipLevel + " where `userid`=" + vipCard.m_playerId + ";";
+            cmd = "update `vip` set `vip_level`=" + vipCard.m_vipLevel + ",`charge_money`="+vipCard.m_chargeMoney+" where `userid`=" + vipCard.m_playerId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
 
+
+
+        //COMBAT EFFECT
         public void InsertMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
             string cmd = "insert into `combat_effect` values(" + mixCombatEfct.m_charId + "," + mixCombatEfct.m_combatEfct +",\""+mixCombatEfct.m_name+"\",\"+"+"mixCombatEfct.m_ocp.ToString()"+ "\");";
             string database = "legend";
