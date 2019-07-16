@@ -50,8 +50,7 @@ namespace MirRemakeBackend.Network {
         // 技能相关
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
         // 商城
-        SEND_SHOPPING_MALL_NORMAL,
-        SEND_SHOPPING_MALL_COMPAIGN,
+        SEND_SHOPPING_MALL,
         // 信息
         SEND_MESSAGE
     }
