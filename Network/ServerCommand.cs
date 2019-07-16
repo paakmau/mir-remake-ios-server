@@ -25,6 +25,21 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_netId);
         }
     }
+    class SC_InitSelfRegister : ServerCommandBase {
+        private static readonly SC_InitSelfRegister s_instance = new SC_InitSelfRegister ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_REGISTER; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private bool m_success;
+        public static SC_InitSelfRegister Instance (int netId, bool success) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            return s_instance;
+        }
+        private SC_InitSelfRegister () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_success);
+        }
+    }
     class SC_InitSelfLogin : ServerCommandBase {
         private static readonly SC_InitSelfLogin s_instance = new SC_InitSelfLogin ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_LOGIN; } }
@@ -69,21 +84,6 @@ namespace MirRemakeBackend.Network {
             return s_instance;
         }
         private SC_InitSelfModifyPassword () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put (m_success);
-        }
-    }
-    class SC_InitSelfRegister : ServerCommandBase {
-        private static readonly SC_InitSelfRegister s_instance = new SC_InitSelfRegister ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_REGISTER; } }
-        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private bool m_success;
-        public static SC_InitSelfRegister Instance (int netId, bool success) {
-            s_instance.m_toClientList = new List<int> { netId };
-            s_instance.m_success = success;
-            return s_instance;
-        }
-        private SC_InitSelfRegister () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_success);
         }
