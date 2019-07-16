@@ -4,6 +4,8 @@ namespace MirRemakeBackend.Network {
         INIT_SELF_NETWORK_ID,
         INIT_SELF_REGISTER,
         INIT_SELF_LOGIN,
+        INIT_SELF_MODIFY_PASSWORD,
+        INIT_SELF_FIND_PASSWORD,
         INIT_SELF_CREATE_CHARACTER,
         INIT_SELF_ATTRIBUTE,
         INIT_SELF_SKILL,
@@ -56,6 +58,8 @@ namespace MirRemakeBackend.Network {
         // 未进入游戏阶段
         INIT_REGISTER,
         INIT_LOGIN,
+        INIT_MODIFY_PASSWORD,
+        INIT_FIND_PASSWORD,
         INIT_CREATE_CHARACTER,
         INIT_CHARACTER_ID,
         // 同步位置

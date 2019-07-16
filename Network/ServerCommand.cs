@@ -43,6 +43,36 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_playerId);
         }
     }
+    class SC_InitSelfFindPassword : ServerCommandBase {
+        private static readonly SC_InitSelfFindPassword s_instance = new SC_InitSelfFindPassword ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_FIND_PASSWORD; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private bool m_success;
+        public static SC_InitSelfFindPassword Instance (int netId, bool success) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            return s_instance;
+        }
+        private SC_InitSelfFindPassword () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_success);
+        }
+    }
+    class SC_InitSelfModifyPassword : ServerCommandBase {
+        private static readonly SC_InitSelfModifyPassword s_instance = new SC_InitSelfModifyPassword ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_MODIFY_PASSWORD; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private bool m_success;
+        public static SC_InitSelfModifyPassword Instance (int netId, bool success) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_success = success;
+            return s_instance;
+        }
+        private SC_InitSelfModifyPassword () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_success);
+        }
+    }
     class SC_InitSelfRegister : ServerCommandBase {
         private static readonly SC_InitSelfRegister s_instance = new SC_InitSelfRegister ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_REGISTER; } }

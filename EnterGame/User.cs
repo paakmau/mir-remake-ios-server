@@ -77,6 +77,12 @@ namespace MirRemakeBackend.EnterGame {
             else
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId));
         }
+        public void CommandModifyPassword (int netId, string username, string oldPwd, string newPwd) {
+            // TODO:
+        }
+        public void CommandFindPassword (int netId, string username, string pwdProtectProblem, string pwdProtectAnswer, string newPwd) {
+            // TODO:
+        }
         public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
             // 角色 dds
             int charId = m_charDds.CreateCharacter (ocp, name);

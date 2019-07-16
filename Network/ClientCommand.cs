@@ -7,14 +7,6 @@ namespace MirRemakeBackend.Network {
         NetworkToServerDataType m_DataType { get; }
         void Execute (NetDataReader reader, int netId);
     }
-    class CC_InitLogin : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_LOGIN; } }
-        public void Execute (NetDataReader reader, int netId) {
-            string username = reader.GetString ();
-            string pwd = reader.GetString ();
-            User.s_instance.CommandLogin (netId, username, pwd);
-        }
-    }
     class CC_InitRegister : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_REGISTER; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -23,6 +15,33 @@ namespace MirRemakeBackend.Network {
             string pwdProtectProblem = reader.GetString ();
             string pwdProtectAnswer = reader.GetString ();;
             User.s_instance.CommandRegister (netId, username, pwd, pwdProtectProblem, pwdProtectAnswer);
+        }
+    }
+    class CC_InitLogin : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_LOGIN; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string username = reader.GetString ();
+            string pwd = reader.GetString ();
+            User.s_instance.CommandLogin (netId, username, pwd);
+        }
+    }
+    class CC_InitModifyPassword : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_LOGIN; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string username = reader.GetString ();
+            string oldPwd = reader.GetString ();
+            string newPwd = reader.GetString ();
+            User.s_instance.CommandModifyPassword (netId, username, oldPwd, newPwd);
+        }
+    }
+    class CC_InitFindPassword : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_FIND_PASSWORD; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string username = reader.GetString ();
+            string pwdProtectProblem = reader.GetString ();
+            string pwdProtectAnswer = reader.GetString ();
+            string newPwd = reader.GetString ();
+            User.s_instance.CommandFindPassword (netId, username, pwdProtectProblem, pwdProtectAnswer, newPwd);
         }
     }
     class CC_InitCreateCharacter : IClientCommand {
