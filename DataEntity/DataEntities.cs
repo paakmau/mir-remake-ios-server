@@ -173,6 +173,11 @@ namespace MirRemakeBackend.DataEntity {
         public readonly short m_id;
         public readonly long m_virtualCyPrice;
         public readonly long m_chargeCyPrice;
+        public DE_MallItem (DO_MallItem mallItemDo) {
+            m_id = mallItemDo.m_itemId;
+            m_virtualCyPrice = mallItemDo.m_virtualCyPrice;
+            m_chargeCyPrice = mallItemDo.m_chargeCyPrice;
+        }
     }
     class DE_Item {
         public readonly short m_id;
