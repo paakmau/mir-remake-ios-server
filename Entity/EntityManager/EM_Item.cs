@@ -389,6 +389,16 @@ namespace MirRemakeBackend.Entity {
             // 地面物品视野
             m_characterGroundItemSightDict.Remove (netId);
         }
+        /// <summary> 
+        /// 获取物品的默认单价  
+        /// 若物品不可使用默认单价购买返回 -1  
+        /// 如 ItemId 不正确返回 -1  
+        /// </summary>
+        public long GetItemPrice (short itemId) {
+            var de = m_dem.GetItemById (itemId);
+            if (de == null) return -1;
+            return de.m_price;
+        }
         /// <summary>
         /// 获取装备区
         /// </summary>

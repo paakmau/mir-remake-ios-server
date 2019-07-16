@@ -90,6 +90,33 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);
         }
+        public void CommandApplySellItemInBag (int netId, long realId, short num) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null)
+                return;
+            short pos;
+            E_Item item = bag.GetItemByRealId (realId, out pos);
+            if (item == null)
+                return;
+            // 失去物品
+            NotifyCharacterLostItem (charObj, item, num, pos, bag);
+            // 拿钱
+            var virCy = (int) (item.m_Price * num * 0.8f);
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
+        }
+        public void CommandApplyBuyItemIntoBag (int netId, short itemId, short num) {
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null)
+                return;
+            long price = EM_Item.s_instance.GetItemPrice (itemId);
+            if (price == -1) return;
+            var virCy = price * num;
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -virCy);
+            NotifyCharacterGainItem (charObj, new List < (short, short) > {
+                (itemId, num)
+            });
+        }
         public void CommandGainItem (int netId, short itemId, short num) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;

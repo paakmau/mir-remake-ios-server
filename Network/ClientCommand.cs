@@ -178,7 +178,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            GL_Mall.s_instance.CommandApplySellItemInBag (netId, realId, num);
+            GL_Item.s_instance.CommandApplySellItemInBag (netId, realId, num);
         }
     }
     /// <summary>
@@ -189,7 +189,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
-            GL_Mall.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
+            GL_Item.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
         }
     }
     class CC_ApplyBuildEquipment : IClientCommand {
