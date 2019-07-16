@@ -74,6 +74,8 @@ create table `user`(
   `userid` int NOT NULL AUTO_INCREMENT,
   `user_name` VARCHAR(155) NOT NULL,
   `password` VARCHAR(155) NOT NULL,
+  `question` VARCHAR(255),
+  `answer` VARCHAR(255),
   primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

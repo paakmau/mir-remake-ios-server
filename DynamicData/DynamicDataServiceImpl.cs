@@ -382,21 +382,21 @@ namespace MirRemakeBackend.DynamicData {
                 resUser = default (DDO_User);
                 return false;
             }
-            resUser = new DDO_User (int.Parse (ds.Tables[0].Rows[0]["userid"].ToString ()), ds.Tables[0].Rows[0]["user_name"].ToString (), ds.Tables[0].Rows[0]["password"].ToString ());
+            resUser = new DDO_User (int.Parse (ds.Tables[0].Rows[0]["userid"].ToString ()), ds.Tables[0].Rows[0]["user_name"].ToString (), ds.Tables[0].Rows[0]["password"].ToString (),ds.Tables[0].Rows[0]["question"].ToString(),ds.Tables[0].Rows[0]["answer"].ToString());
             return true;
         }
         public void UpdateUser (DDO_User ddo) {
             string cmd;
-            cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\" where `userid`=" + ddo.m_playerId + ";";
+            cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\",`question`=\""+ddo.m_pwdProtectProblem+"\",`answer`=\""+ddo.m_pwdProtectAnswer+"\" where `userid`=" + ddo.m_playerId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
         public int InsertUser (DDO_User ddo) {
-            DDO_User temp = new DDO_User (0, "", "");
+            DDO_User temp = new DDO_User (0, "", "","","");
             try {
                 string cmd;
                 DataSet ds = new DataSet ();
-                cmd = "insert into `user` values(null,\"" + ddo.m_username + "\",\"" + ddo.m_pwd + "\");select last_insert_id();";
+                cmd = "insert into `user` values(null,\"" + ddo.m_username + "\",\"" + ddo.m_pwd + "\",\""+ddo.m_pwdProtectProblem+"\",\""+ddo.m_pwdProtectAnswer+"\");select last_insert_id();";
                 string database = "legend";
                 //Console.WriteLine(cmd);
                 pool.ExecuteSql (database, cmd, ds);
