@@ -116,5 +116,5 @@ create table `mall`(
   `charge_price` int NOT NULL,
   `virtal_price` int NOT NULL,
   primary key (`itemid`)
-)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX `classid` ON `mall`(`itemid`);
