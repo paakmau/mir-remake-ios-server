@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
@@ -100,6 +100,7 @@ namespace MirRemakeBackend {
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
+            GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
             GL_Item.s_instance = new GL_Item (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
@@ -124,19 +125,16 @@ namespace MirRemakeBackend {
             };
         }
 
-        static void TestStatic(){
-            IDS_Character sch=new DS_CharacterImpl();
-            IDS_Item sit=new DS_ItemImpl();
-            IDS_Mission smi=new DS_MissionImpl();
-            IDS_Monster smo=new DS_MonsterImpl();
-            IDS_MonsterMap smm=new DS_MonsterMapImpl();
-            IDS_GroundItemMap sgi=new DS_GroundItemMapImpl();
-            IDS_Skill ssk=new DS_SkillImpl();
-            IDS_Status sst=new DS_StatusImpl();
-            IDS_Mall sma=new DS_MallImpl();
-
-
-
+        static void TestStatic () {
+            IDS_Character sch = new DS_CharacterImpl ();
+            IDS_Item sit = new DS_ItemImpl ();
+            IDS_Mission smi = new DS_MissionImpl ();
+            IDS_Monster smo = new DS_MonsterImpl ();
+            IDS_MonsterMap smm = new DS_MonsterMapImpl ();
+            IDS_GroundItemMap sgi = new DS_GroundItemMapImpl ();
+            IDS_Skill ssk = new DS_SkillImpl ();
+            IDS_Status sst = new DS_StatusImpl ();
+            IDS_Mall sma = new DS_MallImpl ();
 
         }
     }

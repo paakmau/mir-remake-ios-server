@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
@@ -40,7 +39,7 @@ namespace MirRemakeBackend.GameLogic {
             // 角色加点后, 具体属性变化
             this.MainPointToConAttr (charObj);
             // 战斗力变化
-            NotifyCombatEffectivenessChange (charObj);
+            GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
             EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
@@ -55,28 +54,12 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
-        public void CommandGetCombatEffectivenessRank (int netId, OccupationType ocp) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
-            var topCombatEfctRnkCharIdAndCombatEfctList = EM_Rank.s_instance.GetTopCombatEfctRnkCharIdAndCombatEfctList (ocp, 15);
-            var topCombatEfctRnkList = new List<NO_FightCapacityRankInfo> (topCombatEfctRnkCharIdAndCombatEfctList.Count);
-            for (int i = 0; i < topCombatEfctRnkCharIdAndCombatEfctList.Count; i++) {
-                var topCharId = topCombatEfctRnkCharIdAndCombatEfctList[i].Item1;
-                var topCharCombatEfct = topCombatEfctRnkCharIdAndCombatEfctList[i].Item2;
-                topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "匿名", 14, (short) i, topCharCombatEfct, "无", (byte) 0));
-            }
-            var myCombatEfctAndRank = EM_Rank.s_instance.GetCombatEfctAndRank (ocp, charObj.m_characterId, charObj.m_Occupation);
-            m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, (short) myCombatEfctAndRank.Item2));
-        }
-        public void NotifyCombatEffectivenessChange (E_Character charObj) {
-            EM_Rank.s_instance.UpdateCharCombatEfct (charObj.m_characterId, charObj.m_Occupation, charObj.m_Attack, charObj.m_Intelligence, charObj.m_MaxHp, charObj.m_MaxMp, charObj.m_Defence, charObj.m_Agility, charObj.m_CriticalRate, charObj.m_CriticalBonus, charObj.m_HitRate, charObj.m_DodgeRate);
-        }
         public E_Character NotifyInitCharacter (int netId, int charId) {
             E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
             if (newChar == null)
                 return null;
             MainPointToConAttr (newChar);
-            NotifyCombatEffectivenessChange (newChar);
+            GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (newChar);
             // client
             m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
                 netId,
@@ -95,7 +78,6 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyRemoveCharacter (E_Character charObj) {
             EM_Unit.s_instance.RemoveCharacter (charObj.m_networkId);
-            EM_Rank.s_instance.RemoveCharacter (charObj);
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == c_maxLevel)
@@ -103,7 +85,7 @@ namespace MirRemakeBackend.GameLogic {
             charObj.m_experience += exp;
             var dLv = charObj.TryLevelUp ();
             if (dLv > 0)
-                NotifyCombatEffectivenessChange (charObj);
+                GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
             EM_Unit.s_instance.SaveCharacter (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
