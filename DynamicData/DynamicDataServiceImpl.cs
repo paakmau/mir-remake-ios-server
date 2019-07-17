@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_CharacterPosition, IDDS_User, IDDS_CombatEfct {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_CharacterPosition, IDDS_User, IDDS_CombatEfct,IDDS_VipCard {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -431,7 +431,7 @@ namespace MirRemakeBackend.DynamicData {
                 resUser = default (DDO_User);
                 return false;
             }
-            resUser = new DDO_User (int.Parse (ds.Tables[0].Rows[0]["userid"].ToString ()), ds.Tables[0].Rows[0]["user_name"].ToString (), ds.Tables[0].Rows[0]["password"].ToString (),ds.Tables[0].Rows[0]["question"].ToString(),ds.Tables[0].Rows[0]["answer"].ToString());
+            resUser = new DDO_User (int.Parse (ds.Tables[0].Rows[0]["userid"].ToString ()),username, ds.Tables[0].Rows[0]["password"].ToString (),ds.Tables[0].Rows[0]["question"].ToString(),ds.Tables[0].Rows[0]["answer"].ToString());
             return true;
         }
         public void UpdateUser (DDO_User ddo) {
@@ -466,14 +466,14 @@ namespace MirRemakeBackend.DynamicData {
         public DDO_VipCard GetVipCardByPlayerId (int playerId) {
             string cmd;
             DataSet ds = new DataSet ();
-            cmd = "";
+            cmd = "select * from `vip` where `userid`="+playerId+";";
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             DataTable dt = ds.Tables[0];
             if (dt.Rows.Count == 0) {
                 throw new Exception ();
             }
-            DDO_VipCard res = new DDO_VipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_card"].ToString ()),long.Parse(dt.Rows[0]["charge_money"].ToString()));
+            DDO_VipCard res = new DDO_VipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_level"].ToString ()),long.Parse(dt.Rows[0]["charge_money"].ToString()));
             return res;
         }
         public void UpdateVipCard (DDO_VipCard vipCard) {
@@ -492,7 +492,7 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql (database, cmd);
         }
         public void UpdateMixCombatEfct (DDO_CombatEfct mixCombatEfct) {
-            string cmd = "update `combat_effect` set `combat`=" + mixCombatEfct.m_combatEfct + ",`name`="+mixCombatEfct.m_name+", `occupation`="+mixCombatEfct.m_ocp.ToString()+" where `charid`=" + mixCombatEfct.m_charId + ";";
+            string cmd = "update `combat_effect` set `combat`=" + mixCombatEfct.m_combatEfct + ",`name`=\""+mixCombatEfct.m_name+"\", `occupation`=\""+mixCombatEfct.m_ocp.ToString()+"\" where `charid`=" + mixCombatEfct.m_charId + ";";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
