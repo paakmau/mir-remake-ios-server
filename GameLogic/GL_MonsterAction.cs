@@ -37,7 +37,7 @@ namespace MirRemakeBackend.GameLogic {
                     var dmg = dmgEn.Current.Value;
                     var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
                     if (charObj == null) continue;
-                    charObj.GetDmgRnkNo ();
+                    // charObj.GetDmgRnkNo ();
                 }
                 // TODO: boss伤害量统计
             }
