@@ -73,6 +73,16 @@ namespace MirRemakeBackend.Network {
             m_level = lv;
         }
     }
+    struct NO_DamageRankCharacter {
+        public int m_charId;
+        public string m_name;
+        public int m_damage;
+        public NO_DamageRankCharacter (int charId, string name, int dmg) {
+            m_charId = charId;
+            m_name = name;
+            m_damage = dmg;
+        }
+    }
     struct NO_MallClass {
         public byte m_mallClassId;
         public string m_mallName;
@@ -259,6 +269,17 @@ namespace MirRemakeBackend.Network {
             OccupationType ocp = (OccupationType) reader.GetByte ();
             short lv = reader.GetShort ();
             return new NO_Character (netId, pos, ocp, lv);
+        }
+        public static void Put (this NetDataWriter writer, NO_DamageRankCharacter dmgRankChar) {
+            writer.Put (dmgRankChar.m_charId);
+            writer.Put (dmgRankChar.m_name);
+            writer.Put (dmgRankChar.m_damage);
+        }
+        public static NO_DamageRankCharacter GetDamageRankCharacter (this NetDataReader reader) {
+            int charId = reader.GetInt ();
+            string name = reader.GetString ();
+            int dmg = reader.GetInt ();
+            return new NO_DamageRankCharacter (charId, name, dmg);
         }
         public static void Put (this NetDataWriter writer, NO_MallClass mallClass) {
             writer.Put (mallClass.m_mallClassId);

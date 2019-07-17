@@ -25,6 +25,7 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_LEVEL_AND_EXP,
         APPLY_SELF_MAIN_ATTRIBUTE,
         APPLY_ALL_RESPAWN,
+        SET_ALL_BOSS_DAMAGE_CHARACTER_RANK,
         // 战力排行榜
         SEND_FIGHT_CAPACITY_RANK,
         // 战斗状态与动画

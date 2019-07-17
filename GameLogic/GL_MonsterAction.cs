@@ -10,6 +10,8 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_MonsterAction s_instance;
         private Dictionary<SkillAimType, SkillParamGeneratorBase> m_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> ();
         private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
+        private const float c_bossSightTime = 2;
+        private float m_bossSightTimer;
         public GL_MonsterAction (INetworkService netService) : base (netService) {
             var monEn = EM_Unit.s_instance.GetMonsterEn ();
             while (monEn.MoveNext ()) {
@@ -24,6 +26,14 @@ namespace MirRemakeBackend.GameLogic {
             var mfsmEn = m_mfsmDict.GetEnumerator ();
             while (mfsmEn.MoveNext ())
                 mfsmEn.Current.Value.Tick (dT);
+            // 发送Boss视野
+            var bossEn = EM_Unit.s_instance.GetBossEn ();
+            while (bossEn.MoveNext ()) {
+                var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
+                var dmgEn = bossEn.Current.Value.m_netIdAndDamageDict.GetEnumerator ();
+                var dmgList = new List<NO_DamageRankCharacter> (bossEn.Current.Value.m_netIdAndDamageDict.Count);
+                // TODO: boss伤害量统计
+            }
         }
         public override void NetworkTick () { }
         public void MFSMCastSkillBegin (int netId, E_MonsterSkill skill, SkillParam sp) {

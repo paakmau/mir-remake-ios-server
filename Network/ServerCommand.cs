@@ -542,6 +542,32 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 发送Boss战伤害的角色排行榜
+    /// </summary>
+    class SC_SetAllBossDamageCharacterRank : ServerCommandBase {
+        private static readonly SC_SetAllBossDamageCharacterRank s_instance = new SC_SetAllBossDamageCharacterRank ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_BOSS_DAMAGE_CHARACTER_RANK; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
+        IReadOnlyList<NO_DamageRankCharacter> m_dmgRnkCharList;
+        int m_myDmg;
+        int m_myRank;
+        public static SC_SetAllBossDamageCharacterRank Instance (int netId, IReadOnlyList<NO_DamageRankCharacter> dmgRnkCharList, int m_myDmg, int myRank) {
+            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.m_dmgRnkCharList = dmgRnkCharList;
+            s_instance.m_myDmg = m_myDmg;
+            s_instance.m_myRank = myRank;
+            return s_instance;
+        }
+        private SC_SetAllBossDamageCharacterRank () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_dmgRnkCharList.Count);
+            for (int i = 0; i < m_dmgRnkCharList.Count; i++)
+                writer.Put (m_dmgRnkCharList[i]);
+            writer.Put (m_myDmg);
+            writer.Put (m_myRank);
+        }
+    }
+    /// <summary>
     /// 发送战斗力排行榜
     /// </summary>
     class SC_SendFightCapacityRank : ServerCommandBase {
