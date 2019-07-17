@@ -13,7 +13,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandGetCombatEffectivenessRank (int netId, OccupationType ocp) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            var topCombatEfctRnkCharInfoList = EM_Rank.s_instance.GetTopCombatEfctRnkCharIdAndCombatEfctList (ocp, 15);
+            var topCombatEfctRnkCharInfoList = EM_Rank.s_instance.GetTopCombatEfctRnkCharIdAndCombatEfctList (ocp, 10);
             var topCombatEfctRnkList = new List<NO_FightCapacityRankInfo> (topCombatEfctRnkCharInfoList.Count);
             for (int i = 0; i < topCombatEfctRnkCharInfoList.Count; i++) {
                 var charInfo = topCombatEfctRnkCharInfoList[i];
