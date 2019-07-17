@@ -92,7 +92,6 @@ namespace MirRemakeBackend {
 
             // TODO: 创建角色
             // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");
-            User.s_instance.CommandRegister (-1, "root", "root", "hello", "world");
         }
         static void InitGameLogic () {
             // 单位初始化器
