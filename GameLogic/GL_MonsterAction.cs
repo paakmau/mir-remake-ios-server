@@ -19,7 +19,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_mfsmDict.Add (monEn.Current.Key, mfsm);
             }
             // Mfsm 的构造
-            SkillParamGeneratorBase.Init();
+            SkillParamGeneratorBase.Init ();
         }
         public override void Tick (float dT) {
             // fsm控制AI
@@ -30,8 +30,15 @@ namespace MirRemakeBackend.GameLogic {
             var bossEn = EM_Unit.s_instance.GetBossEn ();
             while (bossEn.MoveNext ()) {
                 var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
-                var dmgEn = bossEn.Current.Value.m_netIdAndDamageDict.GetEnumerator ();
                 var dmgList = new List<NO_DamageRankCharacter> (bossEn.Current.Value.m_netIdAndDamageDict.Count);
+                var dmgEn = bossEn.Current.Value.m_netIdAndDamageDict.GetEnumerator ();
+                while (dmgEn.MoveNext ()) {
+                    var netId = dmgEn.Current.Key;
+                    var dmg = dmgEn.Current.Value;
+                    var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+                    if (charObj == null) continue;
+                    charObj.GetDmgRnkNo ();
+                }
                 // TODO: boss伤害量统计
             }
         }
