@@ -73,6 +73,11 @@ namespace MirRemakeBackend.Network {
             m_level = lv;
         }
     }
+    struct NO_DamageRankCharacter {
+        public int m_charId;
+        public string m_name;
+        public int m_damage;
+    }
     struct NO_MallClass {
         public byte m_mallClassId;
         public string m_mallName;
