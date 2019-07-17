@@ -12,14 +12,15 @@ namespace MirRemakeBackend.Entity {
                 return ++m_groundItemIdCnt;
             }
         }
-        public EM_MallItem s_instance;
+        public static EM_MallItem s_instance;
         private MallItemIdManager m_mallItemIdManager = new MallItemIdManager ();
         private Dictionary<byte, E_MallClass> m_mallClassDict = new Dictionary<byte, E_MallClass> ();
         private Dictionary<int, E_MallItem> m_mallItemDict = new Dictionary<int, E_MallItem> ();
-        public EM_MallItem () {
-            var classEn = DEM_MallItem.s_instance.GetMallClassEn ();
+        public int m_MallClassCnt { get { return m_mallClassDict.Count; } }
+        public EM_MallItem (DEM_MallItem dem) {
+            var classEn = dem.GetMallClassEn ();
             while (classEn.MoveNext ()) {
-                var mallItemDeList = DEM_MallItem.s_instance.GetMallItemByClassId (classEn.Current.Key);
+                var mallItemDeList = dem.GetMallItemByClassId (classEn.Current.Key);
                 var mallItemList = new List<E_MallItem> (mallItemDeList.Count);
                 for (int i = 0; i < mallItemDeList.Count; i++) {
                     mallItemList.Add (new E_MallItem (m_mallItemIdManager.AssignGroundItemId (), mallItemDeList[i]));

@@ -53,6 +53,7 @@ namespace MirRemakeBackend {
             IDS_Monster monsterDs = new DS_MonsterImpl ();
             IDS_Status statusDs = new DS_StatusImpl ();
             IDS_Skill skillDs = new DS_SkillImpl ();
+            IDS_Mall mallDs = new DS_MallImpl ();
             IDS_Item itemDs = new DS_ItemImpl ();
             IDS_GroundItemMap gndItemDs = new DS_GroundItemMapImpl ();
             IDS_Mission misDs = new DS_MissionImpl ();
@@ -60,6 +61,7 @@ namespace MirRemakeBackend {
             DEM_Unit actorUnitDem = new DEM_Unit (monsterDs, charDs, mapDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
+            DEM_MallItem mallItemDem = new DEM_MallItem (mallDs);
             DEM_Item itemDem = new DEM_Item (itemDs, gndItemDs);
             DEM_Mission misDem = new DEM_Mission (misDs);
             // DynamicDataService
@@ -73,6 +75,7 @@ namespace MirRemakeBackend {
             IDDS_CombatEfct combatEfctDds = ddsImpl;
             // EntityManager
             EM_Camp.s_instance = new EM_Camp ();
+            EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
             EM_Mission.s_instance = new EM_Mission (misDem, misDds);
             EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
