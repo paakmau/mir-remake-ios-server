@@ -241,6 +241,7 @@ namespace MirRemakeBackend.Entity {
             m_networkId = netId;
             m_playerId = charDdo.m_playerId;
             m_characterId = charDdo.m_characterId;
+            m_name = charDdo.m_name;
             m_experience = charDdo.m_experience;
             foreach (var c in charDdo.m_currencyArr)
                 m_currencyDict[c.Item1] = c.Item2;

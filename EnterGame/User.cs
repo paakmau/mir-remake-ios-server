@@ -133,7 +133,7 @@ namespace MirRemakeBackend.EnterGame {
             for (short i = 0; i < eqSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.EQUIPMENT_REGION, i));
             // 战斗力排行 dds
-            m_combatEfctDds.InsertMixCombatEfct (new DDO_CombatEfct (charId, ocp, name, 0));
+            m_combatEfctDds.InsertMixCombatEfct (new DDO_CombatEfct (charId, 0, ocp, name, 1));
             m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true, charId));
         }
     }

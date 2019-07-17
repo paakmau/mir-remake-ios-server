@@ -24,7 +24,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, (short) myCombatEfctAndRank.Item2));
         }
         public void NotifyCombatEffectivenessChange (E_Character charObj) {
-            EM_Rank.s_instance.UpdateCharCombatEfct (charObj.m_characterId, charObj.m_Occupation, charObj.m_Attack, charObj.m_Intelligence, charObj.m_MaxHp, charObj.m_MaxMp, charObj.m_Defence, charObj.m_Agility, charObj.m_CriticalRate, charObj.m_CriticalBonus, charObj.m_HitRate, charObj.m_DodgeRate);
+            EM_Rank.s_instance.UpdateCharCombatEfct (charObj.m_characterId, charObj.m_Occupation, charObj.m_name, charObj.m_Level, charObj.m_Attack, charObj.m_Intelligence, charObj.m_MaxHp, charObj.m_MaxMp, charObj.m_Defence, charObj.m_Agility, charObj.m_CriticalRate, charObj.m_CriticalBonus, charObj.m_HitRate, charObj.m_DodgeRate);
         }
         public void NotifyInitCharacter (E_Character charObj) {
             NotifyCombatEffectivenessChange (charObj);

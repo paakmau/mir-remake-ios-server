@@ -140,14 +140,16 @@ namespace MirRemakeBackend.DynamicData {
     }
     struct DDO_CombatEfct {
         public int m_charId;
+        public int m_combatEfct;
         public OccupationType m_ocp;
         public string m_name;
-        public int m_combatEfct;
-        public DDO_CombatEfct (int charId, OccupationType ocp, string name, int combatEfct) {
+        public short m_level;
+        public DDO_CombatEfct (int charId, int combatEfct, OccupationType ocp, string name, short lv) {
             m_charId = charId;
+            m_combatEfct = combatEfct;
             m_ocp = ocp;
             m_name = name;
-            m_combatEfct = combatEfct;
+            m_level = lv;
         }
     }
 }
