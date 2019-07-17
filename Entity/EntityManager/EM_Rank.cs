@@ -10,7 +10,7 @@ namespace MirRemakeBackend.Entity {
     class EM_Rank : EntityManagerBase {
         public static EM_Rank s_instance;
         private IDDS_CombatEfct m_dds;
-        private class CombatEffectiveItem : IComparable<CombatEffectiveItem> {
+        public class CombatEffectiveItem : IComparable<CombatEffectiveItem> {
             public int m_charId;
             public int m_combatEfct;
             public string m_name;
@@ -78,8 +78,8 @@ namespace MirRemakeBackend.Entity {
             }
             m_charIdAndOriCombatEfctDict[charId] = combatEfct;
         }
-        public List < (int, int) > GetTopCombatEfctRnkCharIdAndCombatEfctList (OccupationType ocp, int num) {
-            var res = new List < (int, int) > (num);
+        public List<CombatEffectiveItem> GetTopCombatEfctRnkCharIdAndCombatEfctList (OccupationType ocp, int num) {
+            var res = new List<CombatEffectiveItem> (num);
             for (int i = 0; i < num; i++) {
                 CombatEffectiveItem v = null;
                 switch (ocp) {
@@ -100,7 +100,7 @@ namespace MirRemakeBackend.Entity {
                         break;
                 }
                 if (v != null)
-                    res.Add ((v.m_charId, v.m_combatEfct));
+                    res.Add (v);
             }
             return res;
         }
