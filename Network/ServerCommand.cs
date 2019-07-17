@@ -550,8 +550,8 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         IReadOnlyList<NO_DamageRankCharacter> m_dmgRnkCharList;
         int m_myDmg;
-        int m_myRank;
-        public static SC_SetAllBossDamageCharacterRank Instance (int netId, IReadOnlyList<NO_DamageRankCharacter> dmgRnkCharList, int m_myDmg, int myRank) {
+        short m_myRank;
+        public static SC_SetAllBossDamageCharacterRank Instance (int netId, IReadOnlyList<NO_DamageRankCharacter> dmgRnkCharList, int m_myDmg, short myRank) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_dmgRnkCharList = dmgRnkCharList;
             s_instance.m_myDmg = m_myDmg;
@@ -576,8 +576,8 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         IReadOnlyList<NO_FightCapacityRankInfo> m_combatEfctRankList;
         int m_myCombatEfct;
-        int m_myRank;
-        public static SC_SendFightCapacityRank Instance (int netId, IReadOnlyList<NO_FightCapacityRankInfo> combatEfctRnkList, int myCombatEfct, int myRank) {
+        short m_myRank;
+        public static SC_SendFightCapacityRank Instance (int netId, IReadOnlyList<NO_FightCapacityRankInfo> combatEfctRnkList, int myCombatEfct, short myRank) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_combatEfctRankList = combatEfctRnkList;
             s_instance.m_myCombatEfct = myCombatEfct;

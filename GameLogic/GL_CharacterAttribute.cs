@@ -66,7 +66,7 @@ namespace MirRemakeBackend.GameLogic {
                 topCombatEfctRnkList.Add (new NO_FightCapacityRankInfo (topCharId, "匿名", 14, (short) i, topCharCombatEfct, "无", (byte) 0));
             }
             var myCombatEfctAndRank = EM_Rank.s_instance.GetCombatEfctAndRank (ocp, charObj.m_characterId, charObj.m_Occupation);
-            m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, myCombatEfctAndRank.Item2));
+            m_networkService.SendServerCommand (SC_SendFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, (short) myCombatEfctAndRank.Item2));
         }
         public void NotifyCombatEffectivenessChange (E_Character charObj) {
             EM_Rank.s_instance.UpdateCharCombatEfct (charObj.m_characterId, charObj.m_Occupation, charObj.m_Attack, charObj.m_Intelligence, charObj.m_MaxHp, charObj.m_MaxMp, charObj.m_Defence, charObj.m_Agility, charObj.m_CriticalRate, charObj.m_CriticalBonus, charObj.m_HitRate, charObj.m_DodgeRate);
