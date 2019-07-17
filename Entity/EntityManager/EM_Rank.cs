@@ -25,7 +25,7 @@ namespace MirRemakeBackend.Entity {
             }
             public int CompareTo (CombatEffectiveItem b) {
                 if (m_combatEfct != b.m_combatEfct)
-                    return m_combatEfct - b.m_combatEfct;
+                    return b.m_combatEfct - m_combatEfct;
                 return m_charId - b.m_charId;
             }
         }
