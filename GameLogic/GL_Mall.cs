@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using MirRemakeBackend.Data;
-using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
