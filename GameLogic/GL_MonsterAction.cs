@@ -27,23 +27,52 @@ namespace MirRemakeBackend.GameLogic {
             while (mfsmEn.MoveNext ())
                 mfsmEn.Current.Value.Tick (dT);
             // 发送Boss视野 (伤害量排行榜)
-            var bossEn = EM_Unit.s_instance.GetBossEn ();
-            while (bossEn.MoveNext ()) {
-                var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
-                var dmgCharList = new List<NO_DamageRankCharacter> (bossEn.Current.Value.m_netIdAndDamageDict.Count);
-                var dmgEn = bossEn.Current.Value.m_netIdAndDamageDict.GetEnumerator ();
-                while (dmgEn.MoveNext ()) {
-                    var netId = dmgEn.Current.Key;
-                    var dmg = dmgEn.Current.Value;
-                    var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
-                    if (charObj == null) continue;
-                    dmgCharList.Add (charObj.GetDmgRnkNo (dmg));
+            m_bossSightTimer += dT;
+            bool bossSight = false;
+            while (m_bossSightTimer > c_bossSightTime) {
+                bossSight = true;
+                m_bossSightTimer -= c_bossSightTime;
+            }
+            if (bossSight) {
+                var bossEn = EM_Unit.s_instance.GetBossEn ();
+                while (bossEn.MoveNext ()) {
+                    var netIdAndDmgDict = bossEn.Current.Value.m_netIdAndDamageDict;
+                    // 若无伤害
+                    var dmgCharCnt = netIdAndDmgDict.Count;
+                    if (dmgCharCnt == 0) continue;
+                    // 若视野内无玩家
+                    var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
+                    if (toNetIdList.Count == 0) continue;
+                    // 获取伤害列表并排序
+                    var dmgCharList = new List<NO_DamageRankCharacter> (dmgCharCnt);
+                    var dmgEn = netIdAndDmgDict.GetEnumerator ();
+                    while (dmgEn.MoveNext ()) {
+                        var netId = dmgEn.Current.Key;
+                        var dmg = dmgEn.Current.Value;
+                        var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+                        if (charObj == null) continue;
+                        dmgCharList.Add (charObj.GetDmgRnkNo (dmg));
+                    }
+                    dmgCharList.Sort ((NO_DamageRankCharacter a, NO_DamageRankCharacter b) => { return a.m_damage - b.m_damage; });
+                    // client
+                    for (int i = 0; i < toNetIdList.Count; i++) {
+                        int toNetId = toNetIdList[i];
+                        int charId = EM_Unit.s_instance.GetCharIdByNetworkId (toNetId);
+                        if (charId == -1) continue;
+                        int dmg;
+                        netIdAndDmgDict.TryGetValue (toNetId, out dmg);
+                        int rank;
+                        if (dmg == 0)
+                            rank = 0;
+                        else {
+                            rank = 0;
+                            for (int j = 0; j < dmgCharList.Count; j++)
+                                if (dmgCharList[i].m_charId == charId)
+                                    rank = i + 1;
+                        }
+                        m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (toNetId, dmgCharList, dmg, (short) rank));
+                    }
                 }
-                // TODO:
-                // dmgCharList.Sort();
-                // client
-
-                // m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (netId,))
             }
         }
         public override void NetworkTick () { }
