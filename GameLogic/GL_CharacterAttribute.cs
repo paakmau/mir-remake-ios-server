@@ -59,7 +59,6 @@ namespace MirRemakeBackend.GameLogic {
             if (newChar == null)
                 return null;
             MainPointToConAttr (newChar);
-            GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (newChar);
             // client
             m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
                 netId,
