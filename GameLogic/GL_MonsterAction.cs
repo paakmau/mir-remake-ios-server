@@ -26,20 +26,24 @@ namespace MirRemakeBackend.GameLogic {
             var mfsmEn = m_mfsmDict.GetEnumerator ();
             while (mfsmEn.MoveNext ())
                 mfsmEn.Current.Value.Tick (dT);
-            // 发送Boss视野
+            // 发送Boss视野 (伤害量排行榜)
             var bossEn = EM_Unit.s_instance.GetBossEn ();
             while (bossEn.MoveNext ()) {
                 var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
-                var dmgList = new List<NO_DamageRankCharacter> (bossEn.Current.Value.m_netIdAndDamageDict.Count);
+                var dmgCharList = new List<NO_DamageRankCharacter> (bossEn.Current.Value.m_netIdAndDamageDict.Count);
                 var dmgEn = bossEn.Current.Value.m_netIdAndDamageDict.GetEnumerator ();
                 while (dmgEn.MoveNext ()) {
                     var netId = dmgEn.Current.Key;
                     var dmg = dmgEn.Current.Value;
                     var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
                     if (charObj == null) continue;
-                    // charObj.GetDmgRnkNo ();
+                    dmgCharList.Add (charObj.GetDmgRnkNo (dmg));
                 }
-                // TODO: boss伤害量统计
+                // TODO:
+                // dmgCharList.Sort();
+                // client
+
+                // m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (netId,))
             }
         }
         public override void NetworkTick () { }

@@ -68,7 +68,7 @@ namespace MirRemakeBackend {
             DEM_Mission misDem = new DEM_Mission (misDs);
             // DynamicDataService
             var ddsImpl = new DynamicDataServiceImpl ();
-            IDDS_User userDds = null;
+            IDDS_User userDds = ddsImpl;
             IDDS_Character charDds = ddsImpl;
             IDDS_CharacterPosition charPosDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
@@ -92,6 +92,7 @@ namespace MirRemakeBackend {
 
             // TODO: 创建角色
             // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");
+            User.s_instance.CommandRegister (-1, "root", "root", "hello", "world");
         }
         static void InitGameLogic () {
             // 单位初始化器

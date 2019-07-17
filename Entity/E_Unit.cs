@@ -293,9 +293,9 @@ namespace MirRemakeBackend.Entity {
         public NO_Character GetNo () {
             return new NO_Character (m_networkId, m_position, m_Occupation, m_Level);
         }
-        // public NO_DamageRankCharacter GetDmgRnkNo () {
-        //     return new NO_DamageRankCharacter (m_characterId, )
-        // }
+        public NO_DamageRankCharacter GetDmgRnkNo (int dmg) {
+            return new NO_DamageRankCharacter (m_characterId, m_name, dmg);
+        }
     }
     class E_Monster : E_Unit {
         public override ActorUnitType m_UnitType { get { return ActorUnitType.MONSTER; } }
