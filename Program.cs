@@ -15,6 +15,8 @@ namespace MirRemakeBackend {
         private static NetworkService s_networkService;
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
+            //TestStatic();
+            //TestDynamic();
             // if (Test() == 1) {
             //     Console.WriteLine("Modle Succeed");
 
@@ -120,6 +122,22 @@ namespace MirRemakeBackend {
                 GL_Log.s_instance,
                 GL_Chat.s_instance
             };
+        }
+
+        static void TestStatic(){
+            IDS_Character sch=new DS_CharacterImpl();
+            IDS_Item sit=new DS_ItemImpl();
+            IDS_Mission smi=new DS_MissionImpl();
+            IDS_Monster smo=new DS_MonsterImpl();
+            IDS_MonsterMap smm=new DS_MonsterMapImpl();
+            IDS_GroundItemMap sgi=new DS_GroundItemMapImpl();
+            IDS_Skill ssk=new DS_SkillImpl();
+            IDS_Status sst=new DS_StatusImpl();
+            IDS_Mall sma=new DS_MallImpl();
+
+
+
+
         }
     }
 }
