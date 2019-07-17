@@ -1,0 +1,11 @@
+[{
+    "ClassId":0,
+    "ClassName":"战斗消耗品"
+},{
+    "ClassId":1,
+    "ClassName":"战斗力提升道具"
+},{
+    "ClassId":2,
+    "ClassName":"豪华装备"
+}
+]
