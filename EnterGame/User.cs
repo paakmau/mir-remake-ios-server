@@ -82,7 +82,7 @@ namespace MirRemakeBackend.EnterGame {
                 List<NO_LoginCharacter> loginCharNoList = new List<NO_LoginCharacter> (charArr.Length);
                 foreach (var charDdo in charArr) {
                     DDO_CharacterAttribute charAttrDdo;
-                    if (m_charAttrDds.GetCharacterAttributeByCharacterId (charDdo.m_characterId, out charAttrDdo)) continue;
+                    if (!m_charAttrDds.GetCharacterAttributeByCharacterId (charDdo.m_characterId, out charAttrDdo)) continue;
                     loginCharNoList.Add (new NO_LoginCharacter (charDdo.m_characterId, charDdo.m_occupation, charDdo.m_name, charAttrDdo.m_level));
                 }
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId, loginCharNoList));
