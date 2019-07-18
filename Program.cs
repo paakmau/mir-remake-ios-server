@@ -70,6 +70,8 @@ namespace MirRemakeBackend {
             var ddsImpl = new DynamicDataServiceImpl ();
             IDDS_User userDds = ddsImpl;
             IDDS_Character charDds = ddsImpl;
+            IDDS_CharacterAttribute charAttrDds = ddsImpl;
+            IDDS_CharacterWallet charWalletDds = ddsImpl;
             IDDS_CharacterPosition charPosDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
@@ -85,10 +87,10 @@ namespace MirRemakeBackend {
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
-            EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds, charPosDds);
+            EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds, charAttrDds, charWalletDds, charPosDds);
             EM_Log.s_instance = new EM_Log ();
             // 角色创建器
-            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charPosDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
+            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, charPosDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
 
             // TODO: 创建角色
             // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");

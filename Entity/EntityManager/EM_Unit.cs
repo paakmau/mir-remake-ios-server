@@ -35,15 +35,19 @@ namespace MirRemakeBackend.Entity {
         }
         public static EM_Unit s_instance;
         private DEM_Unit m_dem;
-        private IDDS_Character m_dds;
+        private IDDS_Character m_charDds;
+        private IDDS_CharacterAttribute m_charAttrDds;
         private IDDS_CharacterPosition m_charPosDds;
+        private IDDS_CharacterWallet m_charWalletDds;
         private NetworkIdManager m_networkIdManager = new NetworkIdManager ();
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
         private Dictionary<int, E_Monster> m_networkIdAndBossDict = new Dictionary<int, E_Monster> ();
-        public EM_Unit (DEM_Unit dem, IDDS_Character dds, IDDS_CharacterPosition charPosDds) {
+        public EM_Unit (DEM_Unit dem, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterPosition charPosDds) {
             m_dem = dem;
-            m_dds = dds;
+            m_charDds = charDds;
+            m_charAttrDds = charAttrDds;
+            m_charWalletDds = charWalletDds;
             m_charPosDds = charPosDds;
 
             // 初始化所有的怪物
@@ -75,22 +79,24 @@ namespace MirRemakeBackend.Entity {
             E_Character newChar = null;
             if (m_networkIdAndCharacterDict.TryGetValue (netId, out newChar))
                 return newChar;
+            // 持久层获取
             DDO_Character charDdo;
-            try {
-                charDdo = m_dds.GetCharacterById (charId);
-            } catch (Exception e) {
-                Console.WriteLine (e);
+            DDO_CharacterAttribute charAttrDdo;
+            DDO_CharacterWallet charWalletDdo;
+            DDO_CharacterPosition charPosDdo;
+            if (!m_charDds.GetCharacterById (charId, out charDdo) ||
+                !m_charAttrDds.GetCharacterAttributeByCharacterId (charId, out charAttrDdo) ||
+                !m_charWalletDds.GetCharacterWalletByCharacterId (charId, out charWalletDdo) ||
+                !m_charPosDds.GetCharacterPosition (charId, out charPosDdo)
+            )
                 return null;
-            }
             newChar = s_entityPool.m_characterPool.GetInstance ();
             DE_Character charDe;
             DE_Unit unitDe;
             DE_CharacterData charDataDe;
-            m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charDdo.m_level, out charDe, out unitDe, out charDataDe);
+            m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charAttrDdo.m_level, out charDe, out unitDe, out charDataDe);
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo);
-            // 角色位置读取数据库
-            newChar.m_position = m_charPosDds.GetCharacterPosition (charId).m_position;
+            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, charWalletDdo, charPosDdo);
             return newChar;
         }
         /// <summary>
@@ -127,7 +133,13 @@ namespace MirRemakeBackend.Entity {
             return m_networkIdAndBossDict.GetEnumerator ();
         }
         public void SaveCharacter (E_Character charObj) {
-            m_dds.UpdateCharacter (charObj.GetDdo ());
+            m_charDds.UpdateCharacter (charObj.GetDdo ());
+        }
+        public void SaveCharacterAttribute (E_Character charObj) {
+            m_charAttrDds.UpdateCharacterAttribute (charObj.GetAttrDdo ());
+        }
+        public void SaveCharacterWallet (E_Character charObj) {
+            m_charWalletDds.UpdateCharacterWallet (charObj.GetWalletDdo ());
         }
         public void SaveCharacterPosition (E_Character charObj) {
             m_charPosDds.UpdateCharacterPosition (charObj.GetPosDdo ());
