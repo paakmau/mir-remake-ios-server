@@ -70,7 +70,7 @@ namespace MirRemakeBackend.Entity {
         public bool m_IsFinished {
             get {
                 for (int i = 0; i < m_tarList.Count; i++)
-                    if (m_tarList[i].m_IsFinish)
+                    if (!m_tarList[i].m_IsFinish)
                         return false;
                 return true;
             }
