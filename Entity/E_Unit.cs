@@ -287,10 +287,6 @@ namespace MirRemakeBackend.Entity {
         public DDO_CharacterWallet GetWalletDdo () {
             return new DDO_CharacterWallet (m_characterId, m_virtualCurrency, m_chargeCurrency);
         }
-        public DDO_CharacterVipCard GetVipCardDdo () {
-            // TODO: Vip card
-            return new DDO_CharacterVipCard (m_characterId, 0, 0);
-        }
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);
         }
