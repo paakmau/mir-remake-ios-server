@@ -254,6 +254,8 @@ namespace MirRemakeBackend.Entity {
                 m_unitDe = m_characterDe.m_unitAllLevel[m_Level + 1];
                 m_characterDataDe = m_characterDe.m_characterDataAllLevel[m_Level + 1];
                 cnt++;
+                m_curHp = m_MaxHp;
+                m_curMp = m_MaxMp;
             }
             return cnt;
         }
