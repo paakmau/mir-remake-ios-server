@@ -13,7 +13,8 @@ CREATE TABLE `character` (
   `name` varchar(255) DEFAULT NULL,
    primary key (`characterid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE INDEX `playedid` ON `character`(`playerid`);
+CREATE INDEX `playerid` ON `character`(`playerid`);
+CREATE UNIQUE INDEX `name` ON `character`(`name`);
 
 DROP TABLE IF EXISTS `skill`;
 create table `skill`( 
@@ -106,6 +107,7 @@ create table `combat_effect`(
   `combat` int,
   `name` VARCHAR(45) NOT NULL,
   `occupation` VARCHAR(45) NOT NULL,
+  `level` int,
   primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
