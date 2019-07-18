@@ -113,6 +113,10 @@ namespace MirRemakeBackend.EnterGame {
         public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
             // 角色 dds
             int charId = m_charDds.CreateCharacter (playerId, ocp, name);
+            if (charId == -1) {
+                m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, false, -1));
+                return;
+            }
             m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];
