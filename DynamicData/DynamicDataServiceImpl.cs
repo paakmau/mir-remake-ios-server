@@ -260,16 +260,18 @@ namespace MirRemakeBackend.DynamicData {
             string cmd="select * from `character` where charid="+charid+";";
             string database="legend";
             DataSet ds=new DataSet();
-            try{
-                pool.ExecuteSql(database,cmd,ds);
-                DataRow dr=ds.Tables[0].Rows[0];
-                int id=int.Parse(dr["charid"].ToString());
-                int playerid=int.Parse(dr["playerid"].ToString());
-                OccupationType ocu=(OccupationType)Enum.Parse(typeof(OccupationType),dr["occupation"].ToString());
-                string name=dr["name"].ToString();
-                c=new DDO_Character(id,playerid,ocu,name);
-                return true;
-            }catch(Exception e){Console.WriteLine(e.StackTrace);c=default(DDO_Character);return false;}
+            pool.ExecuteSql(database,cmd,ds);
+            if(ds.Tables[0].Rows.Count==0){
+                c=default(DDO_Character);return false;
+            }
+            DataRow dr=ds.Tables[0].Rows[0];
+            int id=int.Parse(dr["charid"].ToString());
+            int playerid=int.Parse(dr["playerid"].ToString());
+            OccupationType ocu=(OccupationType)Enum.Parse(typeof(OccupationType),dr["occupation"].ToString());
+            string name=dr["name"].ToString();
+            c=new DDO_Character(id,playerid,ocu,name);
+            return true;
+
         }
         public DDO_Character[] GetCharacterByPlayerId (int playerId){
             string cmd="select * from `character` where playerid="+playerId+";";
@@ -355,27 +357,25 @@ namespace MirRemakeBackend.DynamicData {
             string cmd="select * from `character_attribute` where charid="+charId+";";
             string database="legend";
             DataSet ds=new DataSet();
-            try{
-                pool.ExecuteSql(database,cmd,ds);
-                DataRow dr=ds.Tables[0].Rows[0];
-                short level=short.Parse(dr["level"].ToString());
-                int experience=int.Parse(dr["experience"].ToString());
-                ValueTuple<ActorUnitMainAttributeType,short>[] vt=new ValueTuple<ActorUnitMainAttributeType,short>[4]; 
-                string[] strings=dr["attributes"].ToString().Split(' ');
-                vt[0].Item1=ActorUnitMainAttributeType.STRENGTH;
-                vt[1].Item1=ActorUnitMainAttributeType.AGILITY;
-                vt[2].Item1=ActorUnitMainAttributeType.INTELLIGENCE;
-                vt[3].Item1=ActorUnitMainAttributeType.SPIRIT;
-                for(int i=0;i<4;i++){
-                    vt[i].Item2=short.Parse(strings[i]);
-                }
-                resCharAttr=new DDO_CharacterAttribute(charId,level,experience,vt);
-                return false;
-            }catch(Exception e){
-                Console.WriteLine(e.StackTrace);
+            pool.ExecuteSql(database,cmd,ds);
+            if(ds.Tables[0].Rows.Count==0){
                 resCharAttr=default(DDO_CharacterAttribute);
                 return false;
             }
+            DataRow dr=ds.Tables[0].Rows[0];
+            short level=short.Parse(dr["level"].ToString());
+            int experience=int.Parse(dr["experience"].ToString());
+            ValueTuple<ActorUnitMainAttributeType,short>[] vt=new ValueTuple<ActorUnitMainAttributeType,short>[4]; 
+            string[] strings=dr["attributes"].ToString().Split(' ');
+            vt[0].Item1=ActorUnitMainAttributeType.STRENGTH;
+            vt[1].Item1=ActorUnitMainAttributeType.AGILITY;
+            vt[2].Item1=ActorUnitMainAttributeType.INTELLIGENCE;
+            vt[3].Item1=ActorUnitMainAttributeType.SPIRIT;
+            for(int i=0;i<4;i++){                    
+                vt[i].Item2=short.Parse(strings[i]);
+            }
+            resCharAttr=new DDO_CharacterAttribute(charId,level,experience,vt);
+            return false;
         }
 
 
