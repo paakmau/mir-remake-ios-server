@@ -236,11 +236,10 @@ namespace MirRemakeBackend.Entity {
             m_characterId = charDdo.m_characterId;
             m_name = charDdo.m_name;
             m_experience = charAttrDdo.m_experience;
-            m_virtualCurrency = charWalletDdo.
-            foreach (var c in charWalletDdo.m_currencyArr)
-                m_currencyDict[c.Item1] = c.Item2;
-            foreach (var mainP in charDdo.m_distributedMainAttrPointArr)
+            foreach (var mainP in charAttrDdo.m_distributedMainAttrPointArr)
                 m_mainAttrPointDict[mainP.Item1] = mainP.Item2;
+            m_virtualCurrency = charWalletDdo.m_virtualCy;
+            m_chargeCurrency = charWalletDdo.m_chargeCy;
         }
         /// <summary>
         /// 尝试使用经验升级, 返回提升的等级

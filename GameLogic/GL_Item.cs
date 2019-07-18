@@ -229,7 +229,7 @@ namespace MirRemakeBackend.GameLogic {
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
             if (eq.m_strengthenNum == E_EquipmentItem.c_maxStrengthenNum) return;
-            var curCy = charObj.m_VirtualCurrency;
+            var curCy = charObj.m_virtualCurrency;
             long needCy = (1L << eq.m_strengthenNum) * 80L;
             if (needCy > curCy) return;
             // 花钱
@@ -247,7 +247,7 @@ namespace MirRemakeBackend.GameLogic {
             var encm = bag.GetItemByRealId (enchantmentRealId, out encmPos) as E_EnchantmentItem;
             if (eq == null || encm == null) return;
             // 判断钱充足
-            var curCy = charObj.m_VirtualCurrency;
+            var curCy = charObj.m_virtualCurrency;
             long needCy = (1L << (int) encm.m_Quality) * (1L << (eq.m_LevelInNeed >> 4)) * 3L;
             if (needCy > curCy) return;
             // 花钱
@@ -271,7 +271,7 @@ namespace MirRemakeBackend.GameLogic {
             var gem = bag.GetItemByRealId (gemRealId, out gemPos) as E_GemItem;
             if (eq == null || gem == null) return;
             // 判断钱充足
-            var curCy = charObj.m_VirtualCurrency;
+            var curCy = charObj.m_virtualCurrency;
             long needCy = (1L << (int) gem.m_Quality) * (1L << (eq.m_LevelInNeed >> 5));
             if (needCy > curCy) return;
             // 有插槽
@@ -299,7 +299,7 @@ namespace MirRemakeBackend.GameLogic {
             short eqPos;
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
-            long curCy = charObj.m_VirtualCurrency;
+            long curCy = charObj.m_virtualCurrency;
             long needCy = (1L << eq.m_InlaidGemList.Count) * 100;
             if (needCy > curCy) return;
             // 花钱
@@ -316,7 +316,7 @@ namespace MirRemakeBackend.GameLogic {
             short eqPos;
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
-            long curCy = charObj.m_VirtualCurrency;
+            long curCy = charObj.m_virtualCurrency;
             long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
             // 失去装备
             var emptyItem = EM_Item.s_instance.CharacterLoseItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);

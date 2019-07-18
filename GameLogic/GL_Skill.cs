@@ -17,7 +17,7 @@ namespace MirRemakeBackend.GameLogic {
             short oriLv = skill.m_skillLevel;
             long costTotal = 0;
             while (skill.m_skillLevel < targetLv && skill.m_skillLevel < skill.m_skillDe.m_skillMaxLevel) {
-                if (costTotal + skill.m_skillDataDe.m_upgradeMoneyInNeed > charObj.m_VirtualCurrency) break;
+                if (costTotal + skill.m_skillDataDe.m_upgradeMoneyInNeed > charObj.m_virtualCurrency) break;
                 if (skill.m_skillDataDe.m_upgradeCharacterLevelInNeed > charObj.m_Level) break;
                 if (skill.m_skillDataDe.m_upgradeMasterlyInNeed > skill.m_masterly) break;
                 costTotal += skill.m_skillDataDe.m_upgradeMoneyInNeed;
