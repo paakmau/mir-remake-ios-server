@@ -371,7 +371,7 @@ namespace MirRemakeBackend.DynamicData {
                 vt[i].Item2 = short.Parse (strings[i]);
             }
             resCharAttr = new DDO_CharacterAttribute (charId, level, experience, vt);
-            return false;
+            return true;
         }
 
         //MISSION
