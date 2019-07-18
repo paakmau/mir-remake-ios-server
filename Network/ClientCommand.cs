@@ -293,11 +293,18 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 请求发送消息  
-    /// 数据格式:  
-    /// chanelType: ChattingChanelType,  
-    /// messageContent: string,  
-    /// to: int
+    /// 商城物品购买
+    /// </summary>
+    class CC_ApplyBuyItemInShoppingMall : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_IN_SHOPPING_MALL; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int mallItemId = reader.GetInt ();
+            CurrencyType cyType = (CurrencyType) reader.GetByte ();
+            GL_Mall.s_instance.CommandBuyItemInShoppingMall (netId, mallItemId, cyType);
+        }
+    }
+    /// <summary>
+    /// 发送消息  
     /// </summary>
     class CC_RequireSendMessage : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SEND_MESSAGE; } }

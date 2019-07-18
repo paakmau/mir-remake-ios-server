@@ -94,6 +94,7 @@ namespace MirRemakeBackend.Network {
         APPLY_TALK_TO_MISSION_NPC,
         // 获取商城信息
         REQUIRE_SHOPPING_MALL,
+        APPLY_BUY_ITEM_IN_SHOPPING_MALL,
         // 发送消息
         REQUIRE_SEND_MESSAGE,
         // 测试相关

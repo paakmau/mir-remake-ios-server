@@ -164,4 +164,7 @@ namespace MirRemakeBackend.Entity {
             return new NO_GroundItem (m_groundItemId, m_item.m_ItemId, m_item.m_num, m_charId, m_position);
         }
     }
+    class E_MarketItem {
+        
+    }
 }
