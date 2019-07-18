@@ -411,7 +411,7 @@ namespace MirRemakeBackend.DynamicData {
                 }
             }
             string status = ddo.m_status.ToString ();
-            cmd = "insert into mission values(null," + ddo.m_missionId + "," + ddo.m_characterId + ",\"" + target + "\",\"" + status + "\");";
+            cmd = "insert into mission values(" + ddo.m_missionId + "," + ddo.m_characterId + ",\"" + target + "\",\"" + status + "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
