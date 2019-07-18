@@ -440,14 +440,14 @@ namespace MirRemakeBackend.Entity {
             // 回收实例
             m_itemFactory.RecycleItem (oriSlot);
         }
-        public E_EmptyItem CharacterLoseItem (E_Item item, int charId, ItemPlace ip, short pos) {
+        public void CharacterLoseItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
             // 持久层
             m_ddh.Delete (item);
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
-            m_ddh.Insert (emptyItem, charId, ip, pos);
+            m_ddh.Insert (emptyItem, charId, repo.m_repositoryPlace, pos);
             // 回收实例
             m_itemFactory.RecycleItem (item);
-            return emptyItem;
+            repo.SetItem (emptyItem, pos);
         }
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
@@ -470,15 +470,26 @@ namespace MirRemakeBackend.Entity {
             gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             m_groundItemList.Add (gndItem);
         }
-        public E_EmptyItem CharacterDropItemOntoGround (E_Item item, int charId, Vector2 pos) {
-            // E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
-            // long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            // m_ddh.Delete (item);
-            // item.ResetRealId (-1);
-            // gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
-            // return m_itemFactory.GetEmptyItemInstance ();
-            // TODO: 解决装备掉落问题
-            return null;
+        public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndPos) {
+            if (num == 0) return;
+            E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
+            long gndItemId = m_groundItemIdManager.AssignGroundItemId ();
+            if (num >= item.m_num) {
+                // 完全丢弃
+                E_EmptyItem slot = m_itemFactory.GetEmptyItemInstance ();
+                repo.SetItem (slot, repoPos);
+                m_ddh.Delete (item);
+                m_ddh.Insert (slot, charId, repo.m_repositoryPlace, repoPos);
+                item.ResetRealId (-1);
+                gndItem.Reset (gndItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, -1, gndPos);
+            } else {
+                // 部分丢弃
+                item.RemoveNum (num);
+                m_ddh.Save (item, charId, repo.m_repositoryPlace, repoPos);
+                var sepItem = m_itemFactory.GetAndInitInstance (item.m_ItemId, num);
+                gndItem.Reset (gndItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), sepItem, -1, gndPos);
+            }
+            m_groundItemList.Add (gndItem);
         }
         public void ItemOnGroundDisappear (E_GroundItem groundItem) {
             // 移除gndItem

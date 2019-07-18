@@ -7,6 +7,48 @@ using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
+    abstract class E_Item {
+        public abstract ItemType m_Type { get; }
+        public long m_realId;
+        private DE_Item m_itemDe;
+        public short m_num;
+        public short m_ItemId { get { return m_itemDe.m_id; } }
+        public ItemQuality m_Quality { get { return m_itemDe.m_quality; } }
+        public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
+        public long m_Price { get { return m_itemDe.m_price; } }
+        public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
+        protected void Reset (DE_Item de, short num) {
+            m_realId = -1;
+            m_itemDe = de;
+            m_num = num;
+        }
+        public void ResetRealId (long realId) {
+            m_realId = realId;
+        }
+        /// <summary>
+        /// 移除一定的数量  
+        /// </summary>
+        /// <returns>整格用完返回true</returns>
+        public bool RemoveNum (short num) {
+            m_num = (short) Math.Max (0, m_num - num);
+            return m_num == 0;
+        }
+        /// <summary>
+        /// 加入一定的数量  
+        /// 返回成功加入的数量
+        /// </summary>
+        public short AddNum (short num) {
+            short rNum = (short) Math.Min (m_MaxNum - m_num, num);
+            m_num += rNum;
+            return rNum;
+        }
+        public DDO_Item GetItemDdo (int charId, ItemPlace place, short pos) {
+            return new DDO_Item (m_realId, m_ItemId, charId, m_num, place, pos);
+        }
+        public NO_Item GetItemNo (ItemPlace ip, short pos) {
+            return new NO_Item (ip, pos, m_realId, m_ItemId, m_num);
+        }
+    }
     class E_EmptyItem : E_Item {
         public override ItemType m_Type { get { return ItemType.EMPTY; } }
         public void Reset (DE_Item de) {
@@ -105,48 +147,6 @@ namespace MirRemakeBackend.Entity {
             m_inlaidGemList.Add (null);
         }
     }
-    abstract class E_Item {
-        public abstract ItemType m_Type { get; }
-        public long m_realId;
-        private DE_Item m_itemDe;
-        public short m_num;
-        public short m_ItemId { get { return m_itemDe.m_id; } }
-        public ItemQuality m_Quality { get { return m_itemDe.m_quality; } }
-        public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
-        public long m_Price { get { return m_itemDe.m_price; } }
-        public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
-        protected void Reset (DE_Item de, short num) {
-            m_realId = -1;
-            m_itemDe = de;
-            m_num = num;
-        }
-        public void ResetRealId (long realId) {
-            m_realId = realId;
-        }
-        /// <summary>
-        /// 移除一定的数量  
-        /// </summary>
-        /// <returns>整格用完返回true</returns>
-        public bool RemoveNum (short num) {
-            m_num = (short) Math.Max (0, m_num - num);
-            return m_num == 0;
-        }
-        /// <summary>
-        /// 加入一定的数量  
-        /// 返回成功加入的数量
-        /// </summary>
-        public short AddNum (short num) {
-            short rNum = (short) Math.Min (m_MaxNum - m_num, num);
-            m_num += rNum;
-            return rNum;
-        }
-        public DDO_Item GetItemDdo (int charId, ItemPlace place, short pos) {
-            return new DDO_Item (m_realId, m_ItemId, charId, m_num, place, pos);
-        }
-        public NO_Item GetItemNo (ItemPlace ip, short pos) {
-            return new NO_Item (ip, pos, m_realId, m_ItemId, m_num);
-        }
-    }
     class E_GroundItem {
         public long m_groundItemId;
         public MyTimer.Time m_disappearTime;
@@ -165,6 +165,6 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_MarketItem {
-        
+
     }
 }

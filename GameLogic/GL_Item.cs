@@ -171,22 +171,7 @@ namespace MirRemakeBackend.GameLogic {
             var item = bag.GetItemByRealId (realId, out itemPos);
             if (item == null) return;
             if (item.m_num < num) return;
-            // TODO: 这里无法处理丢弃装备
-            EM_Item.s_instance.GenerateItemOnGround (
-                new List < (short, short) > () {
-                    (item.m_ItemId, num)
-                },
-                charObj.m_characterId,
-                charObj.m_position
-            );
-            item.m_num -= num;
-            if (item.m_num == 0) {
-                var slot = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, ItemPlace.BAG, itemPos);
-                bag.RemoveItemByRealId (realId, slot);
-                item = slot;
-            } else {
-                EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, itemPos);
-            }
+            EM_Item.s_instance.CharacterDropItemOntoGround (item, num, charObj.m_characterId, bag, itemPos, charObj.m_position);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new List<NO_Item> () { item.GetItemNo (ItemPlace.BAG, itemPos) }));
         }
@@ -253,8 +238,7 @@ namespace MirRemakeBackend.GameLogic {
             // 花钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
             // 失去附魔符
-            var emptyItem = EM_Item.s_instance.CharacterLoseItem (encm, charObj.m_characterId, ItemPlace.BAG, encmPos);
-            bag.RemoveItemByPosition (encmPos, emptyItem);
+            EM_Item.s_instance.CharacterLoseItem (encm, charObj.m_characterId, bag, encmPos);
             // 附魔
             eq.m_enchantAttrList.Clear ();
             for (int i = 0; i < encm.m_attrList.Count; i++)
@@ -285,8 +269,7 @@ namespace MirRemakeBackend.GameLogic {
             // 花钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
             // 失去宝石
-            var emptyItem = EM_Item.s_instance.CharacterLoseItem (gem, charObj.m_characterId, ItemPlace.BAG, gemPos);
-            bag.RemoveItemByPosition (gemPos, emptyItem);
+            EM_Item.s_instance.CharacterLoseItem (gem, charObj.m_characterId, bag, gemPos);
             // 镶嵌
             eq.InlayGem (gemInlayPos, gem.m_ItemId, gem.m_gemDe);
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
@@ -319,19 +302,18 @@ namespace MirRemakeBackend.GameLogic {
             long curCy = charObj.m_virtualCurrency;
             long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
             // 失去装备
-            var emptyItem = EM_Item.s_instance.CharacterLoseItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
-            bag.RemoveItemByPosition (eqPos, emptyItem);
+            EM_Item.s_instance.CharacterLoseItem (eq, charObj.m_characterId, bag, eqPos);
             // 得到钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -gainCy);
-            // 可能获得附魔符
-            if (MyRandom.NextInt (0, 100) == 0) {
-                var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
-                for (int i = 0; i < eq.m_RawAttrList.Count; i++)
-                    if (MyRandom.NextInt (0, 10) >= 5)
-                        attrList.Add (eq.m_RawAttrList[i]);
-                var ecmt = EM_Item.s_instance.CharacterGainEnchantmentItem (emptyItem, 29000, attrList, charObj.m_characterId, ItemPlace.BAG, eqPos);
-                bag.SetItem (ecmt, eqPos);
-            }
+            // TODO: 获得附魔符 需要另外考虑
+            // if (MyRandom.NextInt (0, 100) == 0) {
+            //     var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
+            //     for (int i = 0; i < eq.m_RawAttrList.Count; i++)
+            //         if (MyRandom.NextInt (0, 10) >= 5)
+            //             attrList.Add (eq.m_RawAttrList[i]);
+            //     var ecmt = EM_Item.s_instance.CharacterGainEnchantmentItem (emptyItem, 29000, attrList, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            //     bag.SetItem (ecmt, eqPos);
+            // }
         }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
@@ -348,15 +330,14 @@ namespace MirRemakeBackend.GameLogic {
             long realId = item.m_realId;
             short curNum = item.m_num;
             // 实例 与 数据
-            if (runOut) {
+            if (runOut)
                 // 物品消失
-                var empty = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
-                repo.RemoveItemByRealId (realId, empty);
-            } else
-                EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, ItemPlace.BAG, pos);
+                EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, repo, pos);
+            else
+                EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, repo.m_repositoryPlace, pos);
             // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
-                charObj.m_networkId, new List<NO_Item> { item.GetItemNo (ItemPlace.BAG, pos) }));
+                charObj.m_networkId, new List<NO_Item> { item.GetItemNo (repo.m_repositoryPlace, pos) }));
         }
         public void NotifyCharacterSwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
             srcRepo.SetItem (tarItem, srcPos);
@@ -415,9 +396,9 @@ namespace MirRemakeBackend.GameLogic {
                         dropItemIdAndNumList.Add ((id, (short) (MyRandom.NextInt (1, 2))));
                     }
                 } else if (id >= 20000) {
-                    int level=(id-20000)%220/22+1;
+                    int level = (id - 20000) % 220 / 22 + 1;
                     bool drop = MyRandom.NextInt (0, 1000) <= 100;
-                    if (level==10){
+                    if (level == 10) {
                         drop = MyRandom.NextInt (0, 1000) <= 30;
                     }
                     if (drop)
@@ -431,9 +412,12 @@ namespace MirRemakeBackend.GameLogic {
             var charBag = EM_Item.s_instance.GetBag (charObj.m_networkId);
             if (charBag == null) return;
             var bagItemList = charBag.m_ItemList;
-            List<E_Item> droppedItemList = new List<E_Item> ();
-            // TODO: 根据bagItemList (从角色bag中), 角色掉落遗物
-
+            for (int i = 0; i < bagItemList.Count; i++) {
+                int dropFlag = MyRandom.NextInt (1, 1001);
+                if (dropFlag >= 25) continue;
+                int dropNum = MyRandom.NextInt (1, bagItemList[i].m_num + 1);
+                EM_Item.s_instance.CharacterDropItemOntoGround (bagItemList[i], (short) dropNum, charObj.m_characterId, charBag, (short) i, charObj.m_position);
+            }
             int charId = (killer.m_UnitType == ActorUnitType.PLAYER) ? ((E_Character) killer).m_characterId : -1;
         }
         private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
