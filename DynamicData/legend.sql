@@ -24,9 +24,9 @@ CREATE TABLE `character_attribute` (
 
 DROP TABLE IF EXISTS `wallet`;
 CREATE TABLE `wallet` (
-  `charid` int NOT NULL AUTO_INCREMENT,
+  `charid` int NOT NULL,
   `virtual` int NOT NULL,
-  `charge` int NOT NULL.
+  `charge` int NOT NULL,
    primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
