@@ -3,18 +3,32 @@ use legend;
 
 DROP TABLE IF EXISTS `character`;
 CREATE TABLE `character` (
-  `characterid` int NOT NULL AUTO_INCREMENT,
+  `charid` int NOT NULL AUTO_INCREMENT,
   `playerid` int NOT NULL,
   `occupation` VARCHAR(255) NOT NULL,
-  `level` int DEFAULT NULL,
-  `experience` int DEFAULT NULL,
-  `currency` varchar(255) NOT NULL,
-  `giftpoints` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-   primary key (`characterid`)
+   primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX `playerid` ON `character`(`playerid`);
 CREATE UNIQUE INDEX `name` ON `character`(`name`);
+
+DROP TABLE IF EXISTS `character_attribute`;
+CREATE TABLE `character_attribute` (
+  `charid` int NOT NULL,
+  `level` int NOT NULL,
+  `experience` int NOT NULL,
+  `attributes` VARCHAR(45),
+  primary key (`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `wallet`;
+CREATE TABLE `wallet` (
+  `charid` int NOT NULL AUTO_INCREMENT,
+  `virtual` int NOT NULL,
+  `charge` int NOT NULL.
+   primary key (`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `skill`;
 create table `skill`( 
@@ -86,10 +100,10 @@ CREATE UNIQUE INDEX `user_name` ON `user`(`user_name`);
 
 DROP TABLE IF EXISTS `vip`;
 create table `vip`( 
-  `userid` int NOT NULL AUTO_INCREMENT,
+  `charid` int NOT NULL AUTO_INCREMENT,
   `vip_level` int NOT NULL,
   `charge_money` int NOT NULL,
-  primary key (`userid`)
+  primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `enchantment`;
