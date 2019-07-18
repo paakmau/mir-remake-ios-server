@@ -1,9 +1,9 @@
 using MirRemakeBackend.Entity;
 
 namespace MirRemakeBackend.GameLogic {
-    class UnitInitializer {
-        public static UnitInitializer s_instance;
-        public UnitInitializer () { }
+    class CharacterInitializer {
+        public static CharacterInitializer s_instance;
+        public CharacterInitializer () { }
         public void CommandInitCharacterId (int netId, int charId) {
             // 角色
             var newChar = GL_CharacterAttribute.s_instance.NotifyInitCharacter (netId, charId);

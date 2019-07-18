@@ -99,7 +99,7 @@ namespace MirRemakeBackend {
         }
         static void InitGameLogic () {
             // 单位初始化器
-            UnitInitializer.s_instance = new UnitInitializer ();
+            CharacterInitializer.s_instance = new CharacterInitializer ();
             // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
