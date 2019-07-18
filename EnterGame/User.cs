@@ -15,6 +15,8 @@ namespace MirRemakeBackend.EnterGame {
         private INetworkService m_netService;
         private IDDS_User m_userDds;
         private IDDS_Character m_charDds;
+        private IDDS_CharacterAttribute m_charAttrDds;
+        private IDDS_CharacterWallet m_charWalletDds;
         private IDDS_CharacterPosition m_charPosDds;
         private IDDS_Skill m_skillDds;
         private IDDS_Mission m_misDds;
@@ -22,10 +24,12 @@ namespace MirRemakeBackend.EnterGame {
         private IDDS_CombatEfct m_combatEfctDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
             m_netService = ns;
             m_userDds = userDds;
             m_charDds = charDds;
+            m_charAttrDds = charAttrDds;
+            m_charWalletDds = charWalletDds;
             m_charPosDds = charPosDds;
             m_skillDds = skillDds;
             m_misDds = misDds;
@@ -77,7 +81,9 @@ namespace MirRemakeBackend.EnterGame {
                 var charArr = m_charDds.GetCharacterByPlayerId (userDdo.m_playerId);
                 List<NO_LoginCharacter> loginCharNoList = new List<NO_LoginCharacter> (charArr.Length);
                 foreach (var charDdo in charArr) {
-                    loginCharNoList.Add (new NO_LoginCharacter (charDdo.m_characterId, charDdo.m_occupation, charDdo.m_name, charDdo.m_level));
+                    DDO_CharacterAttribute charAttrDdo;
+                    if (m_charAttrDds.GetCharacterAttributeByCharacterId (charDdo.m_characterId, out charAttrDdo)) continue;
+                    loginCharNoList.Add (new NO_LoginCharacter (charDdo.m_characterId, charDdo.m_occupation, charDdo.m_name, charAttrDdo.m_level));
                 }
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId, loginCharNoList));
             } else
@@ -113,11 +119,15 @@ namespace MirRemakeBackend.EnterGame {
         }
         public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
             // 角色 dds
-            int charId = m_charDds.CreateCharacter (playerId, ocp, name);
+            int charId = m_charDds.InsertCharacter (new DDO_Character (-1, playerId, ocp, name));
             if (charId == -1) {
                 m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, false, -1));
                 return;
             }
+            m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 1, 0, new (ActorUnitMainAttributeType, short) [] {
+                (ActorUnitMainAttributeType.STRENGTH, 0), (ActorUnitMainAttributeType.INTELLIGENCE, 0), (ActorUnitMainAttributeType.SPIRIT, 0), (ActorUnitMainAttributeType.AGILITY, 0)
+            }));
+            m_charWalletDds.InsertCharacterWallet (new DDO_CharacterWallet (charId, 0, 0));
             m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];

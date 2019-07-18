@@ -227,7 +227,7 @@ namespace MirRemakeBackend.Entity {
         public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
         public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
         public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
-        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, DDO_CharacterWallet charWalletDdo) {
+        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, DDO_CharacterWallet charWalletDdo, DDO_CharacterPosition charPosDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_characterDataDe = charDataDe;
@@ -240,6 +240,7 @@ namespace MirRemakeBackend.Entity {
                 m_mainAttrPointDict[mainP.Item1] = mainP.Item2;
             m_virtualCurrency = charWalletDdo.m_virtualCy;
             m_chargeCurrency = charWalletDdo.m_chargeCy;
+            m_position = charPosDdo.m_position;
         }
         /// <summary>
         /// 尝试使用经验升级, 返回提升的等级
@@ -271,7 +272,7 @@ namespace MirRemakeBackend.Entity {
             m_mainPointConcreteAttr.SetAttr (type, value);
         }
         public DDO_Character GetDdo () {
-            return new DDO_Character (m_playerId, m_characterId, m_Level, m_Occupation, m_experience, currencyArr, m_name);
+            return new DDO_Character (m_characterId, m_playerId, m_Occupation, m_name);
         }
         public DDO_CharacterAttribute GetAttrDdo () {
             var pointArr = new (ActorUnitMainAttributeType, short) [4];
@@ -279,10 +280,14 @@ namespace MirRemakeBackend.Entity {
             pointArr[1] = (ActorUnitMainAttributeType.INTELLIGENCE, m_Intelligence);
             pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);
             pointArr[3] = (ActorUnitMainAttributeType.SPIRIT, m_Spirit);
-            return new DDO_CharacterAttribute (m_Level, m_experience, pointArr);
+            return new DDO_CharacterAttribute (m_characterId, m_Level, m_experience, pointArr);
         }
         public DDO_CharacterWallet GetWalletDdo () {
-            return new DDO_CharacterWallet (m_)
+            return new DDO_CharacterWallet (m_characterId, m_virtualCurrency, m_chargeCurrency);
+        }
+        public DDO_CharacterVipCard GetVipCardDdo () {
+            // TODO: Vip card
+            return new DDO_CharacterVipCard (m_characterId, 0, 0);
         }
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);

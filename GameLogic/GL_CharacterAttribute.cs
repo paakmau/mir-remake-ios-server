@@ -41,7 +41,7 @@ namespace MirRemakeBackend.GameLogic {
             // 战斗力变化
             GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
-            EM_Unit.s_instance.SaveCharacter (charObj);
+            EM_Unit.s_instance.SaveCharacterAttribute (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
                 netId,
                 charObj.m_Strength,
@@ -86,7 +86,7 @@ namespace MirRemakeBackend.GameLogic {
             if (dLv > 0)
                 GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
-            EM_Unit.s_instance.SaveCharacter (charObj);
+            EM_Unit.s_instance.SaveCharacterAttribute (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
@@ -109,7 +109,7 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_chargeCurrency += dC;
             else
                 charObj.m_virtualCurrency += dC;
-            EM_Unit.s_instance.SaveCharacter (charObj);
+            EM_Unit.s_instance.SaveCharacterWallet (charObj);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
                 charObj.m_networkId, charObj.m_virtualCurrency, charObj.m_chargeCurrency));
