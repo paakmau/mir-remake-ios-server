@@ -143,7 +143,7 @@ namespace MirRemakeBackend.DataEntity {
             m_criticalRate = effectDo.m_criticalRate;
             m_deltaHp = effectDo.m_deltaHp;
             m_deltaMp = effectDo.m_deltaMp;
-            m_attrBonus = effectDo.m_attributeBonusArr;
+            m_attrBonus = effectDo.m_attributeBonusArr ?? new (ActorUnitConcreteAttributeType, float) [0];
             m_statusIdAndValueAndTimeList = new List<ValueTuple<short, float, float>> (effectDo.m_statusIdAndValueAndTimeArr);
         }
     }
