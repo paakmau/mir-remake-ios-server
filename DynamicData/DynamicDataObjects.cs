@@ -17,37 +17,55 @@ namespace MirRemakeBackend.DynamicData {
             m_pwdProtectAnswer = pwdProtectAnswer;
         }
     }
-    struct DDO_VipCard {
+    struct DDO_Character {
+        public int m_characterId;
         public int m_playerId;
-        public int m_vipLevel;
-        public long m_chargeMoney;
-        public DDO_VipCard (int playerId, int vipLevel, long chargeMoney) {
+        public OccupationType m_occupation;
+        public string m_name;
+        public DDO_Character (int charId, int playerId, short level, OccupationType oc, int exp, string name) {
+            m_characterId = charId;
             m_playerId = playerId;
-            m_vipLevel = vipLevel;
-            m_chargeMoney = chargeMoney;
+            m_occupation = oc;
+            m_name = name;
         }
     }
-    struct DDO_Character {
-        public int m_playerId;
-        public int m_characterId;
+    struct DDO_CharacterAttribute {
         public short m_level;
-        public OccupationType m_occupation;
         public int m_experience;
-        public ValueTuple<CurrencyType, long>[] m_currencyArr;
         /// <summary>
         /// 已分配的主属性点情况
         /// </summary>
         public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
-        public string m_name;
-        public DDO_Character (int playerId, int charId, short level, OccupationType oc, int exp, ValueTuple<CurrencyType, long>[] currencyArr, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr, string name) {
-            m_playerId = playerId;
-            m_characterId = charId;
-            m_level = level;
-            m_occupation = oc;
+        public DDO_CharacterAttribute (short lv, int exp, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr) {
+            m_level = lv;
             m_experience = exp;
-            m_currencyArr = currencyArr;
             m_distributedMainAttrPointArr = attrPointArr;
-            m_name = name;
+        }
+    }
+    struct DDO_CharacterPosition {
+        public int m_characterId;
+        public Vector2 m_position;
+        public DDO_CharacterPosition (int charId, Vector2 pos) {
+            m_characterId = charId;
+            m_position = pos;
+        }
+    }
+    struct DDO_CharacterWallet {
+        long m_virtualCy;
+        long m_chargeCy;
+        public DDO_CharacterWallet (long virtualCy, long chargeCy) {
+            m_virtualCy = virtualCy;
+            m_chargeCy = chargeCy;
+        }
+    }
+    struct DDO_CharacterVipCard {
+        public int m_charId;
+        public int m_vipLevel;
+        public long m_chargeMoney;
+        public DDO_CharacterVipCard (int charId, int vipLevel, long chargeMoney) {
+            m_charId = charId;
+            m_vipLevel = vipLevel;
+            m_chargeMoney = chargeMoney;
         }
     }
     struct DDO_EquipmentInfo {
@@ -77,7 +95,7 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_EnchantmentInfo {
         public long m_realId;
         public int m_characterId;
-        public (ActorUnitConcreteAttributeType, int)[] m_attrArr;
+        public (ActorUnitConcreteAttributeType, int) [] m_attrArr;
         public DDO_EnchantmentInfo (long realId, int charId, List < (ActorUnitConcreteAttributeType, int) > attrList) {
             m_realId = realId;
             m_characterId = charId;
@@ -128,14 +146,6 @@ namespace MirRemakeBackend.DynamicData {
             m_characterId = charId;
             m_status = status;
             m_missionTargetProgressList = misProgList;
-        }
-    }
-    struct DDO_CharacterPosition {
-        public int m_characterId;
-        public Vector2 m_position;
-        public DDO_CharacterPosition (int charId, Vector2 pos) {
-            m_characterId = charId;
-            m_position = pos;
         }
     }
     struct DDO_CombatEfct {

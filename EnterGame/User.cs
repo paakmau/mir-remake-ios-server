@@ -76,8 +76,9 @@ namespace MirRemakeBackend.EnterGame {
                 // 获取角色列表
                 var charArr = m_charDds.GetCharacterByPlayerId (userDdo.m_playerId);
                 List<NO_LoginCharacter> loginCharNoList = new List<NO_LoginCharacter> (charArr.Length);
-                foreach (var charDdo in charArr)
+                foreach (var charDdo in charArr) {
                     loginCharNoList.Add (new NO_LoginCharacter (charDdo.m_characterId, charDdo.m_occupation, charDdo.m_name, charDdo.m_level));
+                }
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, true, userDdo.m_playerId, loginCharNoList));
             } else
                 m_netService.SendServerCommand (SC_InitSelfLogin.Instance (netId, false, -1, new List<NO_LoginCharacter> ()));
