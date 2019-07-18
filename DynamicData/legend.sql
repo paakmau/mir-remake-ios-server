@@ -69,13 +69,12 @@ CREATE INDEX `charid` ON `equipment`(`charid`);
 
 DROP TABLE IF EXISTS `mission`;
 create table `mission`(
-  `realid` int NOT NULL AUTO_INCREMENT,
   `missionid` int NOT NULL,
   `charid` int NOT NULL,
   `targets` VARCHAR(150) NOT NULL,
-  `status` VARCHAR(255) NOT NULL,
-   primary key (`realid`)
+  `status` VARCHAR(255) NOT NULL
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `missionid` ON `mission`(`missionid`);
 CREATE INDEX `charid` ON `mission`(`charid`);
 
 DROP TABLE IF EXISTS `character_position`;
