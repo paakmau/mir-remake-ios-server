@@ -466,7 +466,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\",`question`=\""+ddo.m_pwdProtectProblem+"\",`answer`=\""+ddo.m_pwdProtectAnswer+"\" where `userid`=" + ddo.m_playerId + ";";
             string database = "legend";
-            try{pool.ExecuteSql (database, cmd)} catch (Exception e){Console.WriteLine(e.StackTrace);};
+            try{pool.ExecuteSql (database, cmd);} catch (Exception e){Console.WriteLine(e.StackTrace);};
         }
         public int InsertUser (DDO_User ddo) {
             try {
