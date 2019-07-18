@@ -30,13 +30,15 @@ namespace MirRemakeBackend.DynamicData {
         }
     }
     struct DDO_CharacterAttribute {
+        public int m_characterId;
         public short m_level;
         public int m_experience;
         /// <summary>
         /// 已分配的主属性点情况
         /// </summary>
         public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
-        public DDO_CharacterAttribute (short lv, int exp, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr) {
+        public DDO_CharacterAttribute (int charId, short lv, int exp, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr) {
+            m_characterId = charId;
             m_level = lv;
             m_experience = exp;
             m_distributedMainAttrPointArr = attrPointArr;
@@ -51,19 +53,21 @@ namespace MirRemakeBackend.DynamicData {
         }
     }
     struct DDO_CharacterWallet {
+        public int m_characterId;
         public long m_virtualCy;
         public long m_chargeCy;
-        public DDO_CharacterWallet (long virtualCy, long chargeCy) {
+        public DDO_CharacterWallet (int charId, long virtualCy, long chargeCy) {
+            m_characterId = charId;
             m_virtualCy = virtualCy;
             m_chargeCy = chargeCy;
         }
     }
     struct DDO_CharacterVipCard {
-        public int m_charId;
+        public int m_characterId;
         public int m_vipLevel;
         public long m_chargeMoney;
         public DDO_CharacterVipCard (int charId, int vipLevel, long chargeMoney) {
-            m_charId = charId;
+            m_characterId = charId;
             m_vipLevel = vipLevel;
             m_chargeMoney = chargeMoney;
         }

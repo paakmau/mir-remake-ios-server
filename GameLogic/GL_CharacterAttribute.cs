@@ -70,8 +70,8 @@ namespace MirRemakeBackend.GameLogic {
                 newChar.m_Agility,
                 newChar.m_Spirit,
                 newChar.m_TotalMainPoint,
-                newChar.m_VirtualCurrency,
-                newChar.m_ChargeCurrency,
+                newChar.m_virtualCurrency,
+                newChar.m_chargeCurrency,
                 newChar.m_position));
             return newChar;
         }
@@ -105,14 +105,16 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
             // 实例 与 数据
-            charObj.m_currencyDict[type] += dC;
+            if (type == CurrencyType.CHARGE)
+                charObj.m_chargeCurrency += dC;
+            else
+                charObj.m_virtualCurrency += dC;
             EM_Unit.s_instance.SaveCharacter (charObj);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
-                charObj.m_networkId, charObj.m_VirtualCurrency, charObj.m_ChargeCurrency));
+                charObj.m_networkId, charObj.m_virtualCurrency, charObj.m_chargeCurrency));
         }
         private void MainPointToConAttr (E_Character charObj) {
-            // charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, charObj.m_Strength * 233);
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int) (charObj.m_Strength * 0.55));
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int) (charObj.m_Agility * 0.2));
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.CRITICAL_BONUS, (int) (charObj.m_Agility * 0.05));

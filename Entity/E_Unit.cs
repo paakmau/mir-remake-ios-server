@@ -272,14 +272,20 @@ namespace MirRemakeBackend.Entity {
         }
         public DDO_Character GetDdo () {
             var currencyArr = new (CurrencyType, long) [2];
-            currencyArr[0] = (CurrencyType.VIRTUAL, m_VirtualCurrency);
-            currencyArr[1] = (CurrencyType.CHARGE, m_ChargeCurrency);
+            currencyArr[0] = (CurrencyType.VIRTUAL, m_virtualCurrency);
+            currencyArr[1] = (CurrencyType.CHARGE, m_chargeCurrency);
+            return new DDO_Character (m_playerId, m_characterId, m_Level, m_Occupation, m_experience, currencyArr, pointArr, m_name);
+        }
+        public DDO_CharacterAttribute GetAttrDdo () {
             var pointArr = new (ActorUnitMainAttributeType, short) [4];
             pointArr[0] = (ActorUnitMainAttributeType.STRENGTH, m_Strength);
             pointArr[1] = (ActorUnitMainAttributeType.INTELLIGENCE, m_Intelligence);
             pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);
             pointArr[3] = (ActorUnitMainAttributeType.SPIRIT, m_Spirit);
-            return new DDO_Character (m_playerId, m_characterId, m_Level, m_Occupation, m_experience, currencyArr, pointArr, m_name);
+            return new DDO_CharacterAttribute (m_Level, m_experience, pointArr);
+        }
+        public DDO_CharacterWallet GetWalletDdo () {
+            return new DDO_CharacterWallet ()
         }
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);
