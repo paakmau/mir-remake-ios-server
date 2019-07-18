@@ -51,8 +51,8 @@ namespace MirRemakeBackend.DynamicData {
         }
     }
     struct DDO_CharacterWallet {
-        long m_virtualCy;
-        long m_chargeCy;
+        public long m_virtualCy;
+        public long m_chargeCy;
         public DDO_CharacterWallet (long virtualCy, long chargeCy) {
             m_virtualCy = virtualCy;
             m_chargeCy = chargeCy;

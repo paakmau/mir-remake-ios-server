@@ -188,15 +188,8 @@ namespace MirRemakeBackend.Entity {
         public short m_TotalMainPoint { get { return m_characterDataDe.m_mainAttributePointNum; } }
         public int m_UpgradeExperienceInNeed { get { return m_characterDataDe.m_upgradeExperienceInNeed; } }
         public int m_experience;
-        public Dictionary<CurrencyType, long> m_currencyDict = new Dictionary<CurrencyType, long> ();
-        public long m_VirtualCurrency {
-            get { return m_currencyDict[CurrencyType.VIRTUAL]; }
-            set { m_currencyDict[CurrencyType.VIRTUAL] = value; }
-        }
-        public long m_ChargeCurrency {
-            get { return m_currencyDict[CurrencyType.CHARGE]; }
-            set { m_currencyDict[CurrencyType.CHARGE] = value; }
-        }
+        public long m_virtualCurrency;
+        public long m_chargeCurrency;
         public Dictionary<ActorUnitMainAttributeType, short> m_mainAttrPointDict = new Dictionary<ActorUnitMainAttributeType, short> ();
         public short m_Strength {
             get { return m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH]; }
@@ -234,7 +227,7 @@ namespace MirRemakeBackend.Entity {
         public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
         public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
         public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
-        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo) {
+        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, DDO_CharacterWallet charWalletDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_characterDataDe = charDataDe;
@@ -242,8 +235,9 @@ namespace MirRemakeBackend.Entity {
             m_playerId = charDdo.m_playerId;
             m_characterId = charDdo.m_characterId;
             m_name = charDdo.m_name;
-            m_experience = charDdo.m_experience;
-            foreach (var c in charDdo.m_currencyArr)
+            m_experience = charAttrDdo.m_experience;
+            m_virtualCurrency = charWalletDdo.
+            foreach (var c in charWalletDdo.m_currencyArr)
                 m_currencyDict[c.Item1] = c.Item2;
             foreach (var mainP in charDdo.m_distributedMainAttrPointArr)
                 m_mainAttrPointDict[mainP.Item1] = mainP.Item2;
