@@ -243,7 +243,7 @@ namespace MirRemakeBackend.DynamicData {
             DataTable dt = new DataTable ();
             cmd = "insert into `character` values (null,"+playerid+",\"" + occupation.ToString () + "\",1,0,\"0 0\",\"0 0 0 0\",\""+name+"\");select last_insert_id();";
             string database = "legend";
-            pool.ExecuteSql (database, cmd, ds);
+            try{pool.ExecuteSql (database, cmd, ds);}catch(Exception e){Console.WriteLine(e.StackTrace);return -1;};
             dt = ds.Tables[0];
             return int.Parse (dt.Rows[0]["last_insert_id()"].ToString ());
         }

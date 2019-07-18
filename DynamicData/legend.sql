@@ -110,6 +110,7 @@ create table `combat_effect`(
   `level` int,
   primary key (`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE UNIQUE INDEX `name` ON `combat_effect`(`name`);
 
 DROP TABLE IF EXISTS `mall`;
 create table `mall`(
