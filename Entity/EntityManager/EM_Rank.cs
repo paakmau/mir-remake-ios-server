@@ -49,8 +49,8 @@ namespace MirRemakeBackend.Entity {
             if (!m_charIdAndOriCombatEfctDict.TryGetValue (charObj.m_characterId, out combatEfct)) return;
             m_dds.UpdateMixCombatEfct (new DDO_CombatEfct (charObj.m_characterId, combatEfct, charObj.m_Occupation, charObj.m_name, charObj.m_Level));
         }
-        public void UpdateCharCombatEfct (int charId, OccupationType ocp, string name, short lv, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
-            var combatEfct = AttrToCombatEfct (ocp, atk, intl, maxHp, maxMp, def, agl, criticalRate, criticalBonus, hitRate, dodgeRate);
+        public void UpdateCharCombatEfct (int charId, OccupationType ocp, string name, short lv, int atk, int mag, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
+            var combatEfct = AttrToCombatEfct (ocp, atk, mag, maxHp, maxMp, def, agl, criticalRate, criticalBonus, hitRate, dodgeRate);
             UpdateCharCombatEfct (charId, combatEfct, ocp, name, lv);
         }
         private void UpdateCharCombatEfct (int charId, int combatEfct, OccupationType ocp, string name, short lv) {
@@ -127,20 +127,20 @@ namespace MirRemakeBackend.Entity {
             }
             return (combatEfct, rank);
         }
-        private int AttrToCombatEfct (OccupationType ocp, int atk, int intl, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
+        private int AttrToCombatEfct (OccupationType ocp, int atk, int mag, int maxHp, int maxMp, int def, int agl, int criticalRate, int criticalBonus, int hitRate, int dodgeRate) {
             double res = 0;
             switch (ocp) {
                 case OccupationType.WARRIOR:
                     res = Math.Pow (atk, 1.5);
                     break;
                 case OccupationType.ROGUE:
-                    res = 2.5 * Math.Pow (atk, 1.5);
+                    res = 1.2 * Math.Pow (atk, 1.5);
                     break;
                 case OccupationType.MAGE:
-                    res = 0.8 * Math.Pow (intl, 1.5);
+                    res = 0.9 * Math.Pow (mag, 1.5);
                     break;
                 case OccupationType.TAOIST:
-                    res = 1.3 * Math.Pow (intl, 1.5);
+                    res = 1.3 * Math.Pow (mag, 1.5);
                     break;
             }
             res = res + Math.Pow (maxHp, 0.5) * 0.5;
