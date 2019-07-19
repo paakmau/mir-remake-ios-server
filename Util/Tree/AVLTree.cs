@@ -100,8 +100,8 @@ namespace Algorithms.DataStructures.Tree
             }
             else
             {
-                var leftHeight = node.Left?.Height ?? 0;
-                var rightHeight = node.Right?.Height ?? 0;
+                var leftHeight = node.Left?.Height ?? -1;
+                var rightHeight = node.Right?.Height ?? -1;
                 var nodeToReplace = leftHeight > rightHeight
                     ? this.GetPredecessor(node.Content)
                     : this.GetSuccessor(node.Content);
