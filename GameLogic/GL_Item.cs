@@ -198,7 +198,7 @@ namespace MirRemakeBackend.GameLogic {
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq as E_EquipmentItem, -1));
             // 装备穿上Attr
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, 1));
-            NotifyCharacterSwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
+            NotifyCharacterSwapItemPlace (charObj.m_networkId, charObj.m_characterId, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
         public void CommandApplyBuildEquipment (int netId, (short, short) [] matArr) {
             // TODO: 打造装备
