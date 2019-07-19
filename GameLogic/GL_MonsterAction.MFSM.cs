@@ -36,7 +36,6 @@ namespace MirRemakeBackend.GameLogic {
                 }
             }
         }
-
         enum MFSMStateType : byte {
             AUTO_MOVE,
             AUTO_BATTLE,
@@ -73,16 +72,18 @@ namespace MirRemakeBackend.GameLogic {
         }
         class MFSMS_AutoMove : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.AUTO_MOVE; } }
-            private float m_moveTimeLeft;
+            private float m_moveTimer;
+            private const float c_recoverTime = 3f;
+            private float m_recoverTimer;
             private Vector2 m_targetPos;
             public MFSMS_AutoMove (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
-                m_moveTimeLeft = 0f;
+                m_moveTimer = 0f;
                 m_targetPos = self.m_position;
             }
             public override void OnTick (E_Monster self, float dT) {
-                if (m_moveTimeLeft > 0f)
-                    m_moveTimeLeft -= dT;
+                if (m_moveTimer > 0f)
+                    m_moveTimer -= dT;
                 else {
                     var dir = m_targetPos - self.m_position;
                     Vector2 dirNorm;
@@ -94,9 +95,15 @@ namespace MirRemakeBackend.GameLogic {
                         deltaP = dir;
                     self.m_position = self.m_position + deltaP;
                     if ((self.m_position - m_targetPos).LengthSquared () <= 0.01f) {
-                        m_moveTimeLeft = MyRandom.NextFloat (5f, 10f);
+                        m_moveTimer = MyRandom.NextFloat (5f, 10f);
                         m_targetPos = self.m_respawnPosition + new Vector2 (MyRandom.NextFloat (0f, 8f), MyRandom.NextFloat (0f, 8f));
                     }
+                }
+                if (m_recoverTimer > 0f)
+                    m_recoverTimer -= dT;
+                else {
+                    m_recoverTimer = c_recoverTime;
+                    GL_UnitBattleAttribute.s_instance.NotifyMonsterAutoRecover (self);
                 }
             }
             public override MFSMStateBase GetNextState (E_Monster self) {

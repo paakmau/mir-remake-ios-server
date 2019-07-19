@@ -148,9 +148,17 @@ namespace MirRemakeBackend.GameLogic {
                 AttachStatus (target, caster, m_effectStage.m_StatusIdAndValueAndTimeList);
             }
         }
+        public void NotifyMonsterAutoRecover (E_Monster monster) {
+            if (monster.m_IsDead) return;
+            if (monster.m_curHp == monster.m_MaxHp && monster.m_curMp == monster.m_MaxMp) return;
+            int dHp = (int) (monster.m_curHp * 0.08f);
+            int dMp = (int) (monster.m_curMp * 0.08f);
+            monster.m_curHp = Math.Min (monster.m_MaxHp, monster.m_curHp + dHp);
+            monster.m_curMp = Math.Min (monster.m_MaxMp, monster.m_curMp + dMp);
+        }
         private void AttachHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
-            target.m_curHp = Math.Max(0, Math.Min(target.m_MaxHp, target.m_curHp + dHp));
-            target.m_curMp = Math.Max(0, Math.Min(target.m_MaxMp, target.m_curMp + dMp));
+            target.m_curHp = Math.Max (0, Math.Min (target.m_MaxHp, target.m_curHp + dHp));
+            target.m_curMp = Math.Max (0, Math.Min (target.m_MaxMp, target.m_curMp + dMp));
             if (dHp >= 0 && dMp >= 0) return;
 
             // 统计伤害量
