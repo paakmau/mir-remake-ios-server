@@ -11,7 +11,7 @@
         },{
             "ID":2,
             "MonsterID":2,
-            "Num":10
+            "Num":5
         },{
             "ID":3,
             "MonsterID":3,
@@ -27,7 +27,7 @@
         },{
             "ID":6,
             "MonsterID":6,
-            "Num":10
+            "Num":5
         },{
             "ID":7,
             "MonsterID":7,
@@ -35,7 +35,7 @@
         },{
             "ID":8,
             "MonsterID":8,
-            "Num":10
+            "Num":5
         },{
             "ID":9,
             "MonsterID":9,
@@ -67,15 +67,15 @@
         },{
             "ID":16,
             "MonsterID":21,
-            "Num":10
+            "Num":5
         },{
             "ID":17,
             "MonsterID":22,
-            "Num":10
+            "Num":5
         },{
             "ID":18,
             "MonsterID":23,
-            "Num":10
+            "Num":5
         },{
             "ID":19,
             "MonsterID":24,
@@ -91,7 +91,7 @@
         },{
             "ID":22,
             "MonsterID":27,
-            "Num":10
+            "Num":5
         },{
             "ID":23,
             "MonsterID":29,
@@ -119,19 +119,19 @@
         },{
             "ID":29,
             "MonsterID":35,
-            "Num":10
+            "Num":5
         },{
             "ID":30,
             "MonsterID":36,
-            "Num":10
+            "Num":5
         },{
             "ID":31,
             "MonsterID":37,
-            "Num":10
+            "Num":5
         },{
             "ID":32,
             "MonsterID":38,
-            "Num":10
+            "Num":5
         },{
             "ID":33,
             "MonsterID":39,
@@ -143,11 +143,11 @@
         },{
             "ID":35,
             "MonsterID":41,
-            "Num":10
+            "Num":5
         },{
             "ID":36,
             "MonsterID":42,
-            "Num":10
+            "Num":5
         },{
             "ID":37,
             "MonsterID":43,
@@ -196,15 +196,15 @@
         {
             "ID":0,
             "ItemID":30000,
-            "Num":5
+            "Num":3
         },{
             "ID":1,
             "ItemID":30001,
-            "Num":5
+            "Num":3
         },{
             "ID":2,
             "ItemID":30002,
-            "Num":10
+            "Num":3
         },{
             "ID":3,
             "ItemID":30003,
@@ -216,7 +216,7 @@
         },{
             "ID":5,
             "ItemID":30005,
-            "Num":5
+            "Num":3
         },{
             "ID":6,
             "ItemID":30006,
@@ -224,51 +224,51 @@
         },{
             "ID":7,
             "ItemID":30007,
-            "Num":5
+            "Num":3
         },{
             "ID":8,
             "ItemID":30008,
-            "Num":5
+            "Num":3
         },{
             "ID":9,
             "ItemID":30009,
-            "Num":5
+            "Num":3
         },{
             "ID":10,
             "ItemID":30010,
-            "Num":5
+            "Num":3
         },{
             "ID":11,
             "ItemID":30011,
-            "Num":5
+            "Num":4
         },{
             "ID":12,
             "ItemID":30012,
-            "Num":10
+            "Num":3
         },{
             "ID":13,
             "ItemID":30013,
-            "Num":5
+            "Num":3
         },{
             "ID":14,
             "ItemID":30014,
-            "Num":10
+            "Num":3
         },{
             "ID":15,
             "ItemID":30015,
-            "Num":10
+            "Num":3
         },{
             "ID":16,
             "ItemID":30016,
-            "Num":5
+            "Num":3
         },{
             "ID":17,
             "ItemID":30017,
-            "Num":5
+            "Num":3
         },{
             "ID":18,
             "ItemID":30018,
-            "Num":5
+            "Num":3
         },{
             "ID":19,
             "ItemID":30019,
@@ -276,7 +276,7 @@
         },{
             "ID":20,
             "ItemID":30020,
-            "Num":5
+            "Num":3
         }
     ],
 
