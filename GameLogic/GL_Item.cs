@@ -194,12 +194,12 @@ namespace MirRemakeBackend.GameLogic {
             var eq = bag.GetItemByRealId (realId, out posInBag) as E_EquipmentItem;
             if (eq == null) return;
             // 该位置原有装备卸下
-            var oriEq = eqRegion.GetItemByPosition ((short) eq.m_EquipmentPosition) as E_EquipmentItem;
+            var oriEq = eqRegion.GetEquipmentByEquipPosition (eq.m_EquipmentPosition);
             if (oriEq != null) {
-                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, -1));
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq as E_EquipmentItem, -1));
             }
             // 装备穿上Attr
-            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq, 1));
+            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, 1));
             NotifyCharacterSwapItemPlace (charObj, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
         }
         public void CommandApplyBuildEquipment (int netId, (short, short) [] matArr) {

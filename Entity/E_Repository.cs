@@ -122,10 +122,16 @@ namespace MirRemakeBackend.Entity {
     }
     class E_EquipmentRegion : E_Bag {
         public override ItemPlace m_repositoryPlace { get { return ItemPlace.EQUIPMENT_REGION; } }
-        public E_EquipmentItem GetEquipmentByEquipPosition (EquipmentPosition eqPos) {
+        /// <summary>
+        /// 若找不到，则随机返回一个装备区的 E_EmptyItem
+        /// </summary>
+        public E_Item GetEquipmentByEquipPosition (EquipmentPosition eqPos) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if ((m_itemList[i] as E_EquipmentItem).m_EquipmentPosition == eqPos)
                     return m_itemList[i] as E_EquipmentItem;
+            for (int i = 0; i < m_itemList.Count; i++)
+                if ((m_itemList[i].m_Type == ItemType.EMPTY))
+                    return m_itemList[i];
             return null;
         }
         /// <summary>
