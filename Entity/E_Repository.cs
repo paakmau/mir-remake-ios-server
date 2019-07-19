@@ -126,9 +126,12 @@ namespace MirRemakeBackend.Entity {
         /// 若找不到，则随机返回一个装备区的 E_EmptyItem
         /// </summary>
         public E_Item GetEquipmentByEquipPosition (EquipmentPosition eqPos) {
-            for (int i = 0; i < m_itemList.Count; i++)
-                if ((m_itemList[i] as E_EquipmentItem).m_EquipmentPosition == eqPos)
-                    return m_itemList[i] as E_EquipmentItem;
+            for (int i = 0; i < m_itemList.Count; i++) {
+                var eq = m_itemList[i] as E_EquipmentItem;
+                if (eq == null) continue;
+                if (eq.m_EquipmentPosition == eqPos)
+                    return eq;
+            }
             for (int i = 0; i < m_itemList.Count; i++)
                 if ((m_itemList[i].m_Type == ItemType.EMPTY))
                     return m_itemList[i];
