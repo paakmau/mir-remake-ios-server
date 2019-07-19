@@ -128,36 +128,26 @@ namespace MirRemakeBackend.GameLogic {
             var bag = EM_Item.s_instance.GetBag (netId);
             var gndItem = EM_Item.s_instance.GetGroundItem (gndItemId);
             if (gndItem == null || bag == null || charId == -1) return;
-            var item = gndItem.m_item;
             List < (short, E_Item) > posAndItemChanged;
-            short piledNum, realStoredNum;
-            E_EmptyItem oriSlot;
-            short pos = bag.AutoPileItemAndGetOccupiedPos (item.m_ItemId, item.m_num, out posAndItemChanged, out piledNum, out realStoredNum, out oriSlot);
-
-            // 更新Bag中原有
+            E_Item storeItem;
+            short storePos;
+            EM_Item.s_instance.CharacterPickGroundItem (charId, gndItem, bag, out posAndItemChanged, out storeItem, out storePos);
+            // client 更新Bag中原有
             if (posAndItemChanged.Count != 0) {
                 var itemNoList = new List<NO_Item> (posAndItemChanged.Count);
-                for (int i = 0; i < posAndItemChanged.Count; i++) {
+                for (int i = 0; i < posAndItemChanged.Count; i++)
                     itemNoList.Add (posAndItemChanged[i].Item2.GetItemNo (ItemPlace.BAG, posAndItemChanged[i].Item1));
-                    // dds
-                    EM_Item.s_instance.CharacterUpdateItem (posAndItemChanged[i].Item2, charId, ItemPlace.BAG, posAndItemChanged[i].Item1);
-                }
-                // client
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, itemNoList));
             }
-
-            // 整格放入
-            if (pos >= 0) {
-                gndItem.m_item.RemoveNum (piledNum);
-                EM_Item.s_instance.CharacterPickGroundItem (gndItem, charId, bag, pos);
+            // client 整格放入
+            if (storeItem != null) {
                 // 基础信息 client
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                     netId,
-                    new List<NO_Item> { item.GetItemNo (ItemPlace.BAG, pos) }));
+                    new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
                 // 附加信息 (装备等) client
-                m_netSenderDict[item.m_Type].SendItemInfo (item, netId, m_networkService);
-            } else
-                EM_Item.s_instance.GroundItemDisappear (gndItem);
+                m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
+            }
         }
         public void CommandDropItemOntoGround (int netId, long realId, short num) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

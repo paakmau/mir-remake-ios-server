@@ -87,6 +87,9 @@ namespace MirRemakeBackend.Entity {
             public E_EmptyItem GetEmptyItemInstance () {
                 return GetAndInitInstance (-1, 0) as E_EmptyItem;
             }
+            public E_EnchantmentItem GetEnchantmentItemInstance () {
+                return GetAndInitInstance (29000, 1) as E_EnchantmentItem;
+            }
             /// <summary>
             /// 获得物品实例
             /// </summary>
@@ -417,44 +420,41 @@ namespace MirRemakeBackend.Entity {
             m_storeHouseDict.TryGetValue (netId, out res);
             return res;
         }
-        public E_EnchantmentItem CharacterGainEnchantmentItem (E_EmptyItem oriSlot, short itemId, List < (ActorUnitConcreteAttributeType, int) > attrList, int charId, ItemPlace ip, short pos) {
-            E_EnchantmentItem item = m_itemFactory.GetAndInitInstance (itemId, 1) as E_EnchantmentItem;
-            if (item == null)
-                return null;
-            item.ResetEnchantmentData (attrList);
-            CharacterGainItem (oriSlot, item, charId, ip, pos);
-            return item;
+        public short CharacterGainEnchantmentItem (int charId, List < (ActorUnitConcreteAttributeType, int) > attrList, E_Bag bag, out E_Item resStoreItem, out short resStorePos) {
+            E_EnchantmentItem ecmt = m_itemFactory.GetEnchantmentItemInstance ();
+            ecmt.ResetEnchantmentData (attrList);
+            List < (short, E_Item) > changedItemList;
+            return CharacterGainItem (charId, ecmt, bag, out changedItemList, out resStoreItem, out resStorePos);
         }
-        public short CharacterGainItem (int charId, short itemId, short itemNum, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resNewItemStored, out short storePos) {
+        public short CharacterGainItem (int charId, short itemId, short itemNum, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
+            E_Item itemObj = m_itemFactory.GetAndInitInstance (itemId, itemNum);
+            return CharacterGainItem (charId, itemObj, bag, out resChangedItemList, out resStoreItem, out resStorePos);
+        }
+        private short CharacterGainItem (int charId, E_Item itemObj, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
             short piledNum = 0;
             short realStoreNum = 0;
             E_EmptyItem oriBagSlot;
-            storePos = bag.AutoPileItemAndGetOccupiedPos (itemId, itemNum, out resChangedItemList, out piledNum, out realStoreNum, out oriBagSlot);
+            resStorePos = bag.AutoPileItemAndGetOccupiedPos (itemObj.m_ItemId, itemObj.m_num, out resChangedItemList, out piledNum, out realStoreNum, out oriBagSlot);
             // 处理原有物品的堆叠
             // dds 更新
             for (int j = 0; j < resChangedItemList.Count; j++)
                 CharacterUpdateItem (resChangedItemList[j].Item2, charId, ItemPlace.BAG, resChangedItemList[j].Item1);
 
             // 若该物品单独占有一格
-            if (storePos >= 0) {
+            if (resStorePos >= 0) {
                 // 实例化 持久层 回收
-                E_Item itemObj = m_itemFactory.GetAndInitInstance (itemId, itemNum);
+                itemObj.m_num -= piledNum;
                 if (itemObj == null)
                     itemObj = m_itemFactory.GetEmptyItemInstance ();
                 m_ddh.Delete (oriBagSlot);
-                m_ddh.Insert (itemObj, charId, bag.m_repositoryPlace, storePos);
+                m_ddh.Insert (itemObj, charId, bag.m_repositoryPlace, resStorePos);
                 m_itemFactory.RecycleItem (oriBagSlot);
-                resNewItemStored = itemObj;
-            } else
-                resNewItemStored = null;
+                resStoreItem = itemObj;
+            } else {
+                resStoreItem = null;
+                m_itemFactory.RecycleItem (itemObj);
+            }
             return realStoreNum;
-        }
-        public void CharacterGainItem (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
-            // 持久层
-            m_ddh.Delete (oriSlot);
-            m_ddh.Insert (item, charId, ip, pos);
-            // 回收实例
-            m_itemFactory.RecycleItem (oriSlot);
         }
         public E_Item CharacterLoseItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
             // 持久层
@@ -475,23 +475,15 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
-        public void GenerateGroundItem (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
-            for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                var pos = centerPos + new Vector2 (0.25f - MyRandom.NextFloat (0, 0.5f), 0.25f - MyRandom.NextFloat (0, 0.5f));
-                GenerateGroundItem (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
-            }
-        }
-        /// <summary>
-        /// 创建地面物品
-        /// </summary>
-        public void GenerateGroundItem (short itemId, short num, int charId, Vector2 pos) {
-            var item = m_itemFactory.GetAndInitInstance (itemId, num);
-            if (item == null)
-                return;
-            var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
-            long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
-            m_groundItemList.Add (gndItem);
+        public short CharacterPickGroundItem (int charId, E_GroundItem gndItem, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
+            var res = CharacterGainItem (charId, gndItem.m_item, bag, out resChangedItemList, out resStoreItem, out resStorePos);
+            // 移除gndItem
+            for (int i = 0; i < m_groundItemList.Count; i++)
+                if (m_groundItemList[i] == gndItem)
+                    m_groundItemList.RemoveAt (i);
+            // 回收gndItem
+            s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
+            return res;
         }
         public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndPos) {
             if (num == 0) return;
@@ -514,16 +506,23 @@ namespace MirRemakeBackend.Entity {
             }
             m_groundItemList.Add (gndItem);
         }
-        public void CharacterPickGroundItem (E_GroundItem gndItem, int charId, E_RepositoryBase repo, short pos) {
-            repo.SetItem (gndItem.m_item, pos);
-            var slot = repo.GetItemByPosition (pos);
-            EM_Item.s_instance.CharacterGainItem (slot as E_EmptyItem, gndItem.m_item, charId, ItemPlace.BAG, pos);
-            // 移除gndItem
-            for (int i = 0; i < m_groundItemList.Count; i++)
-                if (m_groundItemList[i] == gndItem)
-                    m_groundItemList.RemoveAt (i);
-            // 回收gndItem
-            s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
+        public void GenerateGroundItem (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
+            for (int i = 0; i < itemIdAndNumList.Count; i++) {
+                var pos = centerPos + new Vector2 (0.25f - MyRandom.NextFloat (0, 0.5f), 0.25f - MyRandom.NextFloat (0, 0.5f));
+                GenerateGroundItem (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
+            }
+        }
+        /// <summary>
+        /// 创建地面物品
+        /// </summary>
+        public void GenerateGroundItem (short itemId, short num, int charId, Vector2 pos) {
+            var item = m_itemFactory.GetAndInitInstance (itemId, num);
+            if (item == null)
+                return;
+            var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
+            long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
+            m_groundItemList.Add (gndItem);
         }
         public void GroundItemAutoDisappear () {
             for (int i = m_groundItemList.Count - 1; i >= 0; i--)
