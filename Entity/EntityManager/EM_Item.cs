@@ -425,13 +425,29 @@ namespace MirRemakeBackend.Entity {
             CharacterGainItem (oriSlot, item, charId, ip, pos);
             return item;
         }
-        public E_Item CharacterGainItem (E_EmptyItem oriSlot, short itemId, short itemNum, int charId, ItemPlace ip, short pos) {
-            // 生成实例
-            E_Item item = m_itemFactory.GetAndInitInstance (itemId, itemNum);
-            if (item == null)
-                item = m_itemFactory.GetEmptyItemInstance ();
-            CharacterGainItem (oriSlot, item, charId, ip, pos);
-            return item;
+        public short CharacterGainItem (int charId, short itemId, short itemNum, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resNewItemStored, out short storePos) {
+            short piledNum = 0;
+            short realStoreNum = 0;
+            E_EmptyItem oriBagSlot;
+            storePos = bag.AutoPileItemAndGetOccupiedPos (itemId, itemNum, out resChangedItemList, out piledNum, out realStoreNum, out oriBagSlot);
+            // 处理原有物品的堆叠
+            // dds 更新
+            for (int j = 0; j < resChangedItemList.Count; j++)
+                CharacterUpdateItem (resChangedItemList[j].Item2, charId, ItemPlace.BAG, resChangedItemList[j].Item1);
+
+            // 若该物品单独占有一格
+            if (storePos >= 0) {
+                // 实例化 持久层 回收
+                E_Item itemObj = m_itemFactory.GetAndInitInstance (itemId, itemNum);
+                if (itemObj == null)
+                    itemObj = m_itemFactory.GetEmptyItemInstance ();
+                m_ddh.Delete (oriBagSlot);
+                m_ddh.Insert (itemObj, charId, bag.m_repositoryPlace, storePos);
+                m_itemFactory.RecycleItem (oriBagSlot);
+                resNewItemStored = itemObj;
+            } else
+                resNewItemStored = null;
+            return realStoreNum;
         }
         public void CharacterGainItem (E_EmptyItem oriSlot, E_Item item, int charId, ItemPlace ip, short pos) {
             // 持久层
