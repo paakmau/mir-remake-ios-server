@@ -440,7 +440,7 @@ namespace MirRemakeBackend.Entity {
             // 回收实例
             m_itemFactory.RecycleItem (oriSlot);
         }
-        public void CharacterLoseItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
+        public E_Item CharacterLoseItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
             // 持久层
             m_ddh.Delete (item);
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
@@ -448,6 +448,7 @@ namespace MirRemakeBackend.Entity {
             // 回收实例
             m_itemFactory.RecycleItem (item);
             repo.SetItem (emptyItem, pos);
+            return emptyItem;
         }
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);

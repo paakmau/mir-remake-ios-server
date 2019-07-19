@@ -149,8 +149,8 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         private void AttachHpAndMpChange (E_Unit target, E_Unit caster, int dHp, int dMp) {
-            target.m_curHp += dHp;
-            target.m_curMp += dMp;
+            target.m_curHp = Math.Max(0, Math.Min(target.m_MaxHp, target.m_curHp + dHp));
+            target.m_curMp = Math.Max(0, Math.Min(target.m_MaxMp, target.m_curMp + dMp));
             if (dHp >= 0 && dMp >= 0) return;
 
             // 统计伤害量

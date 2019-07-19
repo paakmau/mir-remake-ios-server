@@ -332,7 +332,7 @@ namespace MirRemakeBackend.GameLogic {
             // 实例 与 数据
             if (runOut)
                 // 物品消失
-                EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, repo, pos);
+                item = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, repo, pos);
             else
                 EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, repo.m_repositoryPlace, pos);
             // Client
