@@ -454,9 +454,16 @@ namespace MirRemakeBackend.Entity {
             m_ddh.Save (item, charId, ip, pos);
         }
         public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
+            int len=itemIdAndNumList.Count;
+            int len1=(int)Math.Sqrt(len);
+            if(len1!=Math.Sqrt(len))
+                len1=len1+1;
+            if(len1==1){
+                GenerateItemOnGround(itemIdAndNumList[0].Item1,itemIdAndNumList[0].Item2,charId,centerPos);
+                return;
+            }
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                // TODO: 随机掉落需要优化
-                var pos = centerPos + new Vector2 (MyRandom.NextFloat (0, 0.2f), MyRandom.NextFloat (0, 0.2f));
+                var pos = centerPos + new Vector2 ((i%len)/(len-1)-0.5f, 0.5f-(i/len)/(len-1));
                 GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
             }
         }
@@ -469,7 +476,6 @@ namespace MirRemakeBackend.Entity {
                 return;
             var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            // TODO: 随机掉落需要优化
             gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, centerPos);
             m_groundItemList.Add (gndItem);
         }
