@@ -138,6 +138,8 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 职业 </summary>
         private OccupationType m_ocp;
+        /// <summary> 角色名 </summary>
+        private string m_name;
         /// <summary> 等级 </summary>
         private short m_level;
         /// <summary> 经验 </summary>
@@ -157,22 +159,10 @@ namespace MirRemakeBackend.Network {
         /// <summary> 充值币 </summary>
         private long m_chargeCy;
         private Vector2 m_pos;
-        public static SC_InitSelfAttribute Instance (
-            int netId,
-            OccupationType ocp,
-            short level,
-            int exp,
-            short strenth,
-            short intelligence,
-            short agility,
-            short spirit,
-            short m_totalMainPoint,
-            long virtualCy,
-            long chargeCy,
-            Vector2 pos
-        ) {
+        public static SC_InitSelfAttribute Instance (int netId, OccupationType ocp, string name, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint, long virtualCy, long chargeCy, Vector2 pos) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_ocp = ocp;
+            s_instance.m_name = name;
             s_instance.m_level = level;
             s_instance.m_exp = exp;
             s_instance.m_strength = strenth;
@@ -188,6 +178,7 @@ namespace MirRemakeBackend.Network {
         private SC_InitSelfAttribute () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_ocp);
+            writer.Put (m_name);
             writer.Put (m_level);
             writer.Put (m_exp);
             writer.Put (m_strength);

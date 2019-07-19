@@ -68,6 +68,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
                 netId,
                 newChar.m_Occupation,
+                newChar.m_name,
                 newChar.m_Level,
                 newChar.m_experience,
                 newChar.m_strength,
