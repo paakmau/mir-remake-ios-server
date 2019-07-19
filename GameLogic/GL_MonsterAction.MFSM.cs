@@ -95,7 +95,7 @@ namespace MirRemakeBackend.GameLogic {
                     self.m_position = self.m_position + deltaP;
                     if ((self.m_position - m_targetPos).LengthSquared () <= 0.01f) {
                         m_moveTimer = MyRandom.NextFloat (5f, 10f);
-                        m_targetPos = self.m_respawnPosition + new Vector2 (MyRandom.NextFloat (0f, 8f), MyRandom.NextFloat (0f, 8f));
+                        m_targetPos = self.m_respawnPosition + new Vector2 (MyRandom.NextFloat (0f, 3f), MyRandom.NextFloat (0f, 3f));
                     }
                 }
                 if (m_recoverTimer > 0f)
