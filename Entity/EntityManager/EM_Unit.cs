@@ -132,9 +132,6 @@ namespace MirRemakeBackend.Entity {
         public Dictionary<int, E_Monster>.Enumerator GetBossEn () {
             return m_networkIdAndBossDict.GetEnumerator ();
         }
-        public void SaveCharacter (E_Character charObj) {
-            m_charDds.UpdateCharacter (charObj.GetDdo ());
-        }
         public void SaveCharacterAttribute (E_Character charObj) {
             m_charAttrDds.UpdateCharacterAttribute (charObj.GetAttrDdo ());
         }
