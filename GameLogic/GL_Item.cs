@@ -394,12 +394,16 @@ namespace MirRemakeBackend.GameLogic {
                     }
                 } else if (id >= 20000) {
                     int level = (id - 20000) % 220 / 22 + 1;
-                    bool drop = MyRandom.NextInt (0, 1000) <= 50;
+                    bool drop = MyRandom.NextInt (0, 1000) <= 10;
                     if (level == 10) {
-                        drop = MyRandom.NextInt (0, 1000) <= 20;
+                        drop = MyRandom.NextInt (0, 1000) <= 5;
                     }
                     if (drop)
                         dropItemIdAndNumList.Add ((id, (short) 1));
+                } else{
+                    bool drop = MyRandom.NextInt(0,10000)<=250;
+                    if(drop)
+                        dropItemIdAndNumList.Add((id,(short)1));
                 }
             }
             int charId = (killer.m_UnitType == ActorUnitType.PLAYER) ? ((E_Character) killer).m_characterId : -1;
