@@ -220,6 +220,14 @@ namespace MirRemakeBackend.Network {
             m_equipmentInfoList = equipsList;
         }
     }
+    struct NO_Mission {
+        public short m_misId;
+        public IReadOnlyList<int> m_targetProgressList;
+        public NO_Mission (short misId, IReadOnlyList<int> tarProgressList) {
+            m_misId = misId;
+            m_targetProgressList = tarProgressList;
+        }
+    }
     struct NO_FightCapacityRankInfo {
         public int m_charId;
         public string m_name;
@@ -319,7 +327,7 @@ namespace MirRemakeBackend.Network {
         public static NO_SightCharacter GetSightCharacter (this NetDataReader reader) {
             int netId = reader.GetInt ();
             Vector2 pos = reader.GetVector2 ();
-            OccupationType ocp = (OccupationType)reader.GetByte ();
+            OccupationType ocp = (OccupationType) reader.GetByte ();
             string name = reader.GetString ();
             short lv = reader.GetShort ();
             return new NO_SightCharacter (netId, pos, ocp, name, lv);
@@ -510,6 +518,20 @@ namespace MirRemakeBackend.Network {
             for (int i = 0; i < equipNum; i++)
                 equipList.Add (reader.GetEquipmentItemInfo ());
             return new NO_Repository (itemList, equipList);
+        }
+        public static void Put (this NetDataWriter writer, NO_Mission mission) {
+            writer.Put (mission.m_misId);
+            writer.Put ((byte) mission.m_targetProgressList.Count);
+            for (int i = 0; i < mission.m_targetProgressList.Count; i++)
+                writer.Put (mission.m_targetProgressList[i]);
+        }
+        public static NO_Mission GetMission (this NetDataReader reader) {
+            short misId = reader.GetShort ();
+            byte misTarCnt = reader.GetByte ();
+            List<int> misTarProgressList = new List<int> (misTarCnt);
+            for (int i = 0; i < misTarCnt; i++)
+                misTarProgressList.Add (reader.GetInt ());
+            return new NO_Mission (misId, misTarProgressList);
         }
         public static void Put (this NetDataWriter writer, NO_FightCapacityRankInfo fcri) {
             writer.Put (fcri.m_charId);

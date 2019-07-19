@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     interface IMissionTarget {
@@ -84,6 +84,12 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < m_tarList.Count; i++)
                 progList.Add (m_tarList[i].m_Progress);
             return new DDO_Mission (m_MissionId, charId, status, progList);
+        }
+        public NO_Mission GetNo () {
+            var misProgressList = new List<int> (m_tarList.Count);
+            for (int i = 0; i < m_tarList.Count; i++)
+                misProgressList.Add (m_tarList[i].m_Progress);
+            return new NO_Mission (m_MissionId, misProgressList);
         }
     }
 

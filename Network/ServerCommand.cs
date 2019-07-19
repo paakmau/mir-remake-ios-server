@@ -222,13 +222,13 @@ namespace MirRemakeBackend.Network {
         private static readonly SC_InitSelfMission s_instance = new SC_InitSelfMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        /// <summary> 已接任务Id列表 </summary>
-        IReadOnlyList<short> m_acceptedMis;
+        /// <summary> 已接任务列表 </summary>
+        IReadOnlyList<NO_Mission> m_acceptedMis;
         /// <summary> 可接任务Id列表 </summary>
         IReadOnlyList<short> m_acceptableMis;
         /// <summary> 不可接但已解锁任务Id列表 </summary>
         IReadOnlyList<short> m_unacceptableMis;
-        public static SC_InitSelfMission Instance (int netId, IReadOnlyList<short> acceptedMis, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
+        public static SC_InitSelfMission Instance (int netId, IReadOnlyList<NO_Mission> acceptedMis, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_acceptedMis = acceptedMis;
             s_instance.m_acceptableMis = acceptableMis;
@@ -897,20 +897,20 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_PROGRESS; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
-        private byte m_targetNum;
-        private int m_value;
-        public static SC_ApplySelfMissionProgress Instance (int netId, short missionId, byte targetNum, int value) {
+        private byte m_targetIndex;
+        private int m_progress;
+        public static SC_ApplySelfMissionProgress Instance (int netId, short missionId, byte targetIdx, int progress) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_missionId = missionId;
-            s_instance.m_targetNum = targetNum;
-            s_instance.m_value = value;
+            s_instance.m_targetIndex = targetIdx;
+            s_instance.m_progress = progress;
             return s_instance;
         }
         private SC_ApplySelfMissionProgress () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_missionId);
-            writer.Put (m_targetNum);
-            writer.Put (m_value);
+            writer.Put (m_targetIndex);
+            writer.Put (m_progress);
         }
     }
     class SC_ApplySelfMissionUnlock : ServerCommandBase {
