@@ -190,23 +190,10 @@ namespace MirRemakeBackend.Entity {
         public int m_experience;
         public long m_virtualCurrency;
         public long m_chargeCurrency;
-        public Dictionary<ActorUnitMainAttributeType, short> m_mainAttrPointDict = new Dictionary<ActorUnitMainAttributeType, short> ();
-        public short m_Strength {
-            get { return m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH]; }
-            set { m_mainAttrPointDict[ActorUnitMainAttributeType.STRENGTH] = value; }
-        }
-        public short m_Intelligence {
-            get { return m_mainAttrPointDict[ActorUnitMainAttributeType.INTELLIGENCE]; }
-            set { m_mainAttrPointDict[ActorUnitMainAttributeType.INTELLIGENCE] = value; }
-        }
-        public short m_Agility {
-            get { return m_mainAttrPointDict[ActorUnitMainAttributeType.AGILITY]; }
-            set { m_mainAttrPointDict[ActorUnitMainAttributeType.AGILITY] = value; }
-        }
-        public short m_Spirit {
-            get { return m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT]; }
-            set { m_mainAttrPointDict[ActorUnitMainAttributeType.SPIRIT] = value; }
-        }
+        public short m_strength;
+        public short m_intelligence;
+        public short m_agility;
+        public short m_spirit;
         private ConcreteAttribute m_equipConcreteAttr = new ConcreteAttribute ();
         private ConcreteAttribute m_mainPointConcreteAttr = new ConcreteAttribute ();
         public override int m_MaxHp { get { return m_equipConcreteAttr.m_MaxHp + m_mainPointConcreteAttr.m_MaxHp + base.m_MaxHp; } }
@@ -236,8 +223,10 @@ namespace MirRemakeBackend.Entity {
             m_characterId = charDdo.m_characterId;
             m_name = charDdo.m_name;
             m_experience = charAttrDdo.m_experience;
-            foreach (var mainP in charAttrDdo.m_distributedMainAttrPointArr)
-                m_mainAttrPointDict[mainP.Item1] = mainP.Item2;
+            m_strength = charAttrDdo.m_str;
+            m_intelligence = charAttrDdo.m_intl;
+            m_spirit = charAttrDdo.m_sprt;
+            m_agility = charAttrDdo.m_agl;
             m_virtualCurrency = charWalletDdo.m_virtualCy;
             m_chargeCurrency = charWalletDdo.m_chargeCy;
             m_position = charPosDdo.m_position;
@@ -262,10 +251,10 @@ namespace MirRemakeBackend.Entity {
         public void DistributePoints (short str, short intl, short agl, short spr) {
             if (str + intl + agl + spr > m_TotalMainPoint)
                 return;
-            m_Strength = str;
-            m_Intelligence = intl;
-            m_Agility = agl;
-            m_Spirit = spr;
+            m_strength = str;
+            m_intelligence = intl;
+            m_agility = agl;
+            m_spirit = spr;
         }
         public void AddEquipConAttr (ActorUnitConcreteAttributeType type, int value) {
             m_equipConcreteAttr.AddAttr (type, value);
@@ -277,12 +266,7 @@ namespace MirRemakeBackend.Entity {
             return new DDO_Character (m_characterId, m_playerId, m_Occupation, m_name);
         }
         public DDO_CharacterAttribute GetAttrDdo () {
-            var pointArr = new (ActorUnitMainAttributeType, short) [4];
-            pointArr[0] = (ActorUnitMainAttributeType.STRENGTH, m_Strength);
-            pointArr[1] = (ActorUnitMainAttributeType.INTELLIGENCE, m_Intelligence);
-            pointArr[2] = (ActorUnitMainAttributeType.AGILITY, m_Agility);
-            pointArr[3] = (ActorUnitMainAttributeType.SPIRIT, m_Spirit);
-            return new DDO_CharacterAttribute (m_characterId, m_Level, m_experience, pointArr);
+            return new DDO_CharacterAttribute (m_characterId, m_Level, m_experience, m_strength, m_intelligence, m_spirit, m_agility);
         }
         public DDO_CharacterWallet GetWalletDdo () {
             return new DDO_CharacterWallet (m_characterId, m_virtualCurrency, m_chargeCurrency);
@@ -292,6 +276,9 @@ namespace MirRemakeBackend.Entity {
         }
         public NO_SightCharacter GetSightNo () {
             return new NO_SightCharacter (m_networkId, m_position, m_Occupation, m_name, m_Level);
+        }
+        public NO_AttributeCharacter GetAttrNo () {
+            return new NO_AttributeCharacter (m_networkId, m_name, m_Level, m_strength, m_intelligence, m_spirit, m_agility, m_MaxHp, m_MaxMp, m_DeltaHpPerSecond, m_DeltaMpPerSecond, m_Attack, m_Defence, m_Magic, m_Resistance, m_Tenacity, m_Speed, m_CriticalRate, m_CriticalBonus, m_HitRate, m_DodgeRate, m_LifeSteal, m_DamageReduction);
         }
         public NO_DamageRankCharacter GetDmgRnkNo (int dmg) {
             return new NO_DamageRankCharacter (m_characterId, m_name, dmg);

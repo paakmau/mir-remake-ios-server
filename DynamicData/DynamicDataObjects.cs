@@ -33,15 +33,19 @@ namespace MirRemakeBackend.DynamicData {
         public int m_characterId;
         public short m_level;
         public int m_experience;
-        /// <summary>
-        /// 已分配的主属性点情况
-        /// </summary>
-        public ValueTuple<ActorUnitMainAttributeType, short>[] m_distributedMainAttrPointArr;
-        public DDO_CharacterAttribute (int charId, short lv, int exp, ValueTuple<ActorUnitMainAttributeType, short>[] attrPointArr) {
+        // 已分配的主属性点情况
+        public short m_str;
+        public short m_intl;
+        public short m_sprt;
+        public short m_agl;
+        public DDO_CharacterAttribute (int charId, short lv, int exp, short str, short intl, short sprt, short agl) {
             m_characterId = charId;
             m_level = lv;
             m_experience = exp;
-            m_distributedMainAttrPointArr = attrPointArr;
+            m_str = str;
+            m_intl = intl;
+            m_sprt = sprt;
+            m_agl = agl;
         }
     }
     struct DDO_CharacterPosition {

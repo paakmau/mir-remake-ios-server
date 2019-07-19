@@ -109,6 +109,16 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// 属性点分配
+    /// </summary>
+    class CC_RequireCharacterAttribute : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_CHARACTER_ATTRIBUTE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int tarNetId = reader.GetInt ();
+            GL_CharacterAttribute.s_instance.CommandRequireCharacterAttribute (netId, tarNetId);
+        }
+    }
+    /// <summary>
     /// 打开战力排行榜时请求刷新操作
     /// </summary>
     class CC_RequireRefreshFightCapacityRank : IClientCommand {
