@@ -461,8 +461,7 @@ namespace MirRemakeBackend.Entity {
         }
         public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                // TODO: 随机掉落需要优化
-                var pos = centerPos + new Vector2 (MyRandom.NextFloat (0, 0.5f)-0.25f, 0.25f-MyRandom.NextFloat (0, 0.5f));
+                var pos = centerPos + new Vector2 (0.25f - MyRandom.NextFloat (0, 0.5f), 0.25f - MyRandom.NextFloat (0, 0.5f));
                 GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
             }
         }
