@@ -378,7 +378,7 @@ namespace MirRemakeBackend.GameLogic {
                     m_netSenderDict[itemObj.m_Type].SendItemInfo (itemObj, charObj.m_networkId, m_networkService);
                 }
                 // 通知 log
-                GL_Log.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemId, realStoreNum);
+                GL_MissionLog.s_instance.NotifyLog (GameLogType.GAIN_ITEM, charObj.m_networkId, itemId, realStoreNum);
             }
         }
         public void NotifyMonsterDropLegacy (E_Monster monObj, E_Unit killer) {

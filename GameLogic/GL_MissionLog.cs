@@ -5,9 +5,9 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理消息
     /// </summary>
-    class GL_Log : GameLogicBase {
-        public static GL_Log s_instance;
-        public GL_Log (INetworkService netService) : base (netService) { }
+    class GL_MissionLog : GameLogicBase {
+        public static GL_MissionLog s_instance;
+        public GL_MissionLog (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) {
             EM_Log.s_instance.NextTick ();
         }

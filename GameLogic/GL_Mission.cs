@@ -4,8 +4,7 @@ using System.Linq;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
-namespace MirRemakeBackend.GameLogic
-{
+namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理任务的接受, 放弃, 完成, 进度
     /// TODO: BUG: 怪物同时击杀多个只记录一个
@@ -25,9 +24,9 @@ namespace MirRemakeBackend.GameLogic
         public override void Tick (float dT) {
             // 根据之前产生的 logs 更新所有角色的任务进度
             var logs = EM_Log.s_instance.GetLogsSecondTick ();
-            var charMisEn = EM_Mission.s_instance.GetAllCharMisEn ();
             for (int i = 0; i < logs.Count; i++) {
                 var logObj = logs[i];
+                var charMisEn = EM_Mission.s_instance.GetAllCharMisEn ();
                 while (charMisEn.MoveNext ()) {
                     var charNetId = charMisEn.Current.Key;
                     var charId = EM_Unit.s_instance.GetCharIdByNetworkId (charNetId);
@@ -60,7 +59,7 @@ namespace MirRemakeBackend.GameLogic
         public void CommandApplyTalkToNpc (int netId, short misId, short misTarId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            GL_Log.s_instance.NotifyLog (GameLogType.TALK_TO_NPC, netId, misId, misTarId);
+            GL_MissionLog.s_instance.NotifyLog (GameLogType.TALK_TO_NPC, netId, misId, misTarId);
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

@@ -107,11 +107,11 @@ namespace MirRemakeBackend {
             GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
             GL_Item.s_instance = new GL_Item (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
+            GL_MissionLog.s_instance = new GL_MissionLog (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
             GL_CharacterSight.s_instance = new GL_CharacterSight (s_networkService);
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
-            GL_Log.s_instance = new GL_Log (s_networkService);
             GL_Chat.s_instance = new GL_Chat (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
@@ -120,11 +120,11 @@ namespace MirRemakeBackend {
                 GL_CharacterAttribute.s_instance,
                 GL_Item.s_instance,
                 GL_Mission.s_instance,
+                GL_MissionLog.s_instance,
                 GL_MonsterAction.s_instance,
                 GL_CharacterSight.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,
-                GL_Log.s_instance,
                 GL_Chat.s_instance
             };
         }
