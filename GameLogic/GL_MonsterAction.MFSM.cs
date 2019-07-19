@@ -3,7 +3,6 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
-    // TODO: AutoMove 自动回血
     partial class GL_MonsterAction {
         private class MFSM {
             public MFSMStateBase m_curState;
