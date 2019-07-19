@@ -27,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) {
             // 地面道具消失
-            EM_Item.s_instance.ItemOnGroundAutoDisappear ();
+            EM_Item.s_instance.GroundItemAutoDisappear ();
             var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
             // 地面道具视野
             var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
@@ -148,19 +148,16 @@ namespace MirRemakeBackend.GameLogic {
 
             // 整格放入
             if (pos >= 0) {
-                bag.SetItem (item, pos);
-                EM_Item.s_instance.CharacterGainItem (oriSlot, item, charId, ItemPlace.BAG, pos);
-
+                gndItem.m_item.RemoveNum (piledNum);
+                EM_Item.s_instance.CharacterPickGroundItem (gndItem, charId, bag, pos);
                 // 基础信息 client
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                     netId,
                     new List<NO_Item> { item.GetItemNo (ItemPlace.BAG, pos) }));
                 // 附加信息 (装备等) client
                 m_netSenderDict[item.m_Type].SendItemInfo (item, netId, m_networkService);
-            }
-
-            // 回收实例
-            EM_Item.s_instance.ItemOnGroundPicked (gndItem);
+            } else
+                EM_Item.s_instance.GroundItemDisappear (gndItem);
         }
         public void CommandDropItemOntoGround (int netId, long realId, short num) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -400,14 +397,14 @@ namespace MirRemakeBackend.GameLogic {
                     }
                     if (drop)
                         dropItemIdAndNumList.Add ((id, (short) 1));
-                } else{
-                    bool drop = MyRandom.NextInt(0,10000)<=250;
-                    if(drop)
-                        dropItemIdAndNumList.Add((id,(short)1));
+                } else {
+                    bool drop = MyRandom.NextInt (0, 10000) <= 250;
+                    if (drop)
+                        dropItemIdAndNumList.Add ((id, (short) 1));
                 }
             }
             int charId = (killer.m_UnitType == ActorUnitType.PLAYER) ? ((E_Character) killer).m_characterId : -1;
-            EM_Item.s_instance.GenerateItemOnGround (dropItemIdAndNumList, charId, monObj.m_position);
+            EM_Item.s_instance.GenerateGroundItem (dropItemIdAndNumList, charId, monObj.m_position);
         }
         public void NotifyCharacterDropLegacy (E_Character charObj, E_Unit killer) {
             var charBag = EM_Item.s_instance.GetBag (charObj.m_networkId);

@@ -318,7 +318,7 @@ namespace MirRemakeBackend.Entity {
         private List < (short, Vector2, MyTimer.Time) > m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > ();
         private float c_renewableItemRefreshTimeMin = 12;
         private float c_renewableItemRefreshTimeMax = 18;
-        private float c_renewableItemRefreshRadian = 15;
+        private float c_renewableItemRefreshRadian = 2;
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -459,16 +459,16 @@ namespace MirRemakeBackend.Entity {
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }
-        public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
+        public void GenerateGroundItem (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
                 var pos = centerPos + new Vector2 (0.25f - MyRandom.NextFloat (0, 0.5f), 0.25f - MyRandom.NextFloat (0, 0.5f));
-                GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
+                GenerateGroundItem (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
             }
         }
         /// <summary>
         /// 创建地面物品
         /// </summary>
-        public void GenerateItemOnGround (short itemId, short num, int charId, Vector2 pos) {
+        public void GenerateGroundItem (short itemId, short num, int charId, Vector2 pos) {
             var item = m_itemFactory.GetAndInitInstance (itemId, num);
             if (item == null)
                 return;
@@ -498,7 +498,18 @@ namespace MirRemakeBackend.Entity {
             }
             m_groundItemList.Add (gndItem);
         }
-        public void ItemOnGroundAutoDisappear () {
+        public void CharacterPickGroundItem (E_GroundItem gndItem, int charId, E_RepositoryBase repo, short pos) {
+            repo.SetItem (gndItem.m_item, pos);
+            var slot = repo.GetItemByPosition (pos);
+            EM_Item.s_instance.CharacterGainItem (slot as E_EmptyItem, gndItem.m_item, charId, ItemPlace.BAG, pos);
+            // 移除gndItem
+            for (int i = 0; i < m_groundItemList.Count; i++)
+                if (m_groundItemList[i] == gndItem)
+                    m_groundItemList.RemoveAt (i);
+            // 回收gndItem
+            s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
+        }
+        public void GroundItemAutoDisappear () {
             for (int i = m_groundItemList.Count - 1; i >= 0; i--)
                 if (MyTimer.CheckTimeUp (m_groundItemList[i].m_disappearTime)) {
                     s_entityPool.m_groundItemPool.RecycleInstance (m_groundItemList[i]);
@@ -506,15 +517,14 @@ namespace MirRemakeBackend.Entity {
                     m_groundItemList.RemoveAt (i);
                 }
         }
-        public void ItemOnGroundPicked (E_GroundItem groundItem) {
+        public void GroundItemDisappear (E_GroundItem gndItem) {
             // 移除gndItem
             for (int i = 0; i < m_groundItemList.Count; i++)
-                if (m_groundItemList[i] == groundItem)
+                if (m_groundItemList[i] == gndItem)
                     m_groundItemList.RemoveAt (i);
             // 回收gndItem
-            s_entityPool.m_groundItemPool.RecycleInstance (groundItem);
-            // 回收Item
-            m_itemFactory.RecycleItem (groundItem.m_item);
+            s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
+            m_itemFactory.RecycleItem (gndItem.m_item);
         }
         public E_GroundItem GetGroundItem (long gndItemId) {
             for (int i = 0; i < m_groundItemList.Count; i++)
@@ -537,7 +547,7 @@ namespace MirRemakeBackend.Entity {
                     short itemId = itemIdPosTime.Item1;
                     Vector2 pos = itemIdPosTime.Item2 + new Vector2 (MyRandom.NextFloat (0, c_renewableItemRefreshRadian), MyRandom.NextFloat (0, c_renewableItemRefreshRadian));
                     // 生成地面物品
-                    GenerateItemOnGround (itemId, 1, -1, pos);
+                    GenerateGroundItem (itemId, 1, -1, pos);
 
                     // 准备下一次刷新
                     itemIdPosTime.Item3 = MyTimer.s_CurTime.Ticked (MyRandom.NextFloat (c_renewableItemRefreshTimeMin, c_renewableItemRefreshTimeMax));
