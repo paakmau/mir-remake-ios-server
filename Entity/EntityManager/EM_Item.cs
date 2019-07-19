@@ -455,6 +455,7 @@ namespace MirRemakeBackend.Entity {
         }
         public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
+                // TODO: 随机掉落需要优化
                 var pos = centerPos + new Vector2 (MyRandom.NextFloat (0, 0.2f), MyRandom.NextFloat (0, 0.2f));
                 GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
             }
@@ -462,13 +463,14 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 创建地面物品
         /// </summary>
-        public void GenerateItemOnGround (short itemId, short num, int charId, Vector2 pos) {
+        public void GenerateItemOnGround (short itemId, short num, int charId, Vector2 centerPos) {
             var item = m_itemFactory.GetAndInitInstance (itemId, num);
             if (item == null)
                 return;
             var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
+            // TODO: 随机掉落需要优化
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, centerPos);
             m_groundItemList.Add (gndItem);
         }
         public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndPos) {
