@@ -468,13 +468,13 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 创建地面物品
         /// </summary>
-        public void GenerateItemOnGround (short itemId, short num, int charId, Vector2 centerPos) {
+        public void GenerateItemOnGround (short itemId, short num, int charId, Vector2 pos) {
             var item = m_itemFactory.GetAndInitInstance (itemId, num);
             if (item == null)
                 return;
             var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, centerPos);
+            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             m_groundItemList.Add (gndItem);
         }
         public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndPos) {
