@@ -50,7 +50,7 @@
 	"MissionID":3,
 	"Title":"更强悍的敌人",
 	"MissionOccupation":"ALL",
-	"Details":"狼妖头目身上的妖力显然比狼妖身上的重了很多，但作为一只小妖，这种等级的妖力仍然超出了它能修炼到的范围。虽然附近的威胁远不止狼妖，但是至少你已经帮助人们解决一部分祸患了。附近还有其他的妖伺机待发，如果你想彻底帮助这里的人们走出困境，你需要做的仍有很多，再往村外走一些，更为凶残的虎妖也在威胁着人们。现在去杀5只虎妖，在面对更大的挑战之前先练练手。",
+	"Details":"狼妖头目身上的妖力显然比狼妖身上的重了很多，但作为一只小妖，这种等级的妖力仍然超出了它能修炼到的范围。虽然附近的威胁远不止狼妖，但是至少你已经帮助人们解决一部分祸患了。附近还有其他的妖伺机待发，如果你想彻底帮助这里的人们走出困境，你需要做的仍有很多，再往村外走一些，更为凶残的虎妖也在威胁着人们。现在去杀10只虎妖，在面对更大的挑战之前先练练手。",
 	"AcceptingNPCID":0,
 	"DeliveringNPCID":0,
 	"ConversationsWhenAccepting":[],
@@ -114,7 +114,7 @@
 	"MissionID":7,
 	"Title":"屠魔者",
 	"MissionOccupation":"ALL",
-	"Details":"比起新手村城外零零散散的几只妖，洛水镇的情况要恶劣得多，整个天空一片灰暗，似乎魔已经占领了这里。你开始意识到问题远非对抗几只小妖那么简单，却又徘徊不知从何下手。城里到处都是魔，看来在解决它们背后的问题之前，要先缓解一下这里的局面。去杀5只劣等魔。",
+	"Details":"比起新手村城外零零散散的几只妖，洛水镇的情况要恶劣得多，整个天空一片灰暗，似乎魔已经占领了这里。你开始意识到问题远非对抗几只小妖那么简单，却又徘徊不知从何下手。城里到处都是魔，看来在解决它们背后的问题之前，要先缓解一下这里的局面。去杀10只劣等魔。",
 	"AcceptingNPCID":2,
 	"DeliveringNPCID":2,
 	"ConversationsWhenAccepting":[],
@@ -188,8 +188,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20023 1","20029 1","20043"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","0"]]
+	"BonusItems":["20023 1","20029 1","20043 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","0"]]
 },{
 	"MissionID":12,
 	"Title":"技能提升",
@@ -204,8 +204,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20243 1","20249 1","20263"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","1"]]
+	"BonusItems":["20243 1","20249 1","20263 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","1"]]
 },{
 	"MissionID":13,
 	"Title":"技能提升",
@@ -220,8 +220,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20463 1","20469 1","20483"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","2"]]
+	"BonusItems":["20463 1","20469 1","20483 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","2"]]
 },{
 	"MissionID":14,
 	"Title":"技能提升",
@@ -236,8 +236,8 @@
 	"ChildrenMissionList":[15],
 	"BonusMoney":750,
 	"BonusExperience":1400,
-	"BonusItems":["20683 1","20689 1","20803"],
-	"MissionTarget":[["LEVEL_UP_SKILLS","3"]]
+	"BonusItems":["20683 1","20689 1","20803 1"],
+	"MissionTarget":[["LEVEL_UP_SKILL","3"]]
 },{
 	"MissionID":15,
 	"Title":"恐惧魔王",
@@ -274,7 +274,7 @@
 	"MissionID":17,
 	"Title":"魔气重重",
 	"MissionOccupation":"ALL",
-	"Details":"你到了天明城，在城外很远你就感受到了一股更强的气息，但不同于以往，附近同时出现了妖和魔。只有妖或者魔的情况下，只是动物的生活会受到影响，但是如果两者皆有，它们对环境造成的伤害远超任一的效果。通常情况下，妖和魔是不会和平存在的，除非，它们受到了远强于它们的妖魔的控制。在解决幕后的怪物之前，先稳定一下附近的情况。自从妖魔大举进犯，这里就人心惶惶，消灭5只蛊心魔，并从它们的尸体上带回3个劣等魔核。",
+	"Details":"你到了天明城，在城外很远你就感受到了一股更强的气息，但不同于以往，附近同时出现了妖和魔。只有妖或者魔的情况下，只是动物的生活会受到影响，但是如果两者皆有，它们对环境造成的伤害远超任一的效果。通常情况下，妖和魔是不会和平存在的，除非，它们受到了远强于它们的妖魔的控制。在解决幕后的怪物之前，先稳定一下附近的情况。自从妖魔大举进犯，这里就人心惶惶，消灭10只蛊心魔，并从它们的尸体上带回5个劣等魔核。",
 	"AcceptingNPCID":4,
 	"DeliveringNPCID":4,
 	"ConversationsWhenAccepting":[],
@@ -290,7 +290,7 @@
 	"MissionID":18,
 	"Title":"魔血草",
 	"MissionOccupation":"ALL",
-	"Details":"类似于之前收集过的魔力灌注的鲜花，这里的魔血草也有类似的效果。如果你能收集几株魔血草，这对陆志它们抵抗妖魔会有极大的帮助。此前他们的人就想收集魔血草了，可是碍于妖魔的阻碍，他们迟迟没能得手。现在有了你就不一样了，去收集5株魔血草，带回来给陆志。",
+	"Details":"类似于之前收集过的魔力灌注的鲜花，这里的魔血草也有类似的效果。如果你能收集几株魔血草，这对陆志它们抵抗妖魔会有极大的帮助。此前他们的人就想收集魔血草了，可是碍于妖魔的阻碍，他们迟迟没能得手。现在有了你就不一样了，去收集10株魔血草，带回来给陆志。",
 	"AcceptingNPCID":4,
 	"DeliveringNPCID":4,
 	"ConversationsWhenAccepting":[],
@@ -402,7 +402,7 @@
 	"MissionID":25,
 	"Title":"蜥蜴腹鳞",
 	"MissionOccupation":"ALL",
-	"Details":"有了古木精华，最重要的材料就已经到位了，现在还需要一些作为辅助工具的材料。首先是一种很奇怪的东西，厚皮蜥蜴腹鳞。这种透明的角质小片，本来就是咒语的绝佳载体，附近的厚皮蜥蜴经过近日的魔力侵蚀，又充满了灵气，用这种鳞片可以绝佳地凝聚咒术的力量。虽然这可能有些残忍，但为了尽早揭开奥秘，击杀几只厚皮蜥蜴，然后取回3个厚皮蜥蜴腹鳞。",
+	"Details":"有了古木精华，最重要的材料就已经到位了，现在还需要一些作为辅助工具的材料。首先是一种很奇怪的东西，厚皮蜥蜴腹鳞。这种透明的角质小片，本来就是咒语的绝佳载体，附近的厚皮蜥蜴经过近日的魔力侵蚀，又充满了灵气，用这种鳞片可以绝佳地凝聚咒术的力量。虽然这可能有些残忍，但为了尽早揭开奥秘，击杀几只厚皮蜥蜴，然后取回5个厚皮蜥蜴腹鳞。",
 	"AcceptingNPCID":6,
 	"DeliveringNPCID":6,
 	"ConversationsWhenAccepting":[],
@@ -450,7 +450,7 @@
 	"MissionID":28,
 	"Title":"收集乌鸡蛋",
 	"MissionOccupation":"ALL",
-	"Details":"李八对你的帮助非常感谢，他愿意送给你乌鸡蛋。但是他的身体过于虚弱，不方便来回走动，需要你自己去稻草棚取乌鸡蛋。有了这些乌鸡蛋，你就能回去完成郑睿晟的咒语了。解开血之契约指日可待，你心中多了一份喜悦，但同时也多了一丝紧张。回过神来，去稻草棚取3个乌鸡蛋。",
+	"Details":"李八对你的帮助非常感谢，他愿意送给你乌鸡蛋。但是他的身体过于虚弱，不方便来回走动，需要你自己去稻草棚取乌鸡蛋。有了这些乌鸡蛋，你就能回去完成郑睿晟的咒语了。解开血之契约指日可待，你心中多了一份喜悦，但同时也多了一丝紧张。回过神来，去稻草棚取5个乌鸡蛋。",
 	"AcceptingNPCID":7,
 	"DeliveringNPCID":6,
 	"ConversationsWhenAccepting":[],
@@ -525,7 +525,7 @@
 	"BonusMoney":7750,
 	"BonusExperience":6000,
 	"BonusItems":["2 5"],
-	"MissionTarget":[["GAIN_ITEM","30008 5"]]
+	"MissionTarget":[["GAIN_ITEM","8"]]
 },{
 	"MissionID":33,
 	"Title":"程家兄弟（二）",
@@ -556,7 +556,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":9700,
 	"BonusExperience":8000,
-	"BonusItems":["20067 1","20073 1","20087"],
+	"BonusItems":["20067 1","20073 1","20087 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":35,
@@ -572,7 +572,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":10350,
 	"BonusExperience":9000,
-	"BonusItems":["20287 1","20293 1","20307"],
+	"BonusItems":["20287 1","20293 1","20307 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":36,
@@ -588,7 +588,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":10350,
 	"BonusExperience":9000,
-	"BonusItems":["20407 1","20413 1","20427"],
+	"BonusItems":["20407 1","20413 1","20427 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":37,
@@ -604,7 +604,7 @@
 	"ChildrenMissionList":[38],
 	"BonusMoney":9700,
 	"BonusExperience":9000,
-	"BonusItems":["20627 1","20633 1","20647"],
+	"BonusItems":["20627 1","20633 1","20647 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":38,
@@ -626,7 +626,7 @@
 	"MissionID":39,
 	"Title":"寒霜草",
 	"MissionOccupation":"ALL",
-	"Details":"消灭了附近的怪物，你回来找冷琦，但是发现她已经被冻得奄奄一息。她有气无力地告诉你这里的寒霜草可以使冻僵的人恢复状态，但是寒霜草本就稀少，加上附近有颇多同样需要寒霜草的村民，想从野外采集寒霜草似乎是不太可能了。但是还有另外一种办法，这里有一种叫寒鬃熊的野兽，它们喜欢采集寒霜草并携带。从寒鬃熊身上收集3株寒霜草。",
+	"Details":"消灭了附近的怪物，你回来找冷琦，但是发现她已经被冻得奄奄一息。她有气无力地告诉你这里的寒霜草可以使冻僵的人恢复状态，但是寒霜草本就稀少，加上附近有颇多同样需要寒霜草的村民，想从野外采集寒霜草似乎是不太可能了。但是还有另外一种办法，这里有一种叫寒鬃熊的野兽，它们喜欢采集寒霜草并携带。从寒鬃熊身上收集5株寒霜草。",
 	"AcceptingNPCID":11,
 	"DeliveringNPCID":11,
 	"ConversationsWhenAccepting":[],
@@ -642,7 +642,7 @@
 	"MissionID":40,
 	"Title":"冰脉石",
 	"MissionOccupation":"ALL",
-	"Details":"服用寒霜草之后，冷琦的情况明显好转了，先前苍白的脸色也开始变得红润了起来，片刻她便恢复了活力。她告诉你临去的路上有种名为冰脉石的石头，在一种名为寒冬之妖的野兽那里可以找到。她想收集一些冰脉石带给冷亦殇，希望你能帮帮她。击杀5只寒冬之咬。并从它们身上收集3块冰脉石。",
+	"Details":"服用寒霜草之后，冷琦的情况明显好转了，先前苍白的脸色也开始变得红润了起来，片刻她便恢复了活力。她告诉你临去的路上有种名为冰脉石的石头，在一种名为寒冬之妖的野兽那里可以找到。她想收集一些冰脉石带给冷亦殇，希望你能帮帮她。击杀5只寒冬之咬。并从它们身上收集5块冰脉石。",
 	"AcceptingNPCID":11,
 	"DeliveringNPCID":11,
 	"ConversationsWhenAccepting":[],
@@ -674,7 +674,7 @@
 	"MissionID":42,
 	"Title":"冰涌道士",
 	"MissionOccupation":"ALL",
-	"Details":"进入雪原镇后，情况同之前遇到的一样，不容乐观。这里本就寒气十足，加上妖的入侵，严重干扰了正常的生活。你早就预料到了这种情况的发生。随着一步步逼近乾坤阵枢，情况会更加恶劣，遇到的敌人也会愈加危险。而且比起之前的妖魔入侵，这里发生了更加难处理的事情。这里的部分修道者，为了获得更强大的力量，他们不惜吸取其他人的生命来晋升为冰涌道士。去击杀5名冰涌道士，来祭奠那些惨死的人。",
+	"Details":"进入雪原镇后，情况同之前遇到的一样，不容乐观。这里本就寒气十足，加上妖的入侵，严重干扰了正常的生活。你早就预料到了这种情况的发生。随着一步步逼近乾坤阵枢，情况会更加恶劣，遇到的敌人也会愈加危险。而且比起之前的妖魔入侵，这里发生了更加难处理的事情。这里的部分修道者，为了获得更强大的力量，他们不惜吸取其他人的生命来晋升为冰涌道士。去击杀10名冰涌道士，来祭奠那些惨死的人。",
 	"AcceptingNPCID":12,
 	"DeliveringNPCID":12,
 	"ConversationsWhenAccepting":[],
@@ -738,7 +738,7 @@
 	"MissionID":46,
 	"Title":"冰寒女巫",
 	"MissionOccupation":"ALL",
-	"Details":"冷亦殇很感谢你帮忙请来了帮手，法阵暂时恢复正常了，但是只要附近的敌人还在，就不能保证这里的安全。法阵似乎还在被某种邪恶的力量影响着，需要祛除这种干扰，才能彻底地恢复此地的秩序。去击杀5个冰寒女巫。",
+	"Details":"冷亦殇很感谢你帮忙请来了帮手，法阵暂时恢复正常了，但是只要附近的敌人还在，就不能保证这里的安全。法阵似乎还在被某种邪恶的力量影响着，需要祛除这种干扰，才能彻底地恢复此地的秩序。去击杀10个冰寒女巫。",
 	"AcceptingNPCID":12,
 	"DeliveringNPCID":12,
 	"ConversationsWhenAccepting":[],
@@ -770,7 +770,7 @@
 	"MissionID":48,
 	"Title":"寒霜精华",
 	"MissionOccupation":"ALL",
-	"Details":"原来还是这些道士们在作祟。冷亦殇要你去收集一些凝结在空气中的寒霜精华，有了它们，冷亦殇的人们就能独立解决附近的低级威胁了。去收集3个凝结在空气中的寒霜精华，",
+	"Details":"原来还是这些道士们在作祟。冷亦殇要你去收集一些凝结在空气中的寒霜精华，有了它们，冷亦殇的人们就能独立解决附近的低级威胁了。去收集10个凝结在空气中的寒霜精华，",
 	"AcceptingNPCID":12,
 	"DeliveringNPCID":12,
 	"ConversationsWhenAccepting":[],
@@ -834,7 +834,7 @@
 	"MissionID":52,
 	"Title":"冰霜试炼（三）",
 	"MissionOccupation":"ALL",
-	"Details":"然后是最后一项试炼了，前往极寒之境的最深处，击杀5只寒冬兽王。",
+	"Details":"然后是最后一项试炼了，前往极寒之境的最深处，击杀10只寒冬兽王。",
 	"AcceptingNPCID":12,
 	"DeliveringNPCID":12,
 	"ConversationsWhenAccepting":[],
@@ -882,7 +882,7 @@
 	"MissionID":55,
 	"Title":"剥离精华",
 	"MissionOccupation":"ALL",
-	"Details":"曹杭告诉你，元素生物产生的元素精华是非常值钱的东西，他曾经就以此为生。曾经他可以像获得牛奶那样友好地从火焰元素身上获取火焰精华，但是现在火焰元素都很暴躁，想获取火焰精华只能采取更为暴力的手段了。从火焰元素身上获取3个火焰精华。",
+	"Details":"曹杭告诉你，元素生物产生的元素精华是非常值钱的东西，他曾经就以此为生。曾经他可以像获得牛奶那样友好地从火焰元素身上获取火焰精华，但是现在火焰元素都很暴躁，想获取火焰精华只能采取更为暴力的手段了。从火焰元素身上获取5个火焰精华。",
 	"AcceptingNPCID":13,
 	"DeliveringNPCID":14,
 	"ConversationsWhenAccepting":[],
@@ -914,7 +914,7 @@
 	"MissionID":57,
 	"Title":"营救冒险者",
 	"MissionOccupation":"ALL",
-	"Details":"灼热卵石，是这附近的一种矿石。它可以向人体内灌注炙热的阳炎之气，从而驱散人体的伤势。去收集3块灼热卵石，或许它能帮助你拯救那个昏迷的人。",
+	"Details":"灼热卵石，是这附近的一种矿石。它可以向人体内灌注炙热的阳炎之气，从而驱散人体的伤势。去收集10块灼热卵石，或许它能帮助你拯救那个昏迷的人。",
 	"AcceptingNPCID":13,
 	"DeliveringNPCID":14,
 	"ConversationsWhenAccepting":[],
@@ -940,7 +940,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":28700,
 	"BonusExperience":37500,
-	"BonusItems":["20111 1","20117 1","20131"],
+	"BonusItems":["20111 1","20117 1","20131 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":59,
@@ -956,7 +956,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":29700,
 	"BonusExperience":40000,
-	"BonusItems":["20331 ","20337 1","20351"],
+	"BonusItems":["20331 1","20337 1","20351 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":60,
@@ -972,7 +972,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":29700,
 	"BonusExperience":40000,
-	"BonusItems":["20551 1","20557 1","20571"],
+	"BonusItems":["20551 1","20557 1","20571 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":61,
@@ -988,7 +988,7 @@
 	"ChildrenMissionList":[62],
 	"BonusMoney":29700,
 	"BonusExperience":40000,
-	"BonusItems":["20671 1","20677 1","20691"],
+	"BonusItems":["20671 1","20677 1","20691 1"],
 	"MissionTarget":[]
 },{
 	"MissionID":62,
@@ -1010,7 +1010,7 @@
 	"MissionID":63,
 	"Title":"狂暴的火妖",
 	"MissionOccupation":"ALL",
-	"Details":"再深入火焰之地，遇到的敌人就更加狂暴了。在这里有一种火妖，赤焰遍及浑身，这种妖在危难爆发之前就很喜欢袭击附近的人类。去好好教训一下它们，击杀5只火妖。",
+	"Details":"再深入火焰之地，遇到的敌人就更加狂暴了。在这里有一种火妖，赤焰遍及浑身，这种妖在危难爆发之前就很喜欢袭击附近的人类。去好好教训一下它们，击杀10只火妖。",
 	"AcceptingNPCID":13,
 	"DeliveringNPCID":13,
 	"ConversationsWhenAccepting":[],
@@ -1058,7 +1058,7 @@
 	"MissionID":66,
 	"Title":"烈焰核心",
 	"MissionOccupation":"ALL",
-	"Details":"返回去找曹杭之前端木醒阔还有一事相求。他在这里收集的最主要的是烈焰核心，这种物质较为稀有，但大都散落在地表而容易获得。去帮端木醒阔收集3个烈焰核心。",
+	"Details":"返回去找曹杭之前端木醒阔还有一事相求。他在这里收集的最主要的是烈焰核心，这种物质较为稀有，但大都散落在地表而容易获得。去帮端木醒阔收集5个烈焰核心。",
 	"AcceptingNPCID":15,
 	"DeliveringNPCID":15,
 	"ConversationsWhenAccepting":[],
@@ -1170,7 +1170,7 @@
 	"MissionID":73,
 	"Title":"梦魂枝",
 	"MissionOccupation":"ALL",
-	"Details":"秦母的症状并不罕见，是由于梦境遭受侵蚀而影响了正常的思维。这里又一种名为梦魂枝的树枝，由于吸收了梦境的精华而充满了灵力。这种树枝也许可以帮助秦母恢复正常。去收集3株梦魂枝。",
+	"Details":"秦母的症状并不罕见，是由于梦境遭受侵蚀而影响了正常的思维。这里又一种名为梦魂枝的树枝，由于吸收了梦境的精华而充满了灵力。这种树枝也许可以帮助秦母恢复正常。去收集5株梦魂枝。",
 	"AcceptingNPCID":17,
 	"DeliveringNPCID":17,
 	"ConversationsWhenAccepting":[],
@@ -1186,7 +1186,7 @@
 	"MissionID":74,
 	"Title":"以绝后患",
 	"MissionOccupation":"ALL",
-	"Details":"吸收了梦魂枝的灵力，秦母的状态明显好了许多。她希望你再去击杀5只战火梦魇兽，防止更多的人遭受这样的迫害。",
+	"Details":"吸收了梦魂枝的灵力，秦母的状态明显好了许多。她希望你再去击杀10只战火梦魇兽，防止更多的人遭受这样的迫害。",
 	"AcceptingNPCID":17,
 	"DeliveringNPCID":17,
 	"ConversationsWhenAccepting":[],
@@ -1202,7 +1202,7 @@
 	"MissionID":75,
 	"Title":"梦魇兽王",
 	"MissionOccupation":"ALL",
-	"Details":"战火梦魇兽在梦魇兽中仍然不是最强的存在。秦母让你去其实只是看看你能不能胜任接下来的事。梦魇兽早就存在，它们的灵力很大程度源自于人们梦中的邪恶思想，但是一般情况下这种情况都是可控的。不过近日魇兽莫名地多了起来，内心稍有杂念的人的梦境中也开始滋生梦魇兽了。而本来就颇有邪念的人的心中则会产生更强大的恶魔，这就是现在的梦魇兽王。去击杀5只梦魇兽王。",
+	"Details":"战火梦魇兽在梦魇兽中仍然不是最强的存在。秦母让你去其实只是看看你能不能胜任接下来的事。梦魇兽早就存在，它们的灵力很大程度源自于人们梦中的邪恶思想，但是一般情况下这种情况都是可控的。不过近日魇兽莫名地多了起来，内心稍有杂念的人的梦境中也开始滋生梦魇兽了。而本来就颇有邪念的人的心中则会产生更强大的恶魔，这就是现在的梦魇兽王。去击杀10只梦魇兽王。",
 	"AcceptingNPCID":17,
 	"DeliveringNPCID":17,
 	"ConversationsWhenAccepting":[],
@@ -1234,7 +1234,7 @@
 	"MissionID":77,
 	"Title":"蠕行恐魔",
 	"MissionOccupation":"ALL",
-	"Details":"葛东莱对如何缓解这里的情况确实有所了解，但是在部署法器之前要先做一点准备工作，也就是肃清一下场地。去击杀5只蠕行梦魇。",
+	"Details":"葛东莱对如何缓解这里的情况确实有所了解，但是在部署法器之前要先做一点准备工作，也就是肃清一下场地。去击杀10只蠕行梦魇。",
 	"AcceptingNPCID":18,
 	"DeliveringNPCID":18,
 	"ConversationsWhenAccepting":[],
@@ -1250,7 +1250,7 @@
 	"MissionID":78,
 	"Title":"梦魂珠",
 	"MissionOccupation":"ALL",
-	"Details":"解决这些梦魇的关键是一种名为梦魂珠的道具，这种宝珠汇集了梦境中最奇妙的灵力，用这种珠子可以将梦魇兽的力量转化为梦境的纯净力量，从而削弱梦魇兽的能力。去收集3个梦魂珠。",
+	"Details":"解决这些梦魇的关键是一种名为梦魂珠的道具，这种宝珠汇集了梦境中最奇妙的灵力，用这种珠子可以将梦魇兽的力量转化为梦境的纯净力量，从而削弱梦魇兽的能力。去收集5个梦魂珠。",
 	"AcceptingNPCID":18,
 	"DeliveringNPCID":18,
 	"ConversationsWhenAccepting":[],
@@ -1314,7 +1314,7 @@
 	"MissionID":82,
 	"Title":"癫狂的守卫",
 	"MissionOccupation":"ALL",
-	"Details":"可能是临近阵眼，有道家力量的缘故，这里的魔气并不重，但是不知为何这里的人们都很狂乱。为了解决这种问题，消灭5名癫狂的守卫。",
+	"Details":"可能是临近阵眼，有道家力量的缘故，这里的魔气并不重，但是不知为何这里的人们都很狂乱。为了解决这种问题，消灭10名癫狂的守卫。",
 	"AcceptingNPCID":19,
 	"DeliveringNPCID":19,
 	"ConversationsWhenAccepting":[],
@@ -1346,7 +1346,7 @@
 	"MissionID":84,
 	"Title":"城中恶霸",
 	"MissionOccupation":"ALL",
-	"Details":"除了癫狂的守卫，城中还有颇多恶霸在欺负百姓。消灭5个恶霸，来治治他们的势头。",
+	"Details":"除了癫狂的守卫，城中还有颇多恶霸在欺负百姓。消灭10个恶霸，来治治他们的势头。",
 	"AcceptingNPCID":19,
 	"DeliveringNPCID":19,
 	"ConversationsWhenAccepting":[],
@@ -1490,7 +1490,7 @@
 	"MissionID":93,
 	"Title":"证明自己",
 	"MissionOccupation":"ALL",
-	"Details":"清和真人知道发生了什么，但深感无力，以他的能力远不足以阻止离火，他自然也不会相信初来乍到的你能做到。此地由于阵法破乱，早已有魔滋生，去击杀5只渗透的眼魔，像清和真人证明你的能力。",
+	"Details":"清和真人知道发生了什么，但深感无力，以他的能力远不足以阻止离火，他自然也不会相信初来乍到的你能做到。此地由于阵法破乱，早已有魔滋生，去击杀10只渗透的眼魔，像清和真人证明你的能力。",
 	"AcceptingNPCID":22,
 	"DeliveringNPCID":22,
 	"ConversationsWhenAccepting":[],
