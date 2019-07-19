@@ -7,7 +7,7 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理任务的接受, 放弃, 完成, 进度
-    /// TODO: BUG: 怪物同时击杀多个只记录一个
+    /// TODO: 紧急优化: 需要Log具有针对性
     /// </summary>
     partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;
@@ -26,32 +26,31 @@ namespace MirRemakeBackend.GameLogic {
             var logs = EM_Log.s_instance.GetLogsSecondTick ();
             for (int i = 0; i < logs.Count; i++) {
                 var logObj = logs[i];
-                var charMisEn = EM_Mission.s_instance.GetAllCharMisEn ();
-                while (charMisEn.MoveNext ()) {
-                    var charNetId = charMisEn.Current.Key;
-                    var charId = EM_Unit.s_instance.GetCharIdByNetworkId (charNetId);
-                    if (charId == -1) continue;
-                    var misEn = charMisEn.Current.Value.GetEnumerator ();
-                    while (misEn.MoveNext ()) {
-                        var misId = misEn.Current.Key;
-                        var misObj = misEn.Current.Value;
-                        var misTars = misObj.m_tarList;
-                        bool dirty = false;
-                        for (int j = 0; j < misTars.Count; j++) {
-                            var checker = m_progressCheckerDict[misTars[j].m_Type];
-                            var curProgs = misTars[j].m_Progress;
-                            var newProgs = checker.GetNewProgress (charNetId, misId, misTars[j], curProgs, logObj);
-                            // 任务进度更新
-                            if (curProgs != newProgs) {
-                                // client
-                                misTars[j].m_Progress = newProgs;
-                                dirty = true;
-                                m_networkService.SendServerCommand (SC_ApplySelfMissionProgress.Instance (charNetId, misId, (byte) j, newProgs));
-                            }
+                var netId = logObj.m_netId;
+                var charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
+                if (charId == -1) continue;
+                var misDict = EM_Mission.s_instance.GetCharAllMisDict (netId);
+                if (misDict == null) continue;
+                var misEn = misDict.GetEnumerator ();
+                while (misEn.MoveNext ()) {
+                    var misId = misEn.Current.Key;
+                    var misObj = misEn.Current.Value;
+                    var misTars = misObj.m_tarList;
+                    bool dirty = false;
+                    for (int j = 0; j < misTars.Count; j++) {
+                        var checker = m_progressCheckerDict[misTars[j].m_Type];
+                        var curProgs = misTars[j].m_Progress;
+                        var newProgs = checker.GetNewProgress (misId, misTars[j], curProgs, logObj);
+                        // 任务进度更新
+                        if (curProgs != newProgs) {
+                            // client
+                            misTars[j].m_Progress = newProgs;
+                            dirty = true;
+                            m_networkService.SendServerCommand (SC_ApplySelfMissionProgress.Instance (netId, misId, (byte) j, newProgs));
                         }
-                        if (dirty)
-                            EM_Mission.s_instance.UpdateMission (charId, misObj);
                     }
+                    if (dirty)
+                        EM_Mission.s_instance.UpdateMission (charId, misObj);
                 }
             }
         }
@@ -103,7 +102,7 @@ namespace MirRemakeBackend.GameLogic {
             List<short> acceptableMis, unacceptableMis;
             EM_Mission.s_instance.InitCharacter (netId, charId, out acceptedMis, out acceptableMis, out unacceptableMis);
             List<NO_Mission> acceptedMisNo = new List<NO_Mission> (acceptedMis.Count);
-            for (int i=0; i<acceptedMis.Count; i++)
+            for (int i = 0; i < acceptedMis.Count; i++)
                 acceptedMisNo.Add (acceptedMis[i].GetNo ());
             // client
             m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMisNo, acceptableMis, unacceptableMis));

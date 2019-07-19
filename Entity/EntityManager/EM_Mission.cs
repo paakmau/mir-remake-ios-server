@@ -143,8 +143,10 @@ namespace MirRemakeBackend.Entity {
             while (mEn.MoveNext ())
                 m_fact.RecycleInstance (mEn.Current);
         }
-        public Dictionary<int, Dictionary<short, E_Mission>>.Enumerator GetAllCharMisEn () {
-            return m_acceptedMissionDict.GetEnumerator ();
+        public Dictionary<short, E_Mission> GetCharAllMisDict (int netId) {
+            Dictionary<short, E_Mission> res;
+            m_acceptedMissionDict.TryGetValue(netId, out res);
+            return res;
         }
         public Dictionary<short, E_Mission> GetAllAcceptedMission (int netId) {
             Dictionary<short, E_Mission> res = null;
