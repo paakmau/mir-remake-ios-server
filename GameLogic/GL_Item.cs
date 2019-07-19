@@ -26,10 +26,8 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void Tick (float dT) {
             // 地面道具消失
+            EM_Item.s_instance.ItemOnGroundAutoDisappear ();
             var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
-            for (int i = gndItemList.Count - 1; i >= 0; i--)
-                if (MyTimer.CheckTimeUp (gndItemList[i].m_disappearTime))
-                    gndItemList.RemoveAt (i);
             // 地面道具视野
             var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
             var charDspprItemIdList = new List<long> ();
