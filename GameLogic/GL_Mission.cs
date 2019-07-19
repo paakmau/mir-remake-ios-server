@@ -8,6 +8,7 @@ namespace MirRemakeBackend.GameLogic
 {
     /// <summary>
     /// 管理任务的接受, 放弃, 完成, 进度
+    /// TODO: BUG: 怪物同时击杀多个只记录一个
     /// </summary>
     partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;

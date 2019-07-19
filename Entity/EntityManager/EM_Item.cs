@@ -450,6 +450,12 @@ namespace MirRemakeBackend.Entity {
             repo.SetItem (emptyItem, pos);
             return emptyItem;
         }
+        public void CharacterSwapItem (int charId, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
+            srcRepo.SetItem (tarItem, srcPos);
+            tarRepo.SetItem (srcItem, tarPos);
+            CharacterUpdateItem (tarItem, charId, srcRepo.m_repositoryPlace, srcPos);
+            CharacterUpdateItem (srcItem, charId, tarRepo.m_repositoryPlace, tarPos);
+        }
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
         }

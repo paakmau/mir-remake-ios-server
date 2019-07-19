@@ -9,6 +9,7 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理物品的使用, 存取 (背包, 仓库), 回收
     /// 装备强化, 附魔, 镶嵌
+    /// TODO: BUG: 装备穿了却没有更新
     /// </summary>
     partial class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
@@ -336,10 +337,9 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                 charObj.m_networkId, new List<NO_Item> { item.GetItemNo (repo.m_repositoryPlace, pos) }));
         }
-        public void NotifyCharacterSwapItemPlace (E_Character charObj, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
-            srcRepo.SetItem (tarItem, srcPos);
-            tarRepo.SetItem (srcItem, tarPos);
-            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (charObj.m_networkId,
+        public void NotifyCharacterSwapItemPlace (int netId, int charId, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
+            EM_Item.s_instance.CharacterSwapItem (charId, srcRepo, srcPos, srcItem, tarRepo, tarPos, tarItem);
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId,
                 new List<NO_Item> { srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos), tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos) }));
         }
         public void NotifyCharacterGainItem (E_Character charObj, IReadOnlyList < (short, short) > itemIdAndNumList) {
