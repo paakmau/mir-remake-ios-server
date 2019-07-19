@@ -502,9 +502,9 @@ namespace MirRemakeBackend.Entity {
         public void ItemOnGroundAutoDisappear () {
             for (int i = m_groundItemList.Count - 1; i >= 0; i--)
                 if (MyTimer.CheckTimeUp (m_groundItemList[i].m_disappearTime)) {
-                    m_groundItemList.RemoveAt (i);
                     s_entityPool.m_groundItemPool.RecycleInstance (m_groundItemList[i]);
                     m_itemFactory.RecycleItem (m_groundItemList[i].m_item);
+                    m_groundItemList.RemoveAt (i);
                 }
         }
         public void ItemOnGroundPicked (E_GroundItem groundItem) {
