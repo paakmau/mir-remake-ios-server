@@ -100,6 +100,7 @@ namespace Algorithms.DataStructures.Tree
             }
             else
             {
+                // TODO: 这里的 -1 原本为 0, 但是如果 Right 为 null, 会出事
                 var leftHeight = node.Left?.Height ?? -1;
                 var rightHeight = node.Right?.Height ?? -1;
                 var nodeToReplace = leftHeight > rightHeight
