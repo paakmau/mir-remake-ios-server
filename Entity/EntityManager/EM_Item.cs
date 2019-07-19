@@ -460,16 +460,9 @@ namespace MirRemakeBackend.Entity {
             m_ddh.Save (item, charId, ip, pos);
         }
         public void GenerateItemOnGround (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
-            int len=itemIdAndNumList.Count;
-            int len1=(int)Math.Sqrt(len);
-            if(len1!=Math.Sqrt(len))
-                len1=len1+1;
-            if(len1==1){
-                GenerateItemOnGround(itemIdAndNumList[0].Item1,itemIdAndNumList[0].Item2,charId,centerPos);
-                return;
-            }
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                var pos = centerPos + new Vector2 ((i%len)/(len-1)-0.5f, 0.5f-(i/len)/(len-1));
+                // TODO: 随机掉落需要优化
+                var pos = centerPos + new Vector2 (MyRandom.NextFloat (0, 1.0f)-0.5f, 0.5f-MyRandom.NextFloat (0, 1.0f));
                 GenerateItemOnGround (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
             }
         }

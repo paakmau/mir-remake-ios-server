@@ -394,9 +394,9 @@ namespace MirRemakeBackend.GameLogic {
                     }
                 } else if (id >= 20000) {
                     int level = (id - 20000) % 220 / 22 + 1;
-                    bool drop = MyRandom.NextInt (0, 1000) <= 100;
+                    bool drop = MyRandom.NextInt (0, 1000) <= 50;
                     if (level == 10) {
-                        drop = MyRandom.NextInt (0, 1000) <= 30;
+                        drop = MyRandom.NextInt (0, 1000) <= 20;
                     }
                     if (drop)
                         dropItemIdAndNumList.Add ((id, (short) 1));
