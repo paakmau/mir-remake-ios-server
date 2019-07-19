@@ -321,8 +321,8 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             ChattingChanelType channel = (ChattingChanelType) reader.GetByte ();
             string msg = reader.GetString ();
-            int toCharId = reader.GetInt ();
-            GL_Chat.s_instance.CommandSendMessage (netId, channel, msg, toCharId);
+            int toNetId = reader.GetInt ();
+            GL_Chat.s_instance.CommandSendMessage (netId, channel, msg, toNetId);
         }
     }
     class CC_TestGainExp : IClientCommand {
