@@ -10,7 +10,7 @@ namespace MirRemakeBackend.GameLogic {
         public GL_Chat (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
-        public void CommandSendMessage (int netId, ChattingChanelType channel, string msg, int toCharId) {
+        public void CommandSendMessage (int netId, ChattingChanelType channel, string msg, int toNetId) {
             var senderCharObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (senderCharObj == null)
                 return;
@@ -18,7 +18,7 @@ namespace MirRemakeBackend.GameLogic {
             switch (channel) {
                 case ChattingChanelType.PRIVATE:
                     while (charEn.MoveNext ()) {
-                        if (charEn.Current.Value.m_characterId == toCharId) {
+                        if (charEn.Current.Key == toNetId) {
                             m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
                             break;
                         }
@@ -26,7 +26,8 @@ namespace MirRemakeBackend.GameLogic {
                     break;
                 case ChattingChanelType.WORLD:
                     while (charEn.MoveNext ())
-                        m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
+                        if (charEn.Current.Key != netId)
+                            m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
                     break;
             }
         }
