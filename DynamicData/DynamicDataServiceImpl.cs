@@ -324,10 +324,7 @@ namespace MirRemakeBackend.DynamicData {
 
         //ATTRIBUTES
         public bool InsertCharacterAttribute (DDO_CharacterAttribute charAttr) {
-            string giftPoints = charAttr.m_distributedMainAttrPointArr[0].Item2.ToString ();
-            for (int i = 1; i < 4; i++) {
-                giftPoints = giftPoints + " " + charAttr.m_distributedMainAttrPointArr[i].Item2.ToString ();
-            }
+            string giftPoints = string.Format ("{0} {1} {2} {3}", charAttr.m_str, charAttr.m_intl, charAttr.m_sprt, charAttr.m_agl);
             string cmd = "insert into `character_attribute` values(" + charAttr.m_characterId + "," + charAttr.m_level + "," + charAttr.m_experience + ",\"" + giftPoints + "\");";
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
@@ -340,10 +337,7 @@ namespace MirRemakeBackend.DynamicData {
             return true;
         }
         public bool UpdateCharacterAttribute (DDO_CharacterAttribute charAttr) {
-            string giftPoints = charAttr.m_distributedMainAttrPointArr[0].Item2.ToString ();
-            for (int i = 1; i < 4; i++) {
-                giftPoints = giftPoints + " " + charAttr.m_distributedMainAttrPointArr[i].Item2.ToString ();
-            }
+            string giftPoints = string.Format ("{0} {1} {2} {3}", charAttr.m_str, charAttr.m_intl, charAttr.m_sprt, charAttr.m_agl);
             string cmd = "update`character_attribute` set `level`=" + charAttr.m_level + ", `experience`=" + charAttr.m_experience + ", attributes=\"" + giftPoints + "\" where charid=" + charAttr.m_characterId + ";";
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
@@ -363,14 +357,11 @@ namespace MirRemakeBackend.DynamicData {
             int experience = int.Parse (dr["experience"].ToString ());
             ValueTuple<ActorUnitMainAttributeType, short>[] vt = new ValueTuple<ActorUnitMainAttributeType, short>[4];
             string[] strings = dr["attributes"].ToString ().Split (' ');
-            vt[0].Item1 = ActorUnitMainAttributeType.STRENGTH;
-            vt[1].Item1 = ActorUnitMainAttributeType.AGILITY;
-            vt[2].Item1 = ActorUnitMainAttributeType.INTELLIGENCE;
-            vt[3].Item1 = ActorUnitMainAttributeType.SPIRIT;
-            for (int i = 0; i < 4; i++) {
-                vt[i].Item2 = short.Parse (strings[i]);
-            }
-            resCharAttr = new DDO_CharacterAttribute (charId, level, experience, vt);
+            short str = short.Parse (strings[0]);
+            short intl = short.Parse (strings[1]);
+            short sprt = short.Parse (strings[2]);
+            short agl = short.Parse (strings[3]);
+            resCharAttr = new DDO_CharacterAttribute (charId, level, experience, str, intl, sprt, agl);
             return true;
         }
 
