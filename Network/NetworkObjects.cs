@@ -61,16 +61,68 @@ namespace MirRemakeBackend.Network {
             m_monsterType = monType;
         }
     }
-    struct NO_Character {
+    struct NO_SightCharacter {
         public int m_netId;
         public Vector2 m_position;
         public OccupationType m_occupation;
+        public string m_name;
         public short m_level;
-        public NO_Character (int netId, Vector2 pos, OccupationType ocp, short lv) {
+        public NO_SightCharacter (int netId, Vector2 pos, OccupationType ocp, string name, short lv) {
             m_netId = netId;
             m_position = pos;
             m_occupation = ocp;
+            m_name = name;
             m_level = lv;
+        }
+    }
+    struct NO_AttributeCharacter {
+        public int m_netId;
+        public string m_name;
+        public short m_level;
+        public short m_str;
+        public short m_intl;
+        public short m_sprt;
+        public short m_agl;
+        public int m_maxHp;
+        public int m_maxMp;
+        public int m_dHpPerSecond;
+        public int m_dMpPerSecond;
+        public int m_atk;
+        public int m_def;
+        public int m_mag;
+        public int m_res;
+        public int m_tenacity;
+        public int m_speed;
+        public int m_criticalRate;
+        public int m_criticalBonus;
+        public int m_hitRate;
+        public int m_dodgeRate;
+        public int m_lifeSteal;
+        public int m_damageReduction;
+        public NO_AttributeCharacter (int netId, string name, short lv, short str, short intl, short sprt, short agl, int maxHp, int maxMp, int dHp, int dMp, int atk, int def, int mag, int res, int tenacity, int speed, int criticalRate, int criticalBonus, int hitRate, int dodgeRate, int lifeSteal, int dmgReduction) {
+            m_netId = netId;
+            m_name = name;
+            m_level = lv;
+            m_str = str;
+            m_intl = intl;
+            m_sprt = sprt;
+            m_agl = agl;
+            m_maxHp = maxHp;
+            m_maxMp = maxMp;
+            m_dHpPerSecond = dHp;
+            m_dMpPerSecond = dMp;
+            m_atk = atk;
+            m_def = def;
+            m_mag = mag;
+            m_res = res;
+            m_tenacity = tenacity;
+            m_speed = speed;
+            m_criticalRate = criticalRate;
+            m_criticalBonus = criticalBonus;
+            m_hitRate = hitRate;
+            m_dodgeRate = dodgeRate;
+            m_lifeSteal = lifeSteal;
+            m_damageReduction = dmgReduction;
         }
     }
     struct NO_DamageRankCharacter {
@@ -257,18 +309,71 @@ namespace MirRemakeBackend.Network {
             MonsterType monType = (MonsterType) reader.GetByte ();
             return new NO_Monster (netId, pos, monsterId, monType);
         }
-        public static void Put (this NetDataWriter writer, NO_Character charNo) {
+        public static void Put (this NetDataWriter writer, NO_SightCharacter charNo) {
             writer.Put (charNo.m_netId);
             writer.Put (charNo.m_position);
             writer.Put ((byte) charNo.m_occupation);
+            writer.Put (charNo.m_name);
             writer.Put (charNo.m_level);
         }
-        public static NO_Character GetCharacter (this NetDataReader reader) {
+        public static NO_SightCharacter GetSightCharacter (this NetDataReader reader) {
             int netId = reader.GetInt ();
             Vector2 pos = reader.GetVector2 ();
-            OccupationType ocp = (OccupationType) reader.GetByte ();
+            OccupationType ocp = (OccupationType)reader.GetByte ();
+            string name = reader.GetString ();
             short lv = reader.GetShort ();
-            return new NO_Character (netId, pos, ocp, lv);
+            return new NO_SightCharacter (netId, pos, ocp, name, lv);
+        }
+        public static void Put (this NetDataWriter writer, NO_AttributeCharacter attrChar) {
+            writer.Put (attrChar.m_netId);
+            writer.Put (attrChar.m_name);
+            writer.Put (attrChar.m_level);
+            writer.Put (attrChar.m_str);
+            writer.Put (attrChar.m_intl);
+            writer.Put (attrChar.m_sprt);
+            writer.Put (attrChar.m_agl);
+            writer.Put (attrChar.m_maxHp);
+            writer.Put (attrChar.m_maxMp);
+            writer.Put (attrChar.m_dHpPerSecond);
+            writer.Put (attrChar.m_dMpPerSecond);
+            writer.Put (attrChar.m_atk);
+            writer.Put (attrChar.m_def);
+            writer.Put (attrChar.m_mag);
+            writer.Put (attrChar.m_res);
+            writer.Put (attrChar.m_tenacity);
+            writer.Put (attrChar.m_speed);
+            writer.Put (attrChar.m_criticalRate);
+            writer.Put (attrChar.m_criticalBonus);
+            writer.Put (attrChar.m_hitRate);
+            writer.Put (attrChar.m_dodgeRate);
+            writer.Put (attrChar.m_lifeSteal);
+            writer.Put (attrChar.m_damageReduction);
+        }
+        public static NO_AttributeCharacter GetAttributeCharacter (this NetDataReader reader) {
+            int netId = reader.GetInt ();
+            string name = reader.GetString ();
+            short lv = reader.GetShort ();
+            short str = reader.GetShort ();
+            short intl = reader.GetShort ();
+            short sprt = reader.GetShort ();
+            short agl = reader.GetShort ();
+            int maxHp = reader.GetInt ();
+            int maxMp = reader.GetInt ();
+            int dHp = reader.GetInt ();
+            int dMp = reader.GetInt ();
+            int atk = reader.GetInt ();
+            int def = reader.GetInt ();
+            int mag = reader.GetInt ();
+            int res = reader.GetInt ();
+            int tenacity = reader.GetInt ();
+            int speed = reader.GetInt ();
+            int criticalRate = reader.GetInt ();
+            int criticalBonus = reader.GetInt ();
+            int hitRate = reader.GetInt ();
+            int dodgeRate = reader.GetInt ();
+            int lifeSteal = reader.GetInt ();
+            int dmgReduction = reader.GetInt ();
+            return new NO_AttributeCharacter (netId, name, lv, str, intl, sprt, agl, maxHp, maxMp, dHp, dMp, atk, def, mag, res, tenacity, speed, criticalRate, criticalBonus, hitRate, dodgeRate, lifeSteal, dmgReduction);
         }
         public static void Put (this NetDataWriter writer, NO_DamageRankCharacter dmgRankChar) {
             writer.Put (dmgRankChar.m_charId);

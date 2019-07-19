@@ -290,8 +290,8 @@ namespace MirRemakeBackend.Entity {
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);
         }
-        public NO_Character GetNo () {
-            return new NO_Character (m_networkId, m_position, m_Occupation, m_Level);
+        public NO_SightCharacter GetSightNo () {
+            return new NO_SightCharacter (m_networkId, m_position, m_Occupation, m_name, m_Level);
         }
         public NO_DamageRankCharacter GetDmgRnkNo (int dmg) {
             return new NO_DamageRankCharacter (m_characterId, m_name, dmg);

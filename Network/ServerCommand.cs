@@ -318,10 +318,10 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 新进入视野中的角色列表 (角色信息, 身上的装备Id列表) </summary>
-        private IReadOnlyList < (NO_Character, IReadOnlyList<short>) > m_charAndEquipedIdList;
+        private IReadOnlyList < (NO_SightCharacter, IReadOnlyList<short>) > m_charAndEquipedIdList;
         public static SC_ApplyOtherCharacterInSight Instance (
             int netId,
-            IReadOnlyList < (NO_Character, IReadOnlyList<short>) > newCharAndEquipedIdList
+            IReadOnlyList < (NO_SightCharacter, IReadOnlyList<short>) > newCharAndEquipedIdList
         ) {
             s_instance.m_toClientList = new List<int> { netId };
             s_instance.m_charAndEquipedIdList = newCharAndEquipedIdList;
@@ -412,30 +412,21 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 同步自身所有属性
+    /// 发送一个角色的所有属性
     /// </summary>
-    class SC_SetSelfConcreteAttribute : ServerCommandBase {
-        private static readonly SC_SetSelfConcreteAttribute s_instance = new SC_SetSelfConcreteAttribute ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_SELF_CONCRETE_ATTRIBUTE; } }
+    class SC_SendAllCharacterAttribute : ServerCommandBase {
+        private static readonly SC_SendAllCharacterAttribute s_instance = new SC_SendAllCharacterAttribute ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_ALL_CHARACTER_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
-        int m_atk;
-        int m_def;
-        int m_mag;
-        int m_res;
-        public static SC_SetSelfConcreteAttribute Instance (int netId, int atk, int def, int mag, int res) {
+        private NO_AttributeCharacter m_attrChar;
+        public static SC_SendAllCharacterAttribute Instance (int netId, NO_AttributeCharacter attrChar) {
             s_instance.m_toClientList = new List<int> { netId };
-            s_instance.m_atk = atk;
-            s_instance.m_def = def;
-            s_instance.m_mag = mag;
-            s_instance.m_res = res;
+            s_instance.m_attrChar = attrChar;
             return s_instance;
         }
-        private SC_SetSelfConcreteAttribute () { }
+        private SC_SendAllCharacterAttribute () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put (m_atk);
-            writer.Put (m_def);
-            writer.Put (m_mag);
-            writer.Put (m_res);
+            writer.Put (m_attrChar);
         }
     }
     /// <summary>

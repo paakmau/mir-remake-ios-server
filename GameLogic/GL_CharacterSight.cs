@@ -41,7 +41,7 @@ namespace MirRemakeBackend.GameLogic {
 
                 // 计算视野新增的怪物与角色
                 var newMonNoList = new List<NO_Monster> ();
-                var newCharNoAndEquipedIdList = new List < (NO_Character, IReadOnlyList<short>) > ();
+                var newCharNoAndEquipedIdList = new List < (NO_SightCharacter, IReadOnlyList<short>) > ();
                 newMonNoList.Clear ();
                 newCharNoAndEquipedIdList.Clear ();
                 for (int i = 0; i < charNowSight.Count; i++) {
@@ -62,7 +62,7 @@ namespace MirRemakeBackend.GameLogic {
                             for (int j = 0; j < eqList.Count; j++)
                                 eqIdList.Add (eqList[j].m_ItemId);
                             newCharNoAndEquipedIdList.Add ((
-                                (((E_Character) charNowSight[i]).GetNo ()),
+                                (((E_Character) charNowSight[i]).GetSightNo ()),
                                 eqIdList
                             ));
                             break;

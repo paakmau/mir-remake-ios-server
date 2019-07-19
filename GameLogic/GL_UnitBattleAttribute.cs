@@ -117,14 +117,6 @@ namespace MirRemakeBackend.GameLogic {
                     sightNetIdList,
                     hpMaxHpMpMaxMpList
                 ));
-                // 发送自身属性
-                m_networkService.SendServerCommand (SC_SetSelfConcreteAttribute.Instance (
-                    charObj.m_networkId,
-                    charObj.m_Attack,
-                    charObj.m_Defence,
-                    charObj.m_Magic,
-                    charObj.m_Resistance
-                ));
             }
         }
         public void NotifyInitCharacter (int netId) {

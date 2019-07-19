@@ -20,7 +20,7 @@ namespace MirRemakeBackend.Network {
         SET_OTHER_POSITION,
         APPLY_ALL_CHANGE_EQUIPMENT,
         SET_ALL_HP_AND_MP,
-        SET_SELF_CONCRETE_ATTRIBUTE,
+        SEND_ALL_CHARACTER_ATTRIBUTE,
         APPLY_SELF_SPECIAL_ATTRIBUTE,
         APPLY_SELF_LEVEL_AND_EXP,
         APPLY_SELF_MAIN_ATTRIBUTE,
@@ -70,6 +70,7 @@ namespace MirRemakeBackend.Network {
         APPLY_CAST_SKILL_BEGIN,
         // 分配属性点
         APPLY_DISTRIBUTE_POINTS,
+        REQUIRE_CHARACTER_ATTRIBUTE,
         // 获取战力排行榜
         REQUIRE_REFRESH_FIGHT_CAPACITY_RANK,
         // 技能升级
