@@ -167,15 +167,15 @@ namespace MirRemakeBackend.Entity {
     class E_MarketItem {
         public long m_marketItemId;
         public E_Item m_item;
-        public int m_holderNetId;
         public long m_virtualCyPrice;
         public long m_chargeCyPrice;
-        public void Reset (long marketItemId, E_Item item, int holderNetId, long virtualCyPrice, long chargeCyPrice) {
+        public short m_bagPos;
+        public void Reset (long marketItemId, E_Item item, long virtualCyPrice, long chargeCyPrice, short bagPos) {
             m_marketItemId = marketItemId;
             m_item = item;
-            m_holderNetId = holderNetId;
             m_virtualCyPrice = virtualCyPrice;
             m_chargeCyPrice = chargeCyPrice;
+            m_bagPos = bagPos;
         }
     }
 }

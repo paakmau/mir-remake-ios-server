@@ -108,16 +108,12 @@ namespace MirRemakeBackend.GameLogic {
             if (price == -1) return;
             var virCy = price * num;
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -virCy);
-            NotifyCharacterGainItem (netId, charObj.m_characterId, new List < (short, short) > {
-                (itemId, num)
-            });
+            NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
         }
         public void CommandGainItem (int netId, short itemId, short num) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            NotifyCharacterGainItem (netId, charObj.m_characterId, new List < (short, short) > {
-                (itemId, num)
-            });
+            NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
         }
         public void CommandPickUpGroundItem (int netId, long gndItemId) {
             var charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
@@ -330,33 +326,34 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId,
                 new List<NO_Item> { srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos), tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos) }));
         }
-        public void NotifyCharacterGainItem (int netId, int charId, IReadOnlyList < (short, short) > itemIdAndNumList) {
+        public void NotifyCharacterGainItems (int netId, int charId, IReadOnlyList < (short, short) > itemIdAndNumList) {
             var bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null) return;
-            // 放入背包
-            for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                var itemId = itemIdAndNumList[i].Item1;
-                var itemNum = itemIdAndNumList[i].Item2;
-                List < (short, E_Item) > changedItemList;
-                E_Item storeItem;
-                short storePos;
-                var realStoreNum = EM_Item.s_instance.CharacterGainItem (charId, itemId, itemNum, bag, out changedItemList, out storeItem, out storePos);
-                // client
-                List<NO_Item> changedItemNoList = new List<NO_Item> (changedItemList.Count);
-                for (int j = 0; j < changedItemList.Count; j++)
-                    changedItemNoList.Add (changedItemList[i].Item2.GetItemNo (ItemPlace.BAG, changedItemList[i].Item1));
-                if (changedItemNoList.Count != 0)
-                    m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, changedItemNoList));
-                // client 基础信息
-                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
-                    netId,
-                    new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
-                // client 附加信息 (装备等)
-                m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
+            for (int i = 0; i < itemIdAndNumList.Count; i++)
+                NotifyCharacterGainItem (netId, charId, itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2);
+        }
+        public void NotifyCharacterGainItem (int netId, int charId, short itemId, short itemNum) {
+            var bag = EM_Item.s_instance.GetBag (netId);
+            if (bag == null) return;
+            List < (short, E_Item) > changedItemList;
+            E_Item storeItem;
+            short storePos;
+            var realStoreNum = EM_Item.s_instance.CharacterGainItem (charId, itemId, itemNum, bag, out changedItemList, out storeItem, out storePos);
+            // client
+            List<NO_Item> changedItemNoList = new List<NO_Item> (changedItemList.Count);
+            for (int j = 0; j < changedItemList.Count; j++)
+                changedItemNoList.Add (changedItemList[j].Item2.GetItemNo (ItemPlace.BAG, changedItemList[j].Item1));
+            if (changedItemNoList.Count != 0)
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, changedItemNoList));
+            // client 基础信息
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
+                netId,
+                new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
+            // client 附加信息 (装备等)
+            m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
 
-                // 通知 log
-                GL_MissionLog.s_instance.NotifyLog (MissionLogType.GAIN_ITEM, netId, itemId, realStoreNum);
-            }
+            // 通知 log
+            GL_MissionLog.s_instance.NotifyLog (MissionLogType.GAIN_ITEM, netId, itemId, realStoreNum);
         }
         public void NotifyMonsterDropLegacy (E_Monster monObj, E_Unit killer) {
             IReadOnlyList<short> monLegacyList = monObj.m_DropItemIdList;

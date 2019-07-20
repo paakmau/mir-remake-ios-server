@@ -26,8 +26,7 @@ namespace MirRemakeBackend.GameLogic {
             // 扣钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, cyType, -needCy);
             // gain item
-            GL_Item.s_instance.NotifyCharacterGainItem (netId, charObj.m_characterId, new List < (short, short) > () {
-                (itemObj.m_ItemId, 1) });
+            GL_Item.s_instance.NotifyCharacterGainItem (netId, charObj.m_characterId, itemObj.m_ItemId, 1);
         }
     }
 }
