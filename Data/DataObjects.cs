@@ -77,8 +77,7 @@ namespace MirRemakeBackend.Data {
         public ItemType m_type;
         public short m_maxNum;
         public ItemQuality m_quality;
-        public long m_buyPrice;
-        public long m_sellPrice;
+        public long m_price;
     }
     struct DO_Consumable {
         public short m_itemId;

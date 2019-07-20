@@ -15,7 +15,7 @@ namespace MirRemakeBackend.Entity {
         public NO_MallClass GetNo () {
             List<NO_MallItem> itemNoList = new List<NO_MallItem> (m_mallItemList.Count);
             for (int i = 0; i < m_mallItemList.Count; i++)
-                itemNoList[i] = m_mallItemList[i].GetNo ();
+                itemNoList.Add (m_mallItemList[i].GetNo ());
             return new NO_MallClass (m_mallClassId, m_mallClassName, itemNoList);
         }
     }
