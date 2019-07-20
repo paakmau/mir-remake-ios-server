@@ -340,17 +340,19 @@ namespace MirRemakeBackend.GameLogic {
             short storePos;
             var realStoreNum = EM_Item.s_instance.CharacterGainItem (charId, itemId, itemNum, bag, out changedItemList, out storeItem, out storePos);
             // client
-            List<NO_Item> changedItemNoList = new List<NO_Item> (changedItemList.Count);
-            for (int j = 0; j < changedItemList.Count; j++)
-                changedItemNoList.Add (changedItemList[j].Item2.GetItemNo (ItemPlace.BAG, changedItemList[j].Item1));
-            if (changedItemNoList.Count != 0)
+            if (changedItemList.Count != 0) {
+                List<NO_Item> changedItemNoList = new List<NO_Item> (changedItemList.Count);
+                for (int j = 0; j < changedItemList.Count; j++)
+                    changedItemNoList.Add (changedItemList[j].Item2.GetItemNo (ItemPlace.BAG, changedItemList[j].Item1));
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, changedItemNoList));
-            // client 基础信息
-            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
-                netId,
-                new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
-            // client 附加信息 (装备等)
-            m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
+            }
+            // client 基础信息 与附加信息
+            if (storeItem != null) {
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
+                    netId,
+                    new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
+                m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
+            }
 
             // 通知 log
             GL_MissionLog.s_instance.NotifyLog (MissionLogType.GAIN_ITEM, netId, itemId, realStoreNum);
