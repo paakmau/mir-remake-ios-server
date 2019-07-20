@@ -192,14 +192,14 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
-    /// 购买物品放入背包
+    /// /// 购买物品放入背包
     /// </summary>
     class CC_ApplyBuyItemIntoBag : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_INTO_BAG; } }
         public void Execute (NetDataReader reader, int netId) {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
-            GL_Item.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
+            // GL_Item.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
         }
     }
     class CC_ApplyBuildEquipment : IClientCommand {
