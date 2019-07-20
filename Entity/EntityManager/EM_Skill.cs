@@ -62,7 +62,7 @@ namespace MirRemakeBackend.Entity {
             learnedSkill.TryGetValue (skillId, out res);
             return res;
         }
-        public void SkillUpdate (int charId, E_Skill skObj) {
+        public void CharacterUpdateSkill (int charId, E_Skill skObj) {
             m_dds.UpdateSkill (skObj.GetDdo (charId));
         }
     }

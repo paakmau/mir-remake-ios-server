@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
 
@@ -26,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
             if (oriLv != skill.m_skillLevel) {
                 GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -costTotal);
                 // 持久化 与 client
-                EM_Skill.s_instance.SkillUpdate (charObj.m_characterId, skill);
+                EM_Skill.s_instance.CharacterUpdateSkill (charObj.m_characterId, skill);
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                     netId, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
                 // log
@@ -39,7 +40,7 @@ namespace MirRemakeBackend.GameLogic {
             if (charId == -1 || skObj == null) return;
             skObj.m_masterly += masterly;
             // 持久化 与 client
-            EM_Skill.s_instance.SkillUpdate (charId, skObj);
+            EM_Skill.s_instance.CharacterUpdateSkill (charId, skObj);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                 netId, skObj.m_SkillId, skObj.m_skillLevel, skObj.m_masterly));
         }
@@ -53,6 +54,13 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Skill.s_instance.RemoveCharacter (netId);
+        }
+        public void NotifyCastSkill (E_Character charObj, E_Skill skill, List<E_Unit> tarList) {
+            // xjb masterly
+            skill.m_masterly += tarList.Count * 10;
+            EM_Skill.s_instance.CharacterUpdateSkill (charObj.m_characterId, skill);
+            // 通知战斗结算
+            GL_BattleSettle.s_instance.NotifySkillSettle (charObj, skill, tarList);
         }
     }
 }
