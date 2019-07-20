@@ -85,11 +85,23 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.RefreshRenewableItem ();
         }
         public override void NetworkTick () { }
+        public void CommandApplyBuyItemIntoBag (int netId, short itemId, short num) {
+            if (num == 0) return;
+            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            long needCy = EM_Item.s_instance.GetItemBuyPrice (itemId);
+            if (needCy == -1) return;
+            needCy *= num;
+            long charCy = charObj.m_virtualCurrency;
+            if (charCy < needCy) return;
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
+        }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null)
-                return;
+            if (charObj == null || bag == null) return;
             short pos;
             E_Item item = bag.GetItemByRealId (realId, out pos);
             if (item == null)

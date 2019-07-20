@@ -102,6 +102,10 @@ namespace MirRemakeBackend.Entity {
             // 地面物品视野
             m_characterGroundItemSightDict.Remove (netId);
         }
+        public long GetItemBuyPrice (short itemId) {
+            var itemDe = m_dem.GetItemById (itemId);
+            return itemDe == null ? -1 : itemDe.m_buyPrice;
+        }
         /// <summary>
         /// 获取装备区
         /// </summary>

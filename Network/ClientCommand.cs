@@ -199,7 +199,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
-            // GL_Item.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
+            GL_Item.s_instance.CommandApplyBuyItemIntoBag (netId, itemId, num);
         }
     }
     class CC_ApplyBuildEquipment : IClientCommand {
