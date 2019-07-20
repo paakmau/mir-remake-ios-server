@@ -57,7 +57,12 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyCastSkill (E_Character charObj, E_Skill skill, List<E_Unit> tarList) {
             // xjb masterly
-            skill.m_masterly += tarList.Count * 10;
+            if(tarList.Count==1){
+                skill.m_masterly +=(3+skill.m_skillLevel);
+            }
+            else{
+                skill.m_masterly += (tarList.Count+skill.m_skillLevel);
+            }
             EM_Skill.s_instance.CharacterUpdateSkill (charObj.m_characterId, skill);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (charObj.m_networkId, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
             // 通知战斗结算
