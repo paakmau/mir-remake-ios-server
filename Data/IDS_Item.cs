@@ -33,7 +33,8 @@ namespace MirRemakeBackend.Data {
                 item.m_quality = (ItemQuality) Enum.Parse (
                     typeof (ItemQuality), s_equipmentDatas[i]["Quality"].ToString ());
                 item.m_maxNum = 1;
-                item.m_price = 1000 * int.Parse (s_equipmentDatas[i]["LevelInNeed"].ToString ());
+                item.m_sellPrice = 750 * int.Parse (s_equipmentDatas[i]["LevelInNeed"].ToString ());
+                item.m_buyPrice = 30*item.m_sellPrice;
                 item.m_type = ItemType.EQUIPMENT;
                 equipment.m_itemId = short.Parse (s_equipmentDatas[i]["EquipmentID"].ToString ());
                 equipment.m_equipPosition = (EquipmentPosition) Enum.Parse (typeof (EquipmentPosition), s_equipmentDatas[i]["EquipmentPosition"].ToString ());
@@ -62,7 +63,8 @@ namespace MirRemakeBackend.Data {
                 DO_Item item = new DO_Item ();
                 item.m_itemId = short.Parse (s_consumableDatas[i]["ID"].ToString ());
                 item.m_maxNum = short.Parse (s_consumableDatas[i]["MaxNum"].ToString ());
-                item.m_price = long.Parse (s_consumableDatas[i]["Price"].ToString ());
+                item.m_sellPrice = long.Parse (s_consumableDatas[i]["Price"].ToString ());
+                item.m_buyPrice = item.m_sellPrice*3;
                 item.m_type = ItemType.CONSUMABLE;
                 item.m_quality = (ItemQuality) Enum.Parse (
                     typeof (ItemQuality), s_consumableDatas[i]["Quality"].ToString ());
@@ -93,7 +95,8 @@ namespace MirRemakeBackend.Data {
                 DO_Item item = new DO_Item ();
                 item.m_itemId = short.Parse (s_gemDatas[i]["ID"].ToString ());
                 item.m_maxNum = 10;
-                item.m_price = 10000L;
+                item.m_sellPrice = 10000L;
+                item.m_buyPrice = 50000L;
                 item.m_type = ItemType.GEM;
                 item.m_quality = (ItemQuality) Enum.Parse (
                     typeof (ItemQuality), s_gemDatas[i]["Quality"].ToString ());
@@ -113,7 +116,8 @@ namespace MirRemakeBackend.Data {
             DO_Item[] res=new DO_Item[s_itemDatas.Count];
             for (int i=0;i<s_itemDatas.Count;i++){
                 res[i].m_itemId=short.Parse(s_itemDatas[i]["ID"].ToString());
-                res[i].m_price=150;
+                res[i].m_sellPrice=150;
+                res[i].m_buyPrice =100;
                 res[i].m_maxNum=short.Parse(s_itemDatas[i]["MaxNum"].ToString());
                 res[i].m_quality=ItemQuality.COMMON;
                 res[i].m_type=ItemType.MATERIAL;
@@ -128,7 +132,8 @@ namespace MirRemakeBackend.Data {
             for(int i=0;i<s_enchantmentDatas.Count;i++){
                 result[i].m_itemId=short.Parse(s_enchantmentDatas[i]["ID"].ToString());
                 result[i].m_quality=(ItemQuality)Enum.Parse(typeof(ItemQuality),s_enchantmentDatas[i]["Quality"].ToString());
-                result[i].m_price = 100*(2*(int)(result[i].m_quality)+1);
+                result[i].m_sellPrice = 600*(2*(int)(result[i].m_quality)+1);
+                result[i].m_buyPrice = 3*result[i].m_sellPrice;
                 result[i].m_type = ItemType.ENCHANTMENT;
                 result[i].m_maxNum = 1;
             }
