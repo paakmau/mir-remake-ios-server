@@ -309,8 +309,9 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_IN_SHOPPING_MALL; } }
         public void Execute (NetDataReader reader, int netId) {
             int mallItemId = reader.GetInt ();
+            short num = reader.GetShort ();
             CurrencyType cyType = (CurrencyType) reader.GetByte ();
-            GL_Mall.s_instance.CommandBuyItemInShoppingMall (netId, mallItemId, cyType);
+            GL_Mall.s_instance.CommandBuyItemInShoppingMall (netId, mallItemId, num, cyType);
         }
     }
     /// <summary>

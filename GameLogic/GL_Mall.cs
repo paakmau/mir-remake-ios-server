@@ -15,7 +15,7 @@ namespace MirRemakeBackend.GameLogic {
                 mallClassNoList.Add (mallClassEn.Current.Value.GetNo ());
             m_networkService.SendServerCommand (SC_SendShoppingMall.Instance (netId, mallClassNoList));
         }
-        public void CommandBuyItemInShoppingMall (int netId, int mallItemId, CurrencyType cyType) {
+        public void CommandBuyItemInShoppingMall (int netId, int mallItemId, short itemNum, CurrencyType cyType) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_MallItem itemObj = EM_MallItem.s_instance.GetMallItemByMallItemId (mallItemId);
             if (charObj == null || itemObj == null) return;
