@@ -315,6 +315,8 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.CharacterSwapItem (charId, srcRepo, srcPos, srcItem, tarRepo, tarPos, tarItem);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId,
                 new List<NO_Item> { srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos), tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos) }));
+            m_netSenderDict[srcItem.m_Type].SendItemInfo (srcItem, netId, m_networkService);
+            m_netSenderDict[tarItem.m_Type].SendItemInfo (tarItem, netId, m_networkService);
         }
         public void NotifyCharacterGainItems (int netId, int charId, IReadOnlyList < (short, short) > itemIdAndNumList) {
             var bag = EM_Item.s_instance.GetBag (netId);
