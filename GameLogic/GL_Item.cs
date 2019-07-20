@@ -86,9 +86,6 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.RefreshRenewableItem ();
         }
         public override void NetworkTick () { }
-        public void NotifyRemoveCharacter (int netId) {
-            EM_Item.s_instance.RemoveCharacter (netId);
-        }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
@@ -307,6 +304,9 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
             // client
             m_networkService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
+        }
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Item.s_instance.RemoveCharacter (netId);
         }
         /// <summary>
         /// 失去确定位置的物品
