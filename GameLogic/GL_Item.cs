@@ -312,7 +312,7 @@ namespace MirRemakeBackend.GameLogic {
             E_RepositoryBase bag, storeHouse, eqRegion;
             EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
             // client
-            m_networkService.SendServerCommand (SC_InitSelfItem.Instance (new List<int> () { netId }, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
+            m_networkService.SendServerCommand (SC_InitSelfItem.Instance (netId, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);

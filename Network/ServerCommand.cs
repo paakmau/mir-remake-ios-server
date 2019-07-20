@@ -10,13 +10,20 @@ namespace MirRemakeBackend.Network {
         public IReadOnlyList<int> m_toClientList;
         public abstract void PutData (NetDataWriter writer);
     }
-    class SC_InitSelfNetworkId : ServerCommandBase {
+    abstract class SingleToClientServerCommand : ServerCommandBase {
+        private int[] m_toClientArr = new int[1];
+        protected SingleToClientServerCommand () { m_toClientList = m_toClientArr; }
+        protected void ResetToClientNetId (int netId) {
+            m_toClientArr[0] = netId;
+        }
+    }
+    class SC_InitSelfNetworkId : SingleToClientServerCommand {
         private static readonly SC_InitSelfNetworkId s_instance = new SC_InitSelfNetworkId ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_netId;
         public static SC_InitSelfNetworkId Instance (int netId) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_netId = netId;
             return s_instance;
         }
@@ -25,13 +32,13 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_netId);
         }
     }
-    class SC_InitSelfRegister : ServerCommandBase {
+    class SC_InitSelfRegister : SingleToClientServerCommand {
         private static readonly SC_InitSelfRegister s_instance = new SC_InitSelfRegister ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_REGISTER; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private bool m_success;
         public static SC_InitSelfRegister Instance (int netId, bool success) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_success = success;
             return s_instance;
         }
@@ -40,7 +47,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_success);
         }
     }
-    class SC_InitSelfLogin : ServerCommandBase {
+    class SC_InitSelfLogin : SingleToClientServerCommand {
         private static readonly SC_InitSelfLogin s_instance = new SC_InitSelfLogin ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_LOGIN; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -48,7 +55,7 @@ namespace MirRemakeBackend.Network {
         private int m_playerId;
         private IReadOnlyList<NO_LoginCharacter> m_loginCharList;
         public static SC_InitSelfLogin Instance (int netId, bool success, int playerId, IReadOnlyList<NO_LoginCharacter> loginCharList) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_success = success;
             s_instance.m_playerId = playerId;
             s_instance.m_loginCharList = loginCharList;
@@ -63,14 +70,14 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_loginCharList[i]);
         }
     }
-    class SC_InitSelfGetPasswordProtectProblem : ServerCommandBase {
+    class SC_InitSelfGetPasswordProtectProblem : SingleToClientServerCommand {
         private static readonly SC_InitSelfGetPasswordProtectProblem s_instance = new SC_InitSelfGetPasswordProtectProblem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_GET_PASSWORD_PROTECT_PROBLEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private bool m_success;
         private string m_problem;
         public static SC_InitSelfGetPasswordProtectProblem Instance (int netId, bool success, string problem) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_success = success;
             s_instance.m_problem = problem;
             return s_instance;
@@ -81,13 +88,13 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_problem);
         }
     }
-    class SC_InitSelfFindPassword : ServerCommandBase {
+    class SC_InitSelfFindPassword : SingleToClientServerCommand {
         private static readonly SC_InitSelfFindPassword s_instance = new SC_InitSelfFindPassword ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_FIND_PASSWORD; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private bool m_success;
         public static SC_InitSelfFindPassword Instance (int netId, bool success) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_success = success;
             return s_instance;
         }
@@ -96,13 +103,13 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_success);
         }
     }
-    class SC_InitSelfModifyPassword : ServerCommandBase {
+    class SC_InitSelfModifyPassword : SingleToClientServerCommand {
         private static readonly SC_InitSelfModifyPassword s_instance = new SC_InitSelfModifyPassword ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_MODIFY_PASSWORD; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private bool m_success;
         public static SC_InitSelfModifyPassword Instance (int netId, bool success) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_success = success;
             return s_instance;
         }
@@ -111,14 +118,14 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_success);
         }
     }
-    class SC_InitSelfCreateCharacter : ServerCommandBase {
+    class SC_InitSelfCreateCharacter : SingleToClientServerCommand {
         private static readonly SC_InitSelfCreateCharacter s_instance = new SC_InitSelfCreateCharacter ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_CREATE_CHARACTER; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private bool m_success;
         private int m_charId;
         public static SC_InitSelfCreateCharacter Instance (int netId, bool success, int charId) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_success = success;
             s_instance.m_charId = charId;
             return s_instance;
@@ -132,7 +139,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 初始化属性点与等级
     /// </summary>
-    class SC_InitSelfAttribute : ServerCommandBase {
+    class SC_InitSelfAttribute : SingleToClientServerCommand {
         private static readonly SC_InitSelfAttribute s_instance = new SC_InitSelfAttribute ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -160,7 +167,7 @@ namespace MirRemakeBackend.Network {
         private long m_chargeCy;
         private Vector2 m_pos;
         public static SC_InitSelfAttribute Instance (int netId, OccupationType ocp, string name, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint, long virtualCy, long chargeCy, Vector2 pos) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_ocp = ocp;
             s_instance.m_name = name;
             s_instance.m_level = level;
@@ -194,14 +201,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 初始化技能习得情况
     /// </summary>
-    class SC_InitSelfSkill : ServerCommandBase {
+    class SC_InitSelfSkill : SingleToClientServerCommand {
         private static readonly SC_InitSelfSkill s_instance = new SC_InitSelfSkill ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SKILL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 职业可学的所有技能列表, (技能Id, 当前等级, 技能熟练度) </summary>
         private (short, short, int) [] m_skillIdAndLvAndMasterlys;
         public static SC_InitSelfSkill Instance (int netId, (short, short, int) [] skillIdAndLvAndMasterlys) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_skillIdAndLvAndMasterlys = skillIdAndLvAndMasterlys;
             return s_instance;
         }
@@ -218,7 +225,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 初始化任务情况
     /// </summary>
-    class SC_InitSelfMission : ServerCommandBase {
+    class SC_InitSelfMission : SingleToClientServerCommand {
         private static readonly SC_InitSelfMission s_instance = new SC_InitSelfMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -229,7 +236,7 @@ namespace MirRemakeBackend.Network {
         /// <summary> 不可接但已解锁任务Id列表 </summary>
         IReadOnlyList<short> m_unacceptableMis;
         public static SC_InitSelfMission Instance (int netId, IReadOnlyList<NO_Mission> acceptedMis, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_acceptedMis = acceptedMis;
             s_instance.m_acceptableMis = acceptableMis;
             s_instance.m_unacceptableMis = unacceptableMis;
@@ -251,7 +258,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 初始化所持道具
     /// </summary>
-    class SC_InitSelfItem : ServerCommandBase {
+    class SC_InitSelfItem : SingleToClientServerCommand {
         private static readonly SC_InitSelfItem s_instance = new SC_InitSelfItem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -262,12 +269,12 @@ namespace MirRemakeBackend.Network {
         /// <summary> 装备区 </summary>
         private NO_Repository m_equipmentRegion;
         public static SC_InitSelfItem Instance (
-            IReadOnlyList<int> toClientList,
+            int netId,
             NO_Repository bag,
             NO_Repository storeHouse,
             NO_Repository equips
         ) {
-            s_instance.m_toClientList = toClientList;
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_bag = bag;
             s_instance.m_storeHouse = storeHouse;
             s_instance.m_equipmentRegion = equips;
@@ -283,14 +290,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 新进入视野的怪物
     /// </summary>
-    class SC_ApplyOtherMonsterInSight : ServerCommandBase {
+    class SC_ApplyOtherMonsterInSight : SingleToClientServerCommand {
         private static SC_ApplyOtherMonsterInSight s_instance = new SC_ApplyOtherMonsterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_MONSTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 新进入视野 怪物列表 </summary>
         private IReadOnlyList<NO_Monster> m_monList;
         public static SC_ApplyOtherMonsterInSight Instance (int netId, IReadOnlyList<NO_Monster> newMonList) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_monList = newMonList;
             return s_instance;
         }
@@ -304,7 +311,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 新进入视野中的其他角色
     /// </summary>
-    class SC_ApplyOtherCharacterInSight : ServerCommandBase {
+    class SC_ApplyOtherCharacterInSight : SingleToClientServerCommand {
         private static SC_ApplyOtherCharacterInSight s_instance = new SC_ApplyOtherCharacterInSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_CHARACTER_IN_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -314,7 +321,7 @@ namespace MirRemakeBackend.Network {
             int netId,
             IReadOnlyList < (NO_SightCharacter, IReadOnlyList<short>) > newCharAndEquipedIdList
         ) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_charAndEquipedIdList = newCharAndEquipedIdList;
             return s_instance;
         }
@@ -332,14 +339,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 离开视野的单位
     /// </summary>
-    class SC_ApplyOtherActorUnitOutOfSight : ServerCommandBase {
+    class SC_ApplyOtherActorUnitOutOfSight : SingleToClientServerCommand {
         private static SC_ApplyOtherActorUnitOutOfSight s_instance = new SC_ApplyOtherActorUnitOutOfSight ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_ACTOR_UNIT_OUT_OF_SIGHT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 离开视野单位的NetId列表 </summary>
         private IReadOnlyList<int> m_unitIdList;
         public static SC_ApplyOtherActorUnitOutOfSight Instance (int netId, IReadOnlyList<int> unitIdList) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_unitIdList = unitIdList;
             return s_instance;
         }
@@ -353,14 +360,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 同步其他单位位置
     /// </summary>
-    class SC_SetOtherPosition : ServerCommandBase {
+    class SC_SetOtherPosition : SingleToClientServerCommand {
         private static SC_SetOtherPosition s_instance = new SC_SetOtherPosition ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_OTHER_POSITION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         /// <summary> 其他单位的位置 (NetId, Pos) </summary>
         IReadOnlyList < (int, Vector2) > m_otherNetIdAndPosList;
         public static SC_SetOtherPosition Instance (int netId, IReadOnlyList < (int, Vector2) > otherNetIdAndPosList) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_otherNetIdAndPosList = otherNetIdAndPosList;
             return s_instance;
         }
@@ -376,7 +383,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 同步所有角色Hp与Mp
     /// </summary>
-    class SC_SetAllHPAndMP : ServerCommandBase {
+    class SC_SetAllHPAndMP : SingleToClientServerCommand {
         private static readonly SC_SetAllHPAndMP s_instance = new SC_SetAllHPAndMP ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_HP_AND_MP; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
@@ -385,7 +392,7 @@ namespace MirRemakeBackend.Network {
         /// <summary> 他们相对应的 (Hp, MaxHp, Mp, MaxMp) </summary>
         IReadOnlyList < (int, int, int, int) > m_hpAndMaxHpAndMpAndMaxMpList;
         public static SC_SetAllHPAndMP Instance (int netId, IReadOnlyList<int> allNetIdList, IReadOnlyList < (int, int, int, int) > hpAndMaxHpAndMpAndMaxMpList) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_allNetIdList = allNetIdList;
             s_instance.m_hpAndMaxHpAndMpAndMaxMpList = hpAndMaxHpAndMpAndMaxMpList;
             return s_instance;
@@ -405,13 +412,13 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 发送一个角色的所有属性
     /// </summary>
-    class SC_SendAllCharacterAttribute : ServerCommandBase {
+    class SC_SendAllCharacterAttribute : SingleToClientServerCommand {
         private static readonly SC_SendAllCharacterAttribute s_instance = new SC_SendAllCharacterAttribute ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_ALL_CHARACTER_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         private NO_AttributeCharacter m_attrChar;
         public static SC_SendAllCharacterAttribute Instance (int netId, NO_AttributeCharacter attrChar) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_attrChar = attrChar;
             return s_instance;
         }
@@ -424,7 +431,7 @@ namespace MirRemakeBackend.Network {
     /// 更新自身特殊属性  
     /// 如眩晕, 禁锢, 沉默等  
     /// </summary>
-    class SC_ApplySelfSpecialAttribute : ServerCommandBase {
+    class SC_ApplySelfSpecialAttribute : SingleToClientServerCommand {
         private static readonly SC_ApplySelfSpecialAttribute s_instance = new SC_ApplySelfSpecialAttribute ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SPECIAL_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -433,7 +440,7 @@ namespace MirRemakeBackend.Network {
         /// <summary> 特殊状态是被附加还是移除 </summary>
         private bool m_isAttach;
         public static SC_ApplySelfSpecialAttribute Instance (int netId, ActorUnitSpecialAttributeType spAttrType, bool isAttach) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_spAttrType = spAttrType;
             s_instance.m_isAttach = isAttach;
             return s_instance;
@@ -447,7 +454,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 更新自身等级与经验值与可分配的主属性点
     /// </summary>
-    class SC_ApplySelfLevelAndExp : ServerCommandBase {
+    class SC_ApplySelfLevelAndExp : SingleToClientServerCommand {
         private static readonly SC_ApplySelfLevelAndExp s_instance = new SC_ApplySelfLevelAndExp ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_LEVEL_AND_EXP; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -455,7 +462,7 @@ namespace MirRemakeBackend.Network {
         int m_exp;
         short m_totalMainPoint;
         public static SC_ApplySelfLevelAndExp Instance (int netId, short lv, int exp, short totalMainPoint) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_lv = lv;
             s_instance.m_exp = exp;
             s_instance.m_totalMainPoint = totalMainPoint;
@@ -471,7 +478,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 更新自身主属性加点
     /// </summary>
-    class SC_ApplySelfMainAttribute : ServerCommandBase {
+    class SC_ApplySelfMainAttribute : SingleToClientServerCommand {
         private static readonly SC_ApplySelfMainAttribute s_instance = new SC_ApplySelfMainAttribute ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MAIN_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -480,7 +487,7 @@ namespace MirRemakeBackend.Network {
         short m_agl;
         short m_spr;
         public static SC_ApplySelfMainAttribute Instance (int netId, short str, short intl, short agl, short spr) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_str = str;
             s_instance.m_intl = intl;
             s_instance.m_agl = agl;
@@ -529,7 +536,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 发送Boss战伤害的角色排行榜
     /// </summary>
-    class SC_SetAllBossDamageCharacterRank : ServerCommandBase {
+    class SC_SetAllBossDamageCharacterRank : SingleToClientServerCommand {
         private static readonly SC_SetAllBossDamageCharacterRank s_instance = new SC_SetAllBossDamageCharacterRank ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SET_ALL_BOSS_DAMAGE_CHARACTER_RANK; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
@@ -537,7 +544,7 @@ namespace MirRemakeBackend.Network {
         int m_myDmg;
         short m_myRank;
         public static SC_SetAllBossDamageCharacterRank Instance (int netId, IReadOnlyList<NO_DamageRankCharacter> dmgRnkCharList, int m_myDmg, short myRank) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_dmgRnkCharList = dmgRnkCharList;
             s_instance.m_myDmg = m_myDmg;
             s_instance.m_myRank = myRank;
@@ -555,7 +562,7 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 发送战斗力排行榜
     /// </summary>
-    class SC_SendFightCapacityRank : ServerCommandBase {
+    class SC_SendFightCapacityRank : SingleToClientServerCommand {
         private static readonly SC_SendFightCapacityRank s_instance = new SC_SendFightCapacityRank ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_FIGHT_CAPACITY_RANK; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -563,7 +570,7 @@ namespace MirRemakeBackend.Network {
         int m_myCombatEfct;
         short m_myRank;
         public static SC_SendFightCapacityRank Instance (int netId, IReadOnlyList<NO_FightCapacityRankInfo> combatEfctRnkList, int myCombatEfct, short myRank) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_combatEfctRankList = combatEfctRnkList;
             s_instance.m_myCombatEfct = myCombatEfct;
             s_instance.m_myRank = myRank;
@@ -695,7 +702,7 @@ namespace MirRemakeBackend.Network {
     /// 更新物品数量  
     /// 数量为0则为丢弃
     /// </summary>
-    class SC_ApplySelfUpdateItem : ServerCommandBase {
+    class SC_ApplySelfUpdateItem : SingleToClientServerCommand {
         private static SC_ApplySelfUpdateItem s_instance = new SC_ApplySelfUpdateItem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -704,7 +711,7 @@ namespace MirRemakeBackend.Network {
             int netId,
             IReadOnlyList<NO_Item> itemList
         ) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_itemList = itemList;
             return s_instance;
         }
@@ -718,14 +725,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 更新装备信息
     /// </summary>
-    class SC_ApplySelfUpdateEquipment : ServerCommandBase {
+    class SC_ApplySelfUpdateEquipment : SingleToClientServerCommand {
         private static SC_ApplySelfUpdateEquipment s_instance = new SC_ApplySelfUpdateEquipment ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_EQUIPMENT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private long m_realId;
         private NO_EquipmentItemInfo m_eqInfo;
         public static SC_ApplySelfUpdateEquipment Instance (int netId, long realId, NO_EquipmentItemInfo eqInfo) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_realId = realId;
             s_instance.m_eqInfo = eqInfo;
             return s_instance;
@@ -739,14 +746,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 更新装备信息
     /// </summary>
-    class SC_ApplySelfUpdateEnchantment : ServerCommandBase {
+    class SC_ApplySelfUpdateEnchantment : SingleToClientServerCommand {
         private static SC_ApplySelfUpdateEnchantment s_instance = new SC_ApplySelfUpdateEnchantment ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_ENCHANTMENT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private long m_realId;
         private NO_EnchantmentItemInfo m_ecmtInfo;
         public static SC_ApplySelfUpdateEnchantment Instance (int netId, long realId, NO_EnchantmentItemInfo ecmtInfo) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_realId = realId;
             s_instance.m_ecmtInfo = ecmtInfo;
             return s_instance;
@@ -760,14 +767,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 更新所持货币
     /// </summary>
-    class SC_ApplySelfCurrency : ServerCommandBase {
+    class SC_ApplySelfCurrency : SingleToClientServerCommand {
         private static SC_ApplySelfCurrency s_instance = new SC_ApplySelfCurrency ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CURRENCY; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private long m_virtualCy;
         private long m_chargeCy;
         public static SC_ApplySelfCurrency Instance (int netId, long virtualCy, long chargeCy) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_virtualCy = virtualCy;
             s_instance.m_chargeCy = chargeCy;
             return s_instance;
@@ -781,13 +788,13 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 地面道具出现
     /// </summary>
-    class SC_ApplyGroundItemShow : ServerCommandBase {
+    class SC_ApplyGroundItemShow : SingleToClientServerCommand {
         private static SC_ApplyGroundItemShow s_instance = new SC_ApplyGroundItemShow ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_SHOW; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_GroundItem> m_itemList;
         public static SC_ApplyGroundItemShow Instance (int netId, IReadOnlyList<NO_GroundItem> itemList) {
-            s_instance.m_toClientList = new List<int> () { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_itemList = itemList;
             return s_instance;
         }
@@ -801,13 +808,13 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 地面道具消失
     /// </summary>
-    class SC_ApplyGroundItemDisappear : ServerCommandBase {
+    class SC_ApplyGroundItemDisappear : SingleToClientServerCommand {
         private static SC_ApplyGroundItemDisappear s_instance = new SC_ApplyGroundItemDisappear ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_GROUND_ITEM_DISAPPEAR; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<long> m_gndItemIdList;
         public static SC_ApplyGroundItemDisappear Instance (int netId, IReadOnlyList<long> gndIdList) {
-            s_instance.m_toClientList = new List<int> () { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_gndItemIdList = gndIdList;
             return s_instance;
         }
@@ -821,14 +828,14 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 自己开摊
     /// </summary>
-    class SC_ApplySelfSetUpMarket : ServerCommandBase {
+    class SC_ApplySelfSetUpMarket : SingleToClientServerCommand {
         private static SC_ApplySelfSetUpMarket s_instance = new SC_ApplySelfSetUpMarket ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SET_UP_MARKET; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         IReadOnlyList<long> m_itemRealIdList;
         IReadOnlyList<short> m_itemNumList;
         public static SC_ApplySelfSetUpMarket Instance (int netId, IReadOnlyList<long> itemRealIdList, IReadOnlyList<short> itemNumList) {
-            s_instance.m_toClientList = new List<int> () { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_itemRealIdList = itemRealIdList;
             s_instance.m_itemNumList = itemNumList;
             return s_instance;
@@ -845,21 +852,42 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 自己收摊
     /// </summary>
-    class SC_ApplySelfPackUpMarket : ServerCommandBase {
+    class SC_ApplySelfPackUpMarket : SingleToClientServerCommand {
         private static SC_ApplySelfPackUpMarket s_instance = new SC_ApplySelfPackUpMarket ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_PACK_UP_MARKET; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public static SC_ApplySelfPackUpMarket Instance (int netId) {
-            s_instance.m_toClientList = new List<int> () { netId };
+            s_instance.ResetToClientNetId (netId);
             return s_instance;
         }
         private SC_ApplySelfPackUpMarket () { }
         public override void PutData (NetDataWriter writer) { }
     }
     /// <summary>
+    /// update self market item
+    /// </summary>
+    class SC_ApplySelfUpdateMarketItem : SingleToClientServerCommand {
+        private static SC_ApplySelfUpdateMarketItem s_instance = new SC_ApplySelfUpdateMarketItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_MARKET_ITEM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        long m_itemRealId;
+        short m_itemNum;
+        public static SC_ApplySelfUpdateMarketItem Instance (int netId, long realId, short num) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_itemRealId = realId;
+            s_instance.m_itemNum = num;
+            return s_instance;
+        }
+        private SC_ApplySelfUpdateMarketItem () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_itemRealId);
+            writer.Put (m_itemNum);
+        }
+    }
+    /// <summary>
     /// 修改技能等级与熟练度
     /// </summary>
-    class SC_ApplySelfUpdateSkillLevelAndMasterly : ServerCommandBase {
+    class SC_ApplySelfUpdateSkillLevelAndMasterly : SingleToClientServerCommand {
         private static SC_ApplySelfUpdateSkillLevelAndMasterly s_instance = new SC_ApplySelfUpdateSkillLevelAndMasterly ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -867,7 +895,7 @@ namespace MirRemakeBackend.Network {
         private short m_skillLv;
         private int m_masterly;
         public static SC_ApplySelfUpdateSkillLevelAndMasterly Instance (int netId, short skillId, short skillLv, int masterly) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_skillId = skillId;
             s_instance.m_skillLv = skillLv;
             s_instance.m_masterly = masterly;
@@ -883,13 +911,13 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 接受任务
     /// </summary>
-    class SC_ApplySelfAcceptMission : ServerCommandBase {
+    class SC_ApplySelfAcceptMission : SingleToClientServerCommand {
         private static SC_ApplySelfAcceptMission s_instance = new SC_ApplySelfAcceptMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_ACCECPT_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
         public static SC_ApplySelfAcceptMission Instance (int netId, short missionId) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_missionId = missionId;
             return s_instance;
         }
@@ -898,13 +926,13 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
-    class SC_ApplySelfDeliverMission : ServerCommandBase {
+    class SC_ApplySelfDeliverMission : SingleToClientServerCommand {
         private static SC_ApplySelfDeliverMission s_instance = new SC_ApplySelfDeliverMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DELIVER_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
         public static SC_ApplySelfDeliverMission Instance (int netId, short missionId) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_missionId = missionId;
             return s_instance;
         }
@@ -913,13 +941,13 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
-    class SC_ApplySelfCancelMission : ServerCommandBase {
+    class SC_ApplySelfCancelMission : SingleToClientServerCommand {
         private static SC_ApplySelfCancelMission s_instance = new SC_ApplySelfCancelMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CANCEL_MISSION; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private short m_missionId;
         public static SC_ApplySelfCancelMission Instance (int netId, short missionId) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_missionId = missionId;
             return s_instance;
         }
@@ -928,7 +956,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
-    class SC_ApplySelfMissionProgress : ServerCommandBase {
+    class SC_ApplySelfMissionProgress : SingleToClientServerCommand {
         private static SC_ApplySelfMissionProgress s_instance = new SC_ApplySelfMissionProgress ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_PROGRESS; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -936,7 +964,7 @@ namespace MirRemakeBackend.Network {
         private byte m_targetIndex;
         private int m_progress;
         public static SC_ApplySelfMissionProgress Instance (int netId, short missionId, byte targetIdx, int progress) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_missionId = missionId;
             s_instance.m_targetIndex = targetIdx;
             s_instance.m_progress = progress;
@@ -949,14 +977,14 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_progress);
         }
     }
-    class SC_ApplySelfMissionUnlock : ServerCommandBase {
+    class SC_ApplySelfMissionUnlock : SingleToClientServerCommand {
         private static SC_ApplySelfMissionUnlock s_instance = new SC_ApplySelfMissionUnlock ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_UNLOCK; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<short> m_acceptableMis;
         private IReadOnlyList<short> m_unacceptableMis;
         public static SC_ApplySelfMissionUnlock Instance (int netId, IReadOnlyList<short> acceptableMis, IReadOnlyList<short> unacceptableMis) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_acceptableMis = acceptableMis;
             s_instance.m_unacceptableMis = unacceptableMis;
             return s_instance;
@@ -971,13 +999,13 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_unacceptableMis[i]);
         }
     }
-    class SC_ApplySelfMissionAcceptable : ServerCommandBase {
+    class SC_ApplySelfMissionAcceptable : SingleToClientServerCommand {
         private static SC_ApplySelfMissionAcceptable s_instance = new SC_ApplySelfMissionAcceptable ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_ACCEPTABLE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<short> m_acceptableMis;
         public static SC_ApplySelfMissionAcceptable Instance (int netId, IReadOnlyList<short> acceptableMis) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_acceptableMis = acceptableMis;
             return s_instance;
         }
@@ -988,13 +1016,13 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_acceptableMis[i]);
         }
     }
-    class SC_SendShoppingMall : ServerCommandBase {
+    class SC_SendShoppingMall : SingleToClientServerCommand {
         private static SC_SendShoppingMall s_instance = new SC_SendShoppingMall ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_SHOPPING_MALL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_MallClass> m_mallClassList;
         public static SC_SendShoppingMall Instance (int netId, IReadOnlyList<NO_MallClass> mallClassList) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_mallClassList = mallClassList;
             return s_instance;
         }
@@ -1005,7 +1033,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_mallClassList[i]);
         }
     }
-    class SC_SendMessage : ServerCommandBase {
+    class SC_SendMessage : SingleToClientServerCommand {
         public static SC_SendMessage s_instance = new SC_SendMessage ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_MESSAGE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
@@ -1014,7 +1042,8 @@ namespace MirRemakeBackend.Network {
         private string m_senderName;
         private string m_msg;
         public static SC_SendMessage Instance (int netId, ChattingChanelType channel, int senderCharId, string senderName, string msg) {
-            s_instance.m_toClientList = new List<int> { netId };
+            s_instance.ResetToClientNetId (netId);
+            s_instance.ResetToClientNetId (netId);
             s_instance.m_channel = channel;
             s_instance.m_senderCharId = senderCharId;
             s_instance.m_senderName = senderName;
