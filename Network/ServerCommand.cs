@@ -357,6 +357,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_unitIdList[i]);
         }
     }
+
     /// <summary>
     /// 同步其他单位位置
     /// </summary>
@@ -380,6 +381,7 @@ namespace MirRemakeBackend.Network {
             }
         }
     }
+
     /// <summary>
     /// 同步所有角色Hp与Mp
     /// </summary>
@@ -409,6 +411,7 @@ namespace MirRemakeBackend.Network {
             }
         }
     }
+
     /// <summary>
     /// 发送一个角色的所有属性
     /// </summary>
@@ -427,6 +430,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_attrChar);
         }
     }
+
     /// <summary>
     /// 更新自身特殊属性  
     /// 如眩晕, 禁锢, 沉默等  
@@ -451,6 +455,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_isAttach);
         }
     }
+
     /// <summary>
     /// 更新自身等级与经验值与可分配的主属性点
     /// </summary>
@@ -475,6 +480,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_totalMainPoint);
         }
     }
+
     /// <summary>
     /// 更新自身主属性加点
     /// </summary>
@@ -502,6 +508,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_spr);
         }
     }
+
     /// <summary>
     /// 更新所有单位的复活
     /// </summary>
@@ -533,6 +540,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_maxHp);
         }
     }
+
     /// <summary>
     /// 发送Boss战伤害的角色排行榜
     /// </summary>
@@ -559,6 +567,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_myRank);
         }
     }
+
     /// <summary>
     /// 发送战斗力排行榜
     /// </summary>
@@ -585,6 +594,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_myRank);
         }
     }
+
     /// <summary>
     /// 其他单位开始释放技能
     /// </summary>
@@ -612,6 +622,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_parm);
         }
     }
+
     /// <summary>
     /// 对单位施加Effect
     /// </summary>
@@ -635,6 +646,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_effect);
         }
     }
+
     /// <summary>
     /// 所有单位状态改变
     /// </summary>
@@ -656,6 +668,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_statusNo);
         }
     }
+
     /// <summary>
     /// 所有单位死亡信息
     /// </summary>
@@ -679,6 +692,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_deadNetId);
         }
     }
+
     /// <summary>
     /// 所有单位更换装备外观
     /// </summary>
@@ -698,6 +712,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_itemId);
         }
     }
+
     /// <summary>
     /// 更新物品数量  
     /// 数量为0则为丢弃
@@ -722,6 +737,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_itemList[i]);
         }
     }
+
     /// <summary>
     /// 更新装备信息
     /// </summary>
@@ -743,6 +759,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_eqInfo);
         }
     }
+
     /// <summary>
     /// 更新装备信息
     /// </summary>
@@ -764,6 +781,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_ecmtInfo);
         }
     }
+
     /// <summary>
     /// 更新所持货币
     /// </summary>
@@ -785,6 +803,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_chargeCy);
         }
     }
+
     /// <summary>
     /// 地面道具出现
     /// </summary>
@@ -805,6 +824,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_itemList[i]);
         }
     }
+
     /// <summary>
     /// 地面道具消失
     /// </summary>
@@ -825,6 +845,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_gndItemIdList[i]);
         }
     }
+
     /// <summary>
     /// 自己开摊
     /// </summary>
@@ -849,6 +870,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_itemNumList[i]);
         }
     }
+
     /// <summary>
     /// 自己收摊
     /// </summary>
@@ -863,6 +885,7 @@ namespace MirRemakeBackend.Network {
         private SC_ApplySelfPackUpMarket () { }
         public override void PutData (NetDataWriter writer) { }
     }
+
     /// <summary>
     /// update self market item
     /// </summary>
@@ -884,6 +907,59 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_itemNum);
         }
     }
+
+    /// <summary>
+    /// enter other market
+    /// </summary>
+    class SC_ApplySelfEnterOtherMarket : SingleToClientServerCommand {
+        private static SC_ApplySelfEnterOtherMarket s_instance = new SC_ApplySelfEnterOtherMarket ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_ENTER_OTHER_MARKET; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        int m_holderNetId;
+        string m_holderName;
+        IReadOnlyList<NO_Item> m_itemList;
+        public static SC_ApplySelfEnterOtherMarket Instance (int netId, int holderNetId, string holderName, IReadOnlyList<NO_Item> itemList) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_holderNetId = holderNetId;
+            s_instance.m_holderName = holderName;
+            s_instance.m_itemList = itemList;
+            return s_instance;
+        }
+        private SC_ApplySelfEnterOtherMarket () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_holderNetId);
+            writer.Put (m_holderName);
+            writer.Put ((short) m_itemList.Count);
+            for (int i = 0; i < m_itemList.Count; i++)
+                writer.Put (m_itemList[i]);
+        }
+    }
+
+    /// <summary>
+    /// other market update
+    /// </summary>
+    class SC_SendOtherUpdateMarketItem : SingleToClientServerCommand {
+        private static SC_SendOtherUpdateMarketItem s_instance = new SC_SendOtherUpdateMarketItem ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_UPDATE_MARKET_ITEM; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        int m_holderNetId;
+        long m_itemRealId;
+        short m_itemNum;
+        public static SC_SendOtherUpdateMarketItem Instance (int netId, int holderNetId, long itemRealId, short itemNum) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_holderNetId = holderNetId;
+            s_instance.m_itemRealId = itemRealId;
+            s_instance.m_itemNum = itemNum;
+            return s_instance;
+        }
+        private SC_SendOtherUpdateMarketItem () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_holderNetId);
+            writer.Put (m_itemRealId);
+            writer.Put (m_itemNum);
+        }
+    }
+
     /// <summary>
     /// 修改技能等级与熟练度
     /// </summary>

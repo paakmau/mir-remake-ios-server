@@ -137,6 +137,18 @@ namespace MirRemakeBackend.Network {
             m_damage = dmg;
         }
     }
+    struct NO_MarketItem {
+        public long m_realId;
+        public short m_onSaleNum;
+        public long m_virtualCyPrice;
+        public long m_chargeCyPrice;
+        public NO_MarketItem (long realId, short onSaleNum, long virtualCyPrice, long chargeCyPrice) {
+            m_realId = realId;
+            m_onSaleNum = onSaleNum;
+            m_virtualCyPrice = virtualCyPrice;
+            m_chargeCyPrice = chargeCyPrice;
+        }
+    }
     struct NO_MallClass {
         public byte m_mallClassId;
         public string m_mallName;
@@ -397,6 +409,19 @@ namespace MirRemakeBackend.Network {
             string name = reader.GetString ();
             int dmg = reader.GetInt ();
             return new NO_DamageRankCharacter (charId, name, dmg);
+        }
+        public static void Put (this NetDataWriter writer, NO_MarketItem marketItem) {
+            writer.Put (marketItem.m_realId);
+            writer.Put (marketItem.m_onSaleNum);
+            writer.Put (marketItem.m_virtualCyPrice);
+            writer.Put (marketItem.m_chargeCyPrice);
+        }
+        public static NO_MarketItem GetMarketItem (this NetDataReader reader) {
+            long realId = reader.GetLong ();
+            short onSaleNum = reader.GetShort ();
+            long virtualCyPrice = reader.GetLong ();
+            long chargeCyPrice = reader.GetLong ();
+            return new NO_MarketItem (realId, onSaleNum, virtualCyPrice, chargeCyPrice);
         }
         public static void Put (this NetDataWriter writer, NO_MallClass mallClass) {
             writer.Put (mallClass.m_mallClassId);

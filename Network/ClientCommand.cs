@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using LiteNetLib.Utils;
 using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.GameLogic;
@@ -256,9 +257,10 @@ namespace MirRemakeBackend.Network {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SET_UP_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
             short itemCnt = reader.GetShort ();
-            long[] itemRealIdArr = new long[itemCnt];
-            short[] itemNumArr = new short[itemCnt];
-            GL_Item.s_instance.CommandApplyPSetUpMarket (netId, itemRealIdArr, itemNumArr);
+            List<NO_MarketItem> itemList = new List<NO_MarketItem> (itemCnt);
+            for (int i=0; i<itemCnt; i++)
+                itemList.Add (reader.GetMarketItem ());
+            GL_Item.s_instance.CommandApplyPSetUpMarket (netId, itemList);
         }
     }
     class CC_ApplyPackUpMarket : IClientCommand {

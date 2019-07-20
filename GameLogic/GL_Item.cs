@@ -296,7 +296,7 @@ namespace MirRemakeBackend.GameLogic {
             //     bag.SetItem (ecmt, eqPos);
             // }
         }
-        public void CommandApplyPSetUpMarket (int netId, long[] itemRealIdArr, short[] itemNumArr) {
+        public void CommandApplyPSetUpMarket (int netId, IReadOnlyList<NO_MarketItem> marketItemNoList) {
             // TODO: 角色开始摆摊
         }
         public void CommandApplyPackUpMarket (int netId) {
