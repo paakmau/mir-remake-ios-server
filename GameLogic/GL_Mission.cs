@@ -37,6 +37,7 @@ namespace MirRemakeBackend.GameLogic {
                     var misTars = misObj.m_tarList;
                     bool dirty = false;
                     for (int j = 0; j < misTars.Count; j++) {
+                        if (misTars[j].m_Type != logObj.m_LogType) continue;
                         var checker = m_progressCheckerDict[misTars[j].m_Type];
                         var curProgs = misTars[j].m_Progress;
                         var newProgs = checker.GetNewProgress (misId, misTars[j], curProgs, logObj);

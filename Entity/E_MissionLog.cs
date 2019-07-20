@@ -1,19 +1,12 @@
 namespace MirRemakeBackend.Entity {
-    enum MissionLogType : byte {
-        KILL_MONSTER,
-        LEVEL_UP_SKILL,
-        LEVEL_UP,
-        TALK_TO_NPC,
-        GAIN_ITEM
-    }
     abstract class E_MissionLog {
         public int m_netId;
-        public abstract MissionLogType m_LogType { get; }
+        public abstract MissionTargetType m_LogType { get; }
         public void Reset (int netId) { m_netId = netId; }
         public abstract void Reset (int netId, int parm1, int parm2, int parm3);
     }
     class E_KillMonsterLog : E_MissionLog {
-        public override MissionLogType m_LogType { get { return MissionLogType.KILL_MONSTER; } }
+        public override MissionTargetType m_LogType { get { return MissionTargetType.KILL_MONSTER; } }
         public short m_monId;
         public override void Reset (int netId, int parm1, int parm2, int parm3) {
             base.Reset (netId);
@@ -21,7 +14,7 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_LevelUpSkillLog : E_MissionLog {
-        public override MissionLogType m_LogType { get { return MissionLogType.LEVEL_UP_SKILL; } }
+        public override MissionTargetType m_LogType { get { return MissionTargetType.LEVEL_UP_SKILL; } }
         public short m_skillId;
         public short m_skillLv;
         public override void Reset (int netId, int parm1, int parm2, int parm3) {
@@ -31,7 +24,7 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_LevelUpLog : E_MissionLog {
-        public override MissionLogType m_LogType { get { return MissionLogType.LEVEL_UP; } }
+        public override MissionTargetType m_LogType { get { return MissionTargetType.LEVEL_UP; } }
         public short m_lv;
         public override void Reset (int netId, int parm1, int parm2, int parm3) {
             base.Reset (netId);
@@ -39,7 +32,7 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_TalkToNpcLog : E_MissionLog {
-        public override MissionLogType m_LogType { get { return MissionLogType.TALK_TO_NPC; } }
+        public override MissionTargetType m_LogType { get { return MissionTargetType.TALK_TO_NPC; } }
         public short m_misId;
         public short m_misTarId;
         public override void Reset (int netId, int parm1, int parm2, int parm3) {
@@ -49,7 +42,7 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_GainItemLog : E_MissionLog {
-        public override MissionLogType m_LogType { get { return MissionLogType.GAIN_ITEM; } }
+        public override MissionTargetType m_LogType { get { return MissionTargetType.GAIN_ITEM; } }
         public short m_itemId;
         public short m_deltaNum;
         public override void Reset (int netId, int parm1, int parm2, int parm3) {

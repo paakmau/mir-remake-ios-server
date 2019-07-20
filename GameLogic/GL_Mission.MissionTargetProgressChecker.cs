@@ -12,7 +12,6 @@ namespace MirRemakeBackend.GameLogic {
             public int GetNewProgress (int misId, IMissionTarget itarget, int curProgs, E_MissionLog logBase) {
                 var target = itarget as E_MissionTargetKillMonster;
                 var log = logBase as E_KillMonsterLog;
-                if (log == null) return curProgs;
                 if (target.m_MonId != log.m_monId)
                     return curProgs;
                 return Math.Min (target.m_TargetNum, curProgs + 1);
@@ -23,7 +22,6 @@ namespace MirRemakeBackend.GameLogic {
             public int GetNewProgress (int misId, IMissionTarget itarget, int curProgs, E_MissionLog logBase) {
                 var target = itarget as E_MissionTargetLevelUpSkill;
                 var log = logBase as E_LevelUpSkillLog;
-                if (log == null) return curProgs;
                 if (target.m_SkillId != log.m_skillId)
                     return curProgs;
                 return log.m_skillLv;
@@ -34,7 +32,6 @@ namespace MirRemakeBackend.GameLogic {
             public int GetNewProgress (int misId, IMissionTarget itarget, int curProgs, E_MissionLog logBase) {
                 var target = itarget as E_MissionTargetGainItem;
                 var log = logBase as E_GainItemLog;
-                if (log == null) return curProgs;
                 if (target.m_ItemId != log.m_itemId)
                     return curProgs;
                 return curProgs + log.m_deltaNum;
@@ -45,7 +42,6 @@ namespace MirRemakeBackend.GameLogic {
             public int GetNewProgress (int misId, IMissionTarget itarget, int curProgs, E_MissionLog logBase) {
                 var target = itarget as E_MissionTargetTalkToNpc;
                 var log = logBase as E_TalkToNpcLog;
-                if (log == null) return curProgs;
                 if (misId != log.m_misId)
                     return curProgs;
                 if (target.m_tarId != log.m_misTarId)
