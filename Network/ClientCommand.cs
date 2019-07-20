@@ -267,11 +267,11 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandApplyPackUpMarket (netId);
         }
     }
-    class CC_RequireOtherMarket : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_OTHER_MARKET; } }
+    class CC_ApplyEnterMarket : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ENTER_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
             int holderNetId = reader.GetInt ();
-            GL_Item.s_instance.CommandRequireOtherMarket (netId, holderNetId);
+            GL_Item.s_instance.CommandApplyEnterMarket (netId, holderNetId);
         }
     }
     class CC_ApplyBuyItemInMarket : IClientCommand {

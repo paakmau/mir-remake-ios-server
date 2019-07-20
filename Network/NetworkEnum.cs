@@ -45,6 +45,7 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_SET_UP_MARKET,
         APPLY_SELF_PACK_UP_MARKET,
         APPLY_SELF_UPDATE_MARKET_ITEM,
+        APPLY_SELF_ENTER_OTHER_MARKET,
         APPLY_OTHER_UPDATE_MARKET_ITEM,
         // 任务相关
         APPLY_SELF_ACCECPT_MISSION,
@@ -96,7 +97,7 @@ namespace MirRemakeBackend.Network {
         // 摆摊
         APPLY_SET_UP_MARKET,
         APPLY_PACK_UP_MARKET,
-        REQUIRE_OTHER_MARKET,
+        APPLY_ENTER_MARKET,
         APPLY_BUY_ITEM_IN_MARKET,
         // 任务相关
         APPLY_ACCEPT_MISSION,

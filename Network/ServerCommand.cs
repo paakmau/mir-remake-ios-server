@@ -798,7 +798,6 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_itemList[i]);
         }
     }
-
     /// <summary>
     /// 地面道具消失
     /// </summary>
@@ -819,7 +818,44 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_gndItemIdList[i]);
         }
     }
-
+    /// <summary>
+    /// 自己开摊
+    /// </summary>
+    class SC_ApplySelfSetUpMarket : ServerCommandBase {
+        private static SC_ApplySelfSetUpMarket s_instance = new SC_ApplySelfSetUpMarket ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SET_UP_MARKET; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        IReadOnlyList<long> m_itemRealIdList;
+        IReadOnlyList<short> m_itemNumList;
+        public static SC_ApplySelfSetUpMarket Instance (int netId, IReadOnlyList<long> itemRealIdList, IReadOnlyList<short> itemNumList) {
+            s_instance.m_toClientList = new List<int> () { netId };
+            s_instance.m_itemRealIdList = itemRealIdList;
+            s_instance.m_itemNumList = itemNumList;
+            return s_instance;
+        }
+        private SC_ApplySelfSetUpMarket () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((short) m_itemRealIdList.Count);
+            for (int i = 0; i < m_itemRealIdList.Count; i++)
+                writer.Put (m_itemRealIdList[i]);
+            for (int i = 0; i < m_itemNumList.Count; i++)
+                writer.Put (m_itemNumList[i]);
+        }
+    }
+    /// <summary>
+    /// 自己收摊
+    /// </summary>
+    class SC_ApplySelfPackUpMarket : ServerCommandBase {
+        private static SC_ApplySelfPackUpMarket s_instance = new SC_ApplySelfPackUpMarket ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_PACK_UP_MARKET; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        public static SC_ApplySelfPackUpMarket Instance (int netId) {
+            s_instance.m_toClientList = new List<int> () { netId };
+            return s_instance;
+        }
+        private SC_ApplySelfPackUpMarket () { }
+        public override void PutData (NetDataWriter writer) { }
+    }
     /// <summary>
     /// 修改技能等级与熟练度
     /// </summary>

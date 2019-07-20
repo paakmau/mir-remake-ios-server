@@ -302,7 +302,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyPackUpMarket (int netId) {
             // TODO: 收摊
         }
-        public void CommandRequireOtherMarket (int netId, int holderNetId) {
+        public void CommandApplyEnterMarket (int netId, int holderNetId) {
             // TODO: 获取他人摊位
         }
         public void CommandApplyBuyItemInMarket (int netId, int holderNetId, long itemRealId, short num) {

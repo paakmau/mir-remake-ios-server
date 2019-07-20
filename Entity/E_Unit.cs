@@ -276,7 +276,8 @@ namespace MirRemakeBackend.Entity {
             return new DDO_CharacterPosition (m_characterId, m_position);
         }
         public NO_SightCharacter GetSightNo () {
-            return new NO_SightCharacter (m_networkId, m_position, m_Occupation, m_name, m_Level);
+            // TODO: isMarket
+            return new NO_SightCharacter (m_networkId, m_position, m_Occupation, m_name, m_Level, false);
         }
         public NO_AttributeCharacter GetAttrNo () {
             return new NO_AttributeCharacter (m_networkId, m_name, m_Level, m_strength, m_intelligence, m_spirit, m_agility, m_MaxHp, m_MaxMp, m_DeltaHpPerSecond, m_DeltaMpPerSecond, m_Attack, m_Defence, m_Magic, m_Resistance, m_Tenacity, m_Speed, m_CriticalRate, m_CriticalBonus, m_HitRate, m_DodgeRate, m_LifeSteal, m_DamageReduction);
