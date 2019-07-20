@@ -20,6 +20,7 @@ namespace MirRemakeBackend.Data {
                 item.m_chargeCyPrice = int.Parse (s_mallData[i]["Price"][0].ToString ());
                 item.m_virtualCyPrice = int.Parse (s_mallData[i]["Price"][1].ToString ());
                 byte c = byte.Parse (s_mallData[i]["ClassId"].ToString ());
+                item.m_mallItemClassId=c;
                 res.Add (item);
             }
             for(int i=0;i<s_mallClasses.Count;i++){
