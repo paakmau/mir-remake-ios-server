@@ -11,7 +11,7 @@ using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend {
     class Program {
-        private const float c_networkFrameTime = 0.1f;
+        private const float c_networkFrameTime = 0.2f;
         private static NetworkService s_networkService;
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
