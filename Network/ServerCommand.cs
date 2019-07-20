@@ -972,21 +972,21 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// other market update
     /// </summary>
-    class SC_SendOtherUpdateMarketItem : SingleToClientServerCommand {
-        private static SC_SendOtherUpdateMarketItem s_instance = new SC_SendOtherUpdateMarketItem ();
+    class SC_ApplyOtherUpdateMarketItem : SingleToClientServerCommand {
+        private static SC_ApplyOtherUpdateMarketItem s_instance = new SC_ApplyOtherUpdateMarketItem ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_UPDATE_MARKET_ITEM; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         int m_holderNetId;
         long m_itemRealId;
         short m_itemNum;
-        public static SC_SendOtherUpdateMarketItem Instance (int netId, int holderNetId, long itemRealId, short itemNum) {
+        public static SC_ApplyOtherUpdateMarketItem Instance (int netId, int holderNetId, long itemRealId, short itemNum) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_holderNetId = holderNetId;
             s_instance.m_itemRealId = itemRealId;
             s_instance.m_itemNum = itemNum;
             return s_instance;
         }
-        private SC_SendOtherUpdateMarketItem () { }
+        private SC_ApplyOtherUpdateMarketItem () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_holderNetId);
             writer.Put (m_itemRealId);
