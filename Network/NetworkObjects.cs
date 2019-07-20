@@ -62,6 +62,7 @@ namespace MirRemakeBackend.Network {
         }
     }
     struct NO_SightCharacter {
+        // TODO: consider market
         public int m_netId;
         public Vector2 m_position;
         public OccupationType m_occupation;

@@ -41,6 +41,9 @@ namespace MirRemakeBackend.Network {
         // 地面物品
         APPLY_GROUND_ITEM_SHOW,
         APPLY_GROUND_ITEM_DISAPPEAR,
+        // 摊位
+        APPLY_SELF_SET_UP_MARKET,
+        APPLY_SELF_PACK_UP_MARKET,
         // 任务相关
         APPLY_SELF_ACCECPT_MISSION,
         APPLY_SELF_DELIVER_MISSION,
@@ -91,9 +94,6 @@ namespace MirRemakeBackend.Network {
         // 摆摊
         APPLY_SET_UP_MARKET,
         APPLY_PACK_UP_MARKET,
-        APPLY_PUT_ITEM_IN_MARKET,
-        APPLY_WITHDRAW_ITEM_IN_MARKET,
-        APPLY_UPDATE_ITEM_IN_MARKET,
         APPLY_ENTER_MARKET,
         APPLY_BUY_ITEM_IN_MARKET,
         // 任务相关
