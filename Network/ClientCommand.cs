@@ -252,6 +252,28 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandApplyDisjointEquipment (netId, equipmentRealId);
         }
     }
+    class CC_ApplySetUpMarket : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SET_UP_MARKET; } }
+        public void Execute (NetDataReader reader, int netId) {
+            short itemCnt = reader.GetShort ();
+            long[] itemRealIdArr = new long[itemCnt];
+            short[] itemNumArr = new short[itemCnt];
+            GL_Item.s_instance.CommandSetUpMarket (netId, itemRealIdArr, itemNumArr);
+        }
+    }
+    class CC_ApplyPackUpMarket : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_PACK_UP_MARKET; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Item.s_instance.CommandPackUpMarket (netId);
+        }
+    }
+    class CC_ApplyEnterMarket : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ENTER_MARKET; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int holder = reader.GetInt ();
+            GL_Item.s_instance.CommandEnterMarket (netId);
+        }
+    }
     /// <summary>
     /// 接受任务
     /// </summary>
