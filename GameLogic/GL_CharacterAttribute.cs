@@ -9,7 +9,6 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_CharacterAttribute : GameLogicBase {
         public static GL_CharacterAttribute s_instance;
-        private const int c_maxLevel = 100;
         private const float c_syncPosTime = 5;
         private float m_syncPosTimer = 0;
         public GL_CharacterAttribute (INetworkService netService) : base (netService) { }
@@ -85,10 +84,9 @@ namespace MirRemakeBackend.GameLogic {
             EM_Unit.s_instance.RemoveCharacter (charObj.m_networkId);
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
-            if (charObj.m_Level == c_maxLevel)
+            if (charObj.m_Level == charObj.m_MaxLevel)
                 return;
-            charObj.m_experience += exp;
-            var dLv = charObj.TryLevelUp ();
+            var dLv = charObj.TryGainExpAndLevelUp (exp);
             if (dLv > 0)
                 GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client

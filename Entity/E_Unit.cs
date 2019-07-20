@@ -234,14 +234,15 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 尝试使用经验升级, 返回提升的等级
         /// </summary>
-        public int TryLevelUp () {
+        public int TryGainExpAndLevelUp (int gainExp) {
             if (m_Level == m_MaxLevel)
                 return 0;
+            m_experience += gainExp;
             int cnt = 0;
             while (m_experience >= m_UpgradeExperienceInNeed) {
                 m_experience -= m_UpgradeExperienceInNeed;
-                m_unitDe = m_characterDe.m_unitAllLevel[m_Level + 1];
-                m_characterDataDe = m_characterDe.m_characterDataAllLevel[m_Level + 1];
+                m_unitDe = m_characterDe.m_unitAllLevel[m_Level];
+                m_characterDataDe = m_characterDe.m_characterDataAllLevel[m_Level];
                 cnt++;
                 m_curHp = m_MaxHp;
                 m_curMp = m_MaxMp;
