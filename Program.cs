@@ -106,6 +106,7 @@ namespace MirRemakeBackend {
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
             GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
             GL_Item.s_instance = new GL_Item (s_networkService);
+            GL_Mall.s_instance = new GL_Mall (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MissionLog.s_instance = new GL_MissionLog (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
@@ -119,6 +120,7 @@ namespace MirRemakeBackend {
                 GL_CharacterAction.s_instance,
                 GL_CharacterAttribute.s_instance,
                 GL_Item.s_instance,
+                GL_Mall.s_instance,
                 GL_Mission.s_instance,
                 GL_MissionLog.s_instance,
                 GL_MonsterAction.s_instance,
@@ -139,7 +141,6 @@ namespace MirRemakeBackend {
             IDS_Skill ssk = new DS_SkillImpl ();
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
-
         }
     }
 }
