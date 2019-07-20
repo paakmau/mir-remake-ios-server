@@ -853,21 +853,17 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplySelfSetUpMarket s_instance = new SC_ApplySelfSetUpMarket ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SET_UP_MARKET; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        IReadOnlyList<long> m_itemRealIdList;
-        IReadOnlyList<short> m_itemNumList;
-        public static SC_ApplySelfSetUpMarket Instance (int netId, IReadOnlyList<long> itemRealIdList, IReadOnlyList<short> itemNumList) {
+        IReadOnlyList<NO_MarketItem> m_itemList;
+        public static SC_ApplySelfSetUpMarket Instance (int netId, IReadOnlyList<NO_MarketItem> itemList) {
             s_instance.ResetToClientNetId (netId);
-            s_instance.m_itemRealIdList = itemRealIdList;
-            s_instance.m_itemNumList = itemNumList;
+            s_instance.m_itemList = itemList;
             return s_instance;
         }
         private SC_ApplySelfSetUpMarket () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((short) m_itemRealIdList.Count);
-            for (int i = 0; i < m_itemRealIdList.Count; i++)
-                writer.Put (m_itemRealIdList[i]);
-            for (int i = 0; i < m_itemNumList.Count; i++)
-                writer.Put (m_itemNumList[i]);
+            writer.Put ((short) m_itemList.Count);
+            for (int i = 0; i < m_itemList.Count; i++)
+                writer.Put (m_itemList[i]);
         }
     }
 
@@ -909,6 +905,44 @@ namespace MirRemakeBackend.Network {
     }
 
     /// <summary>
+    /// 其他玩家开摊
+    /// </summary>
+    class SC_ApplyOtherSetUpMarket : SingleToClientServerCommand {
+        private static SC_ApplyOtherSetUpMarket s_instance = new SC_ApplyOtherSetUpMarket ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_SET_UP_MARKET; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_holderNetId;
+        public static SC_ApplyOtherSetUpMarket Instance (int netId, int holderNetId) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_holderNetId = holderNetId;
+            return s_instance;
+        }
+        private SC_ApplyOtherSetUpMarket () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_holderNetId);
+        }
+    }
+
+    /// <summary>
+    /// 其他玩家收摊
+    /// </summary>
+    class SC_ApplyOtherPackUpMarket : SingleToClientServerCommand {
+        private static SC_ApplyOtherPackUpMarket s_instance = new SC_ApplyOtherPackUpMarket ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_PACK_UP_MARKET; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_holderNetId;
+        public static SC_ApplyOtherPackUpMarket Instance (int netId, int holderNetId) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_holderNetId = holderNetId;
+            return s_instance;
+        }
+        private SC_ApplyOtherPackUpMarket () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_holderNetId);
+        }
+    }
+
+    /// <summary>
     /// enter other market
     /// </summary>
     class SC_ApplySelfEnterOtherMarket : SingleToClientServerCommand {
@@ -917,8 +951,8 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         int m_holderNetId;
         string m_holderName;
-        IReadOnlyList<NO_Item> m_itemList;
-        public static SC_ApplySelfEnterOtherMarket Instance (int netId, int holderNetId, string holderName, IReadOnlyList<NO_Item> itemList) {
+        IReadOnlyList<NO_MarketItem> m_itemList;
+        public static SC_ApplySelfEnterOtherMarket Instance (int netId, int holderNetId, string holderName, IReadOnlyList<NO_MarketItem> itemList) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_holderNetId = holderNetId;
             s_instance.m_holderName = holderName;
