@@ -8,7 +8,6 @@ namespace MirRemakeBackend.DataEntity {
     /// </summary>
     class DEM_Mission {
         private Dictionary<short, DE_Mission> m_misDict = new Dictionary<short, DE_Mission> ();
-        private Dictionary<short, DE_MissionTargetTalkToNpc> m_misTarTalkToNpcDict = new Dictionary<short, DE_MissionTargetTalkToNpc> ();
         private Dictionary<short, DE_MissionTargetKillMonster> m_misTarKillMonDict = new Dictionary<short, DE_MissionTargetKillMonster> ();
         private Dictionary<short, DE_MissionTargetGainItem> m_misTarGainItemDict = new Dictionary<short, DE_MissionTargetGainItem> ();
         private Dictionary<short, DE_MissionTargetLevelUpSkill> m_misTarLevelUpSkillDict = new Dictionary<short, DE_MissionTargetLevelUpSkill> ();
@@ -23,17 +22,10 @@ namespace MirRemakeBackend.DataEntity {
                 m_misTarGainItemDict.Add (gainItemDo.m_id, new DE_MissionTargetGainItem (gainItemDo));
             foreach (var levelUpSkillDo in misDataDos.Item3)
                 m_misTarLevelUpSkillDict.Add (levelUpSkillDo.m_id, new DE_MissionTargetLevelUpSkill (levelUpSkillDo));
-            foreach (var talkToNpcDo in misDataDos.Item4)
-                m_misTarTalkToNpcDict.Add (talkToNpcDo.m_id, new DE_MissionTargetTalkToNpc (talkToNpcDo));
         }
         public DE_Mission GetMissionById (short missionId) {
             DE_Mission res;
             m_misDict.TryGetValue (missionId, out res);
-            return res;
-        }
-        public DE_MissionTargetTalkToNpc GetMissionTargetTalkToNpcById (short tarId) {
-            DE_MissionTargetTalkToNpc res;
-            m_misTarTalkToNpcDict.TryGetValue (tarId, out res);
             return res;
         }
         public DE_MissionTargetKillMonster GetMissionTargetKillMonster (short tarId) {

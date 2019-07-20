@@ -5,7 +5,7 @@ using LitJson;
 namespace MirRemakeBackend.Data {
     interface IDS_Mission {
         DO_Mission[] GetAllMission ();
-        ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[], DO_MissionTargetTalkToNpcData[]> GetAllMissionDatas ();
+        ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[]> GetAllMissionDatas ();
     }
     class DS_MissionImpl : IDS_Mission {
         private JsonData m_missionDatas;
@@ -16,8 +16,6 @@ namespace MirRemakeBackend.Data {
         private JsonData gainItemData;
         private DO_MissionTargetLevelUpSkillData[] m_levelUpSkill;
         private JsonData levelUpSkillData;
-        private DO_MissionTargetTalkToNpcData[] m_talkToNPC;
-        private JsonData talkToNPCData;
         public DO_Mission[] GetAllMission () {
             string jsonFile = File.ReadAllText ("Data/D_Mission.json");
             m_missionDatas = JsonMapper.ToObject (jsonFile);
@@ -80,14 +78,13 @@ namespace MirRemakeBackend.Data {
             }
             return mission;
         }
-        public ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[], DO_MissionTargetTalkToNpcData[]> GetAllMissionDatas () {
+        public ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[]> GetAllMissionDatas () {
             string jsonFile = File.ReadAllText ("Data/D_MissionTarget.json");
             m_allData = JsonMapper.ToObject (jsonFile);
 
             killMonsterData = m_allData["KILL_MONSTER"];
             gainItemData = m_allData["GAIN_ITEM"];
             levelUpSkillData = m_allData["LEVEL_UP_SKILL"];
-            talkToNPCData = m_allData["TALK_TO_NPC"];
 
             m_killMonster = new DO_MissionTargetKillMonsterData[killMonsterData.Count];
             for (int i = 0; i < killMonsterData.Count; i++) {
@@ -110,14 +107,9 @@ namespace MirRemakeBackend.Data {
                 m_levelUpSkill[i].m_targetLevel = short.Parse (levelUpSkillData[i]["Level"].ToString ());
             }
 
-            m_talkToNPC = new DO_MissionTargetTalkToNpcData[talkToNPCData.Count];
-            for (int i = 0; i < talkToNPCData.Count; i++) {
-                m_talkToNPC[i].m_id = short.Parse (talkToNPCData[i]["ID"].ToString ());
-                m_talkToNPC[i].m_targetNpcId = short.Parse (talkToNPCData[i]["NPCID"].ToString ());
-            }
-            ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[], DO_MissionTargetTalkToNpcData[]> res =
-                new ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[], DO_MissionTargetTalkToNpcData[]>
-                (m_killMonster, m_gainItem, m_levelUpSkill, m_talkToNPC);
+            ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[]> res =
+                new ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[]>
+                (m_killMonster, m_gainItem, m_levelUpSkill);
             return res;
         }
     }
