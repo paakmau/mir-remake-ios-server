@@ -255,14 +255,6 @@ namespace MirRemakeBackend.DataEntity {
             m_bonusItemIdAndNumList = new List<ValueTuple<short, short>> (mDo.m_bonusItemIdAndNumArr);
         }
     }
-    class DE_MissionTargetTalkToNpc {
-        public readonly short m_id;
-        public readonly short m_npcId;
-        public DE_MissionTargetTalkToNpc (DO_MissionTargetTalkToNpcData mtDo) {
-            m_id = mtDo.m_id;
-            m_npcId = mtDo.m_targetNpcId;
-        }
-    }
     class DE_MissionTargetKillMonster {
         public readonly short m_id;
         public readonly short m_monsterId;
