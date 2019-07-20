@@ -258,20 +258,29 @@ namespace MirRemakeBackend.Network {
             short itemCnt = reader.GetShort ();
             long[] itemRealIdArr = new long[itemCnt];
             short[] itemNumArr = new short[itemCnt];
-            GL_Item.s_instance.CommandSetUpMarket (netId, itemRealIdArr, itemNumArr);
+            GL_Item.s_instance.CommandApplyPSetUpMarket (netId, itemRealIdArr, itemNumArr);
         }
     }
     class CC_ApplyPackUpMarket : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_PACK_UP_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
-            GL_Item.s_instance.CommandPackUpMarket (netId);
+            GL_Item.s_instance.CommandApplyPackUpMarket (netId);
         }
     }
-    class CC_ApplyEnterMarket : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ENTER_MARKET; } }
+    class CC_RequireOtherMarket : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_OTHER_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
-            int holder = reader.GetInt ();
-            GL_Item.s_instance.CommandEnterMarket (netId);
+            int holderNetId = reader.GetInt ();
+            GL_Item.s_instance.CommandRequireOtherMarket (netId, holderNetId);
+        }
+    }
+    class CC_ApplyBuyItemInMarket : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_IN_MARKET; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int holderNetId = reader.GetInt ();
+            long realId = reader.GetLong ();
+            short num = reader.GetShort ();
+            GL_Item.s_instance.CommandApplyBuyItemInMarket (netId, holderNetId, realId, num);
         }
     }
     /// <summary>

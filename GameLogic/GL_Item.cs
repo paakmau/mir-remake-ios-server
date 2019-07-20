@@ -296,13 +296,18 @@ namespace MirRemakeBackend.GameLogic {
             //     bag.SetItem (ecmt, eqPos);
             // }
         }
-        public void CommandSetUpMarket (int netId, long[] itemRealIdArr, short[] itemNumArr) {
+        public void CommandApplyPSetUpMarket (int netId, long[] itemRealIdArr, short[] itemNumArr) {
             // TODO: 角色开始摆摊
         }
-        public void CommandPackUpMarket (int netId) {
+        public void CommandApplyPackUpMarket (int netId) {
             // TODO: 收摊
         }
-        public void Command
+        public void CommandRequireOtherMarket (int netId, int holderNetId) {
+            // TODO: 获取他人摊位
+        }
+        public void CommandApplyBuyItemInMarket (int netId, int holderNetId, long itemRealId, short num) {
+            // TODO: 
+        }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
             EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
