@@ -186,6 +186,8 @@ namespace MirRemakeBackend.GameLogic {
             // 装备穿上Attr
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, 1));
             NotifyCharacterSwapItemPlace (charObj.m_networkId, charObj.m_characterId, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
+            // client
+            m_networkService.SendServerCommand (SC_ApplyAllChangeEquipment.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), eq.m_ItemId));
         }
         public void CommandApplyBuildEquipment (int netId, (short, short) [] matArr) {
             // TODO: 打造装备
