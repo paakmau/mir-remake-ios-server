@@ -184,20 +184,23 @@ namespace MirRemakeBackend.DataEntity {
         public readonly ItemType m_type;
         public readonly short m_maxNum;
         public readonly ItemQuality m_quality;
-        public readonly long m_price;
+        public readonly long m_buyPrice;
+        public readonly long m_sellPrice;
         public DE_Item (DO_Item itemDo) {
             m_id = itemDo.m_itemId;
             m_type = itemDo.m_type;
             m_maxNum = itemDo.m_maxNum;
             m_quality = itemDo.m_quality;
-            m_price = itemDo.m_price;
+            m_buyPrice = itemDo.m_buyPrice;
+            m_sellPrice = itemDo.m_sellPrice;
         }
         public DE_Item () {
             m_id = -1;
             m_type = ItemType.EMPTY;
             m_maxNum = 0;
             m_quality = ItemQuality.POOR;
-            m_price = 0;
+            m_buyPrice = 0;
+            m_sellPrice = 0;
         }
     }
     class DE_ConsumableData {

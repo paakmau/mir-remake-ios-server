@@ -97,7 +97,7 @@ namespace MirRemakeBackend.GameLogic {
             // 失去物品
             NotifyCharacterLostItem (charObj, item, num, pos, bag);
             // 拿钱
-            var virCy = (int) (item.m_Price * num * 0.8f);
+            var virCy = (int) (item.m_SellPrice * num);
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
         }
         public void CommandGainItem (int netId, short itemId, short num) {

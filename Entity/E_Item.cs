@@ -15,7 +15,8 @@ namespace MirRemakeBackend.Entity {
         public short m_ItemId { get { return m_itemDe.m_id; } }
         public ItemQuality m_Quality { get { return m_itemDe.m_quality; } }
         public short m_MaxNum { get { return m_itemDe.m_maxNum; } }
-        public long m_Price { get { return m_itemDe.m_price; } }
+        public long m_BuyPrice { get { return m_itemDe.m_buyPrice; } }
+        public long m_SellPrice { get { return m_itemDe.m_sellPrice; } }
         public bool m_IsEmpty { get { return m_Type == ItemType.EMPTY; } }
         protected void Reset (DE_Item de, short num) {
             m_realId = -1;
