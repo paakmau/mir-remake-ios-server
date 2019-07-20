@@ -88,6 +88,7 @@ namespace MirRemakeBackend.Entity {
         /// 若完全堆叠返回 -1  
         /// 未能完全存入返回 -2  
         /// </return>
+        //TODO: 感觉这里有点小问题(每次获取新的物品之后它的pos都是0导致背包里显示只有一个东西)
         public short AutoPileItemAndGetOccupiedPos (short itemId, short itemNum, out List < (short, E_Item) > posAndChangedItemList, out short piledNum, out short realStoredNum, out E_EmptyItem oriEmptySlot) {
             posAndChangedItemList = new List < (short, E_Item) > ();
             piledNum = 0;
