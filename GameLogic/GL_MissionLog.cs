@@ -12,7 +12,7 @@ namespace MirRemakeBackend.GameLogic {
             EM_MissionLog.s_instance.NextTick ();
         }
         public override void NetworkTick () { }
-        public void NotifyLog (MissionLogType type, int netId, int parm1 = 0, int parm2 = 0, int parm3 = 0) {
+        public void NotifyLog (MissionTargetType type, int netId, int parm1 = 0, int parm2 = 0, int parm3 = 0) {
             var logs = EM_MissionLog.s_instance.GetRawLogsCurTick ();
             logs.Add (EM_MissionLog.s_instance.CreateLog (type, netId, parm1, parm2, parm3));
         }

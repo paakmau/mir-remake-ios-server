@@ -58,7 +58,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyTalkToNpc (int netId, short misId, short misTarId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            GL_MissionLog.s_instance.NotifyLog (MissionLogType.TALK_TO_NPC, netId, misId, misTarId);
+            GL_MissionLog.s_instance.NotifyLog (MissionTargetType.TALK_TO_NPC, netId, misId, misTarId);
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
             var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);

@@ -5,15 +5,15 @@ namespace MirRemakeBackend.Entity {
     class EM_MissionLog : EntityManagerBase {
         class LogFactory {
             private const int c_poolSize = 5000;
-            private Dictionary<MissionLogType, ObjectPool> m_pool = new Dictionary<MissionLogType, ObjectPool> ();
+            private Dictionary<MissionTargetType, ObjectPool> m_pool = new Dictionary<MissionTargetType, ObjectPool> ();
             public LogFactory () {
-                m_pool.Add (MissionLogType.KILL_MONSTER, new ObjectPool<E_KillMonsterLog> (5000));
-                m_pool.Add (MissionLogType.GAIN_ITEM, new ObjectPool<E_GainItemLog> (5000));
-                m_pool.Add (MissionLogType.LEVEL_UP, new ObjectPool<E_LevelUpLog> (5000));
-                m_pool.Add (MissionLogType.LEVEL_UP_SKILL, new ObjectPool<E_LevelUpSkillLog> (5000));
-                m_pool.Add (MissionLogType.TALK_TO_NPC, new ObjectPool<E_TalkToNpcLog> (5000));
+                m_pool.Add (MissionTargetType.KILL_MONSTER, new ObjectPool<E_KillMonsterLog> (5000));
+                m_pool.Add (MissionTargetType.GAIN_ITEM, new ObjectPool<E_GainItemLog> (5000));
+                m_pool.Add (MissionTargetType.LEVEL_UP, new ObjectPool<E_LevelUpLog> (5000));
+                m_pool.Add (MissionTargetType.LEVEL_UP_SKILL, new ObjectPool<E_LevelUpSkillLog> (5000));
+                m_pool.Add (MissionTargetType.TALK_TO_NPC, new ObjectPool<E_TalkToNpcLog> (5000));
             }
-            public E_MissionLog GetLogInstance (MissionLogType type) {
+            public E_MissionLog GetLogInstance (MissionTargetType type) {
                 return (E_MissionLog) m_pool[type].GetInstanceObj ();
             }
             public void RecycleInstance (E_MissionLog logObj) {
@@ -37,7 +37,7 @@ namespace MirRemakeBackend.Entity {
             m_curTick = GetNextTick (m_curTick);
             GetRawLogsCurTick ().Clear ();
         }
-        public E_MissionLog CreateLog (MissionLogType type, int netId, int parm1, int parm2, int parm3) {
+        public E_MissionLog CreateLog (MissionTargetType type, int netId, int parm1, int parm2, int parm3) {
             var log = m_logFactory.GetLogInstance (type);
             log.Reset (netId, parm1, parm2, parm3);
             return log;
