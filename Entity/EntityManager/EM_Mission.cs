@@ -18,7 +18,7 @@ namespace MirRemakeBackend.Entity {
             private class MTR_TalkToNpc : IMissionTargetReseter {
                 public MissionTargetType m_Type { get { return MissionTargetType.TALK_TO_NPC; } }
                 public void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem) {
-                    (resMt as E_MissionTargetTalkToNpc).Reset (tarId);
+                    (resMt as E_MissionTargetTalkToNpc).Reset (tarId, progress);
                 }
             }
             private class MTR_KillMonster : IMissionTargetReseter {

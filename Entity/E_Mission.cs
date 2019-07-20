@@ -15,9 +15,10 @@ namespace MirRemakeBackend.Entity {
         public int m_Progress { get { return m_isTalk ? 1 : 0; } set { m_isTalk = value != 0; } }
         private bool m_isTalk;
         public short m_tarId;
-        public void Reset (short tarId) {
+        public void Reset (short tarId, int progress) {
             m_isTalk = false;
             m_tarId = tarId;
+            m_isTalk = progress != 0;
         }
     }
     class E_MissionTargetKillMonster : IMissionTarget {
