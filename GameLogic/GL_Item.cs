@@ -9,7 +9,6 @@ namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理物品的使用, 存取 (背包, 仓库), 回收
     /// 装备强化, 附魔, 镶嵌
-    /// TODO: BUG: 装备穿了却没有更新
     /// </summary>
     partial class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
