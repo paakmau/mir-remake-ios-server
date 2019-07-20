@@ -7,7 +7,6 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.GameLogic {
     /// <summary>
     /// 管理任务的接受, 放弃, 完成, 进度
-    /// TODO: 紧急优化: 需要Log具有针对性
     /// </summary>
     partial class GL_Mission : GameLogicBase {
         public static GL_Mission s_instance;
