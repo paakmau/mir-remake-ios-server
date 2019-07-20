@@ -4,8 +4,7 @@ using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Util;
 
-namespace MirRemakeBackend.Entity
-{
+namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 管理游戏场景中出现的所有道具
     /// 范围: 仓库, 背包, 地面
@@ -135,37 +134,17 @@ namespace MirRemakeBackend.Entity
             E_EnchantmentItem ecmt = m_itemFactory.GetEnchantmentItemInstance ();
             ecmt.ResetEnchantmentData (attrList);
             List < (short, E_Item) > changedItemList;
-            return CharacterGainItem (charId, ecmt, bag, out changedItemList, out resStoreItem, out resStorePos);
+            return GainItem (charId, ecmt, bag, out changedItemList, out resStoreItem, out resStorePos);
         }
         public short CharacterGainItem (int charId, short itemId, short itemNum, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
             E_Item itemObj = m_itemFactory.GetAndInitInstance (itemId, itemNum);
-            return CharacterGainItem (charId, itemObj, bag, out resChangedItemList, out resStoreItem, out resStorePos);
-        }
-        private short CharacterGainItem (int charId, E_Item itemObj, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
-            short piledNum = 0;
-            short realStoreNum = 0;
-            E_EmptyItem oriBagSlot;
-            resStorePos = bag.AutoPileItemAndGetOccupiedPos (itemObj.m_ItemId, itemObj.m_num, out resChangedItemList, out piledNum, out realStoreNum, out oriBagSlot);
-            // 处理原有物品的堆叠
-            // dds 更新
-            for (int j = 0; j < resChangedItemList.Count; j++)
-                CharacterUpdateItem (resChangedItemList[j].Item2, charId, ItemPlace.BAG, resChangedItemList[j].Item1);
-
-            // 若该物品单独占有一格
-            if (resStorePos >= 0) {
-                // 实例化 持久层 回收
-                itemObj.m_num -= piledNum;
-                if (itemObj == null)
-                    itemObj = m_itemFactory.GetEmptyItemInstance ();
-                m_ddh.Delete (oriBagSlot);
-                m_ddh.Insert (itemObj, charId, bag.m_repositoryPlace, resStorePos);
-                m_itemFactory.RecycleItem (oriBagSlot);
-                resStoreItem = itemObj;
-            } else {
+            if (itemObj == null) {
+                resChangedItemList = null;
                 resStoreItem = null;
-                m_itemFactory.RecycleItem (itemObj);
+                resStorePos = -3;
+                return 0;
             }
-            return realStoreNum;
+            return GainItem (charId, itemObj, bag, out resChangedItemList, out resStoreItem, out resStorePos);
         }
         public E_Item CharacterLoseItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
             // 持久层
@@ -187,7 +166,7 @@ namespace MirRemakeBackend.Entity
             m_ddh.Save (item, charId, ip, pos);
         }
         public short CharacterPickGroundItem (int charId, E_GroundItem gndItem, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
-            var res = CharacterGainItem (charId, gndItem.m_item, bag, out resChangedItemList, out resStoreItem, out resStorePos);
+            var res = GainItem (charId, gndItem.m_item, bag, out resChangedItemList, out resStoreItem, out resStorePos);
             // 移除gndItem
             for (int i = 0; i < m_groundItemList.Count; i++)
                 if (m_groundItemList[i] == gndItem)
@@ -271,6 +250,29 @@ namespace MirRemakeBackend.Entity
                     m_renewableItemList[i] = itemIdPosTime;
                 }
             }
+        }
+        private short GainItem (int charId, E_Item itemObj, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
+            short piledNum = 0;
+            short realStoreNum = 0;
+            E_EmptyItem oriBagSlot;
+            resStorePos = bag.AutoPileAndStoreItem (itemObj, out resChangedItemList, out piledNum, out realStoreNum, out oriBagSlot);
+            // 处理原有物品的堆叠
+            // dds 更新
+            for (int j = 0; j < resChangedItemList.Count; j++)
+                CharacterUpdateItem (resChangedItemList[j].Item2, charId, ItemPlace.BAG, resChangedItemList[j].Item1);
+
+            // 若该物品单独占有一格
+            if (resStorePos >= 0) {
+                // 实例化 持久层 回收
+                m_ddh.Delete (oriBagSlot);
+                m_ddh.Insert (itemObj, charId, bag.m_repositoryPlace, resStorePos);
+                m_itemFactory.RecycleItem (oriBagSlot);
+                resStoreItem = itemObj;
+            } else {
+                resStoreItem = null;
+                m_itemFactory.RecycleItem (itemObj);
+            }
+            return realStoreNum;
         }
     }
 }

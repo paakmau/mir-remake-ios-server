@@ -88,30 +88,30 @@ namespace MirRemakeBackend.Entity {
         /// 若完全堆叠返回 -1  
         /// 未能完全存入返回 -2  
         /// </return>
-        //TODO: 感觉这里有点小问题(每次获取新的物品之后它的pos都是0导致背包里显示只有一个东西)
-        public short AutoPileItemAndGetOccupiedPos (short itemId, short itemNum, out List < (short, E_Item) > posAndChangedItemList, out short piledNum, out short realStoredNum, out E_EmptyItem oriEmptySlot) {
+        public short AutoPileAndStoreItem (E_Item item, out List < (short, E_Item) > posAndChangedItemList, out short piledNum, out short realStoredNum, out E_EmptyItem resOriSlot) {
             posAndChangedItemList = new List < (short, E_Item) > ();
             piledNum = 0;
             realStoredNum = 0;
-            oriEmptySlot = null;
+            resOriSlot = null;
             // 堆叠
             for (int i = 0; i < m_itemList.Count; i++) {
                 var itemInRepo = m_itemList[i];
-                if (itemInRepo.m_ItemId == itemId && itemInRepo.m_num != itemInRepo.m_MaxNum) {
+                if (itemInRepo.m_ItemId == item.m_ItemId && itemInRepo.m_num != itemInRepo.m_MaxNum) {
                     posAndChangedItemList.Add (((short) i, itemInRepo));
-                    short added = itemInRepo.AddNum (itemNum);
+                    short added = itemInRepo.AddNum (item.m_num);
                     piledNum += added;
                     realStoredNum = piledNum;
-                    itemNum -= added;
-                    if (itemNum == 0)
+                    item.m_num -= added;
+                    if (item.m_num == 0)
                         return -1;
                 }
             }
             // 寻找空插槽
             for (short i = 0; i < m_itemList.Count; i++) {
                 if (m_itemList[i].m_IsEmpty) {
-                    oriEmptySlot = m_itemList[i] as E_EmptyItem;
-                    realStoredNum += itemNum;
+                    resOriSlot = m_itemList[i] as E_EmptyItem;
+                    realStoredNum += item.m_num;
+                    m_itemList[i] = item;
                     return i;
                 }
             }
