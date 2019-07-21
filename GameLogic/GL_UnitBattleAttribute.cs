@@ -14,7 +14,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_UnitBattleAttribute s_instance;
         private EffectCalculateStage m_effectStage = new EffectCalculateStage ();
         private Dictionary<StatusType, IStatusHandler> m_statusHandlerDict = new Dictionary<StatusType, IStatusHandler> ();
-        private const float c_isAttackedLastTime = 15.0f;
+        private const float c_isAttackedLastTime = 1000.0f;
         private float m_secondTimer = 0;
         public GL_UnitBattleAttribute (INetworkService netService) : base (netService) {
             // 实例化所有 StatusHandler 接口的实现类

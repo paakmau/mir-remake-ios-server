@@ -50,7 +50,7 @@ namespace MirRemakeBackend.GameLogic {
                         if (charObj == null) continue;
                         dmgCharList.Add (charObj.GetDmgRnkNo (dmg));
                     }
-                    dmgCharList.Sort ((NO_DamageRankCharacter a, NO_DamageRankCharacter b) => { return a.m_damage - b.m_damage; });
+                    dmgCharList.Sort ((NO_DamageRankCharacter a, NO_DamageRankCharacter b) => { return b.m_damage - a.m_damage; });
                     // client
                     for (int i = 0; i < toNetIdList.Count; i++) {
                         int toNetId = toNetIdList[i];
