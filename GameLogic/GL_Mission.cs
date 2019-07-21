@@ -26,7 +26,7 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < logs.Count; i++) {
                 var logObj = logs[i];
                 var netId = logObj.m_netId;
-                var charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
+                var charId = EM_Character.s_instance.GetCharIdByNetworkId (netId);
                 if (charId == -1) continue;
                 var misDict = EM_Mission.s_instance.GetCharAllMisDict (netId);
                 if (misDict == null) continue;
@@ -56,12 +56,12 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void NetworkTick () { }
         public void CommandApplyTalkToNpc (int netId, short misId, short misTarId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             GL_MissionLog.s_instance.NotifyLog (MissionTargetType.TALK_TO_NPC, netId, misId, misTarId);
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             // 实例化
             var mis = EM_Mission.s_instance.AcceptMission (netId, charObj.m_characterId, misId);
@@ -70,7 +70,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfAcceptMission.Instance (netId, misId));
         }
         public void CommandApplyDeliveryMission (int netId, short misId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             var misObj = EM_Mission.s_instance.GetAcceptedMission (netId, misId);
             if (misObj == null) return;
@@ -88,7 +88,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_CharacterAttribute.s_instance.NotifyGainExperience (charObj, misObj.m_BonusExperience);
         }
         public void CommandCancelMission (int netId, short misId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             var misObj = EM_Mission.s_instance.GetAcceptedMission (netId, misId);
             if (misObj == null) return;

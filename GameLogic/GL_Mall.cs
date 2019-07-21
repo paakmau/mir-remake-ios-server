@@ -17,7 +17,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandBuyItemInShoppingMall (int netId, int mallItemId, short num, CurrencyType cyType) {
             if (num == 0) return;
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_MallItem itemObj = EM_MallItem.s_instance.GetMallItemByMallItemId (mallItemId);
             if (charObj == null || itemObj == null) return;
             long needCy = cyType == CurrencyType.VIRTUAL ? itemObj.m_VirtualCyPrice : itemObj.m_ChargeCyPrice;

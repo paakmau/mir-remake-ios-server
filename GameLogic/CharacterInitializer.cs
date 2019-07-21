@@ -5,7 +5,7 @@ namespace MirRemakeBackend.GameLogic {
         public static CharacterInitializer s_instance;
         public CharacterInitializer () { }
         public void CommandInitCharacterId (int netId, int charId) {
-            // 角色
+            // TODO: 需要拆解 GL_CharacterAttribute, 其中 CharacterInit 模块得到 E_Character 对象, 把它传给其他模块进行init, 就无须返回值
             var newChar = GL_CharacterAttribute.s_instance.NotifyInitCharacter (netId, charId);
             if (newChar == null)
                 return;
@@ -22,7 +22,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
         }
         public void CommandRemoveCharacter (int netId) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             GL_CharacterAttribute.s_instance.NotifyRemoveCharacter (charObj);
             GL_CharacterCombatEfct.s_instance.NotifyRemoveCharacter (charObj);

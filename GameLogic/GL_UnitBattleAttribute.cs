@@ -25,7 +25,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_statusHandlerDict.Add (sh.m_Type, sh);
             }
             // 初始化Status
-            var monEn = EM_Unit.s_instance.GetMonsterEn ();
+            var monEn = EM_Monster.s_instance.GetMonsterEn ();
             while (monEn.MoveNext ())
                 EM_Status.s_instance.InitUnitStatus (monEn.Current.Key);
         }
@@ -97,7 +97,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void NetworkTick () {
-            var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
             while (charEn.MoveNext ()) {
                 var charObj = charEn.Current.Value;
                 var sight = EM_Sight.s_instance.GetCharacterRawSight (charObj.m_networkId);
@@ -161,6 +161,8 @@ namespace MirRemakeBackend.GameLogic {
             if (!target.m_netIdAndDamageDict.TryGetValue (caster.m_networkId, out oriDmg))
                 oriDmg = 0;
             target.m_netIdAndDamageDict[caster.m_networkId] = oriDmg + newDmg;
+            if (target.m_UnitType == ActorUnitType.MONSTER && ((target as E_Monster).m_MonsterType == MonsterType.BOSS || (target as E_Monster).m_MonsterType == MonsterType.FINAL_BOSS))
+                GL_BossDamage.s_instance.NotifyBossAttacked (target as E_Monster, newDmg);
 
             // 若单位死亡
             if (target.m_IsDead) {

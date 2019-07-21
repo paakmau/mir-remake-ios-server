@@ -6,69 +6,22 @@ using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
-    /// 索引场景中所有的单位  
-    /// 怪物不需要内存池因为每个怪物都需要Respawn且不会永久消失  
+    /// 索引场景中所有的Character  
     /// </summary>
-    class EM_Unit : EntityManagerBase {
-        private class NetworkIdManager {
-            private HashSet<int> m_unitNetIdSet = new HashSet<int> ();
-            private int m_unitCnt = 0;
-            public int AssignNetworkId () {
-                // 分配NetworkId
-                while (true) {
-                    ++m_unitCnt;
-                    if (!m_unitNetIdSet.Contains (m_unitCnt))
-                        break;
-                }
-                m_unitNetIdSet.Add (m_unitCnt);
-                return m_unitCnt;
-            }
-            public int[] AssignNetworkId (int num) {
-                int[] res = new int[num];
-                for (int i = 0; i < num; i++)
-                    res[i] = AssignNetworkId ();
-                return res;
-            }
-            public void RecycleNetworkId (int netId) {
-                m_unitNetIdSet.Remove (netId);
-            }
-        }
-        public static EM_Unit s_instance;
-        private DEM_Unit m_dem;
+    class EM_Character : EntityManagerBase {
+        public static EM_Character s_instance;
+        private DEM_Character m_dem;
         private IDDS_Character m_charDds;
         private IDDS_CharacterAttribute m_charAttrDds;
         private IDDS_CharacterPosition m_charPosDds;
         private IDDS_CharacterWallet m_charWalletDds;
-        private NetworkIdManager m_networkIdManager = new NetworkIdManager ();
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
-        private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
-        private Dictionary<int, E_Monster> m_networkIdAndBossDict = new Dictionary<int, E_Monster> ();
-        public EM_Unit (DEM_Unit dem, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterPosition charPosDds) {
+        public EM_Character (DEM_Character dem, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterPosition charPosDds) {
             m_dem = dem;
             m_charDds = charDds;
             m_charAttrDds = charAttrDds;
             m_charWalletDds = charWalletDds;
             m_charPosDds = charPosDds;
-
-            // 初始化所有的怪物
-            var monIdAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
-            var netIdArr = m_networkIdManager.AssignNetworkId (monIdAndPosList.Count);
-            var res = new E_Monster[netIdArr.Length];
-            // 实例化所有的怪物
-            var idAndPosList = m_dem.GetAllMonsterIdAndRespawnPosition ();
-            for (int i = 0; i < idAndPosList.Count; i++) {
-                ValueTuple<DE_Unit, DE_MonsterData> deTuple;
-                m_dem.GetMonsterById (idAndPosList[i].Item1, out deTuple);
-                E_Monster monster = new E_Monster ();
-                monster.Reset (netIdArr[i], idAndPosList[i].Item2, deTuple.Item1, deTuple.Item2);
-                m_networkIdAndMonsterDict[netIdArr[i]] = monster;
-                res[i] = monster;
-                if (monster.m_MonsterType == MonsterType.BOSS || monster.m_MonsterType == MonsterType.FINAL_BOSS)
-                    m_networkIdAndBossDict.Add (monster.m_networkId, monster);
-            }
-        }
-        public int AssignNetworkId () {
-            return m_networkIdManager.AssignNetworkId ();
         }
         /// <summary>
         /// 从数据库读取角色信息  
@@ -109,8 +62,6 @@ namespace MirRemakeBackend.Entity {
                 return;
             m_networkIdAndCharacterDict.Remove (netId);
             s_entityPool.m_characterPool.RecycleInstance (charObj);
-            // 释放NetId
-            m_networkIdManager.RecycleNetworkId (netId);
         }
         public E_Character GetCharacterByNetworkId (int netId) {
             E_Character res = null;
@@ -125,12 +76,6 @@ namespace MirRemakeBackend.Entity {
         }
         public Dictionary<int, E_Character>.Enumerator GetCharacterEnumerator () {
             return m_networkIdAndCharacterDict.GetEnumerator ();
-        }
-        public Dictionary<int, E_Monster>.Enumerator GetMonsterEn () {
-            return m_networkIdAndMonsterDict.GetEnumerator ();
-        }
-        public Dictionary<int, E_Monster>.Enumerator GetBossEn () {
-            return m_networkIdAndBossDict.GetEnumerator ();
         }
         public void SaveCharacterAttribute (E_Character charObj) {
             m_charAttrDds.UpdateCharacterAttribute (charObj.GetAttrDdo ());

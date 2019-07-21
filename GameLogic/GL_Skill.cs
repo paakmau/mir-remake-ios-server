@@ -13,7 +13,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetLv) {
             var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (skill == null || charObj == null) return;
             short oriLv = skill.m_skillLevel;
             long costTotal = 0;
@@ -35,7 +35,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void CommandGainMasterly (int netId, short skillId, int masterly) {
-            int charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetworkId (netId);
             var skObj = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             if (charId == -1 || skObj == null) return;
             skObj.m_masterly += masterly;

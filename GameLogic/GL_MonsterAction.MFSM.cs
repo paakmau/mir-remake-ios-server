@@ -146,7 +146,7 @@ namespace MirRemakeBackend.GameLogic {
                     return null;
                 // 尝试对仇恨最高的目标释放技能
                 E_MonsterSkill skill;
-                if (EM_MonsterSkill.s_instance.GetRandomValidSkill (self.m_networkId, self.m_MonsterId, out skill)) {
+                if (EM_MonsterSkill.s_instance.GetRandomValidSkill (self.m_MonsterId, out skill)) {
                     var spg = SkillParamGeneratorBase.GetSpg(skill.m_AimType);
                     if (spg.InCastRange (self, skill.m_CastRange, unit)) {
                         SkillParam sp = spg.GetSkillParam (self, unit);

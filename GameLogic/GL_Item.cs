@@ -29,7 +29,7 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.GroundItemAutoDisappear ();
             var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
             // 地面道具视野
-            var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
             var charDspprItemIdList = new List<long> ();
             var charShowItemList = new List<NO_GroundItem> ();
             while (charEn.MoveNext ()) {
@@ -87,7 +87,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void CommandApplyBuyItemIntoBag (int netId, short itemId, short num) {
             if (num == 0) return;
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             long needCy = EM_Item.s_instance.GetItemBuyPrice (itemId);
@@ -99,7 +99,7 @@ namespace MirRemakeBackend.GameLogic {
             NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
         }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short pos;
@@ -113,12 +113,12 @@ namespace MirRemakeBackend.GameLogic {
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
         }
         public void CommandGainItem (int netId, short itemId, short num) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
         }
         public void CommandPickUpGroundItem (int netId, long gndItemId) {
-            var charId = EM_Unit.s_instance.GetCharIdByNetworkId (netId);
+            var charId = EM_Character.s_instance.GetCharIdByNetworkId (netId);
             var bag = EM_Item.s_instance.GetBag (netId);
             var gndItem = EM_Item.s_instance.GetGroundItem (gndItemId);
             if (gndItem == null || bag == null || charId == -1) return;
@@ -144,7 +144,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void CommandDropItemOntoGround (int netId, long realId, short num) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             var bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null || charObj == null) return;
             short itemPos;
@@ -156,7 +156,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new List<NO_Item> () { item.GetItemNo (ItemPlace.BAG, itemPos) }));
         }
         public void CommandApplyUseConsumableItem (int netId, long realId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null || charObj == null) return;
             short posInBag = -1;
@@ -166,7 +166,7 @@ namespace MirRemakeBackend.GameLogic {
             NotifyCharacterLoseItem (charObj, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquiped (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || eqRegion == null || bag == null) return;
@@ -188,7 +188,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 强化装备 </summary>
         public void CommandApplyStrengthenEquipment (int netId, long realId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short eqPos;
@@ -205,7 +205,7 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
         }
         public void CommandApplyEnchantEquipment (int netId, long eqRealId, long enchantmentRealId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short eqPos, encmPos;
@@ -232,7 +232,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 镶嵌宝石 </summary>
         public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short eqPos, gemPos;
@@ -265,7 +265,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 装备打孔 </summary>
         public void CommandApplyMakeHoleInEquipment (int netId, long realId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short eqPos;
@@ -285,7 +285,7 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 装备分解 </summary>
         public void CommandApplyDisjointEquipment (int netId, long realId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short eqPos;
@@ -324,7 +324,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfPackUpMarket.Instance (netId));
         }
         public void CommandApplyEnterMarket (int netId, int holderNetId) {
-            var holder = EM_Unit.s_instance.GetCharacterByNetworkId (holderNetId);
+            var holder = EM_Character.s_instance.GetCharacterByNetworkId (holderNetId);
             var market = EM_Item.s_instance.GetMarket (holderNetId);
             if (holder == null || market == null) return;
             List<NO_MarketItem> marketNo = new List<NO_MarketItem> (market.m_itemList.Count);
@@ -334,8 +334,8 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandApplyBuyItemInMarket (int buyerNetId, int holderNetId, long itemRealId, short num, CurrencyType cyType) {
             if (num == 0) return;
-            var buyer = EM_Unit.s_instance.GetCharacterByNetworkId (buyerNetId);
-            var holder = EM_Unit.s_instance.GetCharacterByNetworkId (holderNetId);
+            var buyer = EM_Character.s_instance.GetCharacterByNetworkId (buyerNetId);
+            var holder = EM_Character.s_instance.GetCharacterByNetworkId (holderNetId);
             var market = EM_Item.s_instance.GetMarket (holderNetId);
             var buyerBag = EM_Item.s_instance.GetBag (buyerNetId);
             var holderBag = EM_Item.s_instance.GetBag (holderNetId);

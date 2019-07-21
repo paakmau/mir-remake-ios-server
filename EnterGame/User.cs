@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 
@@ -56,9 +55,6 @@ namespace MirRemakeBackend.EnterGame {
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
 
             // 出事排行榜加载
-        }
-        public int AssignNetworkId () {
-            return EM_Unit.s_instance.AssignNetworkId ();
         }
         public void CommandConnect (int netId) {
             m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId));

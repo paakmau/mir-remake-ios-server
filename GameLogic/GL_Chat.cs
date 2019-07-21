@@ -11,10 +11,10 @@ namespace MirRemakeBackend.GameLogic {
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandSendMessage (int netId, ChattingChanelType channel, string msg, int toNetId) {
-            var senderCharObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var senderCharObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (senderCharObj == null)
                 return;
-            var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
             switch (channel) {
                 case ChattingChanelType.PRIVATE:
                     while (charEn.MoveNext ()) {

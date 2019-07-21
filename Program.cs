@@ -60,12 +60,13 @@ namespace MirRemakeBackend {
             IDS_GroundItemMap gndItemDs = new DS_GroundItemMapImpl ();
             IDS_Mission misDs = new DS_MissionImpl ();
             // DataEntity
-            DEM_Unit actorUnitDem = new DEM_Unit (monsterDs, charDs, mapDs);
+            DEM_Character charDem = new DEM_Character (charDs);
             DEM_Status statusDem = new DEM_Status (statusDs);
             DEM_Skill skillDem = new DEM_Skill (skillDs);
             DEM_MallItem mallItemDem = new DEM_MallItem (mallDs);
-            DEM_Item itemDem = new DEM_Item (itemDs, gndItemDs);
             DEM_Mission misDem = new DEM_Mission (misDs);
+            DEM_Monster monDem = new DEM_Monster (monsterDs, mapDs);
+            DEM_Item itemDem = new DEM_Item (itemDs, gndItemDs);
             // DynamicDataService
             var ddsImpl = new DynamicDataServiceImpl ();
             IDDS_User userDds = ddsImpl;
@@ -78,17 +79,21 @@ namespace MirRemakeBackend {
             IDDS_Mission misDds = ddsImpl;
             IDDS_CombatEfct combatEfctDds = ddsImpl;
             // EntityManager
+            EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
+            EM_Character.s_instance = new EM_Character (charDem, charDds, charAttrDds, charWalletDds, charPosDds);
             EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
             EM_Mission.s_instance = new EM_Mission (misDem, misDds);
-            EM_MonsterSkill.s_instance = new EM_MonsterSkill (skillDem, actorUnitDem);
+            EM_Monster.s_instance = new EM_Monster (monDem);
+            EM_MonsterSkill.s_instance = new EM_MonsterSkill ();
             EM_Rank.s_instance = new EM_Rank (combatEfctDds);
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
-            EM_Unit.s_instance = new EM_Unit (actorUnitDem, charDds, charAttrDds, charWalletDds, charPosDds);
             EM_MissionLog.s_instance = new EM_MissionLog ();
+            // EM init
+            EntityManagerInitializer.Init (skillDem, monDem);
             // 角色创建器
             User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, charPosDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
 
@@ -102,6 +107,7 @@ namespace MirRemakeBackend {
             CharacterInitializer.s_instance = new CharacterInitializer ();
             // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
+            GL_BossDamage.s_instance = new GL_BossDamage (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
             GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
@@ -117,6 +123,7 @@ namespace MirRemakeBackend {
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
+                GL_BossDamage.s_instance,
                 GL_CharacterAction.s_instance,
                 GL_CharacterAttribute.s_instance,
                 GL_Item.s_instance,

@@ -13,7 +13,7 @@ namespace MirRemakeBackend.GameLogic {
         private const float c_bossSightTime = 2f;
         private float m_bossSightTimer;
         public GL_MonsterAction (INetworkService netService) : base (netService) {
-            var monEn = EM_Unit.s_instance.GetMonsterEn ();
+            var monEn = EM_Monster.s_instance.GetMonsterEn ();
             while (monEn.MoveNext ()) {
                 var mfsm = new MFSM (monEn.Current.Value);
                 m_mfsmDict.Add (monEn.Current.Key, mfsm);
@@ -34,7 +34,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_bossSightTimer -= c_bossSightTime;
             }
             if (bossSight) {
-                var bossEn = EM_Unit.s_instance.GetBossEn ();
+                var bossEn = EM_Monster.s_instance.GetBossEn ();
                 while (bossEn.MoveNext ()) {
                     var netIdAndDmgDict = bossEn.Current.Value.m_netIdAndDamageDict;
                     // 若视野内无玩家
@@ -46,7 +46,7 @@ namespace MirRemakeBackend.GameLogic {
                     while (dmgEn.MoveNext ()) {
                         var netId = dmgEn.Current.Key;
                         var dmg = dmgEn.Current.Value;
-                        var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+                        var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
                         if (charObj == null) continue;
                         dmgCharList.Add (charObj.GetDmgRnkNo (dmg));
                     }

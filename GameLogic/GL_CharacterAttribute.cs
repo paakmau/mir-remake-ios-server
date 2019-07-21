@@ -20,24 +20,24 @@ namespace MirRemakeBackend.GameLogic {
                 needSyncPos = true;
             }
             if (needSyncPos) {
-                var charEn = EM_Unit.s_instance.GetCharacterEnumerator ();
+                var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
                 while (charEn.MoveNext ())
-                    EM_Unit.s_instance.SaveCharacterPosition (charEn.Current.Value);
+                    EM_Character.s_instance.SaveCharacterPosition (charEn.Current.Value);
             }
         }
         public override void NetworkTick () { }
         public void CommandGainExperience (int netId, int exp) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             NotifyGainExperience (charObj, exp);
         }
         public void CommandRequireCharacterAttribute (int netId, int tarNetId) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (tarNetId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (tarNetId);
             if (charObj == null) return;
             m_networkService.SendServerCommand (SC_SendAllCharacterAttribute.Instance (netId, charObj.GetAttrNo ()));
         }
         public void CommandApplyDistributePoints (int netId, short str, short intl, short agl, short spr) {
-            E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             charObj.DistributePoints (str, intl, agl, spr);
             // 角色加点后, 具体属性变化
@@ -45,7 +45,7 @@ namespace MirRemakeBackend.GameLogic {
             // 战斗力变化
             GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
-            EM_Unit.s_instance.SaveCharacterAttribute (charObj);
+            EM_Character.s_instance.SaveCharacterAttribute (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfMainAttribute.Instance (
                 netId,
                 charObj.m_strength,
@@ -54,12 +54,12 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_spirit));
         }
         public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
-            var charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
+            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
         public E_Character NotifyInitCharacter (int netId, int charId) {
-            E_Character newChar = EM_Unit.s_instance.InitCharacter (netId, charId);
+            E_Character newChar = EM_Character.s_instance.InitCharacter (netId, charId);
             if (newChar == null)
                 return null;
             MainPointToConAttr (newChar);
@@ -81,7 +81,7 @@ namespace MirRemakeBackend.GameLogic {
             return newChar;
         }
         public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Unit.s_instance.RemoveCharacter (charObj.m_networkId);
+            EM_Character.s_instance.RemoveCharacter (charObj.m_networkId);
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == charObj.m_MaxLevel)
@@ -90,7 +90,7 @@ namespace MirRemakeBackend.GameLogic {
             if (dLv > 0)
                 GL_CharacterCombatEfct.s_instance.NotifyCombatEffectivenessChange (charObj);
             // dds 与 client
-            EM_Unit.s_instance.SaveCharacterAttribute (charObj);
+            EM_Character.s_instance.SaveCharacterAttribute (charObj);
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
@@ -109,7 +109,7 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_chargeCurrency += dC;
             else
                 charObj.m_virtualCurrency += dC;
-            EM_Unit.s_instance.SaveCharacterWallet (charObj);
+            EM_Character.s_instance.SaveCharacterWallet (charObj);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
                 charObj.m_networkId, charObj.m_virtualCurrency, charObj.m_chargeCurrency));
