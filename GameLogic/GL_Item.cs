@@ -107,7 +107,7 @@ namespace MirRemakeBackend.GameLogic {
             if (item == null)
                 return;
             // 失去物品
-            NotifyCharacterLostItem (charObj, item, num, pos, bag);
+            NotifyCharacterLoseItem (charObj, item, num, pos, bag);
             // 拿钱
             var virCy = (int) (item.m_SellPrice * num);
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
@@ -163,7 +163,7 @@ namespace MirRemakeBackend.GameLogic {
             E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
             if (item == null) return;
             GL_UnitBattleAttribute.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, -1, charObj, charObj);
-            NotifyCharacterLostItem (charObj, item, 1, posInBag, bag);
+            NotifyCharacterLoseItem (charObj, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
             E_Character charObj = EM_Unit.s_instance.GetCharacterByNetworkId (netId);
@@ -219,12 +219,16 @@ namespace MirRemakeBackend.GameLogic {
             // 花钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
             // 失去附魔符
-            EM_Item.s_instance.CharacterLoseItem (encm, charObj.m_characterId, bag, encmPos);
+            var slot = EM_Item.s_instance.CharacterLoseWholeItem (encm, charObj.m_characterId, bag, encmPos);
             // 附魔
             eq.m_enchantAttrList.Clear ();
             for (int i = 0; i < encm.m_attrList.Count; i++)
                 eq.m_enchantAttrList.Add (encm.m_attrList[i]);
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, encmPos) }));
+            m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
         }
         /// <summary> 镶嵌宝石 </summary>
         public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
@@ -250,10 +254,14 @@ namespace MirRemakeBackend.GameLogic {
             // 花钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
             // 失去宝石
-            EM_Item.s_instance.CharacterLoseItem (gem, charObj.m_characterId, bag, gemPos);
+            var slot = EM_Item.s_instance.CharacterLoseWholeItem (gem, charObj.m_characterId, bag, gemPos);
             // 镶嵌
             eq.InlayGem (gemInlayPos, gem.m_ItemId, gem.m_gemDe);
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, gemPos) }));
+            m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
         }
         /// <summary> 装备打孔 </summary>
         public void CommandApplyMakeHoleInEquipment (int netId, long realId) {
@@ -271,6 +279,9 @@ namespace MirRemakeBackend.GameLogic {
             // 打孔
             eq.MakeHole ();
             EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+
+            // client
+            m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
         }
         /// <summary> 装备分解 </summary>
         public void CommandApplyDisjointEquipment (int netId, long realId) {
@@ -283,7 +294,7 @@ namespace MirRemakeBackend.GameLogic {
             long curCy = charObj.m_virtualCurrency;
             long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
             // 失去装备
-            EM_Item.s_instance.CharacterLoseItem (eq, charObj.m_characterId, bag, eqPos);
+            EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
             // 得到钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -gainCy);
             // TODO: 获得附魔符 需要另外考虑
@@ -297,16 +308,72 @@ namespace MirRemakeBackend.GameLogic {
             // }
         }
         public void CommandApplyPSetUpMarket (int netId, IReadOnlyList<NO_MarketItem> marketItemNoList) {
-            // TODO: 角色开始摆摊
+            var itemToSellArr = new (long, short, long, long) [marketItemNoList.Count];
+            for (int i = 0; i < marketItemNoList.Count; i++)
+                itemToSellArr[i] = (marketItemNoList[i].m_realId, marketItemNoList[i].m_onSaleNum, marketItemNoList[i].m_virtualCyPrice, marketItemNoList[i].m_chargeCyPrice);
+            E_Market market;
+            EM_Item.s_instance.CharacterSetUpMarket (netId, itemToSellArr, out market);
+            if (market == null) return;
+            List<NO_MarketItem> marketNo = new List<NO_MarketItem> (market.m_itemList.Count);
+            for (int i = 0; i < market.m_itemList.Count; i++)
+                marketNo.Add (market.m_itemList[i].GetNo ());
+            m_networkService.SendServerCommand (SC_ApplySelfSetUpMarket.Instance (netId, marketNo));
         }
         public void CommandApplyPackUpMarket (int netId) {
-            // TODO: 收摊
+            EM_Item.s_instance.CharacterPackUpMarket (netId);
+            m_networkService.SendServerCommand (SC_ApplySelfPackUpMarket.Instance (netId));
         }
         public void CommandApplyEnterMarket (int netId, int holderNetId) {
-            // TODO: 获取他人摊位
+            var holder = EM_Unit.s_instance.GetCharacterByNetworkId (holderNetId);
+            var market = EM_Item.s_instance.GetMarket (holderNetId);
+            if (holder == null || market == null) return;
+            List<NO_MarketItem> marketNo = new List<NO_MarketItem> (market.m_itemList.Count);
+            for (int i = 0; i < market.m_itemList.Count; i++)
+                marketNo.Add (market.m_itemList[i].GetNo ());
+            m_networkService.SendServerCommand (SC_ApplySelfEnterOtherMarket.Instance (netId, holderNetId, holder.m_name, marketNo));
         }
-        public void CommandApplyBuyItemInMarket (int netId, int holderNetId, long itemRealId, short num) {
-            // TODO: 
+        public void CommandApplyBuyItemInMarket (int buyerNetId, int holderNetId, long itemRealId, short num, CurrencyType cyType) {
+            if (num == 0) return;
+            var buyer = EM_Unit.s_instance.GetCharacterByNetworkId (buyerNetId);
+            var holder = EM_Unit.s_instance.GetCharacterByNetworkId (holderNetId);
+            var market = EM_Item.s_instance.GetMarket (holderNetId);
+            var buyerBag = EM_Item.s_instance.GetBag (buyerNetId);
+            var holderBag = EM_Item.s_instance.GetBag (holderNetId);
+            if (buyer == null || holder == null || market == null || buyerBag == null || holderBag == null) return;
+            short marketPos;
+            var marketItem = EM_Item.s_instance.GetMarketItem (holderNetId, itemRealId, out marketPos);
+            if (marketItem == null) return;
+            long needCy = cyType == CurrencyType.VIRTUAL ? marketItem.m_virtualCyPrice : marketItem.m_chargeCyPrice;
+            if (needCy == -1) return;
+            if (marketItem.m_ItemNum < num || marketItem.m_onSaleNum < num) return;
+            needCy *= num;
+            long charCy = cyType == CurrencyType.VIRTUAL ? buyer.m_virtualCurrency : buyer.m_chargeCurrency;
+            if (charCy < needCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (buyer, cyType, -needCy);
+            // 收钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (holder, cyType, needCy);
+            // 交易物品
+            E_Item holderChangedItem;
+            List < (short, E_Item) > buyerChangedItemList;
+            E_Item buyerStoreItem;
+            short buyerStorePos;
+            EM_Item.s_instance.CharacterBuyItemInMarket (holder.m_characterId, buyerNetId, buyer.m_characterId, market, marketItem, num, marketPos, holderBag, buyerBag, out holderChangedItem, out buyerChangedItemList, out buyerStoreItem, out buyerStorePos);
+            // client
+            m_networkService.SendServerCommand (SC_ApplyOtherUpdateMarketItem.Instance (buyerNetId, holderNetId, itemRealId, marketItem.m_onSaleNum));
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateMarketItem.Instance (holderNetId, itemRealId, marketItem.m_onSaleNum));
+            if (buyerChangedItemList.Count != 0) {
+                var changedItemNoArr = new NO_Item[buyerChangedItemList.Count];
+                for (int i = 0; i < buyerChangedItemList.Count; i++)
+                    changedItemNoArr[i] = buyerChangedItemList[i].Item2.GetItemNo (buyerBag.m_repositoryPlace, buyerChangedItemList[i].Item1);
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (buyerNetId, changedItemNoArr));
+            }
+            if (buyerStoreItem != null) {
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (buyerNetId, new NO_Item[] { buyerStoreItem.GetItemNo (buyerBag.m_repositoryPlace, buyerStorePos) }));
+                m_netSenderDict[buyerStoreItem.m_Type].SendItemInfo (buyerStoreItem, buyerNetId, m_networkService);
+            }
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (holderNetId, new NO_Item[] { holderChangedItem.GetItemNo (holderBag.m_repositoryPlace, marketItem.m_bagPos) }));
+            
         }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
@@ -320,17 +387,8 @@ namespace MirRemakeBackend.GameLogic {
         /// <summary>
         /// 失去确定位置的物品
         /// </summary>
-        public void NotifyCharacterLostItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
-            // 移除num个该物品
-            bool runOut = item.RemoveNum (num);
-            long realId = item.m_realId;
-            short curNum = item.m_num;
-            // 实例 与 数据
-            if (runOut)
-                // 物品消失
-                item = EM_Item.s_instance.CharacterLoseItem (item, charObj.m_characterId, repo, pos);
-            else
-                EM_Item.s_instance.CharacterUpdateItem (item, charObj.m_characterId, repo.m_repositoryPlace, pos);
+        public void NotifyCharacterLoseItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
+            item = EM_Item.s_instance.CharacterLoseItem (item, num, charObj.m_characterId, repo, pos);
             // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                 charObj.m_networkId, new List<NO_Item> { item.GetItemNo (repo.m_repositoryPlace, pos) }));

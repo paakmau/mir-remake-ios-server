@@ -282,7 +282,8 @@ namespace MirRemakeBackend.Network {
             int holderNetId = reader.GetInt ();
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            GL_Item.s_instance.CommandApplyBuyItemInMarket (netId, holderNetId, realId, num);
+            CurrencyType cyType = (CurrencyType)reader.GetByte ();
+            GL_Item.s_instance.CommandApplyBuyItemInMarket (netId, holderNetId, realId, num, cyType);
         }
     }
     /// <summary>

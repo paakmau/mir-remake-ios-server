@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.DataEntity;
@@ -31,7 +32,7 @@ namespace MirRemakeBackend.Entity {
         private float c_renewableItemRefreshTimeMin = 12;
         private float c_renewableItemRefreshTimeMax = 18;
         private float c_renewableItemRefreshRadian = 2;
-        private Dictionary<int, List<E_MarketItem>> m_marketDict;
+        private Dictionary<int, E_Market> m_marketDict;
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -140,7 +141,27 @@ namespace MirRemakeBackend.Entity {
             }
             return GainItem (charId, itemObj, bag, out resChangedItemList, out resStoreItem, out resStorePos);
         }
-        public E_Item CharacterLoseItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
+        /// <summary>
+        /// 返回pos处现在的item
+        /// </summary>
+        public E_Item CharacterLoseItem (E_Item item, short num, int charId, E_RepositoryBase repo, short pos) {
+            // 移除num个该物品
+            bool runOut = item.RemoveNum (num);
+            long realId = item.m_realId;
+            short curNum = item.m_num;
+            // 实例 与 数据
+            if (runOut)
+                // 物品消失
+                item = CharacterLoseWholeItem (item, charId, repo, pos);
+            else
+                CharacterUpdateItem (item, charId, repo.m_repositoryPlace, pos);
+            return item;
+        }
+        /// <summary>
+        /// 会回收 item  
+        /// 返回该位置的 slot  
+        /// </summary>
+        public E_Item CharacterLoseWholeItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
             // 持久层
             m_ddh.Delete (item);
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
@@ -245,6 +266,69 @@ namespace MirRemakeBackend.Entity {
                 }
             }
         }
+        public E_Market GetMarket (int netId) {
+            E_Market res;
+            m_marketDict.TryGetValue (netId, out res);
+            return res;
+        }
+        public E_MarketItem GetMarketItem (int netId, long realId, out short pos) {
+            pos = -3;
+            E_Market market;
+            if (!m_marketDict.TryGetValue (netId, out market)) return null;
+            return market.GetMarketItemByRealId (realId);
+        }
+        public void CharacterSetUpMarket (int netId, (long, short, long, long) [] itemToSellArr, out E_Market resMarket) {
+            resMarket = null;
+            if (m_marketDict.ContainsKey (netId)) return;
+            var bag = GetBag (netId);
+            if (bag == null) return;
+            var marketItemList = new List<E_MarketItem> (itemToSellArr.Length);
+            foreach (var item in itemToSellArr) {
+                short bagPos;
+                var itemObj = bag.GetItemByRealId (item.Item1, out bagPos);
+                if (itemObj == null) continue;
+                var marketItem = s_entityPool.m_marketItemPool.GetInstance ();
+                marketItem.Reset (itemObj, Math.Min (itemObj.m_num, item.Item2), item.Item3, item.Item4, bagPos);
+                marketItemList.Add (marketItem);
+            }
+            var market = s_entityPool.m_marketPool.GetInstance ();
+            market.Reset (marketItemList);
+            m_marketDict[netId] = market;
+            resMarket = market;
+        }
+        public void CharacterPackUpMarket (int netId) {
+            E_Market market;
+            if (!m_marketDict.TryGetValue (netId, out market))
+                return;
+            for (int i = 0; i < market.m_itemList.Count; i++)
+                s_entityPool.m_marketItemPool.RecycleInstance (market.m_itemList[i]);
+            m_marketDict.Remove (netId);
+        }
+        public void CharacterBuyItemInMarket (int holderCharId, int buyerNetId, int buyerCharId, E_Market market, E_MarketItem marketItem, short num, short marketPos, E_Bag holderBag, E_Bag buyerBag, out E_Item resHolderItem, out List < (short, E_Item) > resBuyerItem, out E_Item resBuyerStoreItem, out short resBuyerStorePos) {
+            var item = marketItem.m_item;
+            // 处理背包物品
+            if (item.m_num == num) {
+                // 整格交易
+                var slot = m_itemFactory.GetEmptyItemInstance ();
+                holderBag.SetItem (slot, marketItem.m_bagPos);
+                m_ddh.Insert (slot, holderCharId, holderBag.m_repositoryPlace, marketItem.m_bagPos);
+                m_ddh.Delete (item);
+                item.m_realId = -1;
+                resHolderItem = slot;
+                GainItem (buyerCharId, item, buyerBag, out resBuyerItem, out resBuyerStoreItem, out resBuyerStorePos);
+            } else {
+                resHolderItem = CharacterLoseItem (item, num, holderCharId, holderBag, marketItem.m_bagPos);
+                CharacterGainItem (buyerCharId, item.m_ItemId, num, buyerBag, out resBuyerItem, out resBuyerStoreItem, out resBuyerStorePos);
+            }
+            // 处理摊位物品
+            marketItem.m_onSaleNum -= num;
+            if (marketItem.m_onSaleNum <= 0) {
+                market.Remove (item.m_realId);
+            }
+        }
+        /// <summary>
+        /// 会为 itemObj 在 dds 中添加记录
+        /// </summary>
         private short GainItem (int charId, E_Item itemObj, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
             short piledNum = 0;
             short realStoreNum = 0;

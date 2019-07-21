@@ -166,17 +166,41 @@ namespace MirRemakeBackend.Entity {
         }
     }
     class E_MarketItem {
-        public long m_marketItemId;
         public E_Item m_item;
+        public long m_RealId { get { return m_item.m_realId; } }
+        public short m_ItemNum { get { return m_item.m_num; } }
+        public short m_onSaleNum;
         public long m_virtualCyPrice;
         public long m_chargeCyPrice;
         public short m_bagPos;
-        public void Reset (long marketItemId, E_Item item, long virtualCyPrice, long chargeCyPrice, short bagPos) {
-            m_marketItemId = marketItemId;
+        public void Reset (E_Item item, short onSaleNum, long virtualCyPrice, long chargeCyPrice, short bagPos) {
             m_item = item;
+            m_onSaleNum = onSaleNum;
             m_virtualCyPrice = virtualCyPrice;
             m_chargeCyPrice = chargeCyPrice;
             m_bagPos = bagPos;
+        }
+        public NO_MarketItem GetNo () {
+            return new NO_MarketItem (m_item.m_realId, m_onSaleNum, m_virtualCyPrice, m_chargeCyPrice);
+        }
+    }
+    class E_Market {
+        public List<E_MarketItem> m_itemList;
+        public void Reset (List<E_MarketItem> itemList) {
+            m_itemList = itemList;
+        }
+        public E_MarketItem GetMarketItemByRealId (long realId) {
+            for (int i = 0; i < m_itemList.Count; i++)
+                if (m_itemList[i].m_RealId == realId)
+                    return m_itemList[i];
+            return null;
+        }
+        public void Remove (long realId) {
+            for (int i = 0; i < m_itemList.Count; i++)
+                if (m_itemList[i].m_RealId == realId) {
+                    m_itemList.RemoveAt (i);
+                    break;
+                }
         }
     }
 }
