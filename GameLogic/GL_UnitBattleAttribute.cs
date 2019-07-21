@@ -30,52 +30,42 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Status.s_instance.InitUnitStatus (monEn.Current.Key);
         }
         public override void Tick (float dT) {
-            // 移除超时的状态
-            var allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
-            while (allUnitStatusEn.MoveNext ()) {
-                int netId = allUnitStatusEn.Current.Key;
-                var statusList = allUnitStatusEn.Current.Value;
-                E_Unit unit = EM_Sight.s_instance.GetUnitVisibleByNetworkId (netId);
-                if (unit == null) continue;
-                var statusToRemoveList = new List<int> ();
-                for (int i = 0; i < statusList.Count; i++)
-                    if (MyTimer.CheckTimeUp (statusList[i].m_endTime))
-                        statusToRemoveList.Add (i);
-                RemoveStatus (unit, statusToRemoveList, statusList);
-            }
-            // 处理仇恨消失
-            var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
-            while (unitEn.MoveNext ()) {
-                // 无伤害信息
-                if (unitEn.Current.m_netIdAndDamageDict.Count == 0)
-                    continue;
-                // 若已死亡
-                if (unitEn.Current.m_IsDead) {
-                    unitEn.Current.m_netIdAndDamageDict.Clear ();
-                    continue;
-                }
-                // 若不在被攻击状态
-                if (MyTimer.CheckTimeUp (unitEn.Current.m_isAttackedTimer)) {
-                    unitEn.Current.m_netIdAndDamageDict.Clear ();
-                    continue;
-                }
-                var hatredEn = unitEn.Current.m_netIdAndDamageDict.GetEnumerator ();
-                var hTarRemoveList = new List<int> ();
-                while (hatredEn.MoveNext ()) {
-                    // 仇恨目标下线或死亡
-                    var tar = EM_Sight.s_instance.GetUnitVisibleByNetworkId (hatredEn.Current.Key);
-                    if (tar == null || tar.m_IsDead) {
-                        hTarRemoveList.Add (hatredEn.Current.Key);
-                        continue;
-                    }
-                }
-                for (int i = 0; i < hTarRemoveList.Count; i++)
-                    unitEn.Current.m_netIdAndDamageDict.Remove (hTarRemoveList[i]);
-            }
-            // 每秒变化 (每秒回血回蓝) (Status)
+            // 每秒变化 (仇恨消失) (每秒回血回蓝) (Status)
             m_secondTimer += dT;
             if (m_secondTimer >= 1.0f) {
                 m_secondTimer -= 1.0f;
+
+                // 处理仇恨消失
+                var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
+                while (unitEn.MoveNext ()) {
+                    // 无伤害信息
+                    if (unitEn.Current.m_netIdAndDamageDict.Count == 0)
+                        continue;
+                    // 若已死亡
+                    if (unitEn.Current.m_IsDead) {
+                        unitEn.Current.m_netIdAndDamageDict.Clear ();
+                        continue;
+                    }
+                    // 若不在被攻击状态
+                    if (MyTimer.CheckTimeUp (unitEn.Current.m_isAttackedTimer)) {
+                        unitEn.Current.m_netIdAndDamageDict.Clear ();
+                        continue;
+                    }
+                    var hatredEn = unitEn.Current.m_netIdAndDamageDict.GetEnumerator ();
+                    var hTarRemoveList = new List<int> ();
+                    while (hatredEn.MoveNext ()) {
+                        // 仇恨目标下线或死亡
+                        var tar = EM_Sight.s_instance.GetUnitVisibleByNetworkId (hatredEn.Current.Key);
+                        if (tar == null || tar.m_IsDead) {
+                            hTarRemoveList.Add (hatredEn.Current.Key);
+                            continue;
+                        }
+                    }
+                    for (int i = 0; i < hTarRemoveList.Count; i++)
+                        unitEn.Current.m_netIdAndDamageDict.Remove (hTarRemoveList[i]);
+                }
+
+                // 每秒回血回蓝
                 unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
                     if (unitEn.Current.m_IsDead)
@@ -85,14 +75,24 @@ namespace MirRemakeBackend.GameLogic {
                     unitEn.Current.m_curHp = Math.Max (Math.Min (newHP, unitEn.Current.m_MaxHp), 0);
                     unitEn.Current.m_curMp = Math.Max (Math.Min (newMP, unitEn.Current.m_MaxMp), 0);
                 }
-                allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
+
+                // 移除超时的状态 计算状态
+                var allUnitStatusEn = EM_Status.s_instance.GetAllUnitStatusEn ();
                 while (allUnitStatusEn.MoveNext ()) {
-                    var netId = allUnitStatusEn.Current.Key;
+                    int netId = allUnitStatusEn.Current.Key;
                     var statusList = allUnitStatusEn.Current.Value;
-                    var unit = EM_Sight.s_instance.GetUnitVisibleByNetworkId (netId);
+                    E_Unit unit = EM_Sight.s_instance.GetUnitVisibleByNetworkId (netId);
                     if (unit == null) continue;
-                    for (int i = 0; i < statusList.Count; i++)
-                        TickStatusPerSecond (unit, statusList[i]);
+                    var statusToRemoveList = new List<int> ();
+                    for (int i = 0; i < statusList.Count; i++) {
+                        if (MyTimer.CheckTimeUp (statusList[i].m_endTime))
+                            statusToRemoveList.Add (i);
+                        else
+                            m_statusHandlerDict[statusList[i].m_Type].TickPerSecond (statusList[i], unit);
+                    }
+                    for (int i = 0; i < statusToRemoveList.Count; i++)
+                        m_statusHandlerDict[statusList[statusToRemoveList[i]].m_Type].Remove (statusList[statusToRemoveList[i]], unit);
+                    EM_Status.s_instance.RemoveOrderedStatus (unit.m_networkId, statusToRemoveList);
                 }
             }
         }
@@ -205,14 +205,6 @@ namespace MirRemakeBackend.GameLogic {
             if (deltaHp < 0) {
                 caster.m_curHp = (caster.m_curHp + deltaHp * caster.m_LifeSteal) > caster.m_MaxHp?caster.m_MaxHp : caster.m_curHp + deltaHp * caster.m_LifeSteal;
             }
-        }
-        private void TickStatusPerSecond (E_Unit target, E_Status status) {
-            m_statusHandlerDict[status.m_Type].TickPerSecond (status, target);
-        }
-        private void RemoveStatus (E_Unit target, List<int> orderedIndexList, IReadOnlyList<E_Status> fullStatusList) {
-            for (int i = 0; i < orderedIndexList.Count; i++)
-                m_statusHandlerDict[fullStatusList[orderedIndexList[i]].m_Type].Remove (fullStatusList[orderedIndexList[i]], target);
-            EM_Status.s_instance.RemoveOrderedStatus (target.m_networkId, orderedIndexList);
         }
     }
 }

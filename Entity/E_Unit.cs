@@ -305,4 +305,7 @@ namespace MirRemakeBackend.Entity {
             return new NO_Monster (m_networkId, m_position, m_MonsterId, m_MonsterType);
         }
     }
+    class E_Boss : E_Monster {
+        public 
+    }
 }
