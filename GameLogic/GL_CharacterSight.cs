@@ -58,7 +58,7 @@ namespace MirRemakeBackend.GameLogic {
                             for (int j = 0; j < eqList.Count; j++)
                                 eqIdList.Add (eqList[j].m_ItemId);
                             newCharNoAndEquipedIdList.Add ((
-                                (((E_Character) charNowSight[i]).GetSightNo ()),
+                                (((E_Character) charNowSight[i]).GetSightNo (EM_Item.s_instance.GetCharacterMarketing (charNowSight[i].m_networkId))),
                                 eqIdList
                             ));
                             break;

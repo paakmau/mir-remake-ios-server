@@ -277,6 +277,9 @@ namespace MirRemakeBackend.Entity {
             if (!m_marketDict.TryGetValue (netId, out market)) return null;
             return market.GetMarketItemByRealId (realId);
         }
+        public bool GetCharacterMarketing (int netId) {
+            return m_marketDict.ContainsKey (netId);
+        }
         public void CharacterSetUpMarket (int netId, (long, short, long, long) [] itemToSellArr, out E_Market resMarket) {
             resMarket = null;
             if (m_marketDict.ContainsKey (netId)) return;
