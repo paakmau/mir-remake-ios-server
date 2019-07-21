@@ -14,10 +14,8 @@ namespace MirRemakeBackend.GameLogic {
             public bool m_critical;
             public int m_deltaHp;
             public int m_deltaMp;
-            private (short, float, float) [] m_statusIdAndValueAndTimeArr;
-            public IReadOnlyList < (short, float, float) > m_StatusIdAndValueAndTimeList { get { return m_statusIdAndValueAndTimeArr; } }
-            private float m_hatred;
-            public float m_Hatred { get { return m_hatred; } }
+            public (short, float, float) [] m_statusIdAndValueAndTimeArr;
+            public float m_hatred;
             public void InitWithCasterAndTarget (DE_Effect effectDe, short animId, E_Unit caster, E_Unit target) {
                 m_de = effectDe;
                 m_animId = animId;

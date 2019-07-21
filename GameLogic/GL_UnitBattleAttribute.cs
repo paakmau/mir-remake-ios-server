@@ -135,10 +135,10 @@ namespace MirRemakeBackend.GameLogic {
                 m_effectStage.GetNo ()));
             // 若命中
             if (m_effectStage.m_hit) {
-                AttachHatred (target, caster, m_effectStage.m_Hatred);
+                AttachHatred (target, caster, m_effectStage.m_hatred);
                 AttachHpAndMpChange (target, caster, m_effectStage.m_deltaHp, m_effectStage.m_deltaMp);
                 AttachStealHp (target, caster, m_effectStage.m_deltaHp);
-                AttachStatus (target, caster, m_effectStage.m_StatusIdAndValueAndTimeList);
+                AttachStatus (target, caster, m_effectStage.m_statusIdAndValueAndTimeArr);
             }
         }
         public void NotifyMonsterAutoRecover (E_Monster monster) {
@@ -190,9 +190,9 @@ namespace MirRemakeBackend.GameLogic {
             // 仇恨 (伤害列表)
             // xjb 仇恨 现在暂时使用 E_Unit.m_netIdAndDamageDict 来记录
         }
-        private void AttachStatus (E_Unit target, E_Unit caster, IReadOnlyList < (short, float, float) > statusIdAndValueAndTimeList) {
-            for (int i = 0; i < statusIdAndValueAndTimeList.Count; i++) {
-                var status = EM_Status.s_instance.GetStatusInstanceAndAttach (target.m_networkId, statusIdAndValueAndTimeList[i]);
+        private void AttachStatus (E_Unit target, E_Unit caster, (short, float, float) [] statusIdAndValueAndTimeArr) {
+            foreach (var statusInfo in statusIdAndValueAndTimeArr) {
+                var status = EM_Status.s_instance.GetStatusInstanceAndAttach (target.m_networkId, statusInfo);
                 m_statusHandlerDict[status.m_Type].Attach (status, target, caster);
                 // client
                 m_networkService.SendServerCommand (SC_ApplyAllStatus.Instance (
