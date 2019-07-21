@@ -30,24 +30,37 @@ namespace MirRemakeBackend.Data {
                         (short.Parse(s_monsterDatas[durex]["SkillList"][i].ToString().Split(' ')[0]), short.Parse(s_monsterDatas[durex]["SkillList"][i].ToString().Split(' ')[1]));
                 }
                 monster.m_attrArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_monsterDatas[durex]["ConcreteAttributionTable"].Count];
+                int tpe=int.Parse(s_monsterDatas[durex]["Type"].ToString());
                 for (int x = 0; x < s_monsterDatas[durex]["ConcreteAttributionTable"].Count; x++)
                 {   
                     ActorUnitConcreteAttributeType type=(ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType),s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[0]);
                     int num=int.Parse(s_monsterDatas[durex]["ConcreteAttributionTable"][x].ToString().Split(' ')[1]);
                     if(type==ActorUnitConcreteAttributeType.ATTACK || type==ActorUnitConcreteAttributeType.MAGIC){
-                        monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                            (type, (int)(num/1.5));
+                        if(tpe>1){
+                            monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                                (type, (int)(num/1.5)/5);
+                        }
+                        else{
+                            monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                                (type, (int)(num/1.5));
+                        }
                     }
                     else if(type==ActorUnitConcreteAttributeType.MAX_HP){
-                        monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                            (type, (int)(num*1.2));
+                        if(tpe>1){
+                            monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                                (type, (int)(num*1.2)*5);
+                        }
+                        else{
+                            monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                                (type, (int)(num*1.2));
+                        }
                     }
                     else{
                         monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
                             (type, num);
                     }
                 }
-                monster.m_monsterType=(MonsterType)int.Parse(s_monsterDatas[durex]["Type"].ToString());
+                monster.m_monsterType=(MonsterType)tpe;
                 res[durex] = monster;
             }
             return res;
