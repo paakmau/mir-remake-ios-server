@@ -10,7 +10,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_MonsterAction s_instance;
         private Dictionary<SkillAimType, SkillParamGeneratorBase> m_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> ();
         private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
-        private const float c_bossSightTime = 2;
+        private const float c_bossSightTime = 0.1f;
         private float m_bossSightTimer;
         public GL_MonsterAction (INetworkService netService) : base (netService) {
             var monEn = EM_Unit.s_instance.GetMonsterEn ();
@@ -54,8 +54,6 @@ namespace MirRemakeBackend.GameLogic {
                     // client
                     for (int i = 0; i < toNetIdList.Count; i++) {
                         int toNetId = toNetIdList[i];
-                        int charId = EM_Unit.s_instance.GetCharIdByNetworkId (toNetId);
-                        if (charId == -1) continue;
                         int dmg;
                         netIdAndDmgDict.TryGetValue (toNetId, out dmg);
                         int rank;
@@ -64,8 +62,10 @@ namespace MirRemakeBackend.GameLogic {
                         else {
                             rank = 0;
                             for (int j = 0; j < dmgCharList.Count; j++)
-                                if (dmgCharList[i].m_charId == charId)
+                                if (dmgCharList[i].m_netId == toNetId) {
                                     rank = i + 1;
+                                    break;
+                                }
                         }
                         m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (toNetId, dmgCharList, dmg, (short) rank));
                     }

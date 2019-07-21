@@ -128,11 +128,11 @@ namespace MirRemakeBackend.Network {
         }
     }
     struct NO_DamageRankCharacter {
-        public int m_charId;
+        public int m_netId;
         public string m_name;
         public int m_damage;
-        public NO_DamageRankCharacter (int charId, string name, int dmg) {
-            m_charId = charId;
+        public NO_DamageRankCharacter (int netId, string name, int dmg) {
+            m_netId = netId;
             m_name = name;
             m_damage = dmg;
         }
@@ -400,15 +400,15 @@ namespace MirRemakeBackend.Network {
             return new NO_AttributeCharacter (netId, name, lv, str, intl, sprt, agl, maxHp, maxMp, dHp, dMp, atk, def, mag, res, tenacity, speed, criticalRate, criticalBonus, hitRate, dodgeRate, lifeSteal, dmgReduction);
         }
         public static void Put (this NetDataWriter writer, NO_DamageRankCharacter dmgRankChar) {
-            writer.Put (dmgRankChar.m_charId);
+            writer.Put (dmgRankChar.m_netId);
             writer.Put (dmgRankChar.m_name);
             writer.Put (dmgRankChar.m_damage);
         }
         public static NO_DamageRankCharacter GetDamageRankCharacter (this NetDataReader reader) {
-            int charId = reader.GetInt ();
+            int netId = reader.GetInt ();
             string name = reader.GetString ();
             int dmg = reader.GetInt ();
-            return new NO_DamageRankCharacter (charId, name, dmg);
+            return new NO_DamageRankCharacter (netId, name, dmg);
         }
         public static void Put (this NetDataWriter writer, NO_MarketItem marketItem) {
             writer.Put (marketItem.m_realId);
