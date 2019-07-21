@@ -10,7 +10,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_MonsterAction s_instance;
         private Dictionary<SkillAimType, SkillParamGeneratorBase> m_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> ();
         private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
-        private const float c_bossSightTime = 0.1f;
+        private const float c_bossSightTime = 2f;
         private float m_bossSightTimer;
         public GL_MonsterAction (INetworkService netService) : base (netService) {
             var monEn = EM_Unit.s_instance.GetMonsterEn ();

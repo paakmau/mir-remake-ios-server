@@ -14,7 +14,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_UnitBattleAttribute s_instance;
         private EffectCalculateStage m_effectStage = new EffectCalculateStage ();
         private Dictionary<StatusType, IStatusHandler> m_statusHandlerDict = new Dictionary<StatusType, IStatusHandler> ();
-        private const float c_isAttackedLastTime = 7.0f;
+        private const float c_isAttackedLastTime = 15.0f;
         private float m_secondTimer = 0;
         public GL_UnitBattleAttribute (INetworkService netService) : base (netService) {
             // 实例化所有 StatusHandler 接口的实现类
@@ -134,9 +134,10 @@ namespace MirRemakeBackend.GameLogic {
                 target.m_networkId,
                 m_effectStage.GetNo ()));
             // 若命中
-            if (m_effectStage.m_Hit) {
+            if (m_effectStage.m_hit) {
                 AttachHatred (target, caster, m_effectStage.m_Hatred);
-                AttachHpAndMpChange (target, caster, m_effectStage.m_DeltaHp, m_effectStage.m_DeltaMp);
+                AttachHpAndMpChange (target, caster, m_effectStage.m_deltaHp, m_effectStage.m_deltaMp);
+                AttachStealHp (target, caster, m_effectStage.m_deltaHp);
                 AttachStatus (target, caster, m_effectStage.m_StatusIdAndValueAndTimeList);
             }
         }
@@ -198,6 +199,11 @@ namespace MirRemakeBackend.GameLogic {
                     EM_Sight.s_instance.GetInSightCharacterNetworkId (target.m_networkId, true),
                     target.m_networkId,
                     status.GetNo ()));
+            }
+        }
+        private void AttachStealHp (E_Unit target, E_Unit caster, int deltaHp) {
+            if (deltaHp < 0) {
+                caster.m_curHp = (caster.m_curHp + deltaHp * caster.m_LifeSteal) > caster.m_MaxHp?caster.m_MaxHp : caster.m_curHp + deltaHp * caster.m_LifeSteal;
             }
         }
         private void TickStatusPerSecond (E_Unit target, E_Status status) {

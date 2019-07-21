@@ -10,14 +10,10 @@ namespace MirRemakeBackend.GameLogic {
         private class EffectCalculateStage {
             private DE_Effect m_de;
             private short m_animId;
-            private bool m_hit;
-            public bool m_Hit { get { return m_hit; } }
-            private bool m_critical;
-            public bool m_Critical { get { return m_critical; } }
-            private int m_deltaHp;
-            public int m_DeltaHp { get { return m_deltaHp; } }
-            private int m_deltaMp;
-            public int m_DeltaMp { get { return m_deltaMp; } }
+            public bool m_hit;
+            public bool m_critical;
+            public int m_deltaHp;
+            public int m_deltaMp;
             private (short, float, float) [] m_statusIdAndValueAndTimeArr;
             public IReadOnlyList < (short, float, float) > m_StatusIdAndValueAndTimeList { get { return m_statusIdAndValueAndTimeArr; } }
             private float m_hatred;
@@ -85,12 +81,6 @@ namespace MirRemakeBackend.GameLogic {
                     // xjb计算仇恨
                     if (m_deltaHp < 0)
                         m_hatred = -m_deltaHp;
-                    target.m_curHp=target.m_curHp+m_deltaHp;
-                    target.m_curMp=target.m_curMp+m_deltaMp;
-
-                    if(m_deltaHp<0){
-                        caster.m_curHp=(caster.m_curHp+m_deltaHp*caster.m_LifeSteal)>caster.m_MaxHp?caster.m_MaxHp:caster.m_curHp+m_deltaHp*caster.m_LifeSteal;
-                    }                
                 }
             }
             public NO_Effect GetNo () {
