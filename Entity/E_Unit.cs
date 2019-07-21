@@ -133,13 +133,13 @@ namespace MirRemakeBackend.Entity {
         /// <summary>退出被攻击状态计时器</summary>
         public MyTimer.Time m_isAttackedTimer;
         /// <summary>伤害值统计</summary>
-        public Dictionary<int, int> m_netIdAndDamageDict = new Dictionary<int, int> ();
+        public Dictionary<int, int> m_dmgDict = new Dictionary<int, int> ();
         /// <summary>根据伤害值计算仇恨</summary>
         public int m_HighestHatredTargetNetId {
             get {
                 int res = -1;
                 int maxDamage = 0;
-                var en = m_netIdAndDamageDict.GetEnumerator ();
+                var en = m_dmgDict.GetEnumerator ();
                 while (en.MoveNext ()) {
                     if (en.Current.Value >= maxDamage) {
                         res = en.Current.Key;

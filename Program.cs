@@ -103,14 +103,13 @@ namespace MirRemakeBackend {
             // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");
         }
         static void InitGameLogic () {
-            // 单位初始化器
-            CharacterInitializer.s_instance = new CharacterInitializer ();
             // GameLogic
             GL_BattleSettle.s_instance = new GL_BattleSettle (s_networkService);
             GL_BossDamage.s_instance = new GL_BossDamage (s_networkService);
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
             GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
+            GL_CharacterInit.s_instance = new GL_CharacterInit ();
             GL_Item.s_instance = new GL_Item (s_networkService);
             GL_Mall.s_instance = new GL_Mall (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);

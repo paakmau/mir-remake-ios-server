@@ -10,8 +10,6 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_MonsterAction s_instance;
         private Dictionary<SkillAimType, SkillParamGeneratorBase> m_spgDict = new Dictionary<SkillAimType, SkillParamGeneratorBase> ();
         private Dictionary<int, MFSM> m_mfsmDict = new Dictionary<int, MFSM> ();
-        private const float c_bossSightTime = 2f;
-        private float m_bossSightTimer;
         public GL_MonsterAction (INetworkService netService) : base (netService) {
             var monEn = EM_Monster.s_instance.GetMonsterEn ();
             while (monEn.MoveNext ()) {
@@ -26,51 +24,6 @@ namespace MirRemakeBackend.GameLogic {
             var mfsmEn = m_mfsmDict.GetEnumerator ();
             while (mfsmEn.MoveNext ())
                 mfsmEn.Current.Value.Tick (dT);
-            // 发送Boss视野 (伤害量排行榜)
-            m_bossSightTimer += dT;
-            bool bossSight = false;
-            while (m_bossSightTimer > c_bossSightTime) {
-                bossSight = true;
-                m_bossSightTimer -= c_bossSightTime;
-            }
-            if (bossSight) {
-                var bossEn = EM_Monster.s_instance.GetBossEn ();
-                while (bossEn.MoveNext ()) {
-                    var netIdAndDmgDict = bossEn.Current.Value.m_netIdAndDamageDict;
-                    // 若视野内无玩家
-                    var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
-                    if (toNetIdList.Count == 0) continue;
-                    // 获取伤害列表并排序
-                    var dmgCharList = new List<NO_DamageRankCharacter> (netIdAndDmgDict.Count);
-                    var dmgEn = netIdAndDmgDict.GetEnumerator ();
-                    while (dmgEn.MoveNext ()) {
-                        var netId = dmgEn.Current.Key;
-                        var dmg = dmgEn.Current.Value;
-                        var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
-                        if (charObj == null) continue;
-                        dmgCharList.Add (charObj.GetDmgRnkNo (dmg));
-                    }
-                    dmgCharList.Sort ((NO_DamageRankCharacter a, NO_DamageRankCharacter b) => { return b.m_damage - a.m_damage; });
-                    // client
-                    for (int i = 0; i < toNetIdList.Count; i++) {
-                        int toNetId = toNetIdList[i];
-                        int dmg;
-                        netIdAndDmgDict.TryGetValue (toNetId, out dmg);
-                        int rank;
-                        if (dmg == 0)
-                            rank = 0;
-                        else {
-                            rank = 0;
-                            for (int j = 0; j < dmgCharList.Count; j++)
-                                if (dmgCharList[i].m_netId == toNetId) {
-                                    rank = i + 1;
-                                    break;
-                                }
-                        }
-                        m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (toNetId, dmgCharList, dmg, (short) rank));
-                    }
-                }
-            }
         }
         public override void NetworkTick () { }
         public void MFSMCastSkillBegin (int netId, E_MonsterSkill skill, SkillParam sp) {

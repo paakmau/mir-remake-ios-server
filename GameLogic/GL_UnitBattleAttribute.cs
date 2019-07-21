@@ -14,7 +14,7 @@ namespace MirRemakeBackend.GameLogic {
         public static GL_UnitBattleAttribute s_instance;
         private EffectCalculateStage m_effectStage = new EffectCalculateStage ();
         private Dictionary<StatusType, IStatusHandler> m_statusHandlerDict = new Dictionary<StatusType, IStatusHandler> ();
-        private const float c_isAttackedLastTime = 1000.0f;
+        private const float c_isAttackedLastTime = 15.0f;
         private float m_secondTimer = 0;
         public GL_UnitBattleAttribute (INetworkService netService) : base (netService) {
             // 实例化所有 StatusHandler 接口的实现类
@@ -39,19 +39,19 @@ namespace MirRemakeBackend.GameLogic {
                 var unitEn = EM_Sight.s_instance.GetUnitVisibleEnumerator ();
                 while (unitEn.MoveNext ()) {
                     // 无伤害信息
-                    if (unitEn.Current.m_netIdAndDamageDict.Count == 0)
+                    if (unitEn.Current.m_dmgDict.Count == 0)
                         continue;
                     // 若已死亡
                     if (unitEn.Current.m_IsDead) {
-                        unitEn.Current.m_netIdAndDamageDict.Clear ();
+                        unitEn.Current.m_dmgDict.Clear ();
                         continue;
                     }
                     // 若不在被攻击状态
                     if (MyTimer.CheckTimeUp (unitEn.Current.m_isAttackedTimer)) {
-                        unitEn.Current.m_netIdAndDamageDict.Clear ();
+                        unitEn.Current.m_dmgDict.Clear ();
                         continue;
                     }
-                    var hatredEn = unitEn.Current.m_netIdAndDamageDict.GetEnumerator ();
+                    var hatredEn = unitEn.Current.m_dmgDict.GetEnumerator ();
                     var hTarRemoveList = new List<int> ();
                     while (hatredEn.MoveNext ()) {
                         // 仇恨目标下线或死亡
@@ -62,7 +62,7 @@ namespace MirRemakeBackend.GameLogic {
                         }
                     }
                     for (int i = 0; i < hTarRemoveList.Count; i++)
-                        unitEn.Current.m_netIdAndDamageDict.Remove (hTarRemoveList[i]);
+                        unitEn.Current.m_dmgDict.Remove (hTarRemoveList[i]);
                 }
 
                 // 每秒回血回蓝
@@ -158,9 +158,9 @@ namespace MirRemakeBackend.GameLogic {
             int newDmg = -dHp;
             target.m_isAttackedTimer = MyTimer.s_CurTime.Ticked (c_isAttackedLastTime);
             int oriDmg;
-            if (!target.m_netIdAndDamageDict.TryGetValue (caster.m_networkId, out oriDmg))
+            if (!target.m_dmgDict.TryGetValue (caster.m_networkId, out oriDmg))
                 oriDmg = 0;
-            target.m_netIdAndDamageDict[caster.m_networkId] = oriDmg + newDmg;
+            target.m_dmgDict[caster.m_networkId] = oriDmg + newDmg;
             if (target.m_UnitType == ActorUnitType.MONSTER && ((target as E_Monster).m_MonsterType == MonsterType.BOSS || (target as E_Monster).m_MonsterType == MonsterType.FINAL_BOSS))
                 GL_BossDamage.s_instance.NotifyBossAttacked (target as E_Monster, newDmg);
 

@@ -58,14 +58,11 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             NotifyUpdateCurrency (charObj, type, dC);
         }
-        public E_Character NotifyInitCharacter (int netId, int charId) {
-            E_Character newChar = EM_Character.s_instance.InitCharacter (netId, charId);
-            if (newChar == null)
-                return null;
+        public E_Character NotifyInitCharacter (E_Character newChar) {
             MainPointToConAttr (newChar);
             // client
             m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
-                netId,
+                newChar.m_networkId,
                 newChar.m_Occupation,
                 newChar.m_name,
                 newChar.m_Level,
@@ -80,8 +77,8 @@ namespace MirRemakeBackend.GameLogic {
                 newChar.m_position));
             return newChar;
         }
-        public void NotifyRemoveCharacter (E_Character charObj) {
-            EM_Character.s_instance.RemoveCharacter (charObj.m_networkId);
+        public void NotifyRemoveCharacter (int netId) {
+            EM_Character.s_instance.RemoveCharacter (netId);
         }
         public void NotifyGainExperience (E_Character charObj, int exp) {
             if (charObj.m_Level == charObj.m_MaxLevel)

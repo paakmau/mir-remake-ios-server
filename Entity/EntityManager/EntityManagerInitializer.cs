@@ -19,7 +19,9 @@ namespace MirRemakeBackend.Entity {
                 EM_Monster.s_instance.AddMonster (monster);
                 // 视野
                 EM_Sight.s_instance.InitMonster (monster);
-
+                // boss
+                if (monster.m_MonsterType == MonsterType.BOSS || monster.m_MonsterType == MonsterType.FINAL_BOSS)
+                    EM_BossDamage.s_instance.AddBoss (monster.m_networkId);
             }
 
             // 所有怪物技能
