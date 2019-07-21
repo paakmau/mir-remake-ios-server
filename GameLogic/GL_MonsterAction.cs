@@ -37,14 +37,11 @@ namespace MirRemakeBackend.GameLogic {
                 var bossEn = EM_Unit.s_instance.GetBossEn ();
                 while (bossEn.MoveNext ()) {
                     var netIdAndDmgDict = bossEn.Current.Value.m_netIdAndDamageDict;
-                    // 若无伤害
-                    var dmgCharCnt = netIdAndDmgDict.Count;
-                    if (dmgCharCnt == 0) continue;
                     // 若视野内无玩家
                     var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
                     if (toNetIdList.Count == 0) continue;
                     // 获取伤害列表并排序
-                    var dmgCharList = new List<NO_DamageRankCharacter> (dmgCharCnt);
+                    var dmgCharList = new List<NO_DamageRankCharacter> (netIdAndDmgDict.Count);
                     var dmgEn = netIdAndDmgDict.GetEnumerator ();
                     while (dmgEn.MoveNext ()) {
                         var netId = dmgEn.Current.Key;
