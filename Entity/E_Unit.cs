@@ -282,9 +282,6 @@ namespace MirRemakeBackend.Entity {
         public NO_AttributeCharacter GetAttrNo () {
             return new NO_AttributeCharacter (m_networkId, m_name, m_Level, m_strength, m_intelligence, m_spirit, m_agility, m_MaxHp, m_MaxMp, m_DeltaHpPerSecond, m_DeltaMpPerSecond, m_Attack, m_Defence, m_Magic, m_Resistance, m_Tenacity, m_Speed, m_CriticalRate, m_CriticalBonus, m_HitRate, m_DodgeRate, m_LifeSteal, m_DamageReduction);
         }
-        public NO_DamageRankCharacter GetDmgRnkNo (int dmg) {
-            return new NO_DamageRankCharacter (m_networkId, m_name, dmg);
-        }
     }
     class E_Monster : E_Unit {
         public override ActorUnitType m_UnitType { get { return ActorUnitType.MONSTER; } }

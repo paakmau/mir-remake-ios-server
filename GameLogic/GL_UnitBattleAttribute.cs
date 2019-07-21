@@ -161,8 +161,8 @@ namespace MirRemakeBackend.GameLogic {
             if (!target.m_dmgDict.TryGetValue (caster.m_networkId, out oriDmg))
                 oriDmg = 0;
             target.m_dmgDict[caster.m_networkId] = oriDmg + newDmg;
-            if (target.m_UnitType == ActorUnitType.MONSTER && ((target as E_Monster).m_MonsterType == MonsterType.BOSS || (target as E_Monster).m_MonsterType == MonsterType.FINAL_BOSS))
-                GL_BossDamage.s_instance.NotifyBossAttacked (target as E_Monster, newDmg);
+            if (caster.m_UnitType == ActorUnitType.PLAYER && target.m_UnitType == ActorUnitType.MONSTER && ((target as E_Monster).m_MonsterType == MonsterType.BOSS || (target as E_Monster).m_MonsterType == MonsterType.FINAL_BOSS))
+                GL_BossDamage.s_instance.NotifyBossAttacked (target.m_networkId, caster as E_Character, newDmg);
 
             // 若单位死亡
             if (target.m_IsDead) {

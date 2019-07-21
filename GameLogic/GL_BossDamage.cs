@@ -26,39 +26,44 @@ namespace MirRemakeBackend.GameLogic {
                     var toNetIdList = EM_Sight.s_instance.GetInSightCharacterNetworkId (bossEn.Current.Key, false);
                     if (toNetIdList.Count == 0) continue;
                     // 获取伤害列表并排序
-                    var netIdAndDmgList = new List<KeyValuePair<int, int>> (dmgDict.Count);
+                    var netIdAndNameDmgList = new List < KeyValuePair < int,
+                        (string, int) >> (dmgDict.Count);
                     var dmgEn = dmgDict.GetEnumerator ();
                     while (dmgEn.MoveNext ())
-                        netIdAndDmgList.Add (dmgEn.Current);
-                    netIdAndDmgList.Sort ((KeyValuePair<int, int> a, KeyValuePair<int, int> b) => { return b.Value - a.Value; });
+                        netIdAndNameDmgList.Add (dmgEn.Current);
+                    netIdAndNameDmgList.Sort ((KeyValuePair < int, (string, int) > a, KeyValuePair < int, (string, int) > b) => { return b.Value.Item2 - a.Value.Item2; });
                     var dmgCharList = new List<NO_DamageRankCharacter> (c_bossDmgCharacterRankSize);
-                    for (int i = 0; i < Math.Min (c_bossDmgCharacterRankSize, netIdAndDmgList.Count); i++) {
-                        var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netIdAndDmgList[i].Key);
-                        if (charObj == null) continue;
-                        dmgCharList.Add (charObj.GetDmgRnkNo (netIdAndDmgList[i].Value));
-                    }
+                    for (int i = 0; i < Math.Min (c_bossDmgCharacterRankSize, netIdAndNameDmgList.Count); i++)
+                        dmgCharList.Add (new NO_DamageRankCharacter(netIdAndNameDmgList[i].Key, netIdAndNameDmgList[i].Value.Item1, netIdAndNameDmgList[i].Value.Item2));
                     // client
                     for (int i = 0; i < toNetIdList.Count; i++) {
                         int toNetId = toNetIdList[i];
-                        int dmg;
-                        dmgDict.TryGetValue (toNetId, out dmg);
+                        (string, int) nameDmg;
                         int rank;
-                        if (dmg == 0)
+                        if (!dmgDict.TryGetValue (toNetId, out nameDmg))
                             rank = 0;
                         else {
                             rank = 0;
-                            for (int j = 0; j < netIdAndDmgList.Count; j++)
-                                if (netIdAndDmgList[i].Key == toNetId) {
+                            for (int j = 0; j < netIdAndNameDmgList.Count; j++)
+                                if (netIdAndNameDmgList[i].Key == toNetId) {
                                     rank = i + 1;
                                     break;
                                 }
                         }
-                        m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (toNetId, dmgCharList, dmg, (short) rank));
+                        m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (toNetId, dmgCharList, nameDmg.Item2, (short) rank));
                     }
                 }
             }
         }
         public override void NetworkTick () { }
-        public void NotifyBossAttacked (E_Monster boss, int dmg) { }
+        public void NotifyBossAttacked (int bossNetId, E_Character caster, int dmg) {
+            var bossDmgDict = EM_BossDamage.s_instance.GetBossDmgDict (bossNetId);
+            if (bossDmgDict == null) return;
+            (string, int) oriNameDmg;
+            if (!bossDmgDict.TryGetValue (caster.m_networkId, out oriNameDmg))
+                oriNameDmg = (caster.m_name, 0);
+            oriNameDmg.Item2 += dmg;
+            bossDmgDict.Add (caster.m_networkId, oriNameDmg);
+        }
     }
 }
