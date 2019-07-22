@@ -147,7 +147,7 @@ namespace MirRemakeBackend.GameLogic {
                 // 尝试对仇恨最高的目标释放技能
                 E_MonsterSkill skill;
                 if (EM_MonsterSkill.s_instance.GetRandomValidSkill (self.m_MonsterId, out skill)) {
-                    var spg = SkillParamGeneratorBase.GetSpg(skill.m_AimType);
+                    var spg = SkillParamGeneratorBase.GetSpg (skill.m_AimType);
                     if (spg.InCastRange (self, skill.m_CastRange, unit)) {
                         SkillParam sp = spg.GetSkillParam (self, unit);
                         var castState = m_mfsm.m_castFront;
@@ -229,12 +229,28 @@ namespace MirRemakeBackend.GameLogic {
         }
         class MFSMS_Dead : MFSMStateBase {
             public override MFSMStateType m_Type { get { return MFSMStateType.DEAD; } }
-            private const float c_respawnTimeMin = 10f;
-            private const float c_respawnTimeMax = 15f;
+            private const float c_normalRespawnTimeMin = 10f;
+            private const float c_normalRespawnTimeMax = 15f;
+            private const float c_eliteRespawnTime = 25f;
+            private const float c_bossRespawnTime = 3600f;
+            private const float c_finalBossRespawnTime = 7200f;
             private float m_timer;
             public MFSMS_Dead (MFSM mfsm) : base (mfsm) { }
             public override void OnEnter (E_Monster self, MFSMStateType prevType) {
-                m_timer = MyRandom.NextFloat (c_respawnTimeMin, c_respawnTimeMax);
+                switch (self.m_MonsterType) {
+                    case MonsterType.NORMAL:
+                        m_timer = MyRandom.NextFloat (c_normalRespawnTimeMin, c_normalRespawnTimeMax);
+                        break;
+                    case MonsterType.ELITE:
+                        m_timer = c_eliteRespawnTime;
+                        break;
+                    case MonsterType.BOSS:
+                        m_timer = c_bossRespawnTime;
+                        break;
+                    case MonsterType.FINAL_BOSS:
+                        m_timer = c_finalBossRespawnTime;
+                        break;
+                }
             }
             public override void OnTick (E_Monster self, float dT) {
                 m_timer -= dT;
