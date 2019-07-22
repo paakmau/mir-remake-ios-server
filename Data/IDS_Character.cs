@@ -46,9 +46,13 @@ namespace MirRemakeBackend.Data
                     }
                     character.m_concreteAttributeArr = new ValueTuple<ActorUnitConcreteAttributeType, int>[s_characterDatas[i]["ConcreteAttributionTable"].Count];
                     for (int durex = 0; durex < s_characterDatas[i]["ConcreteAttributionTable"].Count; durex++)
-                    {
-                        character.m_concreteAttributeArr[durex] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                            ((ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[0]), (int)float.Parse(s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[1]));
+                    {   ActorUnitConcreteAttributeType t=(ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType), s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[0]);
+                        if(character.m_occupation==OccupationType.ROGUE && t==ActorUnitConcreteAttributeType.ATTACK)
+                            character.m_concreteAttributeArr[durex] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                                (t, 2*(int)float.Parse(s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[1]));
+                        else
+                            character.m_concreteAttributeArr[durex] = new ValueTuple<ActorUnitConcreteAttributeType, int>
+                                (t, (int)float.Parse(s_characterDatas[i]["ConcreteAttributionTable"][durex].ToString().Split(' ')[1]));
                             
                     }
                     character.m_mainAttrPointNumber = short.Parse(s_characterDatas[i]["GiftPointNumber"].ToString());
