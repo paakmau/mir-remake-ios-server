@@ -283,13 +283,13 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
         }
-        public void CommandApplyAutoDisjointEquipment (int netId, ItemQuality minQuality) {
+        public void CommandApplyAutoDisjointEquipment (int netId, byte qualities) {
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null) return;
             var itemList = bag.m_ItemList;
             var realIdList = new List<long> (bag.m_ItemList.Count);
             for (int i = 0; i < itemList.Count; i++)
-                if (itemList[i].m_Type == ItemType.EQUIPMENT && itemList[i].m_Quality <= minQuality)
+                if (itemList[i].m_Type == ItemType.EQUIPMENT && ((byte)itemList[i].m_Quality & qualities) != 0 )
                     realIdList.Add (itemList[i].m_realId);
             for (int i = 0; i < realIdList.Count; i++)
                 CommandApplyDisjointEquipment (netId, realIdList[i]);

@@ -397,7 +397,7 @@ namespace MirRemakeBackend.Network {
             byte cnt = reader.GetByte ();
             ItemQuality[] disjointItemQualityArr = new ItemQuality [cnt];
             for (int i = 0; i < cnt; i++) disjointItemQualityArr[i] = (ItemQuality)reader.GetByte ();
-            // TODO:
+            GL_Item.s_instance.CommandApplyAutoDisjointEquipment (netId, disjointItemQualityArr);
         }
     }
     class CC_ApplyAutoPickOff : IClientCommand {

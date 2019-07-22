@@ -190,13 +190,13 @@ namespace MirRemakeBackend {
         TIGGER
     }
     enum ItemQuality : byte {
-        POOR, // 粗糙
-        COMMON, // 普通
-        UNCOMMON, // 非凡
-        RARE, // 稀有
-        EPIC, // 史诗
-        LEGENDARY, // 传说
-        HEIRLOOM // 传家宝
+        POOR = 1, // 粗糙
+        COMMON = 2, // 普通
+        UNCOMMON = 4, // 非凡
+        RARE = 8, // 稀有
+        EPIC = 16, // 史诗
+        LEGENDARY = 32, // 传说
+        HEIRLOOM = 64 // 传家宝
     }
     enum ShoppingMallActionType : byte {
         /// <summary>
