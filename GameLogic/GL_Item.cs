@@ -283,13 +283,24 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
         }
+        public void CommandApplyAutoDisjointEquipment (int netId, ItemQuality minQuality) {
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (bag == null) return;
+            var itemList = bag.m_ItemList;
+            var realIdList = new List<long> (bag.m_ItemList.Count);
+            for (int i=0; i<itemList.Count; i++)
+                if (itemList[i].m_Type == ItemType.EQUIPMENT && itemList[i].m_Quality <= minQuality)
+                    realIdList.Add (itemList[i].m_realId);
+            for (int i=0; i<realIdList.Count; i++)
+                CommandApplyDisjointEquipment (netId, realIdList[i]);
+        }
         /// <summary> 装备分解 </summary>
         public void CommandApplyDisjointEquipment (int netId, long realId) {
             E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (charObj == null || bag == null) return;
             short eqPos;
-            var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
+            E_EquipmentItem eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
             long curCy = charObj.m_virtualCurrency;
             long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
