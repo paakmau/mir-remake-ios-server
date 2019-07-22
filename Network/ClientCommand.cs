@@ -391,4 +391,25 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandGainItem (netId, itemId, num);
         }
     }
+    class CC_ApplyAutoDisjoint : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_DISJOINT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            byte cnt = reader.GetByte ();
+            ItemQuality[] disjointItemQualityArr = new ItemQuality [cnt];
+            for (int i = 0; i < cnt; i++) disjointItemQualityArr[i] = (ItemQuality)reader.GetByte ();
+            // TODO:
+        }
+    }
+    class CC_ApplyAutoPickOff : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_OFF; } }
+        public void Execute (NetDataReader reader, int netId) {
+            // TODO:
+        }
+    }
+    class CC_ApplyAutoPickOn : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_ON; } }
+        public void Execute (NetDataReader reader, int netId) {
+            // TODO:
+        }
+    }
 }
