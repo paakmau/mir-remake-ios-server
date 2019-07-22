@@ -8,16 +8,25 @@ namespace MirRemakeBackend.Entity {
     class EM_BossDamage : EntityManagerBase {
         public static EM_BossDamage s_instance;
         private const float c_bossDmgRefreshTime = 1800;
-        private List < (int, Dictionary < int, (string, int) >) > m_bossDmgList = new List < (int, Dictionary < int, (string, int) >) > ();
+        /// <summary>
+        /// 键为 charId
+        /// </summary>
+        private List < (int, Dictionary < int, (int, string) >) > m_bossDmgList = new List < (int, Dictionary < int, (int, string) >) > ();
         private List < (int, MyTimer.Time) > m_bossDmgRefreshList = new List < (int, MyTimer.Time) > ();
         public void AddBoss (int bossNetId) {
-            m_bossDmgList.Add ((bossNetId, new Dictionary < int, (string, int) > ()));
+            m_bossDmgList.Add ((bossNetId, new Dictionary < int, (int, string) > ()));
             m_bossDmgRefreshList.Add ((bossNetId, MyTimer.s_CurTime));
         }
-        public IReadOnlyList < (int, Dictionary < int, (string, int) >) > GetBossDmgList () {
+        /// <summary>
+        /// 键为 charId
+        /// </summary>
+        public IReadOnlyList < (int, Dictionary < int, (int, string) >) > GetBossDmgList () {
             return m_bossDmgList;
         }
-        public Dictionary < int, (string, int) > GetBossDmgDict (int bossNetId) {
+        /// <summary>
+        /// 键为 charId
+        /// </summary>
+        public Dictionary < int, (int, string) > GetBossDmgDict (int bossNetId) {
             for (int i = 0; i < m_bossDmgList.Count; i++)
                 if (m_bossDmgList[i].Item1 == bossNetId)
                     return m_bossDmgList[i].Item2;

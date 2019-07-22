@@ -16,6 +16,8 @@ namespace MirRemakeBackend.Entity {
         private IDDS_CharacterPosition m_charPosDds;
         private IDDS_CharacterWallet m_charWalletDds;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
+        private Dictionary<int, int> m_netIdAndCharIdDict = new Dictionary<int, int> ();
+        private Dictionary<int, int> m_charIdAndNetIdDict = new Dictionary<int, int> ();
         public EM_Character (DEM_Character dem, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterPosition charPosDds) {
             m_dem = dem;
             m_charDds = charDds;
@@ -48,6 +50,9 @@ namespace MirRemakeBackend.Entity {
             DE_Unit unitDe;
             DE_CharacterData charDataDe;
             m_dem.GetCharacterByOccupationAndLevel (charDdo.m_occupation, charAttrDdo.m_level, out charDe, out unitDe, out charDataDe);
+
+            m_netIdAndCharIdDict[netId] = charId;
+            m_charIdAndNetIdDict[charId] = netId;
             m_networkIdAndCharacterDict[netId] = newChar;
             newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, charWalletDdo, charPosDdo);
             return newChar;
@@ -60,6 +65,8 @@ namespace MirRemakeBackend.Entity {
             E_Character charObj = null;
             if (!m_networkIdAndCharacterDict.TryGetValue (netId, out charObj))
                 return;
+            m_netIdAndCharIdDict.Remove (netId);
+            m_charIdAndNetIdDict.Remove (charObj.m_characterId);
             m_networkIdAndCharacterDict.Remove (netId);
             s_entityPool.m_characterPool.RecycleInstance (charObj);
         }
@@ -68,10 +75,16 @@ namespace MirRemakeBackend.Entity {
             m_networkIdAndCharacterDict.TryGetValue (netId, out res);
             return res;
         }
-        public int GetCharIdByNetworkId (int netId) {
-            E_Character res = null;
-            if (m_networkIdAndCharacterDict.TryGetValue (netId, out res))
-                return res.m_characterId;
+        public int GetCharIdByNetId (int netId) {
+            int charId;
+            if (m_netIdAndCharIdDict.TryGetValue (netId, out charId))
+                return charId;
+            return -1;
+        }
+        public int GetNetIdByCharId (int charId) {
+            int netId;
+            if (m_charIdAndNetIdDict.TryGetValue (charId, out netId))
+                return netId;
             return -1;
         }
         public Dictionary<int, E_Character>.Enumerator GetCharacterEnumerator () {

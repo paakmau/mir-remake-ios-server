@@ -118,7 +118,7 @@ namespace MirRemakeBackend.GameLogic {
             NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
         }
         public void CommandPickUpGroundItem (int netId, long gndItemId) {
-            var charId = EM_Character.s_instance.GetCharIdByNetworkId (netId);
+            var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             var bag = EM_Item.s_instance.GetBag (netId);
             var gndItem = EM_Item.s_instance.GetGroundItem (gndItemId);
             if (gndItem == null || bag == null || charId == -1) return;

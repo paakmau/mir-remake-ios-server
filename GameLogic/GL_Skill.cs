@@ -35,7 +35,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void CommandGainMasterly (int netId, short skillId, int masterly) {
-            int charId = EM_Character.s_instance.GetCharIdByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             var skObj = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             if (charId == -1 || skObj == null) return;
             skObj.m_masterly += masterly;

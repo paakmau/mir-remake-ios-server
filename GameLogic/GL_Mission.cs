@@ -26,7 +26,7 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < logs.Count; i++) {
                 var logObj = logs[i];
                 var netId = logObj.m_netId;
-                var charId = EM_Character.s_instance.GetCharIdByNetworkId (netId);
+                var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
                 if (charId == -1) continue;
                 var misDict = EM_Mission.s_instance.GetCharAllMisDict (netId);
                 if (misDict == null) continue;

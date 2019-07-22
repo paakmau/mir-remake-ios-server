@@ -2,7 +2,7 @@ using System.Collections.Generic;
 namespace MirRemakeBackend.Network {
     class NetworkIdManager {
         public static NetworkIdManager s_instance = new NetworkIdManager ();
-        private HashSet<int> m_unitNetIdSet = new HashSet<int> ();
+        private HashSet<int> m_unitNetIdSet = new HashSet<int> () {-1 };
         private int m_unitCnt = 0;
         public int AssignNetworkId () {
             // 分配NetworkId
