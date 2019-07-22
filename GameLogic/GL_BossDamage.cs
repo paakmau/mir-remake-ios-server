@@ -63,7 +63,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void NotifyBossAttacked (int bossNetId, E_Character caster, int dmg) {
             // bossDmg清空延后
-            EM_BossDamage.s_instance.UpdateBossDmg ();
+            EM_BossDamage.s_instance.UpdateBossDmg (bossNetId);
             // 更新伤害
             var bossDmgDict = EM_BossDamage.s_instance.GetBossDmgDict (bossNetId);
             if (bossDmgDict == null) return;
