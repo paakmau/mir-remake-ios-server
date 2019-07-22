@@ -401,13 +401,13 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyAutoPickOff : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_OFF; } }
         public void Execute (NetDataReader reader, int netId) {
-            // TODO:
+            GL_Item.s_instance.CommandApplyAutoPickUpOff (netId);
         }
     }
     class CC_ApplyAutoPickOn : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_ON; } }
         public void Execute (NetDataReader reader, int netId) {
-            // TODO:
+            GL_Item.s_instance.CommandApplyAutoPickUpOn (netId);
         }
     }
 }
