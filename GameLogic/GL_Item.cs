@@ -288,10 +288,10 @@ namespace MirRemakeBackend.GameLogic {
             if (bag == null) return;
             var itemList = bag.m_ItemList;
             var realIdList = new List<long> (bag.m_ItemList.Count);
-            for (int i=0; i<itemList.Count; i++)
+            for (int i = 0; i < itemList.Count; i++)
                 if (itemList[i].m_Type == ItemType.EQUIPMENT && itemList[i].m_Quality <= minQuality)
                     realIdList.Add (itemList[i].m_realId);
-            for (int i=0; i<realIdList.Count; i++)
+            for (int i = 0; i < realIdList.Count; i++)
                 CommandApplyDisjointEquipment (netId, realIdList[i]);
         }
         /// <summary> 装备分解 </summary>
@@ -308,15 +308,33 @@ namespace MirRemakeBackend.GameLogic {
             EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
             // 得到钱
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -gainCy);
-            // TODO: 获得附魔符 需要另外考虑
-            // if (MyRandom.NextInt (0, 100) == 0) {
-            //     var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
-            //     for (int i = 0; i < eq.m_RawAttrList.Count; i++)
-            //         if (MyRandom.NextInt (0, 10) >= 5)
-            //             attrList.Add (eq.m_RawAttrList[i]);
-            //     var ecmt = EM_Item.s_instance.CharacterGainEnchantmentItem (emptyItem, 29000, attrList, charObj.m_characterId, ItemPlace.BAG, eqPos);
-            //     bag.SetItem (ecmt, eqPos);
-            // }
+        }
+        /// <summary> 装备熔炼, 获得附魔符 </summary>
+        public void CommandApplySmeltEquipment (int netId, long realId) {
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || bag == null) return;
+            short eqPos;
+            E_EquipmentItem eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
+            if (eq == null) return;
+            long curCy = charObj.m_chargeCurrency;
+            long needCy = ((long) eq.m_Quality + 1L) * 10L;
+            if (curCy < needCy) return;
+            // 花钱
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.CHARGE, -needCy);
+            // 得到属性
+            var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
+            for (int i = 0; i < eq.m_RawAttrList.Count; i++)
+                if (MyRandom.NextInt (0, 100) >= 80)
+                    attrList.Add (eq.m_RawAttrList[i]);
+            // 消耗装备
+            var eqSlot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
+            // 获取附文
+            E_Item ecmt;
+            short ecmtPos;
+            var ecmtNum = EM_Item.s_instance.CharacterGainEnchantmentItem (charObj.m_characterId, attrList, bag, out ecmt, out ecmtPos);
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new List<NO_Item> () { eqSlot.GetItemNo (bag.m_repositoryPlace, eqPos), ecmt.GetItemNo (bag.m_repositoryPlace, ecmtPos) }));
+            m_netSenderDict[ecmt.m_Type].SendItemInfo (ecmt, netId, m_networkService);
         }
         public void CommandApplyPSetUpMarket (int netId, IReadOnlyList<NO_MarketItem> marketItemNoList) {
             var itemToSellArr = new (long, short, long, long) [marketItemNoList.Count];
@@ -384,7 +402,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_netSenderDict[buyerStoreItem.m_Type].SendItemInfo (buyerStoreItem, buyerNetId, m_networkService);
             }
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (holderNetId, new NO_Item[] { holderChangedItem.GetItemNo (holderBag.m_repositoryPlace, marketItem.m_bagPos) }));
-            
+
         }
         public void NotifyInitCharacter (int netId, int charId) {
             E_RepositoryBase bag, storeHouse, eqRegion;
