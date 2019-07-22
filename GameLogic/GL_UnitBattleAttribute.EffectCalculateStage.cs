@@ -26,15 +26,6 @@ namespace MirRemakeBackend.GameLogic {
                     // 计算基础伤害 (或能量剥夺)
                     m_deltaHp = effectDe.m_deltaHp;
                     m_deltaMp = effectDe.m_deltaMp;
-                    switch (effectDe.m_type) {
-                        case EffectType.PHYSICS:
-                            m_deltaHp = (int) ((float) m_deltaHp * (float) caster.m_Attack / (float) target.m_Defence);
-                            break;
-                        case EffectType.MAGIC:
-                            m_deltaHp = (int) ((float) m_deltaHp * (float) caster.m_Magic / (float) target.m_Resistance);
-                            m_deltaMp = (int) ((float) m_deltaMp * (float) caster.m_Magic / (float) target.m_Resistance);
-                            break;
-                    }
                     for (int i = 0; i < effectDe.m_attrBonus.Count; i++) {
                         switch (effectDe.m_attrBonus[i].Item1) {
                             case ActorUnitConcreteAttributeType.ATTACK:
@@ -53,10 +44,20 @@ namespace MirRemakeBackend.GameLogic {
                     }
                     // 计算暴击
                     float criticalRate = effectDe.m_criticalRate * caster.m_CriticalRate * 0.01f;
+                    float bonus=criticalRate>1?criticalRate-1:0;
                     m_critical = MyRandom.NextInt (1, 101) <= criticalRate;
                     if (m_critical)
-                        m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f));
-
+                        m_deltaHp = (int) (m_deltaHp * (1f + (float) caster.m_CriticalBonus * 0.01f+2*bonus));
+                    if(m_deltaHp<0){
+                        switch (effectDe.m_type) {
+                            case EffectType.PHYSICS:
+                                m_deltaHp = GetDamage(m_deltaHp,target.m_Defence);
+                                break;
+                            case EffectType.MAGIC:
+                                m_deltaHp = GetDamage(m_deltaHp,target.m_Resistance);
+                                break;
+                        }
+                    }
                     // 减伤+易伤 
                     if (m_deltaHp < 0) {
                         if (effectDe.m_type == EffectType.PHYSICS) {
@@ -84,16 +85,17 @@ namespace MirRemakeBackend.GameLogic {
             public NO_Effect GetNo () {
                 return new NO_Effect (m_animId, m_hit, m_critical, m_deltaHp, m_deltaMp);
             }
-            // 计算护甲和魔法抗性的减伤
-            // private int GetDamage (int damage, int armor) {
-            //     if (armor <= 100) {
-            //         return (int) (damage * (1 - armor / (armor + 100.0)));
-            //     }
-            //     if (armor <= 100) {
-            //         return (int) (damage * (0.5 - armor / (armor + 1000.0)));
-            //     }
-            //     return (int) (damage * (0.25 - armor / (armor + 10000.0)));
-            // }
+             //计算护甲和魔法抗性的减伤
+             private int GetDamage (int damage, int armor) {
+                if(armor<=0) return damage;
+                 if (armor <= 100) {
+                     return (int) (damage * (1 - armor / (armor + 100.0)));
+                }
+                 if (armor <= 1000) {
+                     return (int) (damage * (0.5 - armor / (armor + 1000.0)));
+                 }
+                 return (int) (damage * (0.25 - armor / (armor + 10000.0)));
+             }
         }
     }
 }
