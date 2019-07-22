@@ -289,7 +289,7 @@ namespace MirRemakeBackend.GameLogic {
             var itemList = bag.m_ItemList;
             var realIdList = new List<long> (bag.m_ItemList.Count);
             for (int i = 0; i < itemList.Count; i++)
-                if (itemList[i].m_Type == ItemType.EQUIPMENT && ((byte)itemList[i].m_Quality & qualities) != 0 )
+                if (itemList[i].m_Type == ItemType.EQUIPMENT && ((byte) itemList[i].m_Quality & qualities) != 0)
                     realIdList.Add (itemList[i].m_realId);
             for (int i = 0; i < realIdList.Count; i++)
                 CommandApplyDisjointEquipment (netId, realIdList[i]);
@@ -305,9 +305,10 @@ namespace MirRemakeBackend.GameLogic {
             long curCy = charObj.m_virtualCurrency;
             long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
             // 失去装备
-            EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
+            var slot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, eqPos) }));
             // 得到钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -gainCy);
+            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, gainCy);
         }
         /// <summary> 装备熔炼, 获得附魔符 </summary>
         public void CommandApplySmeltEquipment (int netId, long realId) {

@@ -394,7 +394,6 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyAutoDisjoint : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_DISJOINT; } }
         public void Execute (NetDataReader reader, int netId) {
-            byte cnt = reader.GetByte ();
             byte itemQualities = reader.GetByte();
             GL_Item.s_instance.CommandApplyAutoDisjointEquipment (netId, itemQualities);
         }
