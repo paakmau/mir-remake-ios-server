@@ -32,7 +32,7 @@ namespace MirRemakeBackend.Entity {
         private float c_renewableItemRefreshTimeMin = 12;
         private float c_renewableItemRefreshTimeMax = 18;
         private float c_renewableItemRefreshRadian = 2;
-        private Dictionary<int, E_Market> m_marketDict;
+        private Dictionary<int, E_Market> m_marketDict = new Dictionary<int, E_Market> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
