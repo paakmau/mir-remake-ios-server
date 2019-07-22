@@ -71,7 +71,7 @@ namespace MirRemakeBackend.GameLogic {
             if (!bossDmgDict.TryGetValue (caster.m_networkId, out oriNameDmg))
                 oriNameDmg = (caster.m_name, 0);
             oriNameDmg.Item2 += dmg;
-            bossDmgDict.Add (caster.m_networkId, oriNameDmg);
+            bossDmgDict[caster.m_networkId] = oriNameDmg;
         }
     }
 }
