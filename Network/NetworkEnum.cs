@@ -96,6 +96,9 @@ namespace MirRemakeBackend.Network {
         APPLY_INLAY_GEM_IN_EQUIPMENT,
         APPLY_MAKE_HOLE_IN_EQUIPMENT,
         APPLY_DISJOINT_EQUIPMENT,
+        APPLY_AUTO_DISJOINT,
+        APPLY_AUTO_PICK_ON,
+        APPLY_AUTO_PICK_OFF,
         // 摆摊
         APPLY_SET_UP_MARKET,
         APPLY_PACK_UP_MARKET,
@@ -111,12 +114,6 @@ namespace MirRemakeBackend.Network {
         APPLY_BUY_ITEM_IN_SHOPPING_MALL,
         // 发送消息
         REQUIRE_SEND_MESSAGE,
-        // 自动分解
-        APPLY_AUTO_DISJOINT,
-        // 打开自动拾取
-        APPLY_AUTO_PICK_ON,
-        // 关闭自动拾取
-        APPLY_AUTO_PICK_OFF,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,
