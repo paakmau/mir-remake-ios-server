@@ -184,8 +184,9 @@ namespace MirRemakeBackend.GameLogic {
                 if (target.m_UnitType == ActorUnitType.MONSTER && caster.m_UnitType == ActorUnitType.PLAYER)
                     GL_MissionLog.s_instance.NotifyLog (MissionTargetType.KILL_MONSTER, caster.m_networkId, ((E_Monster) target).m_MonsterId);
                 // 通知 CharacterLevel
-                if (caster.m_UnitType == ActorUnitType.PLAYER)
-                    GL_CharacterAttribute.s_instance.NotifyKillUnit ((E_Character) caster, target);
+                if (caster.m_UnitType == ActorUnitType.PLAYER) {
+                    GL_CharacterAttribute.s_instance.NotifyKillUnit (caster as E_Character, target);
+                }
             }
         }
         public void AttachHatred (E_Unit target, E_Unit caster, float hatred) {

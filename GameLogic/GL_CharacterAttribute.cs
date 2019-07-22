@@ -92,9 +92,16 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
         public void NotifyKillUnit (E_Character killer, E_Unit dead) {
-            var expGain = 0;
-            expGain += dead.m_Level *15;
+            int expGain = 0;
+            expGain += dead.m_Level * 10;
+            expGain += dead.m_Defence / 10;
+            expGain += dead.m_Resistance / 10;
             NotifyGainExperience (killer, expGain);
+            long cyGain = 0;
+            cyGain += dead.m_Level * 2;
+            cyGain += dead.m_Attack / 20;
+            cyGain += dead.m_Magic / 20;
+            NotifyUpdateCurrency (killer, CurrencyType.VIRTUAL, cyGain);
         }
         public void NotifyConcreteAttributeChange (E_Character charObj, List < (ActorUnitConcreteAttributeType, int) > attrList) {
             for (int i = 0; i < attrList.Count; i++)
