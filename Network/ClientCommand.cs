@@ -388,7 +388,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
-            GL_Item.s_instance.CommandGainItem (netId, itemId, num);
+            GL_Item.s_instance.CommandTestGainItem (netId, itemId, num);
         }
     }
     class CC_ApplyAutoDisjoint : IClientCommand {

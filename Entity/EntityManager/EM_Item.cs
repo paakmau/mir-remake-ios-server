@@ -11,28 +11,13 @@ namespace MirRemakeBackend.Entity {
     /// 范围: 仓库, 背包, 地面
     /// </summary>
     partial class EM_Item : EntityManagerBase {
-        private class GroundItemIdManager {
-            private long m_groundItemIdCnt = 0;
-            public long AssignGroundItemId () {
-                return ++m_groundItemIdCnt;
-            }
-        }
         public static EM_Item s_instance;
-        private const float c_groundItemDisappearTime = 15;
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
         private ItemDynamicDataHelper m_ddh;
         private Dictionary<int, E_Bag> m_bagDict = new Dictionary<int, E_Bag> ();
         private Dictionary<int, E_StoreHouse> m_storeHouseDict = new Dictionary<int, E_StoreHouse> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
-        private GroundItemIdManager m_groundItemIdManager = new GroundItemIdManager ();
-        private List<E_GroundItem> m_groundItemList = new List<E_GroundItem> ();
-        private Dictionary<int, List<E_GroundItem>> m_characterGroundItemSightDict = new Dictionary<int, List<E_GroundItem>> ();
-        private List < (short, Vector2, MyTimer.Time) > m_renewableItemList = new List < (short, Vector2, MyTimer.Time) > ();
-        private float c_renewableItemRefreshTimeMin = 12;
-        private float c_renewableItemRefreshTimeMax = 18;
-        private float c_renewableItemRefreshRadian = 2;
-        private Dictionary<int, E_Market> m_marketDict = new Dictionary<int, E_Market> ();
         public EM_Item (DEM_Item dem, IDDS_Item dds) {
             m_dem = dem;
             m_itemFactory = new ItemFactory (dem);
@@ -89,6 +74,7 @@ namespace MirRemakeBackend.Entity {
             m_bagDict.Remove (netId);
             m_storeHouseDict.Remove (netId);
             m_equipmentRegionDict.Remove (netId);
+            AutoPickOff (netId);
             // 回收
             for (int i = 0; i < bag.m_ItemList.Count; i++)
                 m_itemFactory.RecycleItem (bag.m_ItemList[i]);
@@ -179,155 +165,6 @@ namespace MirRemakeBackend.Entity {
         }
         public void CharacterUpdateItem (E_Item item, int charId, ItemPlace ip, short pos) {
             m_ddh.Save (item, charId, ip, pos);
-        }
-        public short CharacterPickGroundItem (int charId, E_GroundItem gndItem, E_Bag bag, out List < (short, E_Item) > resChangedItemList, out E_Item resStoreItem, out short resStorePos) {
-            var res = GainItem (charId, gndItem.m_item, bag, out resChangedItemList, out resStoreItem, out resStorePos);
-            // 移除gndItem
-            for (int i = 0; i < m_groundItemList.Count; i++)
-                if (m_groundItemList[i] == gndItem)
-                    m_groundItemList.RemoveAt (i);
-            // 回收gndItem
-            s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
-            return res;
-        }
-        public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndPos) {
-            if (num == 0) return;
-            E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
-            long gndItemId = m_groundItemIdManager.AssignGroundItemId ();
-            if (num >= item.m_num) {
-                // 完全丢弃
-                E_EmptyItem slot = m_itemFactory.GetEmptyItemInstance ();
-                repo.SetItem (slot, repoPos);
-                m_ddh.Delete (item);
-                m_ddh.Insert (slot, charId, repo.m_repositoryPlace, repoPos);
-                item.ResetRealId (-1);
-                gndItem.Reset (gndItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, -1, gndPos);
-            } else {
-                // 部分丢弃
-                item.RemoveNum (num);
-                m_ddh.Save (item, charId, repo.m_repositoryPlace, repoPos);
-                var sepItem = m_itemFactory.GetAndInitInstance (item.m_ItemId, num);
-                gndItem.Reset (gndItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), sepItem, -1, gndPos);
-            }
-            m_groundItemList.Add (gndItem);
-        }
-        public void GenerateGroundItem (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
-            for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                var pos = centerPos + new Vector2 (0.25f - MyRandom.NextFloat (0, 0.5f), 0.25f - MyRandom.NextFloat (0, 0.5f));
-                GenerateGroundItem (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
-            }
-        }
-        /// <summary>
-        /// 创建地面物品
-        /// </summary>
-        public void GenerateGroundItem (short itemId, short num, int charId, Vector2 pos) {
-            var item = m_itemFactory.GetAndInitInstance (itemId, num);
-            if (item == null)
-                return;
-            var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
-            long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
-            gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
-            m_groundItemList.Add (gndItem);
-        }
-        public void GroundItemAutoDisappear () {
-            for (int i = m_groundItemList.Count - 1; i >= 0; i--)
-                if (MyTimer.CheckTimeUp (m_groundItemList[i].m_disappearTime)) {
-                    s_entityPool.m_groundItemPool.RecycleInstance (m_groundItemList[i]);
-                    m_itemFactory.RecycleItem (m_groundItemList[i].m_item);
-                    m_groundItemList.RemoveAt (i);
-                }
-        }
-        public E_GroundItem GetGroundItem (long gndItemId) {
-            for (int i = 0; i < m_groundItemList.Count; i++)
-                if (m_groundItemList[i].m_groundItemId == gndItemId)
-                    return m_groundItemList[i];
-            return null;
-        }
-        public List<E_GroundItem> GetRawGroundItemList () {
-            return m_groundItemList;
-        }
-        public List<E_GroundItem> GetCharacterGroundItemRawSight (int netId) {
-            List<E_GroundItem> res;
-            m_characterGroundItemSightDict.TryGetValue (netId, out res);
-            return res;
-        }
-        public void RefreshRenewableItem () {
-            for (int i = 0; i < m_renewableItemList.Count; i++) {
-                var itemIdPosTime = m_renewableItemList[i];
-                if (MyTimer.CheckTimeUp (itemIdPosTime.Item3)) {
-                    short itemId = itemIdPosTime.Item1;
-                    Vector2 pos = itemIdPosTime.Item2 + new Vector2 (MyRandom.NextFloat (0, c_renewableItemRefreshRadian), MyRandom.NextFloat (0, c_renewableItemRefreshRadian));
-                    // 生成地面物品
-                    GenerateGroundItem (itemId, 1, -1, pos);
-
-                    // 准备下一次刷新
-                    itemIdPosTime.Item3 = MyTimer.s_CurTime.Ticked (MyRandom.NextFloat (c_renewableItemRefreshTimeMin, c_renewableItemRefreshTimeMax));
-                    m_renewableItemList[i] = itemIdPosTime;
-                }
-            }
-        }
-        public E_Market GetMarket (int netId) {
-            E_Market res;
-            m_marketDict.TryGetValue (netId, out res);
-            return res;
-        }
-        public E_MarketItem GetMarketItem (int netId, long realId, out short pos) {
-            pos = -3;
-            E_Market market;
-            if (!m_marketDict.TryGetValue (netId, out market)) return null;
-            return market.GetMarketItemByRealId (realId);
-        }
-        public bool GetCharacterMarketing (int netId) {
-            return m_marketDict.ContainsKey (netId);
-        }
-        public void CharacterSetUpMarket (int netId, (long, short, long, long) [] itemToSellArr, out E_Market resMarket) {
-            resMarket = null;
-            if (m_marketDict.ContainsKey (netId)) return;
-            var bag = GetBag (netId);
-            if (bag == null) return;
-            var marketItemList = new List<E_MarketItem> (itemToSellArr.Length);
-            foreach (var item in itemToSellArr) {
-                short bagPos;
-                var itemObj = bag.GetItemByRealId (item.Item1, out bagPos);
-                if (itemObj == null) continue;
-                var marketItem = s_entityPool.m_marketItemPool.GetInstance ();
-                marketItem.Reset (itemObj, Math.Min (itemObj.m_num, item.Item2), item.Item3, item.Item4, bagPos);
-                marketItemList.Add (marketItem);
-            }
-            var market = s_entityPool.m_marketPool.GetInstance ();
-            market.Reset (marketItemList);
-            m_marketDict[netId] = market;
-            resMarket = market;
-        }
-        public void CharacterPackUpMarket (int netId) {
-            E_Market market;
-            if (!m_marketDict.TryGetValue (netId, out market))
-                return;
-            for (int i = 0; i < market.m_itemList.Count; i++)
-                s_entityPool.m_marketItemPool.RecycleInstance (market.m_itemList[i]);
-            m_marketDict.Remove (netId);
-        }
-        public void CharacterBuyItemInMarket (int holderCharId, int buyerNetId, int buyerCharId, E_Market market, E_MarketItem marketItem, short num, short marketPos, E_Bag holderBag, E_Bag buyerBag, out E_Item resHolderItem, out List < (short, E_Item) > resBuyerItem, out E_Item resBuyerStoreItem, out short resBuyerStorePos) {
-            var item = marketItem.m_item;
-            // 处理背包物品
-            if (item.m_num == num) {
-                // 整格交易
-                var slot = m_itemFactory.GetEmptyItemInstance ();
-                holderBag.SetItem (slot, marketItem.m_bagPos);
-                m_ddh.Insert (slot, holderCharId, holderBag.m_repositoryPlace, marketItem.m_bagPos);
-                m_ddh.Delete (item);
-                item.m_realId = -1;
-                resHolderItem = slot;
-                GainItem (buyerCharId, item, buyerBag, out resBuyerItem, out resBuyerStoreItem, out resBuyerStorePos);
-            } else {
-                resHolderItem = CharacterLoseItem (item, num, holderCharId, holderBag, marketItem.m_bagPos);
-                CharacterGainItem (buyerCharId, item.m_ItemId, num, buyerBag, out resBuyerItem, out resBuyerStoreItem, out resBuyerStorePos);
-            }
-            // 处理摊位物品
-            marketItem.m_onSaleNum -= num;
-            if (marketItem.m_onSaleNum <= 0) {
-                market.Remove (item.m_realId);
-            }
         }
         /// <summary>
         /// 会为 itemObj 在 dds 中添加记录

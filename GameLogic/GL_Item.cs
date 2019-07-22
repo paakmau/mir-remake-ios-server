@@ -12,6 +12,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     partial class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
+        private const float c_autoPickUpRadius = 0.3f;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
         private Dictionary<ItemType, IItemInfoNetworkSender> m_netSenderDict = new Dictionary<ItemType, IItemInfoNetworkSender> ();
@@ -38,14 +39,21 @@ namespace MirRemakeBackend.GameLogic {
 
                 var oriSight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
                 if (oriSight == null) continue;
-                // 计算新视野
+                // 计算新视野 与 自动拾取
                 var newSight = new List<E_GroundItem> (oriSight.Count);
-                for (int i = 0; i < gndItemList.Count; i++)
-                    if ((gndItemList[i].m_position - charObj.m_position).LengthSquared () <= c_groundItemSightRadius * c_groundItemSightRadius) {
+                E_GroundItem autoPickItem = null;
+                for (int i = 0; i < gndItemList.Count; i++) {
+                    var disSqrt = (gndItemList[i].m_position - charObj.m_position).LengthSquared ();
+                    if (autoPickItem == null && disSqrt <= c_autoPickUpRadius)
+                        // 自动拾取
+                        autoPickItem = gndItemList[i];
+                    else if (disSqrt <= c_groundItemSightRadius * c_groundItemSightRadius) {
                         newSight.Add (gndItemList[i]);
                         if (newSight.Count > c_groundItemSightMaxNum)
                             break;
                     }
+                }
+                PickUpGroundItem (netId, charObj.m_characterId, autoPickItem);
 
                 charDspprItemIdList.Clear ();
                 charShowItemList.Clear ();
@@ -112,36 +120,22 @@ namespace MirRemakeBackend.GameLogic {
             var virCy = (int) (item.m_SellPrice * num);
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
         }
-        public void CommandGainItem (int netId, short itemId, short num) {
+        public void CommandTestGainItem (int netId, short itemId, short num) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
         }
+        public void CommandApplyAutoPickUpOn (int netId) {
+            EM_Item.s_instance.AutoPickOn (netId);
+        }
+        public void CommandApplyAutoPickUpOff (int netId) {
+            EM_Item.s_instance.AutoPickOff (netId);
+        }
         public void CommandPickUpGroundItem (int netId, long gndItemId) {
             var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
-            var bag = EM_Item.s_instance.GetBag (netId);
             var gndItem = EM_Item.s_instance.GetGroundItem (gndItemId);
-            if (gndItem == null || bag == null || charId == -1) return;
-            List < (short, E_Item) > posAndItemChanged;
-            E_Item storeItem;
-            short storePos;
-            EM_Item.s_instance.CharacterPickGroundItem (charId, gndItem, bag, out posAndItemChanged, out storeItem, out storePos);
-            // client 更新Bag中原有
-            if (posAndItemChanged.Count != 0) {
-                var itemNoList = new List<NO_Item> (posAndItemChanged.Count);
-                for (int i = 0; i < posAndItemChanged.Count; i++)
-                    itemNoList.Add (posAndItemChanged[i].Item2.GetItemNo (ItemPlace.BAG, posAndItemChanged[i].Item1));
-                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, itemNoList));
-            }
-            // client 整格放入
-            if (storeItem != null) {
-                // 基础信息 client
-                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
-                    netId,
-                    new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
-                // 附加信息 (装备等) client
-                m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
-            }
+            if (gndItem == null || charId == -1) return;
+            PickUpGroundItem (netId, charId, gndItem);
         }
         public void CommandDropItemOntoGround (int netId, long realId, short num) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
@@ -518,6 +512,30 @@ namespace MirRemakeBackend.GameLogic {
                     res.Add ((gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2));
             }
             return res;
+        }
+        private void PickUpGroundItem (int netId, int charId, E_GroundItem gndItem) {
+            var bag = EM_Item.s_instance.GetBag (netId);
+            if (bag == null) return;
+            List < (short, E_Item) > posAndItemChanged;
+            E_Item storeItem;
+            short storePos;
+            EM_Item.s_instance.CharacterPickGroundItem (charId, gndItem, bag, out posAndItemChanged, out storeItem, out storePos);
+            // client 更新Bag中原有
+            if (posAndItemChanged.Count != 0) {
+                var itemNoList = new List<NO_Item> (posAndItemChanged.Count);
+                for (int i = 0; i < posAndItemChanged.Count; i++)
+                    itemNoList.Add (posAndItemChanged[i].Item2.GetItemNo (ItemPlace.BAG, posAndItemChanged[i].Item1));
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, itemNoList));
+            }
+            // client 整格放入
+            if (storeItem != null) {
+                // 基础信息 client
+                m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
+                    netId,
+                    new List<NO_Item> { storeItem.GetItemNo (ItemPlace.BAG, storePos) }));
+                // 附加信息 (装备等) client
+                m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
+            }
         }
     }
 }
