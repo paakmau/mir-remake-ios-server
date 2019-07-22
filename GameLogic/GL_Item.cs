@@ -12,7 +12,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     partial class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
-        private const float c_autoPickUpRadius = 0.3f;
+        private const float c_autoPickUpRadius = 0.5f;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
         private Dictionary<ItemType, IItemInfoNetworkSender> m_netSenderDict = new Dictionary<ItemType, IItemInfoNetworkSender> ();
@@ -40,11 +40,12 @@ namespace MirRemakeBackend.GameLogic {
                 var oriSight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
                 if (oriSight == null) continue;
                 // 计算新视野 与 自动拾取
+                bool autoPickUp = !EM_Item.s_instance.IsAutoPickOn (netId); TODO: 
                 var newSight = new List<E_GroundItem> (oriSight.Count);
                 E_GroundItem autoPickItem = null;
                 for (int i = 0; i < gndItemList.Count; i++) {
                     var disSqrt = (gndItemList[i].m_position - charObj.m_position).LengthSquared ();
-                    if (autoPickItem == null && disSqrt <= c_autoPickUpRadius)
+                    if (autoPickUp && autoPickItem == null && disSqrt <= c_autoPickUpRadius)
                         // 自动拾取
                         autoPickItem = gndItemList[i];
                     else if (disSqrt <= c_groundItemSightRadius * c_groundItemSightRadius) {
