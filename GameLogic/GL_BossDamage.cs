@@ -45,7 +45,7 @@ namespace MirRemakeBackend.GameLogic {
                     for (int j = 0; j < toNetIdList.Count; j++) {
                         int toNetId = toNetIdList[j];
                         int toCharId = EM_Character.s_instance.GetCharIdByNetId (toNetId);
-                        // 获取视野内玩家的排行 TODO: 使用二分
+                        // 获取视野内玩家的排行  
                         (int, string) dmgName;
                         int dmg;
                         short rank;
