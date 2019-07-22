@@ -15,6 +15,8 @@ namespace MirRemakeBackend.GameLogic {
         private const float c_autoPickUpRadius = 0.5f;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
+        private const float c_tickTime = 0.5f;
+        private float m_tickTimer = 0.25f;
         private Dictionary<ItemType, IItemInfoNetworkSender> m_netSenderDict = new Dictionary<ItemType, IItemInfoNetworkSender> ();
         public GL_Item (INetworkService netService) : base (netService) {
             // 实例化所有 IItemInitializer 的子类
@@ -26,73 +28,79 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void Tick (float dT) {
-            // 地面道具消失
-            EM_Item.s_instance.RefreshGroundItemAutoDisappear ();
-            var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
-            // 地面道具视野
-            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
-            var charDspprItemIdList = new List<long> ();
-            var charShowItemList = new List<NO_GroundItem> ();
-            while (charEn.MoveNext ()) {
-                var netId = charEn.Current.Key;
-                var charObj = charEn.Current.Value;
+            m_tickTimer += dT;
+            if (m_tickTimer > c_tickTime) {
+                m_tickTimer -= c_tickTime;
 
-                var oriSight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
-                if (oriSight == null) continue;
-                // 计算新视野 与 自动拾取
-                bool autoPickUp = !EM_Item.s_instance.IsAutoPickOn (netId); TODO: 
-                var newSight = new List<E_GroundItem> (oriSight.Count);
-                E_GroundItem autoPickItem = null;
-                for (int i = 0; i < gndItemList.Count; i++) {
-                    var disSqrt = (gndItemList[i].m_position - charObj.m_position).LengthSquared ();
-                    if (autoPickUp && autoPickItem == null && disSqrt <= c_autoPickUpRadius)
-                        // 自动拾取
-                        autoPickItem = gndItemList[i];
-                    else if (disSqrt <= c_groundItemSightRadius * c_groundItemSightRadius) {
-                        newSight.Add (gndItemList[i]);
-                        if (newSight.Count > c_groundItemSightMaxNum)
-                            break;
+                // 地面道具消失
+                EM_Item.s_instance.RefreshGroundItemAutoDisappear ();
+                var gndItemList = EM_Item.s_instance.GetRawGroundItemList ();
+                // 地面道具视野
+                var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
+                var charDspprItemIdList = new List<long> ();
+                var charShowItemList = new List<NO_GroundItem> ();
+                while (charEn.MoveNext ()) {
+                    var netId = charEn.Current.Key;
+                    var charObj = charEn.Current.Value;
+
+                    var oriSight = EM_Item.s_instance.GetCharacterGroundItemRawSight (netId);
+                    if (oriSight == null) continue;
+                    // 计算新视野 与 自动拾取
+                    bool autoPickUp = !EM_Item.s_instance.IsAutoPickOn (netId);
+                    TODO:
+                        var newSight = new List<E_GroundItem> (oriSight.Count);
+                    E_GroundItem autoPickItem = null;
+                    for (int i = 0; i < gndItemList.Count; i++) {
+                        var disSqrt = (gndItemList[i].m_position - charObj.m_position).LengthSquared ();
+                        if (autoPickUp && autoPickItem == null && disSqrt <= c_autoPickUpRadius)
+                            // 自动拾取
+                            autoPickItem = gndItemList[i];
+                        else if (disSqrt <= c_groundItemSightRadius * c_groundItemSightRadius) {
+                            newSight.Add (gndItemList[i]);
+                            if (newSight.Count > c_groundItemSightMaxNum)
+                                break;
+                        }
                     }
-                }
-                if (autoPickItem != null)
-                    PickUpGroundItem (netId, charObj.m_characterId, autoPickItem);
+                    if (autoPickItem != null)
+                        PickUpGroundItem (netId, charObj.m_characterId, autoPickItem);
 
-                charDspprItemIdList.Clear ();
-                charShowItemList.Clear ();
-                for (int i = 0; i < oriSight.Count; i++) {
-                    long gndItemId = oriSight[i].m_groundItemId;
-                    bool removed = true;
-                    for (int j = 0; j < newSight.Count; j++)
-                        if (newSight[j].m_groundItemId == gndItemId) {
-                            removed = false;
-                            break;
-                        }
-                    if (removed)
-                        charDspprItemIdList.Add (gndItemId);
-                }
-                for (int i = 0; i < newSight.Count; i++) {
-                    long gndItemId = newSight[i].m_groundItemId;
-                    bool isNew = true;
-                    for (int j = 0; j < oriSight.Count; j++)
-                        if (oriSight[j].m_groundItemId == gndItemId) {
-                            isNew = false;
-                            break;
-                        }
-                    if (isNew)
-                        charShowItemList.Add (newSight[i].GetNo ());
-                }
-                oriSight.Clear ();
-                for (int i = 0; i < newSight.Count; i++)
-                    oriSight.Add (newSight[i]);
+                    charDspprItemIdList.Clear ();
+                    charShowItemList.Clear ();
+                    for (int i = 0; i < oriSight.Count; i++) {
+                        long gndItemId = oriSight[i].m_groundItemId;
+                        bool removed = true;
+                        for (int j = 0; j < newSight.Count; j++)
+                            if (newSight[j].m_groundItemId == gndItemId) {
+                                removed = false;
+                                break;
+                            }
+                        if (removed)
+                            charDspprItemIdList.Add (gndItemId);
+                    }
+                    for (int i = 0; i < newSight.Count; i++) {
+                        long gndItemId = newSight[i].m_groundItemId;
+                        bool isNew = true;
+                        for (int j = 0; j < oriSight.Count; j++)
+                            if (oriSight[j].m_groundItemId == gndItemId) {
+                                isNew = false;
+                                break;
+                            }
+                        if (isNew)
+                            charShowItemList.Add (newSight[i].GetNo ());
+                    }
+                    oriSight.Clear ();
+                    for (int i = 0; i < newSight.Count; i++)
+                        oriSight.Add (newSight[i]);
 
-                // client
-                if (charDspprItemIdList.Count != 0)
-                    m_networkService.SendServerCommand (SC_ApplyGroundItemDisappear.Instance (netId, charDspprItemIdList));
-                if (charShowItemList.Count != 0)
-                    m_networkService.SendServerCommand (SC_ApplyGroundItemShow.Instance (netId, charShowItemList));
+                    // client
+                    if (charDspprItemIdList.Count != 0)
+                        m_networkService.SendServerCommand (SC_ApplyGroundItemDisappear.Instance (netId, charDspprItemIdList));
+                    if (charShowItemList.Count != 0)
+                        m_networkService.SendServerCommand (SC_ApplyGroundItemShow.Instance (netId, charShowItemList));
+                }
+                // 地面可再生道具刷新
+                EM_Item.s_instance.RefreshRenewableItem ();
             }
-            // 地面可再生道具刷新
-            EM_Item.s_instance.RefreshRenewableItem ();
         }
         public override void NetworkTick () { }
         public void CommandApplyBuyItemIntoBag (int netId, short itemId, short num) {
