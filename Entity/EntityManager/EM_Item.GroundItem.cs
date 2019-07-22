@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
-using MirRemakeBackend.DataEntity;
-using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
@@ -74,7 +71,7 @@ namespace MirRemakeBackend.Entity {
             gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             m_groundItemList.Add (gndItem);
         }
-        public void GroundItemAutoDisappear () {
+        public void RefreshGroundItemAutoDisappear () {
             for (int i = m_groundItemList.Count - 1; i >= 0; i--)
                 if (MyTimer.CheckTimeUp (m_groundItemList[i].m_disappearTime)) {
                     s_entityPool.m_groundItemPool.RecycleInstance (m_groundItemList[i]);
@@ -101,7 +98,7 @@ namespace MirRemakeBackend.Entity {
                 var itemIdPosTime = m_renewableItemList[i];
                 if (MyTimer.CheckTimeUp (itemIdPosTime.Item3)) {
                     short itemId = itemIdPosTime.Item1;
-                    Vector2 pos = itemIdPosTime.Item2 + new Vector2 (MyRandom.NextFloat (0, c_renewableItemRefreshRadian), MyRandom.NextFloat (0, c_renewableItemRefreshRadian));
+                    Vector2 pos = itemIdPosTime.Item2 + new Vector2 (MyRandom.NextFloat (0, c_renewableItemRefreshRadian * 2) - c_renewableItemRefreshRadian, MyRandom.NextFloat (0, c_renewableItemRefreshRadian * 2) - c_renewableItemRefreshRadian);
                     // 生成地面物品
                     GenerateGroundItem (itemId, 1, -1, pos);
 
