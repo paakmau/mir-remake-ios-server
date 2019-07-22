@@ -53,7 +53,8 @@ namespace MirRemakeBackend.GameLogic {
                             break;
                     }
                 }
-                PickUpGroundItem (netId, charObj.m_characterId, autoPickItem);
+                if (autoPickItem != null)
+                    PickUpGroundItem (netId, charObj.m_characterId, autoPickItem);
 
                 charDspprItemIdList.Clear ();
                 charShowItemList.Clear ();
