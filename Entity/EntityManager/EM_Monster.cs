@@ -9,20 +9,14 @@ namespace MirRemakeBackend.Entity {
         public static EM_Monster s_instance;
         private DEM_Monster m_dem;
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();
-        private Dictionary<int, E_Monster> m_networkIdAndBossDict = new Dictionary<int, E_Monster> ();
         public EM_Monster (DEM_Monster dem) {
             m_dem = dem;
         }
         public void AddMonster (E_Monster monster) {
             m_networkIdAndMonsterDict.Add (monster.m_networkId, monster);
-            if (monster.m_MonsterType == MonsterType.BOSS || monster.m_MonsterType == MonsterType.FINAL_BOSS)
-                m_networkIdAndBossDict.Add (monster.m_networkId, monster);
         }
         public Dictionary<int, E_Monster>.Enumerator GetMonsterEn () {
             return m_networkIdAndMonsterDict.GetEnumerator ();
-        }
-        public Dictionary<int, E_Monster>.Enumerator GetBossEn () {
-            return m_networkIdAndBossDict.GetEnumerator ();
         }
     }
 }

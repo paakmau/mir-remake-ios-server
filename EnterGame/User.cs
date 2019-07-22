@@ -120,7 +120,8 @@ namespace MirRemakeBackend.EnterGame {
                 m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, false, -1));
                 return;
             }
-            m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 1, 0, 0, 0, 0, 0));
+            // TODO: 测试用新号初始12级
+            m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 12, 0, 0, 0, 0, 0));
             m_charWalletDds.InsertCharacterWallet (new DDO_CharacterWallet (charId, 0, 0));
             m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
             // 技能 dds
