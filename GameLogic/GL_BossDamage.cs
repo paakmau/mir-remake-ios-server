@@ -51,7 +51,7 @@ namespace MirRemakeBackend.GameLogic {
                             rank = 0;
                             for (int k = 0; k < netIdAndNameDmgList.Count; k++)
                                 if (netIdAndNameDmgList[k].Key == toNetId) {
-                                    rank = i + 1;
+                                    rank = k + 1;
                                     break;
                                 }
                         }
