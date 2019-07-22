@@ -65,7 +65,7 @@ namespace MirRemakeBackend.GameLogic {
                                 else
                                     l = r = mid;
                             }
-                            rank = (short) l;
+                            rank = (short) (l + 1);
                         }
                         m_networkService.SendServerCommand (SC_SetAllBossDamageCharacterRank.Instance (toNetId, dmgCharList, dmg, rank));
                     }
