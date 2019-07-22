@@ -82,7 +82,7 @@ namespace MirRemakeBackend.GameLogic {
             (int, string) oriDmgName;
             if (!bossDmgDict.TryGetValue (caster.m_characterId, out oriDmgName))
                 oriDmgName = (0, caster.m_name);
-            oriDmgName.Item2 += dmg;
+            oriDmgName.Item1 += dmg;
             bossDmgDict[caster.m_characterId] = oriDmgName;
         }
     }
