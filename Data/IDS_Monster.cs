@@ -38,7 +38,7 @@ namespace MirRemakeBackend.Data {
                     if(type==ActorUnitConcreteAttributeType.ATTACK || type==ActorUnitConcreteAttributeType.MAGIC){
                         if(tpe>1){
                             monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                                (type, 0/* (int)(num/1.5)/5*/);
+                                (type, (int)(num/1.5)/5);
                         }
                         else{
                             monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
@@ -48,7 +48,7 @@ namespace MirRemakeBackend.Data {
                     else if(type==ActorUnitConcreteAttributeType.MAX_HP){
                         if(tpe>1){
                             monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                                (type, (int)(num*1.2)*50);
+                                (type, (int)(num*1.2)*10);
                         }
                         else{
                             monster.m_attrArr[x] = new ValueTuple<ActorUnitConcreteAttributeType, int>
