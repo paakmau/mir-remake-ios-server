@@ -262,7 +262,7 @@ namespace MirRemakeBackend.GameLogic {
             }
             public override void OnExit (E_Monster self, MFSMStateType nextType) {
                 self.m_position = self.m_respawnPosition;
-                self.Respawn ();
+                self.Respawn (1);
                 GL_MonsterAction.s_instance.MFSMRespawn (self);
             }
         }
