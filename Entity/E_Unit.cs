@@ -151,7 +151,7 @@ namespace MirRemakeBackend.Entity {
         }
         public virtual void Reset (DE_Unit de) {
             m_unitDe = de;
-            Respawn ();
+            Respawn (1);
         }
         public void Dead () {
             m_curHp = m_curMp = 0;
@@ -160,9 +160,9 @@ namespace MirRemakeBackend.Entity {
             m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.IMMOBILE] = 0;
         }
-        public void Respawn () {
-            m_curHp = m_MaxHp;
-            m_curMp = m_MaxMp;
+        public void Respawn (float recvPercent) {
+            m_curHp = (int) (m_MaxHp * recvPercent);
+            m_curMp = (int) (m_MaxMp * recvPercent);
             m_battleConcreteAttr.Reset ();
             m_specialAttributeDict[ActorUnitSpecialAttributeType.FAINT] = 0;
             m_specialAttributeDict[ActorUnitSpecialAttributeType.SILENT] = 0;
