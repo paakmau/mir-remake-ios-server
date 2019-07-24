@@ -57,17 +57,23 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyRespawnHome (int netId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            charObj.Respawn (0.2f);
-            // 复活点视野需要考虑
-            m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (new List<int> () { netId }, netId, new Vector2(42, 24), charObj.m_curHp, charObj.m_curMp));
+            NotifyRespawnHome (charObj);
         }
         public void CommandApplyRespawnPlace (int netId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            if (charObj.m_chargeCurrency < 188L) return;
+            if (charObj.m_chargeCurrency < 188L) {
+                NotifyRespawnHome (charObj);
+                return;
+            }
             GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.CHARGE, -188L);
             charObj.Respawn (0.7f);
             m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, charObj.m_position, charObj.m_curHp, charObj.m_curMp));
+        }
+        public void NotifyRespawnHome (E_Character charObj) {
+            charObj.Respawn (0.2f);
+            // 复活点视野需要考虑
+            m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (new List<int> () { netId }, netId, new Vector2 (42, 24), charObj.m_curHp, charObj.m_curMp));
         }
     }
 }
