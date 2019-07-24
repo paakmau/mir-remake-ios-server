@@ -12,7 +12,7 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     partial class GL_Item : GameLogicBase {
         public static GL_Item s_instance;
-        private const float c_autoPickUpRadius = 0.8f;
+        private const float c_autoPickUpRadius = 2f;
         private const float c_groundItemSightRadius = 12;
         private const int c_groundItemSightMaxNum = 31;
         private const float c_tickTime = 0.081f;

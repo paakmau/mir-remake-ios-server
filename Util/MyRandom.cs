@@ -10,6 +10,7 @@ namespace MirRemakeBackend.Util {
         /// <param name="right"></param>
         /// <returns></returns>
         public static int NextInt (int left, int right) {
+            if (left >= right) return left;
             int num = s_randomObj.Next();
             return left + num % (right-left);
         }
