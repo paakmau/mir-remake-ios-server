@@ -410,4 +410,16 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandApplyAutoPickUpOn (netId);
         }
     }
+    class CC_ApplyRespawnHome : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_HOME; } }
+        public void Execute (NetDataReader reader, int netId) {
+            // TODO: 回家复活
+        }
+    }
+    class CC_ApplyRespawnPlace : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_PLACE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            // TODO: 原地复活
+        }
+    }
 }

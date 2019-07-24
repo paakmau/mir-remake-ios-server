@@ -114,6 +114,10 @@ namespace MirRemakeBackend.Network {
         APPLY_BUY_ITEM_IN_SHOPPING_MALL,
         // 发送消息
         REQUIRE_SEND_MESSAGE,
+        // 回家复活
+        APPLY_RESPAWN_HOME,
+        // 原地复活
+        APPLY_RESPAWN_PLACE,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,
