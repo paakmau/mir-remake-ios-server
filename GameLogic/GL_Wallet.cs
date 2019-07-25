@@ -15,8 +15,9 @@ namespace MirRemakeBackend.GameLogic {
             NotifyUpdateCurrency (netId, charId, type, dC);
         }
         public void NotifyInitCharacter (int netId, int charId) {
-            EM_Wallet.s_instance.InitCharacter (netId, charId);
-            // TODO: client
+            var wallet = EM_Wallet.s_instance.InitCharacter (netId, charId);
+            // client
+            m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (netId, wallet.Item1, wallet.Item2));
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Wallet.s_instance.RemoveCharacter (netId);
