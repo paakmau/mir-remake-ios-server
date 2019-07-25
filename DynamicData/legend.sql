@@ -139,6 +139,7 @@ DROP TABLE IF EXISTS `mail`;
 create table `mail`(
   `mailid` int NOT NULL AUTO_INCREMENT,
   `senderid` int NOT NULL,
+  `sender_name` VARCHAR(55),
   `receiverid` int NOT NULL,
   `title` VARCHAR(55) NOT NULL,
   `detail` VARCHAR(555) NOT NULL,
