@@ -8,15 +8,15 @@ namespace MirRemakeBackend.GameLogic {
         public GL_Mail (INetworkService ns) : base (ns) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
-        public void CommandApplyShowMail (int netId) {
-            // TODO:
+        public void CommandApplyShowMailBox (int netId) {
             var mailBox = EM_Mail.s_instance.GetAllMailByNetId (netId);
             if (mailBox == null) return;
+            // TODO:
         }
         public void CommandApplyReceiveMail (int netId, int mailId) {
-            // TODO:
             var mail = EM_Mail.s_instance.GetMailByNetIdAndMailId (netId, mailId);
             if (mail == null) return;
+            // TODO:
         }
         public void NotifyInitCharacter (int netId, int charId) {
             EM_Mail.s_instance.InitCharacter (netId, charId);

@@ -112,8 +112,8 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 属性点分配
     /// </summary>
-    class CC_RequireCharacterAttribute : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_CHARACTER_ATTRIBUTE; } }
+    class CC_ApplyShowCharacterAttribute : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SHOW_CHARACTER_ATTRIBUTE; } }
         public void Execute (NetDataReader reader, int netId) {
             int tarNetId = reader.GetInt ();
             GL_CharacterAttribute.s_instance.CommandRequireCharacterAttribute (netId, tarNetId);
@@ -122,8 +122,8 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 打开战力排行榜时请求刷新操作
     /// </summary>
-    class CC_RequireRefreshFightCapacityRank : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_REFRESH_FIGHT_CAPACITY_RANK; } }
+    class CC_ApplyRefreshFightCapacityRank : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_REFRESH_FIGHT_CAPACITY_RANK; } }
         public void Execute (NetDataReader reader, int netId) {
             OccupationType ocp = (OccupationType) reader.GetByte ();
             GL_CharacterCombatEfct.s_instance.CommandGetCombatEffectivenessRank (netId, ocp);
@@ -330,29 +330,29 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 获取商场 常规商品列表
     /// </summary>
-    class CC_RequireShoppingMallNormal : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SHOPPING_MALL; } }
+    class CC_ApplyShowMallNormal : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SHOW_MALL; } }
         public void Execute (NetDataReader reader, int netId) {
-            GL_Mall.s_instance.CommandRequireShoppingMall (netId);
+            GL_Mall.s_instance.CommandRequireMall (netId);
         }
     }
     /// <summary>
     /// 商城物品购买
     /// </summary>
-    class CC_ApplyBuyItemInShoppingMall : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_IN_SHOPPING_MALL; } }
+    class CC_ApplyBuyItemInMall : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_IN_MALL; } }
         public void Execute (NetDataReader reader, int netId) {
             int mallItemId = reader.GetInt ();
             short num = reader.GetShort ();
             CurrencyType cyType = (CurrencyType) reader.GetByte ();
-            GL_Mall.s_instance.CommandBuyItemInShoppingMall (netId, mallItemId, num, cyType);
+            GL_Mall.s_instance.CommandBuyItemInMall (netId, mallItemId, num, cyType);
         }
     }
     /// <summary>
     /// 发送消息  
     /// </summary>
-    class CC_RequireSendMessage : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.REQUIRE_SEND_MESSAGE; } }
+    class CC_ApplySendMessage : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SEND_MESSAGE; } }
         public void Execute (NetDataReader reader, int netId) {
             ChattingChanelType channel = (ChattingChanelType) reader.GetByte ();
             string msg = reader.GetString ();

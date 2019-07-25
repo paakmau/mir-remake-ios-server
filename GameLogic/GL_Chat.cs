@@ -19,7 +19,7 @@ namespace MirRemakeBackend.GameLogic {
                 case ChattingChanelType.PRIVATE:
                     while (charEn.MoveNext ()) {
                         if (charEn.Current.Key == toNetId) {
-                            m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
+                            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
                             break;
                         }
                     }
@@ -27,7 +27,7 @@ namespace MirRemakeBackend.GameLogic {
                 case ChattingChanelType.WORLD:
                     while (charEn.MoveNext ())
                         if (charEn.Current.Key != netId)
-                            m_networkService.SendServerCommand (SC_SendMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
+                            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (charEn.Current.Value.m_networkId, channel, senderCharObj.m_characterId, senderCharObj.m_name, msg));
                     break;
             }
         }

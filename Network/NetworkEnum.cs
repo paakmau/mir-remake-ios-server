@@ -59,9 +59,13 @@ namespace MirRemakeBackend.Network {
         // 技能相关
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
         // 商城
-        SEND_SHOPPING_MALL,
+        APPLY_SELF_SHOW_MALL,
         // 信息
-        SEND_MESSAGE
+        APPLY_ALL_RECEIVE_MESSAGE,
+        // 邮箱
+        APPLY_SELF_SHOW_MAIL_BOX,
+        APPLY_SELF_READ_MAIL,
+        APPLY_SELF_RECEIVE_MAIL
     }
     enum NetworkToServerDataType : byte {
         // 未进入游戏阶段
@@ -78,9 +82,9 @@ namespace MirRemakeBackend.Network {
         APPLY_CAST_SKILL_BEGIN,
         // 分配属性点
         APPLY_DISTRIBUTE_POINTS,
-        REQUIRE_CHARACTER_ATTRIBUTE,
+        APPLY_SHOW_CHARACTER_ATTRIBUTE,
         // 获取战力排行榜
-        REQUIRE_REFRESH_FIGHT_CAPACITY_RANK,
+        APPLY_REFRESH_FIGHT_CAPACITY_RANK,
         // 技能升级
         APPLY_UPDATE_SKILL_LEVEL,
         // 地面物品扔拾; 背包物品 使用, 交易等
@@ -110,14 +114,19 @@ namespace MirRemakeBackend.Network {
         APPLY_CANCEL_MISSION,
         APPLY_TALK_TO_MISSION_NPC,
         // 获取商城信息
-        REQUIRE_SHOPPING_MALL,
-        APPLY_BUY_ITEM_IN_SHOPPING_MALL,
+        APPLY_SHOW_MALL,
+        APPLY_BUY_ITEM_IN_MALL,
         // 发送消息
-        REQUIRE_SEND_MESSAGE,
-        // 回家复活
+        APPLY_SEND_MESSAGE,
+        // 复活相关
         APPLY_RESPAWN_HOME,
-        // 原地复活
         APPLY_RESPAWN_PLACE,
+        // 邮件相关
+        APPLY_SHOW_MAIL_BOX,
+        APPLY_READ_MAIL,
+        APPLY_READ_ALL_MAIL,
+        APPLY_RECEIVE_MAIL,
+        APPLY_RECEIVE_ALL_MAIL,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,

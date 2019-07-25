@@ -1126,32 +1126,32 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_acceptableMis[i]);
         }
     }
-    class SC_SendShoppingMall : SingleToClientServerCommand {
-        private static SC_SendShoppingMall s_instance = new SC_SendShoppingMall ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_SHOPPING_MALL; } }
+    class SC_ApplySelfShowMall : SingleToClientServerCommand {
+        private static SC_ApplySelfShowMall s_instance = new SC_ApplySelfShowMall ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SHOW_MALL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_MallClass> m_mallClassList;
-        public static SC_SendShoppingMall Instance (int netId, IReadOnlyList<NO_MallClass> mallClassList) {
+        public static SC_ApplySelfShowMall Instance (int netId, IReadOnlyList<NO_MallClass> mallClassList) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_mallClassList = mallClassList;
             return s_instance;
         }
-        private SC_SendShoppingMall () { }
+        private SC_ApplySelfShowMall () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_mallClassList.Count);
             for (int i = 0; i < m_mallClassList.Count; i++)
                 writer.Put (m_mallClassList[i]);
         }
     }
-    class SC_SendMessage : SingleToClientServerCommand {
-        public static SC_SendMessage s_instance = new SC_SendMessage ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_MESSAGE; } }
+    class SC_ApplyAllReceiveMessage : SingleToClientServerCommand {
+        public static SC_ApplyAllReceiveMessage s_instance = new SC_ApplyAllReceiveMessage ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_RECEIVE_MESSAGE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private ChattingChanelType m_channel;
         private int m_senderCharId;
         private string m_senderName;
         private string m_msg;
-        public static SC_SendMessage Instance (int netId, ChattingChanelType channel, int senderCharId, string senderName, string msg) {
+        public static SC_ApplyAllReceiveMessage Instance (int netId, ChattingChanelType channel, int senderCharId, string senderName, string msg) {
             s_instance.ResetToClientNetId (netId);
             s_instance.ResetToClientNetId (netId);
             s_instance.m_channel = channel;
@@ -1160,7 +1160,7 @@ namespace MirRemakeBackend.Network {
             s_instance.m_msg = msg;
             return s_instance;
         }
-        private SC_SendMessage () { }
+        private SC_ApplyAllReceiveMessage () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_channel);
             writer.Put (m_senderCharId);
