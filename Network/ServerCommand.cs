@@ -1018,6 +1018,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_masterly);
         }
     }
+
     /// <summary>
     /// 接受任务
     /// </summary>
@@ -1036,6 +1037,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
+
     class SC_ApplySelfDeliverMission : SingleToClientServerCommand {
         private static SC_ApplySelfDeliverMission s_instance = new SC_ApplySelfDeliverMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DELIVER_MISSION; } }
@@ -1051,6 +1053,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
+
     class SC_ApplySelfCancelMission : SingleToClientServerCommand {
         private static SC_ApplySelfCancelMission s_instance = new SC_ApplySelfCancelMission ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_CANCEL_MISSION; } }
@@ -1066,6 +1069,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_missionId);
         }
     }
+
     class SC_ApplySelfMissionProgress : SingleToClientServerCommand {
         private static SC_ApplySelfMissionProgress s_instance = new SC_ApplySelfMissionProgress ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_PROGRESS; } }
@@ -1087,6 +1091,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_progress);
         }
     }
+
     class SC_ApplySelfMissionUnlock : SingleToClientServerCommand {
         private static SC_ApplySelfMissionUnlock s_instance = new SC_ApplySelfMissionUnlock ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_UNLOCK; } }
@@ -1109,6 +1114,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_unacceptableMis[i]);
         }
     }
+
     class SC_ApplySelfMissionAcceptable : SingleToClientServerCommand {
         private static SC_ApplySelfMissionAcceptable s_instance = new SC_ApplySelfMissionAcceptable ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_MISSION_ACCEPTABLE; } }
@@ -1126,6 +1132,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_acceptableMis[i]);
         }
     }
+
     class SC_ApplySelfShowMall : SingleToClientServerCommand {
         private static SC_ApplySelfShowMall s_instance = new SC_ApplySelfShowMall ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SHOW_MALL; } }
@@ -1143,6 +1150,7 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_mallClassList[i]);
         }
     }
+
     class SC_ApplyAllReceiveMessage : SingleToClientServerCommand {
         public static SC_ApplyAllReceiveMessage s_instance = new SC_ApplyAllReceiveMessage ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_RECEIVE_MESSAGE; } }
@@ -1152,7 +1160,6 @@ namespace MirRemakeBackend.Network {
         private string m_senderName;
         private string m_msg;
         public static SC_ApplyAllReceiveMessage Instance (int netId, ChattingChanelType channel, int senderCharId, string senderName, string msg) {
-            s_instance.ResetToClientNetId (netId);
             s_instance.ResetToClientNetId (netId);
             s_instance.m_channel = channel;
             s_instance.m_senderCharId = senderCharId;
@@ -1166,6 +1173,24 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_senderCharId);
             writer.Put (m_senderName);
             writer.Put (m_msg);
+        }
+    }
+
+    class SC_ApplySelfShowMailBox : SingleToClientServerCommand {
+        public static SC_ApplySelfShowMailBox s_instance = new SC_ApplySelfShowMailBox ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SHOW_MAIL_BOX; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private IReadOnlyList<NO_Mail> m_mailList;
+        public static SC_ApplySelfShowMailBox Instance (int netId, IReadOnlyList<NO_Mail> mailList) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_mailList = mailList;
+            return s_instance;
+        }
+        private SC_ApplySelfShowMailBox () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_mailList.Count);
+            for (int i=0; i<m_mailList.Count; i++)
+                writer.Put (m_mailList[i]);
         }
     }
 }

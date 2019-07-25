@@ -37,9 +37,7 @@ namespace MirRemakeBackend.GameLogic {
                     charIdDmgNameList.Sort (((int, int, string) a, (int, int, string) b) => { return b.Item2 - a.Item2; });
                     var dmgCharList = new List<NO_DamageRankCharacter> (c_bossDmgCharacterRankSize);
                     for (int j = 0; j < Math.Min (c_bossDmgCharacterRankSize, charIdDmgNameList.Count); j++) {
-                        var item = charIdDmgNameList[j];
-                        int rnkCharNetId = EM_Character.s_instance.GetNetIdByCharId (item.Item1);
-                        dmgCharList.Add (new NO_DamageRankCharacter (rnkCharNetId, item.Item3, item.Item2));
+                        dmgCharList.Add (new NO_DamageRankCharacter (charIdDmgNameList[j].Item1, charIdDmgNameList[j].Item3, charIdDmgNameList[j].Item2));
                     }
                     // client
                     for (int j = 0; j < toNetIdList.Count; j++) {

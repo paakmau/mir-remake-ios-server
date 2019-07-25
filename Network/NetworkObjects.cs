@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using LiteNetLib.Utils;
@@ -128,11 +129,11 @@ namespace MirRemakeBackend.Network {
         }
     }
     struct NO_DamageRankCharacter {
-        public int m_netId;
+        public int m_charId;
         public string m_name;
         public int m_damage;
-        public NO_DamageRankCharacter (int netId, string name, int dmg) {
-            m_netId = netId;
+        public NO_DamageRankCharacter (int charId, string name, int dmg) {
+            m_charId = charId;
             m_name = name;
             m_damage = dmg;
         }
@@ -263,6 +264,28 @@ namespace MirRemakeBackend.Network {
             m_occupation = occupation;
         }
     }
+    struct NO_Mail {
+        public int m_mailId;
+        public int m_senderCharId;
+        public int m_recvCharId;
+        public DateTime m_sendTime;
+        public string m_title;
+        public string m_detail;
+        public List < (short, short) > m_itemIdAndNumList;
+        public bool m_isRead;
+        public bool m_isReceived;
+        public NO_Mail (int id, int senderCharId, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, bool isRead, bool isReceived) {
+            m_mailId = id;
+            m_senderCharId = senderCharId;
+            m_recvCharId = recvCharId;
+            m_sendTime = sendTime;
+            m_title = title;
+            m_detail = detail;
+            m_itemIdAndNumList = itemIdAndNumList;
+            m_isRead = isRead;
+            m_isReceived = isReceived;
+        }
+    }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.X);
@@ -270,6 +293,12 @@ namespace MirRemakeBackend.Network {
         }
         public static Vector2 GetVector2 (this NetDataReader reader) {
             return new Vector2 (reader.GetFloat (), reader.GetFloat ());
+        }
+        public static void Put (this NetDataWriter writer, DateTime value) {
+            writer.Put (value.ToString ());
+        }
+        public static DateTime GetDateTime (this NetDataReader reader) {
+            return DateTime.Parse (reader.GetString ());
         }
         public static void Put (this NetDataWriter writer, NO_LoginCharacter value) {
             writer.Put (value.m_charId);
@@ -400,15 +429,15 @@ namespace MirRemakeBackend.Network {
             return new NO_AttributeCharacter (netId, name, lv, str, intl, sprt, agl, maxHp, maxMp, dHp, dMp, atk, def, mag, res, tenacity, speed, criticalRate, criticalBonus, hitRate, dodgeRate, lifeSteal, dmgReduction);
         }
         public static void Put (this NetDataWriter writer, NO_DamageRankCharacter dmgRankChar) {
-            writer.Put (dmgRankChar.m_netId);
+            writer.Put (dmgRankChar.m_charId);
             writer.Put (dmgRankChar.m_name);
             writer.Put (dmgRankChar.m_damage);
         }
         public static NO_DamageRankCharacter GetDamageRankCharacter (this NetDataReader reader) {
-            int netId = reader.GetInt ();
+            int charId = reader.GetInt ();
             string name = reader.GetString ();
             int dmg = reader.GetInt ();
-            return new NO_DamageRankCharacter (netId, name, dmg);
+            return new NO_DamageRankCharacter (charId, name, dmg);
         }
         public static void Put (this NetDataWriter writer, NO_MarketItem marketItem) {
             writer.Put (marketItem.m_realId);
@@ -580,6 +609,36 @@ namespace MirRemakeBackend.Network {
             string family = reader.GetString ();
             byte occupation = reader.GetByte ();
             return new NO_FightCapacityRankInfo (charId, name, level, rank, fightCapacity, family, occupation);
+        }
+        public static void Put (this NetDataWriter writer, NO_Mail value) {
+            writer.Put (value.m_mailId);
+            writer.Put (value.m_senderCharId);
+            writer.Put (value.m_recvCharId);
+            writer.Put (value.m_sendTime);
+            writer.Put (value.m_title);
+            writer.Put (value.m_detail);
+            writer.Put ((byte) value.m_itemIdAndNumList.Count);
+            for (int i = 0; i < value.m_itemIdAndNumList.Count; i++) {
+                writer.Put (value.m_itemIdAndNumList[i].Item1);
+                writer.Put (value.m_itemIdAndNumList[i].Item2);
+            }
+            writer.Put (value.m_isRead);
+            writer.Put (value.m_isReceived);
+        }
+        public static NO_Mail GetMail (this NetDataReader reader) {
+            int mailId = reader.GetInt ();
+            int senderCharId = reader.GetInt ();
+            int recvCharId = reader.GetInt ();
+            DateTime sendTime = reader.GetDateTime ();
+            string title = reader.GetString ();
+            string detail = reader.GetString ();
+            byte itemCount = reader.GetByte ();
+            List < (short, short) > itemIdAndNum = new List < (short, short) > (itemCount);
+            for (int i = 0; i < itemCount; i++)
+                itemIdAndNum.Add ((reader.GetShort (), reader.GetShort ()));
+            bool isRead = reader.GetBool ();
+            bool isReceived = reader.GetBool ();
+            return new NO_Mail (mailId, senderCharId, recvCharId, sendTime, title, detail, itemIdAndNum, isRead, isReceived);
         }
     }
 }
