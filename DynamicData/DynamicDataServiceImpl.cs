@@ -237,19 +237,19 @@ namespace MirRemakeBackend.DynamicData {
             string cmd = "insert into `character` values(null," + charDdo.m_playerId + ",\"" + charDdo.m_occupation.ToString () + "\",\"" + charDdo.m_name + "\");select last_insert_id();";
             string database = "legend";
             DataSet ds = new DataSet ();
-            try { pool.ExecuteSql (database, cmd, ds); } catch (Exception e) { Console.WriteLine (e.StackTrace); return -1; }
+            try { pool.ExecuteSql (database, cmd, ds); } catch { return -1; }
             return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
         public bool DeleteCharacterById (int charId) {
             string cmd = "delete from `character` where charid=" + charId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool UpdateCharacter (DDO_Character charDdo) {
             string cmd = "update `character` set `occupation`=\"" + charDdo.m_occupation.ToString () + "\",`name`=\"" + charDdo.m_name + "\" where charid=" + charDdo.m_characterId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool GetCharacterById (int charid, out DDO_Character c) {
@@ -292,19 +292,19 @@ namespace MirRemakeBackend.DynamicData {
         public bool InsertCharacterWallet (DDO_CharacterWallet w) {
             string cmd = "insert into `wallet` values(" + w.m_characterId + "," + w.m_virtualCy + "," + w.m_chargeCy + ");";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool UpdateCharacterWallet (DDO_CharacterWallet w) {
             string cmd = "update `wallet` set `virtual`=" + w.m_virtualCy + ",`charge`=" + w.m_chargeCy + " where charid=" + w.m_characterId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool DeleteCharacterWalletByCharacterId (int id) {
             string cmd = "delete from `wallet` where `charid`=" + id + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool GetCharacterWalletByCharacterId (int id, out DDO_CharacterWallet w) {
@@ -327,20 +327,20 @@ namespace MirRemakeBackend.DynamicData {
             string giftPoints = string.Format ("{0} {1} {2} {3}", charAttr.m_str, charAttr.m_intl, charAttr.m_sprt, charAttr.m_agl);
             string cmd = "insert into `character_attribute` values(" + charAttr.m_characterId + "," + charAttr.m_level + "," + charAttr.m_experience + ",\"" + giftPoints + "\");";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool DeleteCharacterAttributeByCharacterId (int charId) {
             string cmd = "delete from `character_attribute` where charid=" + charId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool UpdateCharacterAttribute (DDO_CharacterAttribute charAttr) {
             string giftPoints = string.Format ("{0} {1} {2} {3}", charAttr.m_str, charAttr.m_intl, charAttr.m_sprt, charAttr.m_agl);
             string cmd = "update`character_attribute` set `level`=" + charAttr.m_level + ", `experience`=" + charAttr.m_experience + ", attributes=\"" + giftPoints + "\" where charid=" + charAttr.m_characterId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool GetCharacterAttributeByCharacterId (int charId, out DDO_CharacterAttribute resCharAttr) {
@@ -437,7 +437,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet ();
             cmd = "update character_position set `x`=\"" + cp.m_position.X + "\",`y`=\"" + cp.m_position.Y + "\" where charid=" + cp.m_characterId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool InsertCharacterPosition (DDO_CharacterPosition cp) {
@@ -445,7 +445,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet ();
             cmd = "insert into character_position values(" + cp.m_characterId + ",\"" + cp.m_position.X + "\",\"" + cp.m_position.Y + "\");";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool GetCharacterPosition (int charId, out DDO_CharacterPosition res) {
@@ -469,7 +469,7 @@ namespace MirRemakeBackend.DynamicData {
             DataSet ds = new DataSet ();
             cmd = "delete from character_position where `charid`=" + charid + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
 
@@ -491,7 +491,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             cmd = "update user set `user_name`=\"" + ddo.m_username + "\",`password`=\"" + ddo.m_pwd + "\",`question`=\"" + ddo.m_pwdProtectProblem + "\",`answer`=\"" + ddo.m_pwdProtectAnswer + "\" where `userid`=" + ddo.m_playerId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public int InsertUser (DDO_User ddo) {
@@ -514,7 +514,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             cmd = "insert into `vip` values(" + vipCard.m_characterId + "," + vipCard.m_vipLevel + "," + vipCard.m_chargeMoney + ");";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
 
         }
@@ -536,7 +536,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd;
             cmd = "update `vip` set `vip_level`=" + vipCard.m_vipLevel + ",`charge_money`=" + vipCard.m_chargeMoney + " where `userid`=" + vipCard.m_characterId + ";";
             string database = "legend";
-            try { pool.ExecuteSql (database, cmd); } catch (Exception e) { Console.WriteLine (e.StackTrace); return false; }
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool DeleteCharacterVipCardByCharacterId (int characterid) {
