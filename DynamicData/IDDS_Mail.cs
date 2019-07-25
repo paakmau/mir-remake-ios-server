@@ -6,8 +6,8 @@ namespace MirRemakeBackend.DynamicData {
         List<DDO_Mail> GetAllMailByReceiverCharacterId (int charId);
         bool DeleteMailById (int id);
         bool InsertMail (DDO_Mail mail);
-        bool UpdateMailRead (int id, int isRead);
-        bool UpdateMailReceived (int id, int isReceived);
+        bool UpdateMailRead (int id, bool isRead);
+        bool UpdateMailReceived (int id, bool isReceived);
         void DeleteMailBeforeCertainTime(DateTime time);
     }
 }
