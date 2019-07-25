@@ -253,22 +253,46 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandApplyDisjointEquipment (netId, equipmentRealId);
         }
     }
+    class CC_ApplyAutoDisjoint : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_DISJOINT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            byte itemQualities = reader.GetByte ();
+            GL_Item.s_instance.CommandApplyAutoDisjointEquipment (netId, itemQualities);
+        }
+    }
+
+    class CC_ApplyAutoPickOn : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_ON; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Item.s_instance.CommandApplyAutoPickUpOn (netId);
+        }
+    }
+
+    class CC_ApplyAutoPickOff : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_OFF; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Item.s_instance.CommandApplyAutoPickUpOff (netId);
+        }
+    }
+
     class CC_ApplySetUpMarket : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SET_UP_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
             short itemCnt = reader.GetShort ();
             List<NO_MarketItem> itemList = new List<NO_MarketItem> (itemCnt);
-            for (int i=0; i<itemCnt; i++)
+            for (int i = 0; i < itemCnt; i++)
                 itemList.Add (reader.GetMarketItem ());
             GL_Item.s_instance.CommandApplyPSetUpMarket (netId, itemList);
         }
     }
+
     class CC_ApplyPackUpMarket : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_PACK_UP_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
             GL_Item.s_instance.CommandApplyPackUpMarket (netId);
         }
     }
+
     class CC_ApplyEnterMarket : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ENTER_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -282,10 +306,11 @@ namespace MirRemakeBackend.Network {
             int holderNetId = reader.GetInt ();
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            CurrencyType cyType = (CurrencyType)reader.GetByte ();
+            CurrencyType cyType = (CurrencyType) reader.GetByte ();
             GL_Item.s_instance.CommandApplyBuyItemInMarket (netId, holderNetId, realId, num, cyType);
         }
     }
+
     /// <summary>
     /// 接受任务
     /// </summary>
@@ -360,6 +385,18 @@ namespace MirRemakeBackend.Network {
             GL_Chat.s_instance.CommandSendMessage (netId, channel, msg, toNetId);
         }
     }
+    class CC_ApplyRespawnHome : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_HOME; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_CharacterAction.s_instance.CommandApplyRespawnHome (netId);
+        }
+    }
+    class CC_ApplyRespawnPlace : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_PLACE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_CharacterAction.s_instance.CommandApplyRespawnPlace (netId);
+        }
+    }
     class CC_TestGainExp : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_EXP; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -389,37 +426,6 @@ namespace MirRemakeBackend.Network {
             short itemId = reader.GetShort ();
             short num = reader.GetShort ();
             GL_Item.s_instance.CommandTestGainItem (netId, itemId, num);
-        }
-    }
-    class CC_ApplyAutoDisjoint : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_DISJOINT; } }
-        public void Execute (NetDataReader reader, int netId) {
-            byte itemQualities = reader.GetByte();
-            GL_Item.s_instance.CommandApplyAutoDisjointEquipment (netId, itemQualities);
-        }
-    }
-    class CC_ApplyAutoPickOff : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_OFF; } }
-        public void Execute (NetDataReader reader, int netId) {
-            GL_Item.s_instance.CommandApplyAutoPickUpOff (netId);
-        }
-    }
-    class CC_ApplyAutoPickOn : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_AUTO_PICK_ON; } }
-        public void Execute (NetDataReader reader, int netId) {
-            GL_Item.s_instance.CommandApplyAutoPickUpOn (netId);
-        }
-    }
-    class CC_ApplyRespawnHome : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_HOME; } }
-        public void Execute (NetDataReader reader, int netId) {
-            GL_CharacterAction.s_instance.CommandApplyRespawnHome (netId);
-        }
-    }
-    class CC_ApplyRespawnPlace : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_PLACE; } }
-        public void Execute (NetDataReader reader, int netId) {
-            GL_CharacterAction.s_instance.CommandApplyRespawnPlace (netId);
         }
     }
 }
