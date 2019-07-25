@@ -1193,4 +1193,36 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_mailList[i]);
         }
     }
+
+    class SC_ApplySelfReadMail : SingleToClientServerCommand {
+        public static SC_ApplySelfReadMail s_instance = new SC_ApplySelfReadMail ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_READ_MAIL; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_mailId;
+        public static SC_ApplySelfReadMail Instance (int netId, int mailId) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_mailId = mailId;
+            return s_instance;
+        }
+        private SC_ApplySelfReadMail () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_mailId);
+        }
+    }
+
+    class SC_ApplySelfReceiveMail : SingleToClientServerCommand {
+        public static SC_ApplySelfReceiveMail s_instance = new SC_ApplySelfReceiveMail ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_RECEIVE_MAIL; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_mailId;
+        public static SC_ApplySelfReceiveMail Instance (int netId, int mailId) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_mailId = mailId;
+            return s_instance;
+        }
+        private SC_ApplySelfReceiveMail () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_mailId);
+        }
+    }
 }
