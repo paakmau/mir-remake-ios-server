@@ -8,7 +8,7 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
-
+using System.Collections.Generic;
 namespace MirRemakeBackend {
     class Program {
         private const float c_networkFrameTime = 0.2f;
@@ -137,7 +137,7 @@ namespace MirRemakeBackend {
             };
         }
 
-        static void TestStatic () {
+        static void TestDynamic() {
             IDS_Character sch = new DS_CharacterImpl ();
             IDS_Item sit = new DS_ItemImpl ();
             IDS_Mission smi = new DS_MissionImpl ();
@@ -147,6 +147,10 @@ namespace MirRemakeBackend {
             IDS_Skill ssk = new DS_SkillImpl ();
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
+            DynamicDataServiceImpl dma=new DynamicDataServiceImpl();
+            dma.DeleteMailBeforeCertainTime(Convert.ToDateTime("2015-03-25 04:00:00"));
+
+
         }
     }
 }

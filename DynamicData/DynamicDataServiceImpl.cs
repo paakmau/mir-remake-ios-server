@@ -629,6 +629,27 @@ namespace MirRemakeBackend.DynamicData {
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
+        public bool UpdateMail (DDO_Mail mail) {
+            string itemArray = "";
+            if (mail.m_itemIdAndNumArr.Length != 0) {
+                itemArray = string.Format ("{0} {1}", mail.m_itemIdAndNumArr[0].Item1, mail.m_itemIdAndNumArr[0].Item2);
+            }
+            for (int i = 1; i < mail.m_itemIdAndNumArr.Length; i++) {
+                itemArray = string.Format ("{0},{1} {2}", itemArray, mail.m_itemIdAndNumArr[i].Item1, mail.m_itemIdAndNumArr[i].Item2);
+            }
+            string cmd = string.Format ("update `mail` set senderid={0},receiverid={1},`title`=\"{2}\",`detail`=\"{3}\",`time`=\"{4}\",`is_read`={5},`is_received`={6},item_array=\"{7}\" where `mailid`={8};",
+                mail.m_senderCharId, mail.m_receiverCharId, mail.m_title, mail.m_detail,  mail.m_sendTime.ToString ("yyyy-MM-dd HH:mm:ss"), mail.m_isRead?1 : 0, mail.m_isReceived?1 : 0,itemArray,mail.m_id);
+            string database = "legend";
+            try { pool.ExecuteSql (database, cmd); } catch { return false; }
+            return true;
+        }
+        public void DeleteMailBeforeCertainTime(DateTime time){
+            string cmd=string.Format("delete from `mail` where `time`<\"{0}\";",time.ToString("yyyy-MM-dd HH:mm:ss"));
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        
+        
 
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];

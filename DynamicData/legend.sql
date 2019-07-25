@@ -150,3 +150,4 @@ create table `mail`(
 );
 CREATE INDEX `senderid` ON `mail`(`senderid`);
 CREATE INDEX `receiverid` ON `mail`(`receiverid`);
+
