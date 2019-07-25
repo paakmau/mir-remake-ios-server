@@ -181,7 +181,7 @@ namespace MirRemakeBackend.Entity {
             m_bagPos = bagPos;
         }
         public NO_MarketItem GetNo () {
-            return new NO_MarketItem (m_item.m_realId, m_onSaleNum, m_virtualCyPrice, m_chargeCyPrice);
+            return new NO_MarketItem (m_item.m_realId, m_item.m_ItemId, m_onSaleNum, m_virtualCyPrice, m_chargeCyPrice);
         }
     }
     class E_Market {
