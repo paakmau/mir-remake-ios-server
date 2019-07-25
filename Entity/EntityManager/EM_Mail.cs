@@ -9,7 +9,7 @@ namespace MirRemakeBackend.Entity {
         public EM_Mail (IDDS_Mail dds) { m_dds = dds; }
         public void InitCharacter (int netId, int charId) {
             if (m_mailDict.ContainsKey (netId)) return;
-            List<DDO_Mail> ddoList = m_dds.GetAllMailByCharacterId (charId);
+            List<DDO_Mail> ddoList = m_dds.GetAllMailByReceiverCharacterId (charId);
             List<E_Mail> mailList = new List<E_Mail> (ddoList.Count);
             for (int i=0; i<ddoList.Count; i++) {
                 var mail = s_entityPool.m_mailPool.GetInstance ();
