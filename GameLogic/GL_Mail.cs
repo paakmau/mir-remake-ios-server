@@ -37,8 +37,12 @@ namespace MirRemakeBackend.GameLogic {
             if (mail == null || charId == -1) return;
             if (mail.m_isReceived) return;
             var itemIdAndNumList = mail.m_itemIdAndNumList;
+            var virtualCy = mail.m_virtualCy;
+            var chargeCy = mail.m_chargeCy;
             EM_Mail.s_instance.CharacterReceiveMail (netId, mail);
             m_networkService.SendServerCommand (SC_ApplySelfReceiveMail.Instance (netId, mailId));
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, virtualCy);
+            GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charId, chargeCy);
             GL_Item.s_instance.NotifyCharacterGainItems (netId, charId, itemIdAndNumList);
         }
         public void CommandApplyReceiveAllMail (int netId) {
@@ -58,7 +62,7 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRemoveCharacter (int netId) {
             EM_Mail.s_instance.RemoveCharacter (netId);
         }
-        public void NotifySendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
+    public void NotifySendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
             EM_Mail.s_instance.SendMail (senderCharId, senderName, recvNetId, recvCharId, title, detail, itemIdAndNumList, virtualCy, chargeCy);
         }
     }

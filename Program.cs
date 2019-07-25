@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
@@ -8,7 +9,6 @@ using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 using MirRemakeBackend.Util;
-using System.Collections.Generic;
 namespace MirRemakeBackend {
     class Program {
         private const float c_networkFrameTime = 0.2f;
@@ -82,7 +82,7 @@ namespace MirRemakeBackend {
             // EntityManager
             EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
-            EM_Character.s_instance = new EM_Character (charDem, charDds, charAttrDds, charWalletDds, charPosDds);
+            EM_Character.s_instance = new EM_Character (charDem, charDds, charAttrDds, charPosDds);
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
             EM_Mail.s_instance = new EM_Mail (mailDds);
             EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
@@ -94,6 +94,7 @@ namespace MirRemakeBackend {
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
             EM_MissionLog.s_instance = new EM_MissionLog ();
+            EM_Wallet.s_instance = new EM_Wallet (charWalletDds);
             // EM init
             EntityManagerInitializer.Init (skillDem, monDem);
             // 角色创建器
@@ -106,17 +107,18 @@ namespace MirRemakeBackend {
             GL_CharacterAction.s_instance = new GL_CharacterAction (s_networkService);
             GL_CharacterAttribute.s_instance = new GL_CharacterAttribute (s_networkService);
             GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
-            GL_CharacterInit.s_instance = new GL_CharacterInit ();
+            GL_CharacterInit.s_instance = new GL_CharacterInit (s_networkService);
+            GL_CharacterSight.s_instance = new GL_CharacterSight (s_networkService);
+            GL_Chat.s_instance = new GL_Chat (s_networkService);
             GL_Item.s_instance = new GL_Item (s_networkService);
             GL_Mail.s_instance = new GL_Mail (s_networkService);
             GL_Mall.s_instance = new GL_Mall (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MissionLog.s_instance = new GL_MissionLog (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
-            GL_CharacterSight.s_instance = new GL_CharacterSight (s_networkService);
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
-            GL_Chat.s_instance = new GL_Chat (s_networkService);
+            GL_Wallet.s_instance = new GL_Wallet (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
                 GL_BattleSettle.s_instance,
@@ -124,20 +126,22 @@ namespace MirRemakeBackend {
                 GL_CharacterAction.s_instance,
                 GL_CharacterAttribute.s_instance,
                 // GL_CharacterCombatEfct.s_instance,
+                // GL_CharacterInit.s_instance,
+                GL_CharacterSight.s_instance,
+                // GL_Chat.s_instance,
                 GL_Item.s_instance,
                 // GL_Mail.s_instance,
                 GL_Mall.s_instance,
                 GL_Mission.s_instance,
                 GL_MissionLog.s_instance,
                 GL_MonsterAction.s_instance,
-                GL_CharacterSight.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,
-                GL_Chat.s_instance
+                // GL_Wallet.s_instance
             };
         }
 
-        static void TestDynamic() {
+        static void TestDynamic () {
             IDS_Character sch = new DS_CharacterImpl ();
             IDS_Item sit = new DS_ItemImpl ();
             IDS_Mission smi = new DS_MissionImpl ();
@@ -147,9 +151,8 @@ namespace MirRemakeBackend {
             IDS_Skill ssk = new DS_SkillImpl ();
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
-            DynamicDataServiceImpl dma=new DynamicDataServiceImpl();
-            dma.DeleteMailBeforeCertainTime(Convert.ToDateTime("2015-03-25 04:00:00"));
-
+            DynamicDataServiceImpl dma = new DynamicDataServiceImpl ();
+            dma.DeleteMailBeforeCertainTime (Convert.ToDateTime ("2015-03-25 04:00:00"));
 
         }
     }

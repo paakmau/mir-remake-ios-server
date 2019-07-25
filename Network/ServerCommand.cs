@@ -161,12 +161,8 @@ namespace MirRemakeBackend.Network {
         private short m_spirit;
         /// <summary> 总可分配属性点 </summary>
         private short m_totalMainPoint;
-        /// <summary> 虚拟币 </summary>
-        private long m_virtualCy;
-        /// <summary> 充值币 </summary>
-        private long m_chargeCy;
         private Vector2 m_pos;
-        public static SC_InitSelfAttribute Instance (int netId, OccupationType ocp, string name, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint, long virtualCy, long chargeCy, Vector2 pos) {
+        public static SC_InitSelfAttribute Instance (int netId, OccupationType ocp, string name, short level, int exp, short strenth, short intelligence, short agility, short spirit, short m_totalMainPoint, Vector2 pos) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_ocp = ocp;
             s_instance.m_name = name;
@@ -177,8 +173,6 @@ namespace MirRemakeBackend.Network {
             s_instance.m_agility = agility;
             s_instance.m_spirit = spirit;
             s_instance.m_totalMainPoint = m_totalMainPoint;
-            s_instance.m_virtualCy = virtualCy;
-            s_instance.m_chargeCy = chargeCy;
             s_instance.m_pos = pos;
             return s_instance;
         }
@@ -193,8 +187,6 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_agility);
             writer.Put (m_spirit);
             writer.Put (m_totalMainPoint);
-            writer.Put (m_virtualCy);
-            writer.Put (m_chargeCy);
             writer.Put (m_pos);
         }
     }

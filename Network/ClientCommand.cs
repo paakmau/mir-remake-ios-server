@@ -466,7 +466,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             CurrencyType cyType = (CurrencyType) reader.GetByte ();
             long cy = reader.GetLong ();
-            GL_CharacterAttribute.s_instance.CommandGainCurrency (netId, cyType, cy);
+            GL_Wallet.s_instance.CommandGainCurrency (netId, cyType, cy);
         }
     }
 

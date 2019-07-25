@@ -106,30 +106,31 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void CommandApplyBuyItemIntoBag (int netId, short itemId, short num) {
             if (num == 0) return;
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             long needCy = EM_Item.s_instance.GetItemBuyPrice (itemId);
             if (needCy == -1) return;
             needCy *= num;
-            long charCy = charObj.m_virtualCurrency;
+            long charCy = wallet.Item2;
             if (charCy < needCy) return;
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
-            NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
+            NotifyCharacterGainItem (netId, charId, itemId, num);
         }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            if (charId == -1 || bag == null) return;
             short pos;
             E_Item item = bag.GetItemByRealId (realId, out pos);
             if (item == null)
                 return;
             // 失去物品
-            NotifyCharacterLoseItem (charObj, item, num, pos, bag);
+            NotifyCharacterLoseItem (netId, charId, item, num, pos, bag);
             // 拿钱
             var virCy = (int) (item.m_SellPrice * num);
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, virCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, virCy);
         }
         public void CommandTestGainItem (int netId, short itemId, short num) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
@@ -168,7 +169,7 @@ namespace MirRemakeBackend.GameLogic {
             E_ConsumableItem item = bag.GetItemByRealId (realId, out posInBag) as E_ConsumableItem;
             if (item == null) return;
             GL_UnitBattleAttribute.s_instance.NotifyApplyEffect (item.m_consumableDe.m_itemEffect, -1, charObj, charObj);
-            NotifyCharacterLoseItem (charObj, item, 1, posInBag, bag);
+            NotifyCharacterLoseItem (netId, charObj.m_characterId, item, 1, posInBag, bag);
         }
         public void CommandApplyUseEquipmentItem (int netId, long realId) {
             E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
@@ -193,43 +194,45 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 强化装备 </summary>
         public void CommandApplyStrengthenEquipment (int netId, long realId) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             short eqPos;
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
             if (eq.m_strengthenNum == E_EquipmentItem.c_maxStrengthenNum) return;
-            var curCy = charObj.m_virtualCurrency;
+            var curCy = wallet.Item1;
             long needCy = (1L << eq.m_strengthenNum) * 80L;
             if (needCy > curCy) return;
             // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
             // 强化
             eq.m_strengthenNum++;
-            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
         }
         public void CommandApplyEnchantEquipment (int netId, long eqRealId, long enchantmentRealId) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             short eqPos, encmPos;
             var eq = bag.GetItemByRealId (eqRealId, out eqPos) as E_EquipmentItem;
             var encm = bag.GetItemByRealId (enchantmentRealId, out encmPos) as E_EnchantmentItem;
             if (eq == null || encm == null) return;
             // 判断钱充足
-            var curCy = charObj.m_virtualCurrency;
+            var curCy = wallet.Item1;
             long needCy = (1L << (int) encm.m_Quality) * (1L << (eq.m_LevelInNeed >> 4)) * 3L;
             if (needCy > curCy) return;
             // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
             // 失去附魔符
-            var slot = EM_Item.s_instance.CharacterLoseWholeItem (encm, charObj.m_characterId, bag, encmPos);
+            var slot = EM_Item.s_instance.CharacterLoseWholeItem (encm, charId, bag, encmPos);
             // 附魔
             eq.m_enchantAttrList.Clear ();
             for (int i = 0; i < encm.m_attrList.Count; i++)
                 eq.m_enchantAttrList.Add (encm.m_attrList[i]);
-            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
 
             // client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, encmPos) }));
@@ -237,15 +240,16 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 镶嵌宝石 </summary>
         public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             short eqPos, gemPos;
             var eq = bag.GetItemByRealId (eqRealId, out eqPos) as E_EquipmentItem;
             var gem = bag.GetItemByRealId (gemRealId, out gemPos) as E_GemItem;
             if (eq == null || gem == null) return;
             // 判断钱充足
-            var curCy = charObj.m_virtualCurrency;
+            var curCy = wallet.Item1;
             long needCy = (1L << (int) gem.m_Quality) * (1L << (eq.m_LevelInNeed >> 5));
             if (needCy > curCy) return;
             // 有插槽
@@ -257,12 +261,12 @@ namespace MirRemakeBackend.GameLogic {
                 }
             if (gemInlayPos == -1) return;
             // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
             // 失去宝石
-            var slot = EM_Item.s_instance.CharacterLoseWholeItem (gem, charObj.m_characterId, bag, gemPos);
+            var slot = EM_Item.s_instance.CharacterLoseWholeItem (gem, charId, bag, gemPos);
             // 镶嵌
             eq.InlayGem (gemInlayPos, gem.m_ItemId, gem.m_gemDe);
-            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
 
             // client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, gemPos) }));
@@ -270,20 +274,21 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 装备打孔 </summary>
         public void CommandApplyMakeHoleInEquipment (int netId, long realId) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             short eqPos;
             var eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
-            long curCy = charObj.m_virtualCurrency;
+            long curCy = wallet.Item1;
             long needCy = (1L << eq.m_InlaidGemList.Count) * 100;
             if (needCy > curCy) return;
             // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
             // 打孔
             eq.MakeHole ();
-            EM_Item.s_instance.CharacterUpdateItem (eq, charObj.m_characterId, ItemPlace.BAG, eqPos);
+            EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
 
             // client
             m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
@@ -301,44 +306,46 @@ namespace MirRemakeBackend.GameLogic {
         }
         /// <summary> 装备分解 </summary>
         public void CommandApplyDisjointEquipment (int netId, long realId) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             short eqPos;
             E_EquipmentItem eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
-            long curCy = charObj.m_virtualCurrency;
+            long curCy = wallet.Item1;
             long gainCy = (1L << (eq.m_LevelInNeed >> 4)) * 8L;
             // 失去装备
-            var slot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
+            var slot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charId, bag, eqPos);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, eqPos) }));
             // 得到钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, gainCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, gainCy);
         }
         /// <summary> 装备熔炼, 获得附魔符 </summary>
         public void CommandApplySmeltEquipment (int netId, long realId) {
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
-            if (charObj == null || bag == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charId == -1 || bag == null || wallet.Item1 == -1) return;
             short eqPos;
             E_EquipmentItem eq = bag.GetItemByRealId (realId, out eqPos) as E_EquipmentItem;
             if (eq == null) return;
-            long curCy = charObj.m_chargeCurrency;
+            long curCy = wallet.Item2;
             long needCy = ((long) eq.m_Quality + 1L) * 10L;
             if (curCy < needCy) return;
             // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.CHARGE, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charId, -needCy);
             // 得到属性
             var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
             for (int i = 0; i < eq.m_RawAttrList.Count; i++)
                 if (MyRandom.NextInt (0, 100) >= 80)
                     attrList.Add (eq.m_RawAttrList[i]);
             // 消耗装备
-            var eqSlot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charObj.m_characterId, bag, eqPos);
+            var eqSlot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charId, bag, eqPos);
             // 获取附文
             E_Item ecmt;
             short ecmtPos;
-            var ecmtNum = EM_Item.s_instance.CharacterGainEnchantmentItem (charObj.m_characterId, attrList, bag, out ecmt, out ecmtPos);
+            var ecmtNum = EM_Item.s_instance.CharacterGainEnchantmentItem (charId, attrList, bag, out ecmt, out ecmtPos);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new List<NO_Item> () { eqSlot.GetItemNo (bag.m_repositoryPlace, eqPos), ecmt.GetItemNo (bag.m_repositoryPlace, ecmtPos) }));
             m_netSenderDict[ecmt.m_Type].SendItemInfo (ecmt, netId, m_networkService);
         }
@@ -369,12 +376,13 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandApplyBuyItemInMarket (int buyerNetId, int holderNetId, long itemRealId, short num, CurrencyType cyType) {
             if (num == 0) return;
-            var buyer = EM_Character.s_instance.GetCharacterByNetworkId (buyerNetId);
-            var holder = EM_Character.s_instance.GetCharacterByNetworkId (holderNetId);
+            var buyerCharId = EM_Character.s_instance.GetCharIdByNetId (buyerNetId);
+            var buyerWallet = EM_Wallet.s_instance.GetWallet (buyerNetId);
+            var holderCharId = EM_Character.s_instance.GetCharIdByNetId (holderNetId);
             var market = EM_Item.s_instance.GetMarket (holderNetId);
             var buyerBag = EM_Item.s_instance.GetBag (buyerNetId);
             var holderBag = EM_Item.s_instance.GetBag (holderNetId);
-            if (buyer == null || holder == null || market == null || buyerBag == null || holderBag == null) return;
+            if (buyerCharId == -1 || buyerWallet.Item1 == -1 || holderCharId == -1 || market == null || buyerBag == null || holderBag == null) return;
             short marketPos;
             var marketItem = EM_Item.s_instance.GetMarketItem (holderNetId, itemRealId, out marketPos);
             if (marketItem == null) return;
@@ -382,18 +390,18 @@ namespace MirRemakeBackend.GameLogic {
             if (needCy == -1) return;
             if (marketItem.m_ItemNum < num || marketItem.m_onSaleNum < num) return;
             needCy *= num;
-            long charCy = cyType == CurrencyType.VIRTUAL ? buyer.m_virtualCurrency : buyer.m_chargeCurrency;
+            long charCy = cyType == CurrencyType.VIRTUAL ? buyerWallet.Item1 : buyerWallet.Item2;
             if (charCy < needCy) return;
             // 花钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (buyer, cyType, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateCurrency (buyerNetId, buyerCharId, cyType, -needCy);
             // 收钱
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (holder, cyType, needCy);
+            GL_Wallet.s_instance.NotifyUpdateCurrency (holderNetId, holderCharId, cyType, needCy);
             // 交易物品
             E_Item holderChangedItem;
             List < (short, E_Item) > buyerChangedItemList;
             E_Item buyerStoreItem;
             short buyerStorePos;
-            EM_Item.s_instance.CharacterBuyItemInMarket (holder.m_characterId, buyerNetId, buyer.m_characterId, market, marketItem, num, marketPos, holderBag, buyerBag, out holderChangedItem, out buyerChangedItemList, out buyerStoreItem, out buyerStorePos);
+            EM_Item.s_instance.CharacterBuyItemInMarket (holderCharId, buyerNetId, buyerCharId, market, marketItem, num, marketPos, holderBag, buyerBag, out holderChangedItem, out buyerChangedItemList, out buyerStoreItem, out buyerStorePos);
             // client
             m_networkService.SendServerCommand (SC_ApplyOtherUpdateMarketItem.Instance (buyerNetId, holderNetId, itemRealId, marketItem.m_onSaleNum));
             m_networkService.SendServerCommand (SC_ApplySelfUpdateMarketItem.Instance (holderNetId, itemRealId, marketItem.m_onSaleNum));
@@ -422,11 +430,11 @@ namespace MirRemakeBackend.GameLogic {
         /// <summary>
         /// 失去确定位置的物品
         /// </summary>
-        public void NotifyCharacterLoseItem (E_Character charObj, E_Item item, short num, short pos, E_RepositoryBase repo) {
-            item = EM_Item.s_instance.CharacterLoseItem (item, num, charObj.m_characterId, repo, pos);
+        public void NotifyCharacterLoseItem (int netId, int charId, E_Item item, short num, short pos, E_RepositoryBase repo) {
+            item = EM_Item.s_instance.CharacterLoseItem (item, num, charId, repo, pos);
             // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
-                charObj.m_networkId, new List<NO_Item> { item.GetItemNo (repo.m_repositoryPlace, pos) }));
+                netId, new List<NO_Item> { item.GetItemNo (repo.m_repositoryPlace, pos) }));
         }
         public void NotifyCharacterSwapItemPlace (int netId, int charId, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
             EM_Item.s_instance.CharacterSwapItem (charId, srcRepo, srcPos, srcItem, tarRepo, tarPos, tarItem);
@@ -436,6 +444,7 @@ namespace MirRemakeBackend.GameLogic {
             m_netSenderDict[tarItem.m_Type].SendItemInfo (tarItem, netId, m_networkService);
         }
         public void NotifyCharacterGainItems (int netId, int charId, IReadOnlyList < (short, short) > itemIdAndNumList) {
+            if (itemIdAndNumList.Count == 0) return;
             var bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null) return;
             for (int i = 0; i < itemIdAndNumList.Count; i++)

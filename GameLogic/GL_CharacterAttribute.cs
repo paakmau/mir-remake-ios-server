@@ -53,11 +53,6 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_agility,
                 charObj.m_spirit));
         }
-        public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
-            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
-            NotifyUpdateCurrency (charObj, type, dC);
-        }
         public E_Character NotifyInitCharacter (E_Character newChar) {
             MainPointToConAttr (newChar);
             // client
@@ -72,8 +67,6 @@ namespace MirRemakeBackend.GameLogic {
                 newChar.m_agility,
                 newChar.m_spirit,
                 newChar.m_TotalMainPoint,
-                newChar.m_virtualCurrency,
-                newChar.m_chargeCurrency,
                 newChar.m_position));
             return newChar;
         }
@@ -91,32 +84,9 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
-        public void NotifyKillUnit (E_Character killer, E_Unit dead) {
-            int expGain = 0;
-            expGain += dead.m_Level * 10;
-            expGain += dead.m_Defence / 10;
-            expGain += dead.m_Resistance / 10;
-            NotifyGainExperience (killer, expGain);
-            long cyGain = 0;
-            cyGain += dead.m_Level * 2;
-            cyGain += dead.m_Attack / 20;
-            cyGain += dead.m_Magic / 20;
-            NotifyUpdateCurrency (killer, CurrencyType.VIRTUAL, cyGain);
-        }
         public void NotifyConcreteAttributeChange (E_Character charObj, List < (ActorUnitConcreteAttributeType, int) > attrList) {
             for (int i = 0; i < attrList.Count; i++)
                 charObj.AddEquipConAttr (attrList[i].Item1, attrList[i].Item2);
-        }
-        public void NotifyUpdateCurrency (E_Character charObj, CurrencyType type, long dC) {
-            // 实例 与 数据
-            if (type == CurrencyType.CHARGE)
-                charObj.m_chargeCurrency += dC;
-            else
-                charObj.m_virtualCurrency += dC;
-            EM_Character.s_instance.SaveCharacterWallet (charObj);
-            // client
-            m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
-                charObj.m_networkId, charObj.m_virtualCurrency, charObj.m_chargeCurrency));
         }
         private void MainPointToConAttr (E_Character charObj) {
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int) (charObj.m_strength * 0.55));

@@ -61,12 +61,13 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandApplyRespawnPlace (int netId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
-            if (charObj.m_chargeCurrency < 188L) {
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (charObj == null || wallet.Item1 == -1) return;
+            if (wallet.Item2 < 188L) {
                 NotifyRespawnHome (charObj);
                 return;
             }
-            GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.CHARGE, -188L);
+            GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charObj.m_characterId, -188L);
             charObj.Respawn (0.7f);
             m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, charObj.m_position, charObj.m_curHp, charObj.m_curMp));
         }

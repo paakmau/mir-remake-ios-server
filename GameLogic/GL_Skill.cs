@@ -14,18 +14,19 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandUpdateSkillLevel (int netId, short skillId, short targetLv) {
             var skill = EM_Skill.s_instance.GetCharacterSkillByIdAndNetworkId (skillId, netId);
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
-            if (skill == null || charObj == null) return;
+            var wallet = EM_Wallet.s_instance.GetWallet (netId);
+            if (skill == null || charObj == null || wallet.Item1 == -1) return;
             short oriLv = skill.m_skillLevel;
             long costTotal = 0;
             while (skill.m_skillLevel < targetLv && skill.m_skillLevel < skill.m_skillDe.m_skillMaxLevel) {
-                if (costTotal + skill.m_skillDataDe.m_upgradeMoneyInNeed > charObj.m_virtualCurrency) break;
+                if (costTotal + skill.m_skillDataDe.m_upgradeMoneyInNeed > wallet.Item1) break;
                 if (skill.m_skillDataDe.m_upgradeCharacterLevelInNeed > charObj.m_Level) break;
                 if (skill.m_skillDataDe.m_upgradeMasterlyInNeed > skill.m_masterly) break;
                 costTotal += skill.m_skillDataDe.m_upgradeMoneyInNeed;
                 skill.Upgrade ();
             }
             if (oriLv != skill.m_skillLevel) {
-                GL_CharacterAttribute.s_instance.NotifyUpdateCurrency (charObj, CurrencyType.VIRTUAL, -costTotal);
+                GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charObj.m_characterId, -costTotal);
                 // 持久化 与 client
                 EM_Skill.s_instance.CharacterUpdateSkill (charObj.m_characterId, skill);
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (

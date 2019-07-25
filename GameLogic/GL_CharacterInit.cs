@@ -1,9 +1,12 @@
 using MirRemakeBackend.Entity;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.GameLogic {
-    class GL_CharacterInit {
+    class GL_CharacterInit : GameLogicBase {
         public static GL_CharacterInit s_instance;
-        public GL_CharacterInit () { }
+        public GL_CharacterInit (INetworkService ns) : base (ns) { }
+        public override void Tick (float dT) { }
+        public override void NetworkTick () { }
         public void CommandInitCharacterId (int netId, int charId) {
             E_Character newChar = EM_Character.s_instance.InitCharacter (netId, charId);
             if (newChar == null)

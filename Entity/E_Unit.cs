@@ -188,8 +188,6 @@ namespace MirRemakeBackend.Entity {
         public short m_TotalMainPoint { get { return m_characterDataDe.m_mainAttributePointNum; } }
         public int m_UpgradeExperienceInNeed { get { return m_characterDataDe.m_upgradeExperienceInNeed; } }
         public int m_experience;
-        public long m_virtualCurrency;
-        public long m_chargeCurrency;
         public short m_strength;
         public short m_intelligence;
         public short m_agility;
@@ -214,7 +212,7 @@ namespace MirRemakeBackend.Entity {
         public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
         public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
         public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
-        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, DDO_CharacterWallet charWalletDdo, DDO_CharacterPosition charPosDdo) {
+        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, DDO_CharacterPosition charPosDdo) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_characterDataDe = charDataDe;
@@ -227,8 +225,6 @@ namespace MirRemakeBackend.Entity {
             m_intelligence = charAttrDdo.m_intl;
             m_spirit = charAttrDdo.m_sprt;
             m_agility = charAttrDdo.m_agl;
-            m_virtualCurrency = charWalletDdo.m_virtualCy;
-            m_chargeCurrency = charWalletDdo.m_chargeCy;
             m_position = charPosDdo.m_position;
         }
         /// <summary>
@@ -268,9 +264,6 @@ namespace MirRemakeBackend.Entity {
         }
         public DDO_CharacterAttribute GetAttrDdo () {
             return new DDO_CharacterAttribute (m_characterId, m_Level, m_experience, m_strength, m_intelligence, m_spirit, m_agility);
-        }
-        public DDO_CharacterWallet GetWalletDdo () {
-            return new DDO_CharacterWallet (m_characterId, m_virtualCurrency, m_chargeCurrency);
         }
         public DDO_CharacterPosition GetPosDdo () {
             return new DDO_CharacterPosition (m_characterId, m_position);

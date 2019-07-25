@@ -183,9 +183,21 @@ namespace MirRemakeBackend.GameLogic {
                 // log
                 if (target.m_UnitType == ActorUnitType.MONSTER && caster.m_UnitType == ActorUnitType.PLAYER)
                     GL_MissionLog.s_instance.NotifyLog (MissionTargetType.KILL_MONSTER, caster.m_networkId, ((E_Monster) target).m_MonsterId);
-                // 通知 CharacterLevel
+                // 通知 CharacterAttr 与 钱
                 if (caster.m_UnitType == ActorUnitType.PLAYER) {
-                    GL_CharacterAttribute.s_instance.NotifyKillUnit (caster as E_Character, target);
+                    int expGain = 0;
+                    expGain += target.m_Level * 10;
+                    expGain += target.m_Defence / 10;
+                    expGain += target.m_Resistance / 10;
+                    if (expGain > 0)
+                        GL_CharacterAttribute.s_instance.NotifyGainExperience (caster as E_Character, expGain);
+
+                    long cyGain = 0;
+                    cyGain += target.m_Level * 2;
+                    cyGain += target.m_Attack / 20;
+                    cyGain += target.m_Magic / 20;
+                    if (cyGain > 0)
+                        GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (caster.m_networkId, (caster as E_Character).m_characterId, cyGain);
                 }
             }
         }
