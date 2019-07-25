@@ -6,7 +6,10 @@ namespace MirRemakeBackend.GameLogic {
     class GL_Mail : GameLogicBase {
         public static GL_Mail s_instance;
         public GL_Mail (INetworkService ns) : base (ns) { }
-        public override void Tick (float dT) { }
+        public override void Tick (float dT) {
+            // TODO: 每隔12小时, 清除过期邮件
+            // TODO: 发件的时候, 清除超出数量限制的邮件
+        }
         public override void NetworkTick () { }
         public void CommandApplyShowMailBox (int netId) {
             var mailBox = EM_Mail.s_instance.GetAllMailByNetId (netId);
