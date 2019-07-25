@@ -267,6 +267,7 @@ namespace MirRemakeBackend.Network {
     struct NO_Mail {
         public int m_mailId;
         public int m_senderCharId;
+        public string m_senderName;
         public int m_recvCharId;
         public DateTime m_sendTime;
         public string m_title;
@@ -274,9 +275,10 @@ namespace MirRemakeBackend.Network {
         public List < (short, short) > m_itemIdAndNumList;
         public bool m_isRead;
         public bool m_isReceived;
-        public NO_Mail (int id, int senderCharId, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, bool isRead, bool isReceived) {
+        public NO_Mail (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, bool isRead, bool isReceived) {
             m_mailId = id;
             m_senderCharId = senderCharId;
+            m_senderName = senderName;
             m_recvCharId = recvCharId;
             m_sendTime = sendTime;
             m_title = title;
@@ -613,6 +615,7 @@ namespace MirRemakeBackend.Network {
         public static void Put (this NetDataWriter writer, NO_Mail value) {
             writer.Put (value.m_mailId);
             writer.Put (value.m_senderCharId);
+            writer.Put (value.m_senderName);
             writer.Put (value.m_recvCharId);
             writer.Put (value.m_sendTime);
             writer.Put (value.m_title);
@@ -628,6 +631,7 @@ namespace MirRemakeBackend.Network {
         public static NO_Mail GetMail (this NetDataReader reader) {
             int mailId = reader.GetInt ();
             int senderCharId = reader.GetInt ();
+            string senderName = reader.GetString ();
             int recvCharId = reader.GetInt ();
             DateTime sendTime = reader.GetDateTime ();
             string title = reader.GetString ();
@@ -638,7 +642,7 @@ namespace MirRemakeBackend.Network {
                 itemIdAndNum.Add ((reader.GetShort (), reader.GetShort ()));
             bool isRead = reader.GetBool ();
             bool isReceived = reader.GetBool ();
-            return new NO_Mail (mailId, senderCharId, recvCharId, sendTime, title, detail, itemIdAndNum, isRead, isReceived);
+            return new NO_Mail (mailId, senderCharId, senderName, recvCharId, sendTime, title, detail, itemIdAndNum, isRead, isReceived);
         }
     }
 }

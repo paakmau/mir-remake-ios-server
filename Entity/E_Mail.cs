@@ -7,6 +7,7 @@ namespace MirRemakeBackend.Entity {
     class E_Mail {
         public int m_id;
         public int m_senderCharId;
+        public string m_senderName;
         public int m_receiverCharId;
         public DateTime m_sendTime;
         public string m_title;
@@ -37,10 +38,10 @@ namespace MirRemakeBackend.Entity {
             m_isReceived = isReceived;
         }
         public DDO_Mail GetDdo () {
-            return new DDO_Mail (m_id, m_senderCharId, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList.ToArray (), m_isRead, m_isReceived);
+            return new DDO_Mail (m_id, m_senderCharId, m_senderName, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList.ToArray (), m_isRead, m_isReceived);
         }
         public NO_Mail GetNo () {
-            return new NO_Mail (m_id, m_senderCharId, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList, m_isRead, m_isReceived);
+            return new NO_Mail (m_id, m_senderCharId, m_senderName, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList, m_isRead, m_isReceived);
         }
     }
 }
