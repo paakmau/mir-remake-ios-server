@@ -61,7 +61,13 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRemoveCharacter (int netId) {
             EM_Mail.s_instance.RemoveCharacter (netId);
         }
-        public void NotifySendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
+        public void NotifySendMallItem (int recvNetId, int recvCharId, List < (short, short) > itemIdAndNumList) {
+            SendMail (-1, "系统商城", recvNetId, recvCharId, "商城物品", "背包容量不足，购买的物品发放至邮箱", itemIdAndNumList, 0, 0);
+        }
+        public void NotifySendMissionReward (int recvNetId, int recvCharId, List < (short, short) > itemIdAndNumList, long virtualCy) {
+            SendMail (-1, "任务报酬", recvNetId, recvCharId, "任务报酬", "背包容量不足，奖励发放至邮箱", itemIdAndNumList, virtualCy, 0);
+        }
+        private void SendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
             EM_Mail.s_instance.SendMail (senderCharId, senderName, recvNetId, recvCharId, title, detail, itemIdAndNumList, virtualCy, chargeCy);
         }
     }
