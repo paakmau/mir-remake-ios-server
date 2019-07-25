@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
 
@@ -23,6 +24,15 @@ namespace MirRemakeBackend.Entity {
             for (int i=0; i<mailList.Count; i++)
                 s_entityPool.m_mailPool.RecycleInstance (mailList[i]);
             m_mailDict.Remove (netId);
+        }
+        public IReadOnlyList<E_Mail> GetAllMailByNetId(int netId) {
+            List<E_Mail> res;
+            m_mailDict.TryGetValue (netId, out res);
+            return res;
+        }
+        public void SendMail (int senderCharId, int recvNetId, int recvCharId, string title, string details) {
+            E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
+            // mail.Reset (-1, senderCharId, recvCharId, DateTime.Now)
         }
     }
 }
