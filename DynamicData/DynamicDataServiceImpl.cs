@@ -599,6 +599,12 @@ namespace MirRemakeBackend.DynamicData {
                     mail.m_itemIdAndNumArr[j].Item1=short.Parse(s[0]);
                     mail.m_itemIdAndNumArr[j].Item2=short.Parse(s[1]);
                 }
+                string is_read=drs[i]["is_read"].ToString();
+                if(is_read=="0") mail.m_isRead=false;
+                else mail.m_isRead=true;
+                string is_received=drs[i]["is_received"].ToString();
+                if(is_read=="0") mail.m_isReceived=false;
+                else mail.m_isReceived=true;
                 res.Add(mail);
             }
             return res;
@@ -618,8 +624,8 @@ namespace MirRemakeBackend.DynamicData {
             for(int i=1;i<mail.m_itemIdAndNumArr.Length;i++){
                 itemArray=string.Format("{0},{1} {2}",itemArray,mail.m_itemIdAndNumArr[i].Item1,mail.m_itemIdAndNumArr[i].Item2);
             }
-            string cmd=string.Format("insert into `mail` values(null,{0},{1},\"{2}\",\"{3}\",\"{4}\",\"{5}\");",
-                mail.m_senderCharId,mail.m_receiverCharId,mail.m_title,mail.m_detail,itemArray,mail.m_sendTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            string cmd=string.Format("insert into `mail` values(null,{0},{1},\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6},{7});",
+                mail.m_senderCharId,mail.m_receiverCharId,mail.m_title,mail.m_detail,itemArray,mail.m_sendTime.ToString("yyyy-MM-dd HH:mm:ss"),mail.m_isRead?1:0,mail.m_isReceived?1:0);
             string database="legend";
             try{pool.ExecuteSql(database,cmd);}catch{return false;}
             return true;
