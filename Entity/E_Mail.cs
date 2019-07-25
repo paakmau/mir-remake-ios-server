@@ -13,6 +13,8 @@ namespace MirRemakeBackend.Entity {
         public string m_title;
         public string m_detail;
         public List < (short, short) > m_itemIdAndNumList;
+        public long m_virtualCy;
+        public long m_chargeCy;
         public bool m_isRead;
         public bool m_isReceived;
         public void Reset (DDO_Mail ddo) {
@@ -27,7 +29,7 @@ namespace MirRemakeBackend.Entity {
             m_isRead = ddo.m_isRead;
             m_isReceived = ddo.m_isReceived;
         }
-        public void Reset (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, bool isRead, bool isReceived) {
+        public void Reset (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy, bool isRead, bool isReceived) {
             m_id = id;
             m_senderCharId = senderCharId;
             m_senderName = senderName;
@@ -36,14 +38,16 @@ namespace MirRemakeBackend.Entity {
             m_title = title;
             m_detail = detail;
             m_itemIdAndNumList = itemIdAndNumList;
+            m_virtualCy = virtualCy;
+            m_chargeCy = chargeCy;
             m_isRead = isRead;
             m_isReceived = isReceived;
         }
         public DDO_Mail GetDdo () {
-            return new DDO_Mail (m_id, m_senderCharId, m_senderName, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList.ToArray (), m_isRead, m_isReceived);
+            return new DDO_Mail (m_id, m_senderCharId, m_senderName, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList.ToArray (), m_virtualCy, m_chargeCy, m_isRead, m_isReceived);
         }
         public NO_Mail GetNo () {
-            return new NO_Mail (m_id, m_senderCharId, m_senderName, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList, m_isRead, m_isReceived);
+            return new NO_Mail (m_id, m_senderCharId, m_senderName, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList, m_virtualCy, m_chargeCy, m_isRead, m_isReceived);
         }
     }
 }

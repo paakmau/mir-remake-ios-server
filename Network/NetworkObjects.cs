@@ -273,9 +273,11 @@ namespace MirRemakeBackend.Network {
         public string m_title;
         public string m_detail;
         public List < (short, short) > m_itemIdAndNumList;
+        public long m_virtualCy;
+        public long m_chargeCy;
         public bool m_isRead;
         public bool m_isReceived;
-        public NO_Mail (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, bool isRead, bool isReceived) {
+        public NO_Mail (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy, bool isRead, bool isReceived) {
             m_mailId = id;
             m_senderCharId = senderCharId;
             m_senderName = senderName;
@@ -284,6 +286,8 @@ namespace MirRemakeBackend.Network {
             m_title = title;
             m_detail = detail;
             m_itemIdAndNumList = itemIdAndNumList;
+            m_virtualCy = virtualCy;
+            m_chargeCy = chargeCy;
             m_isRead = isRead;
             m_isReceived = isReceived;
         }
@@ -625,6 +629,8 @@ namespace MirRemakeBackend.Network {
                 writer.Put (value.m_itemIdAndNumList[i].Item1);
                 writer.Put (value.m_itemIdAndNumList[i].Item2);
             }
+            writer.Put (value.m_virtualCy);
+            writer.Put (value.m_chargeCy);
             writer.Put (value.m_isRead);
             writer.Put (value.m_isReceived);
         }
@@ -640,9 +646,11 @@ namespace MirRemakeBackend.Network {
             List < (short, short) > itemIdAndNum = new List < (short, short) > (itemCount);
             for (int i = 0; i < itemCount; i++)
                 itemIdAndNum.Add ((reader.GetShort (), reader.GetShort ()));
+            long virtualCy = reader.GetLong ();
+            long chargeCy = reader.GetLong ();
             bool isRead = reader.GetBool ();
             bool isReceived = reader.GetBool ();
-            return new NO_Mail (mailId, senderCharId, senderName, recvCharId, sendTime, title, detail, itemIdAndNum, isRead, isReceived);
+            return new NO_Mail (mailId, senderCharId, senderName, recvCharId, sendTime, title, detail, itemIdAndNum, virtualCy, chargeCy, isRead, isReceived);
         }
     }
 }
