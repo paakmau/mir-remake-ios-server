@@ -96,11 +96,6 @@ namespace MirRemakeBackend {
             EntityManagerInitializer.Init (skillDem, monDem);
             // 角色创建器
             User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, charPosDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
-
-            // TODO: 创建角色
-            // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");
-            // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");
-            // User.s_instance.CommandCreateCharacter (1, 1, OccupationType.WARRIOR, "nzynb!");
         }
         static void InitGameLogic () {
             // GameLogic

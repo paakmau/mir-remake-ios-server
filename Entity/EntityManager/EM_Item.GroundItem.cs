@@ -32,10 +32,11 @@ namespace MirRemakeBackend.Entity {
             s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
             return res;
         }
-        public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndPos) {
+        public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_RepositoryBase repo, short repoPos, Vector2 gndCenterPos) {
             if (num == 0) return;
             E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
             long gndItemId = m_groundItemIdManager.AssignGroundItemId ();
+            Vector2 gndPos = gndCenterPos + new Vector2 (MyRandom.NextFloat (0, 2) - 1, MyRandom.NextFloat (0, 2) - 1);
             if (num >= item.m_num) {
                 // 完全丢弃
                 E_EmptyItem slot = m_itemFactory.GetEmptyItemInstance ();
