@@ -151,6 +151,5 @@ create table `mail`(
   `is_received` int NOT NULL,
   primary key(`mailid`)
 );
-CREATE INDEX `senderid` ON `mail`(`senderid`);
 CREATE INDEX `receiverid` ON `mail`(`receiverid`);
 
