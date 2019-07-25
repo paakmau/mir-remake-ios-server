@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
+
+    // TODO: 做容量检测
     abstract class E_RepositoryBase {
         public abstract ItemPlace m_repositoryPlace { get; }
         public abstract List<E_Item> m_ItemList { get; }
