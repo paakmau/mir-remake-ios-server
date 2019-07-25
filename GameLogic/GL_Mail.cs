@@ -11,10 +11,16 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyShowMailBox (int netId) {
             var mailBox = EM_Mail.s_instance.GetAllMailByNetId (netId);
             if (mailBox == null) return;
-            // TODO:
+            NO_Mail[] mailArr = new NO_Mail[mailBox.Count];
+            for (int i=0; i<mailBox.Count; i++)
+                mailArr[i] = mailBox[i].GetNo ();
+            m_networkService.SendServerCommand (SC_ApplySelfShowMailBox.Instance (netId, mailArr));
         }
         public void CommandApplyReadMail (int netId, int mailId) {
-            // TODO:
+            var mail = EM_Mail.s_instance.GetMailByNetIdAndMailId (netId, mailId);
+            if (mail == null) return;
+            if (mail.m_isRead) return;
+            EM_Mail.s_instance.CharacterReadMail (netId, mail);
         }
         public void CommandApplyReadAllMail (int netId) {
             // TODO: 

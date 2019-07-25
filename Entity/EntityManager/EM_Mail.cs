@@ -39,6 +39,11 @@ namespace MirRemakeBackend.Entity {
                     return mailList[i];
             return null;
         }
+        public void CharacterReadMail (int netId, E_Mail mail) {
+            if (mail.m_isRead) return;
+            mail.m_isRead = true;
+            // m_dds.
+        }
         public void SendMail (int senderCharId, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNum) {
             E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
             mail.Reset (-1, senderCharId, recvCharId, DateTime.Now, title, detail, itemIdAndNum, false, false);
