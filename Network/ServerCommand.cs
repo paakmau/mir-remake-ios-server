@@ -415,17 +415,17 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 发送一个角色的所有属性
     /// </summary>
-    class SC_SendAllCharacterAttribute : SingleToClientServerCommand {
-        private static readonly SC_SendAllCharacterAttribute s_instance = new SC_SendAllCharacterAttribute ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_ALL_CHARACTER_ATTRIBUTE; } }
+    class SC_ApplyShowAllCharacterAttribute : SingleToClientServerCommand {
+        private static readonly SC_ApplyShowAllCharacterAttribute s_instance = new SC_ApplyShowAllCharacterAttribute ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SHOW_ALL_CHARACTER_ATTRIBUTE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.Sequenced; } }
         private NO_AttributeCharacter m_attrChar;
-        public static SC_SendAllCharacterAttribute Instance (int netId, NO_AttributeCharacter attrChar) {
+        public static SC_ApplyShowAllCharacterAttribute Instance (int netId, NO_AttributeCharacter attrChar) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_attrChar = attrChar;
             return s_instance;
         }
-        private SC_SendAllCharacterAttribute () { }
+        private SC_ApplyShowAllCharacterAttribute () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_attrChar);
         }
@@ -571,21 +571,21 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 发送战斗力排行榜
     /// </summary>
-    class SC_SendFightCapacityRank : SingleToClientServerCommand {
-        private static readonly SC_SendFightCapacityRank s_instance = new SC_SendFightCapacityRank ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.SEND_FIGHT_CAPACITY_RANK; } }
+    class SC_ApplyShowFightCapacityRank : SingleToClientServerCommand {
+        private static readonly SC_ApplyShowFightCapacityRank s_instance = new SC_ApplyShowFightCapacityRank ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SHOW_FIGHT_CAPACITY_RANK; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         IReadOnlyList<NO_FightCapacityRankInfo> m_combatEfctRankList;
         int m_myCombatEfct;
         short m_myRank;
-        public static SC_SendFightCapacityRank Instance (int netId, IReadOnlyList<NO_FightCapacityRankInfo> combatEfctRnkList, int myCombatEfct, short myRank) {
+        public static SC_ApplyShowFightCapacityRank Instance (int netId, IReadOnlyList<NO_FightCapacityRankInfo> combatEfctRnkList, int myCombatEfct, short myRank) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_combatEfctRankList = combatEfctRnkList;
             s_instance.m_myCombatEfct = myCombatEfct;
             s_instance.m_myRank = myRank;
             return s_instance;
         }
-        private SC_SendFightCapacityRank () { }
+        private SC_ApplyShowFightCapacityRank () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_combatEfctRankList.Count);
             for (int i = 0; i < m_combatEfctRankList.Count; i++)

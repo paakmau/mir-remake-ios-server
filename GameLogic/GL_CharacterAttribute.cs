@@ -34,7 +34,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandRequireCharacterAttribute (int netId, int tarNetId) {
             E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (tarNetId);
             if (charObj == null) return;
-            m_networkService.SendServerCommand (SC_SendAllCharacterAttribute.Instance (netId, charObj.GetAttrNo ()));
+            m_networkService.SendServerCommand (SC_ApplyShowAllCharacterAttribute.Instance (netId, charObj.GetAttrNo ()));
         }
         public void CommandApplyDistributePoints (int netId, short str, short intl, short agl, short spr) {
             E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
