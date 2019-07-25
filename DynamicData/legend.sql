@@ -144,6 +144,8 @@ create table `mail`(
   `title` VARCHAR(55) NOT NULL,
   `detail` VARCHAR(555) NOT NULL,
   `item_array` VARCHAR(255) NOT NULL,
+  `charge` int NOT NULL,
+  `virtual` int NOT NULL,
   `time` datetime,
   `is_read` int NOT NULL,
   `is_received` int NOT NULL,
