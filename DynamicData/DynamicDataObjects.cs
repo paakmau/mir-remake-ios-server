@@ -76,6 +76,20 @@ namespace MirRemakeBackend.DynamicData {
             m_chargeMoney = chargeMoney;
         }
     }
+    struct DDO_CombatEfct {
+        public int m_charId;
+        public int m_combatEfct;
+        public OccupationType m_ocp;
+        public string m_name;
+        public short m_level;
+        public DDO_CombatEfct (int charId, int combatEfct, OccupationType ocp, string name, short lv) {
+            m_charId = charId;
+            m_combatEfct = combatEfct;
+            m_ocp = ocp;
+            m_name = name;
+            m_level = lv;
+        }
+    }
     struct DDO_EquipmentInfo {
         public long m_realId;
         public int m_characterId;
@@ -156,18 +170,11 @@ namespace MirRemakeBackend.DynamicData {
             m_missionTargetProgressList = misProgList;
         }
     }
-    struct DDO_CombatEfct {
+    struct DDO_Mail {
+        public int m_id;
         public int m_charId;
-        public int m_combatEfct;
-        public OccupationType m_ocp;
-        public string m_name;
-        public short m_level;
-        public DDO_CombatEfct (int charId, int combatEfct, OccupationType ocp, string name, short lv) {
-            m_charId = charId;
-            m_combatEfct = combatEfct;
-            m_ocp = ocp;
-            m_name = name;
-            m_level = lv;
-        }
+        public string m_title;
+        public string m_detail;
+        public (short, short)[] m_itemIdAndNumArr;
     }
 }
