@@ -140,11 +140,13 @@ namespace MirRemakeBackend.Network {
     }
     struct NO_MarketItem {
         public long m_realId;
+        public short m_itemId;
         public short m_onSaleNum;
         public long m_virtualCyPrice;
         public long m_chargeCyPrice;
-        public NO_MarketItem (long realId, short onSaleNum, long virtualCyPrice, long chargeCyPrice) {
+        public NO_MarketItem (long realId, short itemId, short onSaleNum, long virtualCyPrice, long chargeCyPrice) {
             m_realId = realId;
+            m_itemId = itemId;
             m_onSaleNum = onSaleNum;
             m_virtualCyPrice = virtualCyPrice;
             m_chargeCyPrice = chargeCyPrice;
@@ -447,16 +449,18 @@ namespace MirRemakeBackend.Network {
         }
         public static void Put (this NetDataWriter writer, NO_MarketItem marketItem) {
             writer.Put (marketItem.m_realId);
+            writer.Put (marketItem.m_itemId);
             writer.Put (marketItem.m_onSaleNum);
             writer.Put (marketItem.m_virtualCyPrice);
             writer.Put (marketItem.m_chargeCyPrice);
         }
         public static NO_MarketItem GetMarketItem (this NetDataReader reader) {
             long realId = reader.GetLong ();
+            short itemId = reader.GetShort ();
             short onSaleNum = reader.GetShort ();
             long virtualCyPrice = reader.GetLong ();
             long chargeCyPrice = reader.GetLong ();
-            return new NO_MarketItem (realId, onSaleNum, virtualCyPrice, chargeCyPrice);
+            return new NO_MarketItem (realId, itemId, onSaleNum, virtualCyPrice, chargeCyPrice);
         }
         public static void Put (this NetDataWriter writer, NO_MallClass mallClass) {
             writer.Put (mallClass.m_mallClassId);
