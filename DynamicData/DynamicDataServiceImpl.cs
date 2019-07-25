@@ -591,6 +591,7 @@ namespace MirRemakeBackend.DynamicData {
                 mail.m_senderCharId = int.Parse (drs[i]["senderid"].ToString ());
                 mail.m_title = drs[i]["title"].ToString ();
                 mail.m_sendTime = Convert.ToDateTime (drs[i]["time"]);
+                mail.m_senderName=drs[i]["sender_name"].ToString();
                 string[] strings = drs[i]["item_array"].ToString ().Split (',');
                 mail.m_itemIdAndNumArr = new (short, short) [strings.Length];
                 for (int j = 0; j < strings.Length; j++) {
@@ -623,8 +624,8 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 1; i < mail.m_itemIdAndNumArr.Length; i++) {
                 itemArray = string.Format ("{0},{1} {2}", itemArray, mail.m_itemIdAndNumArr[i].Item1, mail.m_itemIdAndNumArr[i].Item2);
             }
-            string cmd = string.Format ("insert into `mail` values(null,{0},{1},\"{2}\",\"{3}\",\"{4}\",\"{5}\",{6},{7});",
-                mail.m_senderCharId, mail.m_receiverCharId, mail.m_title, mail.m_detail, itemArray, mail.m_sendTime.ToString ("yyyy-MM-dd HH:mm:ss"), mail.m_isRead?1 : 0, mail.m_isReceived?1 : 0);
+            string cmd = string.Format ("insert into `mail` values(null,{0},\"1\",{2},\"{3}\",\"{4}\",\"{5}\",\"{6}\",{7},{8});",
+                mail.m_senderCharId, mail.m_senderName,mail.m_receiverCharId, mail.m_title, mail.m_detail, itemArray, mail.m_sendTime.ToString ("yyyy-MM-dd HH:mm:ss"), mail.m_isRead?1 : 0, mail.m_isReceived?1 : 0);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
@@ -637,8 +638,8 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 1; i < mail.m_itemIdAndNumArr.Length; i++) {
                 itemArray = string.Format ("{0},{1} {2}", itemArray, mail.m_itemIdAndNumArr[i].Item1, mail.m_itemIdAndNumArr[i].Item2);
             }
-            string cmd = string.Format ("update `mail` set senderid={0},receiverid={1},`title`=\"{2}\",`detail`=\"{3}\",`time`=\"{4}\",`is_read`={5},`is_received`={6},item_array=\"{7}\" where `mailid`={8};",
-                mail.m_senderCharId, mail.m_receiverCharId, mail.m_title, mail.m_detail,  mail.m_sendTime.ToString ("yyyy-MM-dd HH:mm:ss"), mail.m_isRead?1 : 0, mail.m_isReceived?1 : 0,itemArray,mail.m_id);
+            string cmd = string.Format ("update `mail` set senderid={0},receiverid={1},`title`=\"{2}\",`detail`=\"{3}\",`time`=\"{4}\",`is_read`={5},`is_received`={6},item_array=\"{7}\",sender_name=\"{8}\" where `mailid`={9};",
+                mail.m_senderCharId, mail.m_receiverCharId, mail.m_title, mail.m_detail,  mail.m_sendTime.ToString ("yyyy-MM-dd HH:mm:ss"), mail.m_isRead?1 : 0, mail.m_isReceived?1 : 0,mail.m_senderName,itemArray,mail.m_id);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
