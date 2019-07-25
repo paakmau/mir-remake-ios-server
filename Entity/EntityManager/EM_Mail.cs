@@ -4,6 +4,7 @@ using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
     class EM_Mail : EntityManagerBase {
+        public static EM_Mail s_instance;
         private IDDS_Mail m_dds;
         private Dictionary<int, List<E_Mail>> m_mailDict = new Dictionary<int, List<E_Mail>> ();
         public EM_Mail (IDDS_Mail dds) { m_dds = dds; }
@@ -30,9 +31,17 @@ namespace MirRemakeBackend.Entity {
             m_mailDict.TryGetValue (netId, out res);
             return res;
         }
+        public E_Mail GetMailByNetIdAndMailId (int netId, int mailId) {
+            var mailList = GetAllMailByNetId (netId);
+            if (mailList == null) return null;
+            for (int i = 0; i < mailList.Count; i++)
+                if (mailList[i].m_id == mailId)
+                    return mailList[i];
+            return null;
+        }
         public void SendMail (int senderCharId, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNum) {
             E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
-            mail.Reset (-1, senderCharId, recvCharId, DateTime.Now, title, detail, itemIdAndNum);
+            mail.Reset (-1, senderCharId, recvCharId, DateTime.Now, title, detail, itemIdAndNum, false, false);
             m_dds.InsertMail (mail.GetDdo ());
 
             List<E_Mail> recvMailBox;

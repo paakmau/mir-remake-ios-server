@@ -11,6 +11,8 @@ namespace MirRemakeBackend.Entity {
         public string m_title;
         public string m_detail;
         public List < (short, short) > m_itemIdAndNumList;
+        public bool m_isRead;
+        public bool m_isReceived;
         public void Reset (DDO_Mail ddo) {
             m_id = ddo.m_id;
             m_senderCharId = ddo.m_senderCharId;
@@ -19,8 +21,10 @@ namespace MirRemakeBackend.Entity {
             m_title = ddo.m_title;
             m_detail = ddo.m_detail;
             m_itemIdAndNumList = new List < (short, short) > (ddo.m_itemIdAndNumArr);
+            m_isRead = ddo.m_isRead;
+            m_isReceived = ddo.m_isReceived;
         }
-        public void Reset (int id, int senderCharId, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList) {
+        public void Reset (int id, int senderCharId, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, bool isRead, bool isReceived) {
             m_id = id;
             m_senderCharId = senderCharId;
             m_receiverCharId = recvCharId;
@@ -28,9 +32,11 @@ namespace MirRemakeBackend.Entity {
             m_title = title;
             m_detail = detail;
             m_itemIdAndNumList = itemIdAndNumList;
+            m_isRead = isRead;
+            m_isReceived = isReceived;
         }
         public DDO_Mail GetDdo () {
-            return new DDO_Mail (m_id, m_senderCharId, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList.ToArray ());
+            return new DDO_Mail (m_id, m_senderCharId, m_receiverCharId, m_sendTime, m_title, m_detail, m_itemIdAndNumList.ToArray (), m_isRead, m_isReceived);
         }
     }
 }

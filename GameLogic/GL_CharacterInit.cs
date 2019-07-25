@@ -21,6 +21,8 @@ namespace MirRemakeBackend.GameLogic {
             GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
             // 任务
             GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
+            // 邮箱
+            GL_Mail.s_instance.NotifyInitCharacter (netId, charId);
         }
         public void CommandRemoveCharacter (int netId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
@@ -32,6 +34,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Item.s_instance.NotifyRemoveCharacter (netId);
             GL_Skill.s_instance.NotifyRemoveCharacter (netId);
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);
+            GL_Mail.s_instance.NotifyRemoveCharacter (netId);
         }
     }
 }

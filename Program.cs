@@ -78,14 +78,14 @@ namespace MirRemakeBackend {
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
             IDDS_CombatEfct combatEfctDds = ddsImpl;
-            // TODO: mailDds无初始值
-            IDDS_Mail mailDds = null;
+            IDDS_Mail mailDds = ddsImpl;
             // EntityManager
             EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
             EM_Character.s_instance = new EM_Character (charDem, charDds, charAttrDds, charWalletDds, charPosDds);
-            EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
+            EM_Mail.s_instance = new EM_Mail (mailDds);
+            EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
             EM_Mission.s_instance = new EM_Mission (misDem, misDds);
             EM_Monster.s_instance = new EM_Monster (monDem);
             EM_MonsterSkill.s_instance = new EM_MonsterSkill ();
@@ -108,6 +108,7 @@ namespace MirRemakeBackend {
             GL_CharacterCombatEfct.s_instance = new GL_CharacterCombatEfct (s_networkService);
             GL_CharacterInit.s_instance = new GL_CharacterInit ();
             GL_Item.s_instance = new GL_Item (s_networkService);
+            GL_Mail.s_instance = new GL_Mail (s_networkService);
             GL_Mall.s_instance = new GL_Mall (s_networkService);
             GL_Mission.s_instance = new GL_Mission (s_networkService);
             GL_MissionLog.s_instance = new GL_MissionLog (s_networkService);
@@ -122,7 +123,9 @@ namespace MirRemakeBackend {
                 GL_BossDamage.s_instance,
                 GL_CharacterAction.s_instance,
                 GL_CharacterAttribute.s_instance,
+                // GL_CharacterCombatEfct.s_instance,
                 GL_Item.s_instance,
+                // GL_Mail.s_instance,
                 GL_Mall.s_instance,
                 GL_Mission.s_instance,
                 GL_MissionLog.s_instance,

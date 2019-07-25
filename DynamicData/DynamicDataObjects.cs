@@ -178,7 +178,9 @@ namespace MirRemakeBackend.DynamicData {
         public string m_title;
         public string m_detail;
         public (short, short)[] m_itemIdAndNumArr;
-        public DDO_Mail (int id, int senderCharId, int receiverCharId, DateTime sendTime, string title, string detail, (short, short)[] itemIdAndNum) {
+        public bool m_isRead;
+        public bool m_isReceived;
+        public DDO_Mail (int id, int senderCharId, int receiverCharId, DateTime sendTime, string title, string detail, (short, short)[] itemIdAndNum, bool isRead, bool isReceived) {
             m_id = id;
             m_senderCharId = senderCharId;
             m_receiverCharId = receiverCharId;
@@ -186,6 +188,8 @@ namespace MirRemakeBackend.DynamicData {
             m_title = title;
             m_detail = detail;
             m_itemIdAndNumArr = itemIdAndNum;
+            m_isRead = isRead;
+            m_isReceived = isReceived;
         }
     }
 }
