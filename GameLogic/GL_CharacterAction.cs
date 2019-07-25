@@ -73,7 +73,7 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRespawnHome (E_Character charObj) {
             charObj.Respawn (0.2f);
             // 复活点视野需要考虑
-            m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (new List<int> () { netId }, netId, new Vector2 (42, 24), charObj.m_curHp, charObj.m_curMp));
+            m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (new List<int> () { charObj.m_networkId }, charObj.m_networkId, new Vector2 (42, 24), charObj.m_curHp, charObj.m_curMp));
         }
     }
 }
