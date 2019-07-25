@@ -11,7 +11,7 @@ namespace MirRemakeBackend.Entity {
             if (m_mailDict.ContainsKey (netId)) return;
             List<DDO_Mail> ddoList = m_dds.GetAllMailByReceiverCharacterId (charId);
             List<E_Mail> mailList = new List<E_Mail> (ddoList.Count);
-            for (int i=0; i<ddoList.Count; i++) {
+            for (int i = 0; i < ddoList.Count; i++) {
                 var mail = s_entityPool.m_mailPool.GetInstance ();
                 mail.Reset (ddoList[i]);
                 mailList.Add (mail);
@@ -21,18 +21,26 @@ namespace MirRemakeBackend.Entity {
         public void RemoveCharacter (int netId) {
             List<E_Mail> mailList;
             if (!m_mailDict.TryGetValue (netId, out mailList)) return;
-            for (int i=0; i<mailList.Count; i++)
+            for (int i = 0; i < mailList.Count; i++)
                 s_entityPool.m_mailPool.RecycleInstance (mailList[i]);
             m_mailDict.Remove (netId);
         }
-        public IReadOnlyList<E_Mail> GetAllMailByNetId(int netId) {
+        public IReadOnlyList<E_Mail> GetAllMailByNetId (int netId) {
             List<E_Mail> res;
             m_mailDict.TryGetValue (netId, out res);
             return res;
         }
-        public void SendMail (int senderCharId, int recvNetId, int recvCharId, string title, string details) {
+        public void SendMail (int senderCharId, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNum) {
             E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
-            // mail.Reset (-1, senderCharId, recvCharId, DateTime.Now)
+            mail.Reset (-1, senderCharId, recvCharId, DateTime.Now, title, detail, itemIdAndNum);
+            m_dds.InsertMail (mail.GetDdo ());
+
+            List<E_Mail> recvMailBox;
+            if (m_mailDict.TryGetValue (recvNetId, out recvMailBox)) {
+                recvMailBox.Add (mail);
+            } else {
+                s_entityPool.m_mailPool.RecycleInstance (mail);
+            }
         }
     }
 }
