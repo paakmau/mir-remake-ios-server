@@ -626,20 +626,20 @@ namespace MirRemakeBackend.DynamicData {
             for (int i = 1; i < mail.m_itemIdAndNumArr.Length; i++) {
                 itemArray = string.Format ("{0},{1} {2}", itemArray, mail.m_itemIdAndNumArr[i].Item1, mail.m_itemIdAndNumArr[i].Item2);
             }
-            string cmd = string.Format ("insert into `mail` values(null,{0},\"1\",{2},\"{3}\",\"{4}\",\"{5}\",{6},{7},\"{8}\",{9},{10});",
+            string cmd = string.Format ("insert into `mail` values(null,{0},\"{1}\",{2},\"{3}\",\"{4}\",\"{5}\",{6},{7},\"{8}\",{9},{10});",
                 mail.m_senderCharId, mail.m_senderName,mail.m_receiverCharId, mail.m_title, mail.m_detail, itemArray,mail.m_chargeCy ,mail.m_virtualCy, mail.m_sendTime.ToString ("yyyy-MM-dd HH:mm:ss"), mail.m_isRead?1 : 0, mail.m_isReceived?1 : 0);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool UpdateMailRead (int id,bool isRead) {
-            string cmd = string.Format ("update `mail` set `is_read`={0}` where `mailid`={1}",isRead?1:0,id);
+            string cmd = string.Format ("update `mail` set `is_read`={0} where `mailid`={1}",isRead?1:0,id);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
         public bool UpdateMailReceived(int id,bool isReceived){
-            string cmd = string.Format ("update `mail` set `is_received`={0}` where `mailid`={1}",isReceived?1:0,id);
+            string cmd = string.Format ("update `mail` set `is_received`={0} where `mailid`={1}",isReceived?1:0,id);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;

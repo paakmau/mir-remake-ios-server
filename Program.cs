@@ -149,8 +149,24 @@ namespace MirRemakeBackend {
             IDS_Mall sma = new DS_MallImpl ();
             DynamicDataServiceImpl dma=new DynamicDataServiceImpl();
             dma.DeleteMailBeforeCertainTime(Convert.ToDateTime("2015-03-25 04:00:00"));
-
-
+            /*DDO_Mail m=new DDO_Mail();
+            m.m_senderCharId=1234;
+            m.m_receiverCharId=5678;
+            m.m_title="nmsl";
+            m.m_detail="你说的他们首先是谁，去那里恰，什么时候去的 我一问三不知。";
+            m.m_chargeCy=6324;
+            m.m_virtualCy=10000;
+            m.m_isRead=false;
+            m.m_isReceived=false;
+            m.m_sendTime=Convert.ToDateTime("2016-07-06 14:00:00");
+            m.m_itemIdAndNumArr=new (short,short)[2];
+            m.m_itemIdAndNumArr[0].Item1=1;m.m_itemIdAndNumArr[0].Item2=2;
+            m.m_itemIdAndNumArr[1].Item1=3;m.m_itemIdAndNumArr[1].Item2=4;
+            m.m_senderName="带带大师兄";
+            dma.InsertMail(m);*/
+            DDO_Mail m1=dma.GetAllMailByReceiverCharacterId(5678)[0];
+            dma.UpdateMailRead(m1.m_id,true);
+            dma.UpdateMailReceived(m1.m_id,true);
         }
     }
 }
