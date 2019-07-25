@@ -632,14 +632,14 @@ namespace MirRemakeBackend.DynamicData {
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
-        public bool UpdateMailRead (DDO_Mail mail) {
-            string cmd = string.Format ("update `mail` set `is_read`={}`",mail.m_isRead?1:0);
+        public bool UpdateMailRead (int id,bool isRead) {
+            string cmd = string.Format ("update `mail` set `is_read`={0}` where `mailid`={1}",isRead?1:0,id);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
         }
-        public bool UpdateMailReceived(DDO_Mail mail){
-            string cmd = string.Format ("update `mail` set `is_received`={}`",mail.m_isReceived?1:0);
+        public bool UpdateMailReceived(int id,bool isReceived){
+            string cmd = string.Format ("update `mail` set `is_received`={0}` where `mailid`={1}",isReceived?1:0,id);
             string database = "legend";
             try { pool.ExecuteSql (database, cmd); } catch { return false; }
             return true;
