@@ -134,3 +134,17 @@ create table `mall`(
   primary key (`itemid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX `classid` ON `mall`(`itemid`);
+
+DROP TABLE IF EXISTS `mail`;
+create table `mail`(
+  `mailid` int NOT NULL AUTO_INCREMENT,
+  `senderid` int NOT NULL,
+  `receiverid` int NOT NULL,
+  `title` VARCHAR(55) NOT NULL,
+  `detail` VARCHAR(555) NOT NULL,
+  `item_array` VARCHAR(255) NOT NULL,
+  `time` datetime,
+  primary key(`mailid`)
+);
+CREATE INDEX `senderid` ON `mail`(`senderid`);
+CREATE INDEX `receiverid` ON `mail`(`receiverid`);

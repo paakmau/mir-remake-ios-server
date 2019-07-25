@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute,IDDS_Mail {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -575,6 +575,56 @@ namespace MirRemakeBackend.DynamicData {
             return res;
         }
 
+
+        //MAIL
+        public List<DDO_Mail> GetAllMailByReceiverCharacterId (int charId){
+            string cmd=string.Format("select * from `mail` where `receiverid`={0};",charId);
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            List<DDO_Mail> res=new List<DDO_Mail>();
+            DataRowCollection drs=ds.Tables[0].Rows;
+            for(int i=0;i<drs.Count;i++){
+                DDO_Mail mail=new DDO_Mail();
+                mail.m_receiverCharId=charId;
+                mail.m_id=int.Parse(drs[i]["mailid"].ToString());
+                mail.m_detail=drs[i]["detail"].ToString();
+                mail.m_senderCharId=int.Parse(drs[i]["senderid"].ToString());
+                mail.m_title=drs[i]["title"].ToString();
+                mail.m_sendTime=Convert.ToDateTime(drs[i]["time"]);
+                string[] strings=drs[i]["item_array"].ToString().Split(',');
+                mail.m_itemIdAndNumArr=new (short,short)[strings.Length];
+                for(int j=0;j<strings.Length;j++){
+                    string[] s=strings[j].Split(' ');
+                    mail.m_itemIdAndNumArr[j].Item1=short.Parse(s[0]);
+                    mail.m_itemIdAndNumArr[j].Item2=short.Parse(s[1]);
+                }
+                res.Add(mail);
+            }
+            return res;
+            
+        }
+        public bool DeleteMailById (int id){
+            string cmd=string.Format("delete from `mail` where `mailid`={0};",id);
+            string database="legend";
+            try{pool.ExecuteSql(database,cmd);}catch{return false;}
+            return true;
+        }
+        public bool InsertMail (DDO_Mail mail){
+            string itemArray="";
+            if(mail.m_itemIdAndNumArr.Length!=0){
+                itemArray=string.Format("{0} {1}",mail.m_itemIdAndNumArr[0].Item1,mail.m_itemIdAndNumArr[0].Item2);
+            }
+            for(int i=1;i<mail.m_itemIdAndNumArr.Length;i++){
+                itemArray=string.Format("{0},{1} {2}",itemArray,mail.m_itemIdAndNumArr[i].Item1,mail.m_itemIdAndNumArr[i].Item2);
+            }
+            string cmd=string.Format("insert into `mail` values(null,{0},{1},\"{2}\",\"{3}\",\"{4}\",\"{5}\");",
+                mail.m_senderCharId,mail.m_receiverCharId,mail.m_title,mail.m_detail,itemArray,mail.m_sendTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            string database="legend";
+            try{pool.ExecuteSql(database,cmd);}catch{return false;}
+            return true;
+        }
+
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
@@ -598,5 +648,6 @@ namespace MirRemakeBackend.DynamicData {
             return res;
         }
 
+        
     }
 }
