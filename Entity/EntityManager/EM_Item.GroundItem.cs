@@ -56,7 +56,7 @@ namespace MirRemakeBackend.Entity {
         }
         public void GenerateGroundItem (IReadOnlyList < (short, short) > itemIdAndNumList, int charId, Vector2 centerPos) {
             for (int i = 0; i < itemIdAndNumList.Count; i++) {
-                var pos = centerPos + new Vector2 (0.25f - MyRandom.NextFloat (0, 0.5f), 0.25f - MyRandom.NextFloat (0, 0.5f));
+                var pos = centerPos + new Vector2 (MyRandom.NextFloat (0, 2) - 1, MyRandom.NextFloat (0, 2) - 1);
                 GenerateGroundItem (itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2, charId, pos);
             }
         }
