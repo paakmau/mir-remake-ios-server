@@ -42,11 +42,16 @@ namespace MirRemakeBackend.Entity {
         public void CharacterReadMail (int netId, E_Mail mail) {
             if (mail.m_isRead) return;
             mail.m_isRead = true;
-            // m_dds.
+            m_dds.UpdateMail (mail.GetDdo ());
         }
-        public void SendMail (int senderCharId, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNum) {
+        public void CharacterReceiveMail (int netId, E_Mail mail) {
+            if (mail.m_isReceived) return;
+            mail.m_isReceived = true;
+            m_dds.UpdateMail (mail.GetDdo ());
+        }
+        public void SendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList) {
             E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
-            mail.Reset (-1, senderCharId, recvCharId, DateTime.Now, title, detail, itemIdAndNum, false, false);
+            mail.Reset (-1, senderCharId, senderName, recvCharId, DateTime.Now, title, detail, itemIdAndNumList, false, false);
             m_dds.InsertMail (mail.GetDdo ());
 
             List<E_Mail> recvMailBox;
