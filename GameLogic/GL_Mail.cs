@@ -58,8 +58,8 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRemoveCharacter (int netId) {
             EM_Mail.s_instance.RemoveCharacter (netId);
         }
-        public void NotifySendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList) {
-            EM_Mail.s_instance.SendMail (senderCharId, senderName, recvNetId, recvCharId, title, detail, itemIdAndNumList);
+        public void NotifySendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
+            EM_Mail.s_instance.SendMail (senderCharId, senderName, recvNetId, recvCharId, title, detail, itemIdAndNumList, virtualCy, chargeCy);
         }
     }
 }
