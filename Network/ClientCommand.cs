@@ -300,6 +300,7 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandApplyEnterMarket (netId, holderNetId);
         }
     }
+
     class CC_ApplyBuyItemInMarket : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_BUY_ITEM_IN_MARKET; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -321,6 +322,7 @@ namespace MirRemakeBackend.Network {
             GL_Mission.s_instance.CommandApplyAcceptMission (netId, missionId);
         }
     }
+
     /// <summary>
     /// 交付任务
     /// </summary>
@@ -331,6 +333,7 @@ namespace MirRemakeBackend.Network {
             GL_Mission.s_instance.CommandApplyDeliveryMission (netId, missionId);
         }
     }
+
     /// <summary>
     /// 放弃任务
     /// </summary>
@@ -341,6 +344,7 @@ namespace MirRemakeBackend.Network {
             GL_Mission.s_instance.CommandCancelMission (netId, missionId);
         }
     }
+
     /// <summary>
     /// 与任务Npc交流
     /// </summary>
@@ -352,6 +356,7 @@ namespace MirRemakeBackend.Network {
             GL_Mission.s_instance.CommandApplyTalkToNpc (netId, misId, misTarId);
         }
     }
+
     /// <summary>
     /// 获取商场 常规商品列表
     /// </summary>
@@ -361,6 +366,7 @@ namespace MirRemakeBackend.Network {
             GL_Mall.s_instance.CommandRequireMall (netId);
         }
     }
+
     /// <summary>
     /// 商城物品购买
     /// </summary>
@@ -373,6 +379,7 @@ namespace MirRemakeBackend.Network {
             GL_Mall.s_instance.CommandBuyItemInMall (netId, mallItemId, num, cyType);
         }
     }
+
     /// <summary>
     /// 发送消息  
     /// </summary>
@@ -385,18 +392,58 @@ namespace MirRemakeBackend.Network {
             GL_Chat.s_instance.CommandSendMessage (netId, channel, msg, toNetId);
         }
     }
+
     class CC_ApplyRespawnHome : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_HOME; } }
         public void Execute (NetDataReader reader, int netId) {
             GL_CharacterAction.s_instance.CommandApplyRespawnHome (netId);
         }
     }
+
     class CC_ApplyRespawnPlace : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RESPAWN_PLACE; } }
         public void Execute (NetDataReader reader, int netId) {
             GL_CharacterAction.s_instance.CommandApplyRespawnPlace (netId);
         }
     }
+
+    class CC_ApplyShowMailBox : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SHOW_MAIL_BOX; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Mail.s_instance.CommandApplyShowMailBox (netId);
+        }
+    }
+
+    class CC_ApplyReadMail : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_READ_MAIL; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int mailId = reader.GetInt ();
+            GL_Mail.s_instance.CommandApplyReadMail (netId, mailId);
+        }
+    }
+
+    class CC_ApplyReadAllMail : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_READ_ALL_MAIL; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Mail.s_instance.CommandApplyReadAllMail (netId);
+        }
+    }
+
+    class CC_ApplyReceiveMail : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RECEIVE_MAIL; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int mailId = reader.GetInt ();
+            GL_Mail.s_instance.CommandApplyReceiveMail (netId, mailId);
+        }
+    }
+
+    class CC_ApplyReceiveAllMail : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_RECEIVE_ALL_MAIL; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Mail.s_instance.CommandApplyReceiveAllMail (netId);
+        }
+    }
+
     class CC_TestGainExp : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_EXP; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -404,6 +451,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterAttribute.s_instance.CommandGainExperience (netId, exp);
         }
     }
+
     class CC_TestGainMasterly : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_MASTERLY; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -412,6 +460,7 @@ namespace MirRemakeBackend.Network {
             GL_Skill.s_instance.CommandGainMasterly (netId, skId, masterly);
         }
     }
+
     class CC_TestGainCy : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -420,6 +469,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterAttribute.s_instance.CommandGainCurrency (netId, cyType, cy);
         }
     }
+
     class CC_TestGainItem : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
