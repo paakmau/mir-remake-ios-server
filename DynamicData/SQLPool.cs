@@ -96,6 +96,7 @@ namespace MirRemakeBackend.DynamicData
             try {
                 Execute(cmd, ds);
             } catch (Exception e) {
+                Console.WriteLine(sql);
                 Console.WriteLine (e.StackTrace);
             }
         }
