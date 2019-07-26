@@ -442,8 +442,12 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyCharacterSwapItemPlace (int netId, int charId, E_Bag srcRepo, short srcPos, E_Item srcItem, E_Bag tarRepo, short tarPos, E_Item tarItem) {
             EM_Item.s_instance.CharacterSwapItem (charId, srcRepo, srcPos, srcItem, tarRepo, tarPos, tarItem);
-            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId,
-                new List<NO_Item> { srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos), tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos) }));
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
+                netId,
+                new List<NO_Item> {
+                    srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos),
+                    tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos)
+                }));
             m_netSenderDict[srcItem.m_Type].SendItemInfo (srcItem, netId, m_networkService);
             m_netSenderDict[tarItem.m_Type].SendItemInfo (tarItem, netId, m_networkService);
         }
@@ -540,6 +544,11 @@ namespace MirRemakeBackend.GameLogic {
         private void PickUpGroundItem (int netId, int charId, E_GroundItem gndItem) {
             var bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null) return;
+            // 容量不足
+            if (!bag.CanPutItem (gndItem.m_item.m_ItemId, gndItem.m_item.m_num)) {
+                GL_Chat.s_instance.NotifyPickUpGroundItemBagFullSendMessage (netId);
+                return;
+            }
             List < (short, E_Item) > posAndItemChanged;
             E_Item storeItem;
             short storePos;

@@ -1,8 +1,8 @@
+using System;
 using System.Collections.Generic;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
-    // TODO: 做容量检测
     class E_Bag {
         public virtual ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
         public List<E_Item> m_itemList = new List<E_Item> ();
@@ -73,6 +73,41 @@ namespace MirRemakeBackend.Entity {
             }
             return -2;
         }
+        /// <summary> 判断能否放入物品, 其中 snum 必须小于该物品的 MaxNum </summary>
+        public bool CanPutItem (short itemId, short snum) {
+            for (int i = 0; i < m_itemList.Count; i++)
+                if (m_itemList[i].m_Type == ItemType.EMPTY)
+                    return true;
+            int num = snum;
+            for (int i = 0; i < m_itemList.Count; i++)
+                if (m_itemList[i].m_ItemId == itemId)
+                    num -= (m_itemList[i].m_MaxNum - m_itemList[i].m_num);
+            return num <= 0;
+        }
+        /// <summary> 判断能否放入一组物品, 其中每一个物品的 num 必须小于该物品的 MaxNum </summary>
+        public bool CanPutItems ((short, short) [] itemIdAndNumArr) {
+            int slotNum = 0;
+            for (int i = 0; i < m_itemList.Count; i++)
+                if (m_itemList[i].m_Type == ItemType.EMPTY)
+                    slotNum++;
+            if (slotNum >= itemIdAndNumArr.Length) return true;
+            var idNumMxNumArr = new (short, short, short) [m_itemList.Count];
+            for (int i = 0; i < m_itemList.Count; i++)
+                idNumMxNumArr[i] = (m_itemList[i].m_ItemId, m_itemList[i].m_num, m_itemList[i].m_MaxNum);
+            foreach (var idAndNum in itemIdAndNumArr) {
+                short num = idAndNum.Item2;
+                for (int i = 0; i < idNumMxNumArr.Length; i++) {
+                    if (idNumMxNumArr[i].Item1 != idAndNum.Item1) continue;
+                    short toPut = Math.Min ((short) (idNumMxNumArr[i].Item3 - idNumMxNumArr[i].Item2), num);
+                    idNumMxNumArr[i].Item2 += toPut;
+                    num -= toPut;
+                    if (num == 0) break;
+                }
+                slotNum = (num == 0) ? slotNum : slotNum - 1;
+                if (slotNum < 0) return false;
+            }
+            return true;
+        }
     }
     class E_StoreHouse : E_Bag {
         public override ItemPlace m_repositoryPlace { get { return ItemPlace.STORE_HOUSE; } }
@@ -80,7 +115,8 @@ namespace MirRemakeBackend.Entity {
     class E_EquipmentRegion : E_Bag {
         public override ItemPlace m_repositoryPlace { get { return ItemPlace.EQUIPMENT_REGION; } }
         /// <summary>
-        /// 若找不到，则随机返回一个装备区的 E_EmptyItem
+        /// 返回位置
+        /// 若找不到，则为随机一个装备区的 E_EmptyItem
         /// </summary>
         public short GetEquipmentByEquipPosition (EquipmentPosition eqPos, out E_Item resItem) {
             for (int i = 0; i < m_itemList.Count; i++) {
