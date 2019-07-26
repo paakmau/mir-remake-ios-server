@@ -14,6 +14,7 @@ namespace MirRemakeBackend.GameLogic {
             // 角色
             GL_CharacterAttribute.s_instance.NotifyInitCharacter (newChar);
             GL_CharacterCombatEfct.s_instance.NotifyInitCharacter (newChar);
+            GL_Wallet.s_instance.NotifyInitCharacter (netId, charId);
             // 单位战斗属性
             GL_UnitBattleAttribute.s_instance.NotifyInitCharacter (netId);
             // Sight
@@ -32,6 +33,7 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             GL_CharacterAttribute.s_instance.NotifyRemoveCharacter (netId);
             GL_CharacterCombatEfct.s_instance.NotifyRemoveCharacter (charObj);
+            GL_Wallet.s_instance.NotifyRemoveCharacter (netId);
             GL_UnitBattleAttribute.s_instance.NotifyRemoveCharacter (netId);
             GL_CharacterSight.s_instance.NotifyRemoveCharacter (netId);
             GL_Item.s_instance.NotifyRemoveCharacter (netId);
