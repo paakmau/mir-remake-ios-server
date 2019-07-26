@@ -71,9 +71,9 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandApplyDeliveryMission (int netId, short misId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
             var misObj = EM_Mission.s_instance.GetAcceptedMission (netId, misId);
-            if (misObj == null) return;
+            var bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || misObj == null || bag == null) return;
             if (!misObj.m_IsFinished)
                 return;
             // 移除实例
@@ -82,9 +82,14 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
-            // 其他模块
+            // 钱
             GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charObj.m_characterId, misObj.m_BonusVirtualCurrency);
-            GL_Item.s_instance.NotifyCharacterGainItems (netId, charObj.m_characterId, misObj.m_BonusItemIdAndNumList);
+            // 物品
+            if (bag.CanPutItems (misObj.m_BonusItemIdAndNumList))
+                GL_Item.s_instance.NotifyCharacterGainItems (netId, charObj.m_characterId, bag, misObj.m_BonusItemIdAndNumList);
+            else
+                GL_Mail.s_instance.NotifySendMissionReward (netId, charObj.m_characterId, misObj.m_BonusItemIdAndNumList);
+            // 经验
             GL_CharacterAttribute.s_instance.NotifyGainExperience (charObj, misObj.m_BonusExperience);
         }
         public void CommandCancelMission (int netId, short misId) {

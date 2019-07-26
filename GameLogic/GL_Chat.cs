@@ -31,7 +31,7 @@ namespace MirRemakeBackend.GameLogic {
                     break;
             }
         }
-        public void NotifyBuyMallItemBagFullSendMessage (int netId) {
+        public void NotifyBuyItemBagFullSendToMailBoxSendMessage (int netId) {
             m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 所购商品发送至邮箱"));
         }
         public void NotifyBuyItemBagFullSendMessage (int netId) {
@@ -48,6 +48,9 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyMissionRewardBagFullSendMessage (int netId) {
             m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 任务报酬发送至邮箱"));
+        }
+        public void NotifyReceiveMailBagFullSendMessage (int netId) {
+            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 邮件领取失败"));
         }
     }
 }

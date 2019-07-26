@@ -85,19 +85,19 @@ namespace MirRemakeBackend.Entity {
             return num <= 0;
         }
         /// <summary> 判断能否放入一组物品, 其中每一个物品的 num 必须小于该物品的 MaxNum </summary>
-        public bool CanPutItems ((short, short) [] itemIdAndNumArr) {
+        public bool CanPutItems (IReadOnlyList < (short, short) > itemIdAndNumList) {
             int slotNum = 0;
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_Type == ItemType.EMPTY)
                     slotNum++;
-            if (slotNum >= itemIdAndNumArr.Length) return true;
+            if (slotNum >= itemIdAndNumList.Count) return true;
             var idNumMxNumArr = new (short, short, short) [m_itemList.Count];
             for (int i = 0; i < m_itemList.Count; i++)
                 idNumMxNumArr[i] = (m_itemList[i].m_ItemId, m_itemList[i].m_num, m_itemList[i].m_MaxNum);
-            foreach (var idAndNum in itemIdAndNumArr) {
-                short num = idAndNum.Item2;
+            for (int k = 0; k < itemIdAndNumList.Count; k++) {
+                short num = itemIdAndNumList[k].Item2;
                 for (int i = 0; i < idNumMxNumArr.Length; i++) {
-                    if (idNumMxNumArr[i].Item1 != idAndNum.Item1) continue;
+                    if (idNumMxNumArr[i].Item1 != itemIdAndNumList[k].Item1) continue;
                     short toPut = Math.Min ((short) (idNumMxNumArr[i].Item3 - idNumMxNumArr[i].Item2), num);
                     idNumMxNumArr[i].Item2 += toPut;
                     num -= toPut;

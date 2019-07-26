@@ -29,7 +29,7 @@ namespace MirRemakeBackend.Entity {
             m_isRead = ddo.m_isRead;
             m_isReceived = ddo.m_isReceived;
         }
-        public void Reset (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, List < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy, bool isRead, bool isReceived) {
+        public void Reset (int id, int senderCharId, string senderName, int recvCharId, DateTime sendTime, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy, bool isRead, bool isReceived) {
             m_id = id;
             m_senderCharId = senderCharId;
             m_senderName = senderName;
@@ -37,7 +37,7 @@ namespace MirRemakeBackend.Entity {
             m_sendTime = sendTime;
             m_title = title;
             m_detail = detail;
-            m_itemIdAndNumList = itemIdAndNumList;
+            m_itemIdAndNumList = new List < (short, short) > (itemIdAndNumList);
             m_virtualCy = virtualCy;
             m_chargeCy = chargeCy;
             m_isRead = isRead;
