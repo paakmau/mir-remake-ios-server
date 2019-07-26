@@ -111,13 +111,26 @@ namespace MirRemakeBackend.GameLogic {
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             var wallet = EM_Wallet.s_instance.GetWallet (netId);
             if (charId == -1 || bag == null || wallet.Item1 == -1) return;
+            // 背包容量不足
+            if (!bag.CanPutItem (itemId, num)) {
+                GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
+                return;
+            }
+            // 货币不正确
             long needCy = EM_Item.s_instance.GetItemBuyPrice (itemId);
-            if (needCy == -1) return;
+            if (needCy == -1) {
+                GL_Chat.s_instance.NotifyBuyItemCyErrSendMessage (netId);
+                return;
+            }
+            // 货币不足
             needCy *= num;
             long charCy = wallet.Item2;
-            if (charCy < needCy) return;
+            if (charCy < needCy) {
+                GL_Chat.s_instance.NotifyBuyItemShortOfCySendMessage (netId);
+                return;
+            }
             GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
-            NotifyCharacterGainItem (netId, charId, itemId, num);
+            NotifyCharacterGainItem (netId, charId, bag, itemId, num);
         }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
@@ -134,9 +147,10 @@ namespace MirRemakeBackend.GameLogic {
             GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, virCy);
         }
         public void CommandTestGainItem (int netId, short itemId, short num) {
-            var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
-            if (charObj == null) return;
-            NotifyCharacterGainItem (netId, charObj.m_characterId, itemId, num);
+            var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
+            var bag = EM_Item.s_instance.GetBag (netId);
+            if (charId == -1 || bag == null) return;
+            NotifyCharacterGainItem (netId, charId, bag, itemId, num);
         }
         public void CommandApplyAutoPickUpOn (int netId) {
             EM_Item.s_instance.AutoPickOn (netId);
@@ -452,16 +466,12 @@ namespace MirRemakeBackend.GameLogic {
             m_netSenderDict[srcItem.m_Type].SendItemInfo (srcItem, netId, m_networkService);
             m_netSenderDict[tarItem.m_Type].SendItemInfo (tarItem, netId, m_networkService);
         }
-        public void NotifyCharacterGainItems (int netId, int charId, IReadOnlyList < (short, short) > itemIdAndNumList) {
+        public void NotifyCharacterGainItems (int netId, int charId, E_Bag bag, IReadOnlyList < (short, short) > itemIdAndNumList) {
             if (itemIdAndNumList.Count == 0) return;
-            var bag = EM_Item.s_instance.GetBag (netId);
-            if (bag == null) return;
             for (int i = 0; i < itemIdAndNumList.Count; i++)
-                NotifyCharacterGainItem (netId, charId, itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2);
+                NotifyCharacterGainItem (netId, charId, bag, itemIdAndNumList[i].Item1, itemIdAndNumList[i].Item2);
         }
-        public void NotifyCharacterGainItem (int netId, int charId, short itemId, short itemNum) {
-            var bag = EM_Item.s_instance.GetBag (netId);
-            if (bag == null) return;
+        public void NotifyCharacterGainItem (int netId, int charId, E_Bag bag, short itemId, short itemNum) {
             List < (short, E_Item) > changedItemList;
             E_Item storeItem;
             short storePos;
