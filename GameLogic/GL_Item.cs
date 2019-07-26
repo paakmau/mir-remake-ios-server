@@ -180,12 +180,14 @@ namespace MirRemakeBackend.GameLogic {
             var eq = bag.GetItemByRealId (realId, out posInBag) as E_EquipmentItem;
             if (eq == null) return;
             // 该位置原有装备卸下
-            var oriEq = eqRegion.GetEquipmentByEquipPosition (eq.m_EquipmentPosition);
-            if (oriEq.m_Type == ItemType.EQUIPMENT)
-                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriEq as E_EquipmentItem, -1));
+            E_Item oriItem;
+            short oriPos = eqRegion.GetEquipmentByEquipPosition (eq.m_EquipmentPosition, out oriItem);
+            if (oriPos < 0 || oriItem == null) return;
+            if (oriItem.m_Type == ItemType.EQUIPMENT)
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriItem as E_EquipmentItem, -1));
             // 装备穿上Attr
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, 1));
-            NotifyCharacterSwapItemPlace (charObj.m_networkId, charObj.m_characterId, eqRegion, (short) eq.m_EquipmentPosition, oriEq, bag, posInBag, eq);
+            NotifyCharacterSwapItemPlace (charObj.m_networkId, charObj.m_characterId, eqRegion, oriPos, oriItem, bag, posInBag, eq);
             // client
             m_networkService.SendServerCommand (SC_ApplyAllChangeEquipment.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), eq.m_ItemId));
         }

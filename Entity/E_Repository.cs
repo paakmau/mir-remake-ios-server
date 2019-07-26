@@ -30,27 +30,10 @@ namespace MirRemakeBackend.Entity {
             resPos = -1;
             return null;
         }
-        public E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
-            for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_realId == realId) {
-                    var res = m_itemList[i];
-                    m_itemList[i] = empty;
-                    return res;
-                }
-            return null;
-        }
         public void SetItem (E_Item item, short pos) {
             if (m_itemList.Count <= pos)
                 return;
             m_itemList[pos] = item;
-        }
-        public bool RemoveItemByPosition (int pos, E_EmptyItem empty) {
-            if (m_itemList.Count <= pos)
-                return false;
-            if (m_itemList[pos].m_IsEmpty)
-                return false;
-            m_itemList[pos] = empty;
-            return true;
         }
         /// <summary>
         /// 存储一个Item  
@@ -99,34 +82,22 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 若找不到，则随机返回一个装备区的 E_EmptyItem
         /// </summary>
-        public E_Item GetEquipmentByEquipPosition (EquipmentPosition eqPos) {
+        public short GetEquipmentByEquipPosition (EquipmentPosition eqPos, out E_Item resItem) {
             for (int i = 0; i < m_itemList.Count; i++) {
                 var eq = m_itemList[i] as E_EquipmentItem;
                 if (eq == null) continue;
-                if (eq.m_EquipmentPosition == eqPos)
-                    return eq;
+                if (eq.m_EquipmentPosition == eqPos) {
+                    resItem = eq;
+                    return (short) i;
+                }
             }
             for (int i = 0; i < m_itemList.Count; i++)
-                if ((m_itemList[i].m_Type == ItemType.EMPTY))
-                    return m_itemList[i];
-            return null;
-        }
-        /// <summary>
-        /// 返回卸下的原装备
-        /// </summary>
-        public E_EquipmentItem PutOnEquipment (E_EquipmentItem eq) {
-            int oriPos = -1;
-            E_Item res = null;
-            for (int i = 0; i < m_itemList.Count; i++)
-                if ((m_itemList[i] as E_EquipmentItem).m_EquipmentPosition == eq.m_EquipmentPosition) {
-                    oriPos = i;
-                    res = m_itemList[i];
+                if ((m_itemList[i].m_Type == ItemType.EMPTY)) {
+                    resItem = m_itemList[i];
+                    return (short) i;
                 }
-            if (oriPos != -1)
-                m_itemList[oriPos] = eq;
-            else
-                m_itemList.Add (eq);
-            return res as E_EquipmentItem;
+            resItem = null;
+            return -3;
         }
     }
 }
