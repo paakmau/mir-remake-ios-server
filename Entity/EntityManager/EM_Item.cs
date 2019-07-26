@@ -76,12 +76,12 @@ namespace MirRemakeBackend.Entity {
             m_equipmentRegionDict.Remove (netId);
             AutoPickOff (netId);
             // 回收
-            for (int i = 0; i < bag.m_ItemList.Count; i++)
-                m_itemFactory.RecycleItem (bag.m_ItemList[i]);
-            for (int i = 0; i < storeHouse.m_ItemList.Count; i++)
-                m_itemFactory.RecycleItem (storeHouse.m_ItemList[i]);
-            for (int i = 0; i < equiped.m_ItemList.Count; i++)
-                m_itemFactory.RecycleItem (equiped.m_ItemList[i]);
+            for (int i = 0; i < bag.m_itemList.Count; i++)
+                m_itemFactory.RecycleItem (bag.m_itemList[i]);
+            for (int i = 0; i < storeHouse.m_itemList.Count; i++)
+                m_itemFactory.RecycleItem (storeHouse.m_itemList[i]);
+            for (int i = 0; i < equiped.m_itemList.Count; i++)
+                m_itemFactory.RecycleItem (equiped.m_itemList[i]);
             s_entityPool.m_bagPool.RecycleInstance (bag);
             s_entityPool.m_storeHousePool.RecycleInstance (storeHouse);
             s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);

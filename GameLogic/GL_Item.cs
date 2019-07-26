@@ -296,8 +296,8 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyAutoDisjointEquipment (int netId, byte qualities) {
             E_Bag bag = EM_Item.s_instance.GetBag (netId);
             if (bag == null) return;
-            var itemList = bag.m_ItemList;
-            var realIdList = new List<long> (bag.m_ItemList.Count);
+            var itemList = bag.m_itemList;
+            var realIdList = new List<long> (itemList.Count);
             for (int i = 0; i < itemList.Count; i++)
                 if (itemList[i].m_Type == ItemType.EQUIPMENT && ((byte) itemList[i].m_Quality & qualities) != 0)
                     realIdList.Add (itemList[i].m_realId);
@@ -508,7 +508,7 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyCharacterDropLegacy (E_Character charObj, E_Unit killer) {
             var charBag = EM_Item.s_instance.GetBag (charObj.m_networkId);
             if (charBag == null) return;
-            var bagItemList = charBag.m_ItemList;
+            var bagItemList = charBag.m_itemList;
             for (int i = 0; i < bagItemList.Count; i++) {
                 int dropFlag = MyRandom.NextInt (1, 1001);
                 if (dropFlag >= 25) continue;

@@ -5,14 +5,13 @@ namespace MirRemakeBackend.Entity {
     // TODO: 做容量检测
     class E_Bag {
         public virtual ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
-        protected List<E_Item> m_itemList = new List<E_Item> ();
-        public virtual List<E_Item> m_ItemList { get { return m_itemList; } }
-        public virtual void Reset (E_Item[] itemArr) {
+        public List<E_Item> m_itemList = new List<E_Item> ();
+        public void Reset (E_Item[] itemArr) {
             m_itemList.Clear ();
             foreach (var item in itemArr)
                 m_itemList.Add (item);
         }
-        public virtual NO_Repository GetNo () {
+        public NO_Repository GetNo () {
             var itemNoList = new List<NO_Item> (m_itemList.Count);
             var equipInfoNoList = new List<NO_EquipmentItemInfo> ();
             for (int i = 0; i < m_itemList.Count; i++) {
@@ -21,17 +20,6 @@ namespace MirRemakeBackend.Entity {
                     equipInfoNoList.Add (((E_EquipmentItem) m_itemList[i]).GetEquipmentInfoNo ());
             }
             return new NO_Repository (itemNoList, equipInfoNoList);
-        }
-        public virtual E_Item GetItemByRealId (long realId) {
-            for (int i = 0; i < m_itemList.Count; i++)
-                if (m_itemList[i].m_realId == realId)
-                    return m_itemList[i];
-            return null;
-        }
-        public virtual E_Item GetItemByPosition (short pos) {
-            if (m_itemList.Count <= pos)
-                return null;
-            return m_itemList[pos];
         }
         public E_Item GetItemByRealId (long realId, out short resPos) {
             for (short i = 0; i < m_itemList.Count; i++)
@@ -42,7 +30,7 @@ namespace MirRemakeBackend.Entity {
             resPos = -1;
             return null;
         }
-        public virtual E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
+        public E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId) {
                     var res = m_itemList[i];
@@ -51,7 +39,7 @@ namespace MirRemakeBackend.Entity {
                 }
             return null;
         }
-        public virtual void SetItem (E_Item item, short pos) {
+        public void SetItem (E_Item item, short pos) {
             if (m_itemList.Count <= pos)
                 return;
             m_itemList[pos] = item;

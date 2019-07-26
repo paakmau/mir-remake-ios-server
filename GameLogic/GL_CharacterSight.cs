@@ -53,7 +53,7 @@ namespace MirRemakeBackend.GameLogic {
                             newMonNoList.Add (((E_Monster) charNowSight[i]).GetNo ());
                             break;
                         case ActorUnitType.PLAYER:
-                            var eqList = EM_Item.s_instance.GetEquiped (charNowSight[i].m_networkId).m_ItemList;
+                            var eqList = EM_Item.s_instance.GetEquiped (charNowSight[i].m_networkId).m_itemList;
                             List<short> eqIdList = new List<short> (eqList.Count);
                             for (int j = 0; j < eqList.Count; j++)
                                 eqIdList.Add (eqList[j].m_ItemId);
