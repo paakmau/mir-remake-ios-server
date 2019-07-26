@@ -63,7 +63,8 @@ namespace MirRemakeBackend.GameLogic {
                         }
                     }
                     for (int i = 0; i < t_autoPickItemList.Count; i++)
-                        PickUpGroundItem (netId, charObj.m_characterId, t_autoPickItemList[i]);
+                        if (!PickUpGroundItem (netId, charObj.m_characterId, t_autoPickItemList[i]))
+                            newSight.Add (t_autoPickItemList[i]);
 
                     charDspprItemIdList.Clear ();
                     charShowItemList.Clear ();
@@ -541,13 +542,13 @@ namespace MirRemakeBackend.GameLogic {
             }
             return res;
         }
-        private void PickUpGroundItem (int netId, int charId, E_GroundItem gndItem) {
+        private bool PickUpGroundItem (int netId, int charId, E_GroundItem gndItem) {
             var bag = EM_Item.s_instance.GetBag (netId);
-            if (bag == null) return;
+            if (bag == null) return false;
             // 容量不足
             if (!bag.CanPutItem (gndItem.m_item.m_ItemId, gndItem.m_item.m_num)) {
                 GL_Chat.s_instance.NotifyPickUpGroundItemBagFullSendMessage (netId);
-                return;
+                return false;
             }
             List < (short, E_Item) > posAndItemChanged;
             E_Item storeItem;
@@ -569,6 +570,7 @@ namespace MirRemakeBackend.GameLogic {
                 // 附加信息 (装备等) client
                 m_netSenderDict[storeItem.m_Type].SendItemInfo (storeItem, netId, m_networkService);
             }
+            return true;
         }
     }
 }
