@@ -2,32 +2,17 @@ using System.Collections.Generic;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
-
     // TODO: 做容量检测
-    abstract class E_RepositoryBase {
-        public abstract ItemPlace m_repositoryPlace { get; }
-        public abstract List<E_Item> m_ItemList { get; }
-        public abstract void Reset (E_Item[] itemArr);
-        public abstract void SetItem (E_Item item, short pos);
-        public abstract NO_Repository GetNo ();
-        public abstract E_Item GetItemByRealId (long realId);
-        public abstract E_Item GetItemByPosition (short pos);
-        /// <summary>
-        /// 从背包移除整格物品  
-        /// 成功返回true
-        /// </summary>
-        public abstract E_Item RemoveItemByRealId (long realId, E_EmptyItem empty);
-    }
-    class E_Bag : E_RepositoryBase {
-        public override ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
+    class E_Bag {
+        public virtual ItemPlace m_repositoryPlace { get { return ItemPlace.BAG; } }
         protected List<E_Item> m_itemList = new List<E_Item> ();
-        public override List<E_Item> m_ItemList { get { return m_itemList; } }
-        public override void Reset (E_Item[] itemArr) {
+        public virtual List<E_Item> m_ItemList { get { return m_itemList; } }
+        public virtual void Reset (E_Item[] itemArr) {
             m_itemList.Clear ();
             foreach (var item in itemArr)
                 m_itemList.Add (item);
         }
-        public override NO_Repository GetNo () {
+        public virtual NO_Repository GetNo () {
             var itemNoList = new List<NO_Item> (m_itemList.Count);
             var equipInfoNoList = new List<NO_EquipmentItemInfo> ();
             for (int i = 0; i < m_itemList.Count; i++) {
@@ -37,13 +22,13 @@ namespace MirRemakeBackend.Entity {
             }
             return new NO_Repository (itemNoList, equipInfoNoList);
         }
-        public override E_Item GetItemByRealId (long realId) {
+        public virtual E_Item GetItemByRealId (long realId) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId)
                     return m_itemList[i];
             return null;
         }
-        public override E_Item GetItemByPosition (short pos) {
+        public virtual E_Item GetItemByPosition (short pos) {
             if (m_itemList.Count <= pos)
                 return null;
             return m_itemList[pos];
@@ -57,7 +42,7 @@ namespace MirRemakeBackend.Entity {
             resPos = -1;
             return null;
         }
-        public override E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
+        public virtual E_Item RemoveItemByRealId (long realId, E_EmptyItem empty) {
             for (int i = 0; i < m_itemList.Count; i++)
                 if (m_itemList[i].m_realId == realId) {
                     var res = m_itemList[i];
@@ -66,7 +51,7 @@ namespace MirRemakeBackend.Entity {
                 }
             return null;
         }
-        public override void SetItem (E_Item item, short pos) {
+        public virtual void SetItem (E_Item item, short pos) {
             if (m_itemList.Count <= pos)
                 return;
             m_itemList[pos] = item;

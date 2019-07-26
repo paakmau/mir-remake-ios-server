@@ -32,9 +32,9 @@ namespace MirRemakeBackend.Entity {
         public void InitCharacter (
             int netId,
             int charId,
-            out E_RepositoryBase bag,
-            out E_RepositoryBase storeHouse,
-            out E_RepositoryBase eqRegion
+            out E_Bag bag,
+            out E_StoreHouse storeHouse,
+            out E_EquipmentRegion eqRegion
         ) {
             // 若角色已经初始化
             if (m_bagDict.ContainsKey (netId)) {
@@ -130,7 +130,7 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 返回pos处现在的item
         /// </summary>
-        public E_Item CharacterLoseItem (E_Item item, short num, int charId, E_RepositoryBase repo, short pos) {
+        public E_Item CharacterLoseItem (E_Item item, short num, int charId, E_Bag repo, short pos) {
             // 移除num个该物品
             bool runOut = item.RemoveNum (num);
             long realId = item.m_realId;
@@ -147,7 +147,7 @@ namespace MirRemakeBackend.Entity {
         /// 会回收 item  
         /// 返回该位置的 slot  
         /// </summary>
-        public E_Item CharacterLoseWholeItem (E_Item item, int charId, E_RepositoryBase repo, short pos) {
+        public E_Item CharacterLoseWholeItem (E_Item item, int charId, E_Bag repo, short pos) {
             // 持久层
             m_ddh.Delete (item);
             var emptyItem = m_itemFactory.GetEmptyItemInstance ();
@@ -157,7 +157,7 @@ namespace MirRemakeBackend.Entity {
             repo.SetItem (emptyItem, pos);
             return emptyItem;
         }
-        public void CharacterSwapItem (int charId, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
+        public void CharacterSwapItem (int charId, E_Bag srcRepo, short srcPos, E_Item srcItem, E_Bag tarRepo, short tarPos, E_Item tarItem) {
             srcRepo.SetItem (tarItem, srcPos);
             tarRepo.SetItem (srcItem, tarPos);
             CharacterUpdateItem (tarItem, charId, srcRepo.m_repositoryPlace, srcPos);

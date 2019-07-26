@@ -419,7 +419,9 @@ namespace MirRemakeBackend.GameLogic {
 
         }
         public void NotifyInitCharacter (int netId, int charId) {
-            E_RepositoryBase bag, storeHouse, eqRegion;
+            E_Bag bag;
+            E_StoreHouse storeHouse;
+            E_EquipmentRegion eqRegion;
             EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
             // client
             m_networkService.SendServerCommand (SC_InitSelfItem.Instance (netId, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
@@ -430,13 +432,13 @@ namespace MirRemakeBackend.GameLogic {
         /// <summary>
         /// 失去确定位置的物品
         /// </summary>
-        public void NotifyCharacterLoseItem (int netId, int charId, E_Item item, short num, short pos, E_RepositoryBase repo) {
+        public void NotifyCharacterLoseItem (int netId, int charId, E_Item item, short num, short pos, E_Bag repo) {
             item = EM_Item.s_instance.CharacterLoseItem (item, num, charId, repo, pos);
             // Client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (
                 netId, new List<NO_Item> { item.GetItemNo (repo.m_repositoryPlace, pos) }));
         }
-        public void NotifyCharacterSwapItemPlace (int netId, int charId, E_RepositoryBase srcRepo, short srcPos, E_Item srcItem, E_RepositoryBase tarRepo, short tarPos, E_Item tarItem) {
+        public void NotifyCharacterSwapItemPlace (int netId, int charId, E_Bag srcRepo, short srcPos, E_Item srcItem, E_Bag tarRepo, short tarPos, E_Item tarItem) {
             EM_Item.s_instance.CharacterSwapItem (charId, srcRepo, srcPos, srcItem, tarRepo, tarPos, tarItem);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId,
                 new List<NO_Item> { srcItem.GetItemNo (tarRepo.m_repositoryPlace, tarPos), tarItem.GetItemNo (srcRepo.m_repositoryPlace, srcPos) }));
