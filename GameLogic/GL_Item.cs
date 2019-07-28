@@ -390,6 +390,8 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < market.m_itemList.Count; i++)
                 marketNo.Add (market.m_itemList[i].GetNo ());
             m_networkService.SendServerCommand (SC_ApplySelfEnterOtherMarket.Instance (netId, holderNetId, holder.m_name, marketNo));
+            for (int i=0; i<market.m_itemList.Count; i++)
+                m_netSenderDict[market.m_itemList[i].m_item.m_Type].SendMarketItemInfo (market.m_itemList[i].m_item, netId, holderNetId, m_networkService);
         }
         public void CommandApplyBuyItemInMarket (int buyerNetId, int holderNetId, long itemRealId, short num, CurrencyType cyType) {
             if (num == 0) return;
