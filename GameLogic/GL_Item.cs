@@ -377,6 +377,7 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < market.m_itemList.Count; i++)
                 marketNo.Add (market.m_itemList[i].GetNo ());
             m_networkService.SendServerCommand (SC_ApplySelfSetUpMarket.Instance (netId, marketNo));
+            m_networkService.SendServerCommand (SC_ApplyOtherSetUpMarket.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, false), netId));
         }
         public void CommandApplyPackUpMarket (int netId) {
             EM_Item.s_instance.CharacterPackUpMarket (netId);

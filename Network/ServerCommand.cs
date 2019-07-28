@@ -899,13 +899,13 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 其他玩家开摊
     /// </summary>
-    class SC_ApplyOtherSetUpMarket : SingleToClientServerCommand {
+    class SC_ApplyOtherSetUpMarket : ServerCommandBase {
         private static SC_ApplyOtherSetUpMarket s_instance = new SC_ApplyOtherSetUpMarket ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_SET_UP_MARKET; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_holderNetId;
-        public static SC_ApplyOtherSetUpMarket Instance (int netId, int holderNetId) {
-            s_instance.ResetToClientNetId (netId);
+        public static SC_ApplyOtherSetUpMarket Instance (List<int> toNetIdList, int holderNetId) {
+            s_instance.m_toClientList = toNetIdList;
             s_instance.m_holderNetId = holderNetId;
             return s_instance;
         }
