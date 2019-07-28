@@ -26,13 +26,14 @@ namespace MirRemakeBackend.Entity {
         public bool GetCharacterMarketing (int netId) {
             return m_marketDict.ContainsKey (netId);
         }
-        public void CharacterSetUpMarket (int netId, (long, short, long, long) [] itemToSellArr, out E_Market resMarket) {
+        public void CharacterSetUpMarket (int netId, IReadOnlyList < (long, short, long, long) > itemToSellList, out E_Market resMarket) {
             resMarket = null;
             if (m_marketDict.ContainsKey (netId)) return;
             var bag = GetBag (netId);
             if (bag == null) return;
-            var marketItemList = new List<E_MarketItem> (itemToSellArr.Length);
-            foreach (var item in itemToSellArr) {
+            var marketItemList = new List<E_MarketItem> (itemToSellList.Count);
+            for (int i = 0; i < itemToSellList.Count; i++) {
+                var item = itemToSellList[i];
                 short bagPos;
                 var itemObj = bag.GetItemByRealId (item.Item1, out bagPos);
                 if (itemObj == null) continue;

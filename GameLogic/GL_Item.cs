@@ -367,11 +367,15 @@ namespace MirRemakeBackend.GameLogic {
             m_netSenderDict[ecmt.m_Type].SendItemInfo (ecmt, netId, m_networkService);
         }
         public void CommandApplyPSetUpMarket (int netId, IReadOnlyList<NO_MarketItem> marketItemNoList) {
-            var itemToSellArr = new (long, short, long, long) [marketItemNoList.Count];
-            for (int i = 0; i < marketItemNoList.Count; i++)
-                itemToSellArr[i] = (marketItemNoList[i].m_realId, marketItemNoList[i].m_onSaleNum, marketItemNoList[i].m_virtualCyPrice, marketItemNoList[i].m_chargeCyPrice);
+            var itemToSellList = new List < (long, short, long, long) > (marketItemNoList.Count);
+            for (int i = 0; i < marketItemNoList.Count; i++) {
+                var no = marketItemNoList[i];
+                if (no.m_onSaleNum == 0 || (no.m_chargeCyPrice == -1 && no.m_virtualCyPrice == -1))
+                    continue;
+                itemToSellList.Add ((no.m_realId, no.m_onSaleNum, no.m_virtualCyPrice, no.m_chargeCyPrice));
+            }
             E_Market market;
-            EM_Item.s_instance.CharacterSetUpMarket (netId, itemToSellArr, out market);
+            EM_Item.s_instance.CharacterSetUpMarket (netId, itemToSellList, out market);
             if (market == null) return;
             List<NO_MarketItem> marketNo = new List<NO_MarketItem> (market.m_itemList.Count);
             for (int i = 0; i < market.m_itemList.Count; i++)
@@ -391,7 +395,7 @@ namespace MirRemakeBackend.GameLogic {
             for (int i = 0; i < market.m_itemList.Count; i++)
                 marketNo.Add (market.m_itemList[i].GetNo ());
             m_networkService.SendServerCommand (SC_ApplySelfEnterOtherMarket.Instance (netId, holderNetId, holder.m_name, marketNo));
-            for (int i=0; i<market.m_itemList.Count; i++)
+            for (int i = 0; i < market.m_itemList.Count; i++)
                 m_netSenderDict[market.m_itemList[i].m_item.m_Type].SendMarketItemInfo (market.m_itemList[i].m_item, netId, holderNetId, m_networkService);
         }
         public void CommandApplyBuyItemInMarket (int buyerNetId, int holderNetId, long itemRealId, short num, CurrencyType cyType) {

@@ -22,9 +22,13 @@ namespace MirRemakeBackend {
 
             //     return;
             // }
+            Console.WriteLine ("服务端开始初始化");
             s_networkService = new NetworkService ();
+            Console.WriteLine ("初始化实体管理器");
             InitEntityManager ();
+            Console.WriteLine ("初始化游戏逻辑");
             InitGameLogic ();
+            Console.WriteLine ("初始化完成");
 
             DateTime time = DateTime.Now;
             float netFrameTimer = 0f;
