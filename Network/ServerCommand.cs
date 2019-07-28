@@ -962,6 +962,50 @@ namespace MirRemakeBackend.Network {
     }
 
     /// <summary>
+    /// 更新装备信息
+    /// </summary>
+    class SC_ApplyOtherUpdateMarketEquipment : SingleToClientServerCommand {
+        private static SC_ApplyOtherUpdateMarketEquipment s_instance = new SC_ApplyOtherUpdateMarketEquipment ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_UPDATE_MARKET_EQUIPMENT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        int m_holderNetId;
+        NO_EquipmentItemInfo m_eqInfo;
+        public static SC_ApplyOtherUpdateMarketEquipment Instance (int netId, int holderNetId, NO_EquipmentItemInfo eqInfo) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_holderNetId = holderNetId;
+            s_instance.m_eqInfo = eqInfo;
+            return s_instance;
+        }
+        private SC_ApplyOtherUpdateMarketEquipment () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_holderNetId);
+            writer.Put (m_eqInfo);
+        }
+    }
+
+    /// <summary>
+    /// 更新附魔符信息
+    /// </summary>
+    class SC_ApplyOtherUpdateMarketEnchantment : SingleToClientServerCommand {
+        private static SC_ApplyOtherUpdateMarketEnchantment s_instance = new SC_ApplyOtherUpdateMarketEnchantment ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_OTHER_UPDATE_MARKET_EQUIPMENT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        int m_holderNetId;
+        NO_EnchantmentItemInfo m_ecmtInfo;
+        public static SC_ApplyOtherUpdateMarketEnchantment Instance (int netId, int holderNetId, NO_EnchantmentItemInfo ecmtInfo) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_holderNetId = holderNetId;
+            s_instance.m_ecmtInfo = ecmtInfo;
+            return s_instance;
+        }
+        private SC_ApplyOtherUpdateMarketEnchantment () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_holderNetId);
+            writer.Put (m_ecmtInfo);
+        }
+    }
+
+    /// <summary>
     /// other market update
     /// </summary>
     class SC_ApplyOtherUpdateMarketItem : SingleToClientServerCommand {
@@ -1181,7 +1225,7 @@ namespace MirRemakeBackend.Network {
         private SC_ApplySelfShowMailBox () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put ((byte) m_mailList.Count);
-            for (int i=0; i<m_mailList.Count; i++)
+            for (int i = 0; i < m_mailList.Count; i++)
                 writer.Put (m_mailList[i]);
         }
     }
