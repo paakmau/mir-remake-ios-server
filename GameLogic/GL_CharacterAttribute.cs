@@ -32,8 +32,8 @@ namespace MirRemakeBackend.GameLogic {
             NotifyGainExperience (charObj, exp);
         }
         public void CommandRequireCharacterAttribute (int netId, int tarCharId) {
-            // TODO:
-            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (tarCharId);
+            var tarNetId = EM_Character.s_instance.GetNetIdByCharId (tarCharId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (tarNetId);
             if (charObj == null) return;
             m_networkService.SendServerCommand (SC_ApplyShowAllCharacterAttribute.Instance (netId, charObj.GetAttrNo ()));
         }

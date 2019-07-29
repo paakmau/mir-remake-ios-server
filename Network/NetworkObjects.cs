@@ -1,3 +1,4 @@
+using System.Globalization;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -64,13 +65,15 @@ namespace MirRemakeBackend.Network {
     }
     struct NO_SightCharacter {
         public int m_netId;
+        public int m_charId;
         public Vector2 m_position;
         public OccupationType m_occupation;
         public string m_name;
         public short m_level;
         public bool m_isMarket;
-        public NO_SightCharacter (int netId, Vector2 pos, OccupationType ocp, string name, short lv, bool isMarket) {
+        public NO_SightCharacter (int netId, int charId, Vector2 pos, OccupationType ocp, string name, short lv, bool isMarket) {
             m_netId = netId;
+            m_charId = charId;
             m_position = pos;
             m_occupation = ocp;
             m_name = name;
@@ -80,6 +83,7 @@ namespace MirRemakeBackend.Network {
     }
     struct NO_AttributeCharacter {
         public int m_netId;
+        public int m_charId;
         public string m_name;
         public short m_level;
         public short m_str;
@@ -102,8 +106,9 @@ namespace MirRemakeBackend.Network {
         public int m_dodgeRate;
         public int m_lifeSteal;
         public int m_damageReduction;
-        public NO_AttributeCharacter (int netId, string name, short lv, short str, short intl, short sprt, short agl, int maxHp, int maxMp, int dHp, int dMp, int atk, int def, int mag, int res, int tenacity, int speed, int criticalRate, int criticalBonus, int hitRate, int dodgeRate, int lifeSteal, int dmgReduction) {
+        public NO_AttributeCharacter (int netId, int charId, string name, short lv, short str, short intl, short sprt, short agl, int maxHp, int maxMp, int dHp, int dMp, int atk, int def, int mag, int res, int tenacity, int speed, int criticalRate, int criticalBonus, int hitRate, int dodgeRate, int lifeSteal, int dmgReduction) {
             m_netId = netId;
+            m_charId = charId;
             m_name = name;
             m_level = lv;
             m_str = str;
@@ -370,6 +375,7 @@ namespace MirRemakeBackend.Network {
         }
         public static void Put (this NetDataWriter writer, NO_SightCharacter charNo) {
             writer.Put (charNo.m_netId);
+            writer.Put (charNo.m_charId);
             writer.Put (charNo.m_position);
             writer.Put ((byte) charNo.m_occupation);
             writer.Put (charNo.m_name);
@@ -378,15 +384,17 @@ namespace MirRemakeBackend.Network {
         }
         public static NO_SightCharacter GetSightCharacter (this NetDataReader reader) {
             int netId = reader.GetInt ();
+            int charId = reader.GetInt ();
             Vector2 pos = reader.GetVector2 ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
             string name = reader.GetString ();
             short lv = reader.GetShort ();
             bool isMarket = reader.GetBool ();
-            return new NO_SightCharacter (netId, pos, ocp, name, lv, isMarket);
+            return new NO_SightCharacter (netId, charId, pos, ocp, name, lv, isMarket);
         }
         public static void Put (this NetDataWriter writer, NO_AttributeCharacter attrChar) {
             writer.Put (attrChar.m_netId);
+            writer.Put (attrChar.m_charId);
             writer.Put (attrChar.m_name);
             writer.Put (attrChar.m_level);
             writer.Put (attrChar.m_str);
@@ -412,6 +420,7 @@ namespace MirRemakeBackend.Network {
         }
         public static NO_AttributeCharacter GetAttributeCharacter (this NetDataReader reader) {
             int netId = reader.GetInt ();
+            int charId = reader.GetInt ();
             string name = reader.GetString ();
             short lv = reader.GetShort ();
             short str = reader.GetShort ();
@@ -434,7 +443,7 @@ namespace MirRemakeBackend.Network {
             int dodgeRate = reader.GetInt ();
             int lifeSteal = reader.GetInt ();
             int dmgReduction = reader.GetInt ();
-            return new NO_AttributeCharacter (netId, name, lv, str, intl, sprt, agl, maxHp, maxMp, dHp, dMp, atk, def, mag, res, tenacity, speed, criticalRate, criticalBonus, hitRate, dodgeRate, lifeSteal, dmgReduction);
+            return new NO_AttributeCharacter (netId, charId, name, lv, str, intl, sprt, agl, maxHp, maxMp, dHp, dMp, atk, def, mag, res, tenacity, speed, criticalRate, criticalBonus, hitRate, dodgeRate, lifeSteal, dmgReduction);
         }
         public static void Put (this NetDataWriter writer, NO_DamageRankCharacter dmgRankChar) {
             writer.Put (dmgRankChar.m_charId);
