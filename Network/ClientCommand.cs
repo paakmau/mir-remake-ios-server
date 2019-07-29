@@ -115,8 +115,8 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyShowCharacterAttribute : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SHOW_CHARACTER_ATTRIBUTE; } }
         public void Execute (NetDataReader reader, int netId) {
-            int tarNetId = reader.GetInt ();
-            GL_CharacterAttribute.s_instance.CommandRequireCharacterAttribute (netId, tarNetId);
+            int tarCharId = reader.GetInt ();
+            GL_CharacterAttribute.s_instance.CommandRequireCharacterAttribute (netId, tarCharId);
         }
     }
     /// <summary>
