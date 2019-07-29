@@ -655,20 +655,21 @@ namespace MirRemakeBackend.DynamicData {
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];
             for (int j = 0; j < attr.Count; j++) {
+                string[]s=attr[j].ToString ().Split (' ');
                 res[j] = new ValueTuple<ActorUnitConcreteAttributeType, int>
-                    ((ActorUnitConcreteAttributeType) Enum.Parse (typeof (ActorUnitConcreteAttributeType), attr[j].ToString ().Split (' ') [0]),
-                        int.Parse (attr[j].ToString ().Split (' ') [1]));
+                    ((ActorUnitConcreteAttributeType) Enum.Parse (typeof (ActorUnitConcreteAttributeType),  s[0]),
+                        int.Parse (s[1]));
             }
             return res;
         }
         private string GetString (ValueTuple<ActorUnitConcreteAttributeType, int>[] ps) {
             if (ps.Length == 0) {
-                return new String ("");
+                return new String ("[]");
             }
             String res = new String ("");
-            res = "[\"" + ps[0].Item1.ToString () + "," + ps[0].Item2.ToString () + "\"";
+            res = "[\"" + ps[0].Item1.ToString () + " " + ps[0].Item2.ToString () + "\"";
             for (int i = 1; i < ps.Length; i++) {
-                res = res + ",\"" + ps[0].Item1.ToString () + "," + ps[0].Item2.ToString () + "\"";
+                res = res + ",\"" + ps[i].Item1.ToString () + " " + ps[i].Item2.ToString () + "\"";
             }
 
             res = res + "]";
