@@ -478,4 +478,36 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandTestGainItem (netId, itemId, num);
         }
     }
+
+    class CC_TestSendMailToAll : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_SEND_MAIL_TO_ALL; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string senderName = reader.GetString ();
+            string title = reader.GetString ();
+            string detail = reader.GetString ();
+            byte itemCnt = reader.GetByte ();
+            (short, short) [] itemIdAndNumArr = new (short, short) [itemCnt];
+            for (int i = 0; i < itemCnt; i++)
+                itemIdAndNumArr[i] = (reader.GetShort (), reader.GetShort ());
+            long vCy = reader.GetLong ();
+            long cCy = reader.GetLong ();
+            GL_Mail.s_instance.CommandTestSendMailToAll (senderName, title, detail, itemIdAndNumArr, vCy, cCy);
+        }
+    }
+
+    class CC_TestSendMailToAllOnline : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_SEND_MAIL_TO_ALL_ONLINE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string senderName = reader.GetString ();
+            string title = reader.GetString ();
+            string detail = reader.GetString ();
+            byte itemCnt = reader.GetByte ();
+            (short, short) [] itemIdAndNumArr = new (short, short) [itemCnt];
+            for (int i = 0; i < itemCnt; i++)
+                itemIdAndNumArr[i] = (reader.GetShort (), reader.GetShort ());
+            long vCy = reader.GetLong ();
+            long cCy = reader.GetLong ();
+            GL_Mail.s_instance.CommandTestSendMailToAllOnline (senderName, title, detail, itemIdAndNumArr, vCy, cCy);
+        }
+    }
 }

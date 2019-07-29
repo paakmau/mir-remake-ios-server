@@ -133,6 +133,8 @@ namespace MirRemakeBackend.Network {
         TEST_GAIN_CY,
         TEST_GAIN_EXP,
         TEST_GAIN_MASTERLY,
-        TEST_GAIN_ITEM
+        TEST_GAIN_ITEM,
+        TEST_SEND_MAIL_TO_ALL,
+        TEST_SEND_MAIL_TO_ALL_ONLINE
     }
 }

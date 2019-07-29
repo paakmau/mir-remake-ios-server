@@ -69,6 +69,12 @@ namespace MirRemakeBackend.GameLogic {
                 m_networkService.SendServerCommand (SC_ApplySelfReceiveMail.Instance (netId, mailList[i].m_id));
             }
         }
+        public void CommandTestSendMailToAll (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {
+            // EM_Mail.s_instance.SendMail (-1, senderName, );
+        }
+        public void CommandTestSendMailToAllOnline (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {
+            // EM_Mail.s_instance.SendMail ()
+        }
         public void NotifyInitCharacter (int netId, int charId) {
             EM_Mail.s_instance.InitCharacter (netId, charId);
         }
