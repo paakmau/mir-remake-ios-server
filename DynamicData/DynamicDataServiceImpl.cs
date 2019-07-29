@@ -288,6 +288,20 @@ namespace MirRemakeBackend.DynamicData {
             return res;
         }
 
+        public int[] GetAllCharacterId (){
+            string cmd="select `charid` from `character`;";
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            DataRowCollection drs=ds.Tables[0].Rows;
+            int[] res=new int[drs.Count];
+            for(int i=0;i<drs.Count;i++)
+                res[i]=int.Parse(drs[i]["charid"].ToString());
+            return res;
+                
+        }
+        
+        
         //WALLET
         public bool InsertCharacterWallet (DDO_CharacterWallet w) {
             string cmd = "insert into `wallet` values(" + w.m_characterId + "," + w.m_virtualCy + "," + w.m_chargeCy + ");";
