@@ -52,7 +52,7 @@ namespace MirRemakeBackend.Entity {
         public void SendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
             E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
             mail.Reset (-1, senderCharId, senderName, recvCharId, DateTime.Now, title, detail, itemIdAndNumList, virtualCy, chargeCy, false, false);
-            m_dds.InsertMail (mail.GetDdo ());
+            mail.m_id = m_dds.InsertMail (mail.GetDdo ());
 
             List<E_Mail> recvMailBox;
             if (m_mailDict.TryGetValue (recvNetId, out recvMailBox)) {
