@@ -66,6 +66,9 @@ namespace MirRemakeBackend.Entity {
             m_networkIdAndCharacterDict.Remove (netId);
             s_entityPool.m_characterPool.RecycleInstance (charObj);
         }
+        public int[] GetAllCharId () {
+            return m_charDds.GetAllCharacterId ();
+        }
         public E_Character GetCharacterByNetworkId (int netId) {
             E_Character res = null;
             m_networkIdAndCharacterDict.TryGetValue (netId, out res);

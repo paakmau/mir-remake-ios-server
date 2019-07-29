@@ -69,11 +69,10 @@ namespace MirRemakeBackend.GameLogic {
                 m_networkService.SendServerCommand (SC_ApplySelfReceiveMail.Instance (netId, mailList[i].m_id));
             }
         }
-        public void CommandTestSendMailToAll (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
-            // TODO: 目前只能获取已在线玩家
-            while (charEn.MoveNext ()) {
-                var netId = charEn.Current.Key;
-                var charId = charEn.Current.Value.m_characterId;
+        public void CommandTestSendMailToAll (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {
+            var charIdArr = EM_Character.s_instance.GetAllCharId ();
+            foreach (var charId in charIdArr) {
+                var netId = EM_Character.s_instance.GetNetIdByCharId (charId);
                 EM_Mail.s_instance.SendMail (-1, senderName, netId, charId, title, detail, itemIdAndNumList, vCy, cCy);
             }
         }
@@ -92,13 +91,10 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mail.s_instance.RemoveCharacter (netId);
         }
         public void NotifySendMallItem (int recvNetId, int recvCharId, IReadOnlyList < (short, short) > itemIdAndNumList) {
-            SendMail (-1, "系统商城", recvNetId, recvCharId, "商城物品", "背包容量不足，购买的物品发放至邮箱", itemIdAndNumList, 0, 0);
+            EM_Mail.s_instance.SendMail (-1, "系统商城", recvNetId, recvCharId, "商城物品", "背包容量不足，购买的物品发放至邮箱", itemIdAndNumList, 0, 0);
         }
         public void NotifySendMissionReward (int recvNetId, int recvCharId, IReadOnlyList < (short, short) > itemIdAndNumList) {
-            SendMail (-1, "任务报酬", recvNetId, recvCharId, "任务报酬", "背包容量不足，奖励发放至邮箱", itemIdAndNumList, 0, 0);
-        }
-        private void SendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
-            EM_Mail.s_instance.SendMail (senderCharId, senderName, recvNetId, recvCharId, title, detail, itemIdAndNumList, virtualCy, chargeCy);
+            EM_Mail.s_instance.SendMail (-1, "任务报酬", recvNetId, recvCharId, "任务报酬", "背包容量不足，奖励发放至邮箱", itemIdAndNumList, 0, 0);
         }
     }
 }
