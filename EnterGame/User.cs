@@ -134,7 +134,7 @@ namespace MirRemakeBackend.EnterGame {
             // 背包, 仓库, equipment dds
             short bagSize = 15;
             short storeHouseSize = 8;
-            short eqSize = 5;
+            short eqSize = 10;
             for (short i = 0; i < bagSize; i++)
                 m_itemDds.InsertItem (new DDO_Item (-1, -1, charId, 0, ItemPlace.BAG, i));
             for (short i = 0; i < storeHouseSize; i++)
