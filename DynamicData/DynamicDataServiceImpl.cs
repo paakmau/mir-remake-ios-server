@@ -608,13 +608,18 @@ namespace MirRemakeBackend.DynamicData {
                 mail.m_senderName=drs[i]["sender_name"].ToString();
                 mail.m_chargeCy=int.Parse(drs[i]["charge"].ToString());
                 mail.m_virtualCy=int.Parse(drs[i]["virtual"].ToString());
-                string[] strings = drs[i]["item_array"].ToString ().Split (',');
+                string str=drs[i]["item_array"].ToString ();
+                if(str==""){
+                    mail.m_itemIdAndNumArr=new (short,short)[0];
+                }
+                else{
+                string[] strings = str.Split (',');
                 mail.m_itemIdAndNumArr = new (short, short) [strings.Length];
                 for (int j = 0; j < strings.Length; j++) {
                     string[] s = strings[j].Split (' ');
                     mail.m_itemIdAndNumArr[j].Item1 = short.Parse (s[0]);
                     mail.m_itemIdAndNumArr[j].Item2 = short.Parse (s[1]);
-                }
+                }}
                 string is_read = drs[i]["is_read"].ToString ();
                 if (is_read == "0") mail.m_isRead = false;
                 else mail.m_isRead = true;
