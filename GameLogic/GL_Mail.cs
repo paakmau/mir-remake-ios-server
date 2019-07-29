@@ -69,11 +69,21 @@ namespace MirRemakeBackend.GameLogic {
                 m_networkService.SendServerCommand (SC_ApplySelfReceiveMail.Instance (netId, mailList[i].m_id));
             }
         }
-        public void CommandTestSendMailToAll (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {
-            // EM_Mail.s_instance.SendMail (-1, senderName, );
+        public void CommandTestSendMailToAll (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
+            // TODO: 目前只能获取已在线玩家
+            while (charEn.MoveNext ()) {
+                var netId = charEn.Current.Key;
+                var charId = charEn.Current.Value.m_characterId;
+                EM_Mail.s_instance.SendMail (-1, senderName, netId, charId, title, detail, itemIdAndNumList, vCy, cCy);
+            }
         }
         public void CommandTestSendMailToAllOnline (string senderName, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long vCy, long cCy) {
-            // EM_Mail.s_instance.SendMail ()
+            var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
+            while (charEn.MoveNext ()) {
+                var netId = charEn.Current.Key;
+                var charId = charEn.Current.Value.m_characterId;
+                EM_Mail.s_instance.SendMail (-1, senderName, netId, charId, title, detail, itemIdAndNumList, vCy, cCy);
+            }
         }
         public void NotifyInitCharacter (int netId, int charId) {
             EM_Mail.s_instance.InitCharacter (netId, charId);
