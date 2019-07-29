@@ -692,15 +692,18 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplyAllChangeEquipment s_instance = new SC_ApplyAllChangeEquipment ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_CHANGE_EQUIPMENT; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_tarNetId;
         /// <summary> 该单位换上的装备的ItemId </summary>
         private short m_itemId;
-        public static SC_ApplyAllChangeEquipment Instance (IReadOnlyList<int> toClientList, short itemId) {
+        public static SC_ApplyAllChangeEquipment Instance (IReadOnlyList<int> toClientList, int tarNetId, short itemId) {
             s_instance.m_toClientList = toClientList;
+            s_instance.m_tarNetId = tarNetId;
             s_instance.m_itemId = itemId;
             return s_instance;
         }
         private SC_ApplyAllChangeEquipment () { }
         public override void PutData (NetDataWriter writer) {
+            writer.Put (m_tarNetId);
             writer.Put (m_itemId);
         }
     }
