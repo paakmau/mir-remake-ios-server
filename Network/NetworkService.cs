@@ -39,7 +39,11 @@ namespace MirRemakeBackend.Network {
             IClientCommand command = m_clientCommandDict[(NetworkToServerDataType) reader.GetByte ()];
             if (command.m_DataType != NetworkToServerDataType.SET_POSITION)
                 Console.WriteLine ("CC: " + command.m_DataType);
-            command.Execute (reader, clientNetId);
+            try {
+                command.Execute (reader, clientNetId);
+            } catch (Exception e) {
+                Console.WriteLine (e);
+            }
         }
         public void SendServerCommand (ServerCommandBase command) {
             m_writer.Put ((byte) command.m_DataType);
