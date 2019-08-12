@@ -198,4 +198,10 @@ namespace MirRemakeBackend.DynamicData {
             m_isReceived = isReceived;
         }
     }
+    struct DDO_Notice {
+        public int m_id;
+        public DateTime m_time;
+        public string m_title;
+        public string m_detail;
+    }
 }
