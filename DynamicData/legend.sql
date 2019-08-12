@@ -153,3 +153,11 @@ create table `mail`(
 );
 CREATE INDEX `receiverid` ON `mail`(`receiverid`);
 
+DROP TABLE IF EXISTS `notice`;
+create table `notice`(
+  `noticeid` int NOT NULL AUTO_INCREMENT,
+  `time` datetime,
+  `title` VARCHAR(255),
+  `detail` VARCHAR(2555),
+  primary key(`noticeid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

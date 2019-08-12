@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute, IDDS_Mail {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute, IDDS_Mail,IDDS_Notice {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -670,6 +670,44 @@ namespace MirRemakeBackend.DynamicData {
             pool.ExecuteSql(database,cmd);
         }
         
+
+        //NOTICE
+        public List<DDO_Notice> GetAllNotice (){
+            string cmd="select * from `notice`;";
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            DataRowCollection drs=ds.Tables[0].Rows;
+            List<DDO_Notice> res=new List<DDO_Notice>();
+            for(int i=0;i<drs.Count;i++){
+                DDO_Notice notice=new DDO_Notice();
+                notice.m_time = Convert.ToDateTime (drs[i]["time"]);
+                notice.m_title=drs[i]["title"].ToString();
+                notice.m_detail=drs[i]["detail"].ToString();
+                notice.m_id=int.Parse(drs[i]["noticeid"].ToString());
+                res.Add(notice);
+            }
+            return res;
+        }
+        public int InsertNotice (DDO_Notice notice){
+            string time=notice.m_time.ToString ("yyyy-MM-dd HH:mm:ss");
+            string cmd=String.Format("insert into `notice` values(null,\"{0}\",\"{1}\",\"{2}\");select last_insert_id();",time,notice.m_title,notice.m_detail);
+            string database="legend";
+            DataSet ds=new DataSet();
+            try{pool.ExecuteSql(database,cmd,ds);}catch{return -1;}
+            return int.Parse(ds.Tables[0].Rows[0]["last_insert_id()"].ToString());   
+        }
+        public bool DeleteNoticeById (int id){
+            string cmd=String.Format("delete from notice where noticeid={0};",id);
+            string database="legend";
+            try{pool.ExecuteSql(database,cmd);}catch{return false;};
+            return true;
+        }
+        public void DeleteNoticeBeforeCertainTime (DateTime time){
+            string cmd=String.Format("delete from notice where `time`<\"{0}\";",time.ToString("yyyy-MM-dd HH:mm:ss"));
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
         
 
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
