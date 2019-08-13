@@ -22,14 +22,17 @@ namespace MirRemakeBackend.Network {
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_NETWORK_ID; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_netId;
-        public static SC_InitSelfNetworkId Instance (int netId) {
+        private string m_version;
+        public static SC_InitSelfNetworkId Instance (int netId, string version) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_netId = netId;
+            s_instance.m_version = version;
             return s_instance;
         }
         private SC_InitSelfNetworkId () { }
         public override void PutData (NetDataWriter writer) {
             writer.Put (m_netId);
+            writer.Put (m_version);
         }
     }
     class SC_InitSelfRegister : SingleToClientServerCommand {

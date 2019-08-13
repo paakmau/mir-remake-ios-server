@@ -11,6 +11,7 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.EnterGame {
     class User {
         public static User s_instance;
+        private const string c_version = "1.00";
         private INetworkService m_netService;
         private IDDS_User m_userDds;
         private IDDS_Character m_charDds;
@@ -53,11 +54,9 @@ namespace MirRemakeBackend.EnterGame {
                     foreach (var ocp in ocpArr)
                         if ((ocp | mDo.m_missionOccupation) != 0)
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
-
-            // 出事排行榜加载
         }
         public void CommandConnect (int netId) {
-            m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId));
+            m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId, c_version));
         }
         public void CommandDisconnect (int netId) {
             GL_CharacterInit.s_instance.CommandRemoveCharacter (netId);
