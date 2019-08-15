@@ -12,6 +12,7 @@ namespace MirRemakeBackend.EnterGame {
     class User {
         public static User s_instance;
         private const string c_version = "1.00";
+        private const string c_downloadUrl = "www.baidu.com";
         private INetworkService m_netService;
         private IDDS_User m_userDds;
         private IDDS_Character m_charDds;
@@ -56,7 +57,7 @@ namespace MirRemakeBackend.EnterGame {
                             m_ocpInitMisIdDict[ocp].Add (mDo.m_id);
         }
         public void CommandConnect (int netId) {
-            m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId, c_version));
+            m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId, c_version, c_downloadUrl));
         }
         public void CommandDisconnect (int netId) {
             GL_CharacterInit.s_instance.CommandRemoveCharacter (netId);
