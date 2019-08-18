@@ -18,20 +18,18 @@ namespace MirRemakeBackend.EnterGame {
         private IDDS_Character m_charDds;
         private IDDS_CharacterAttribute m_charAttrDds;
         private IDDS_CharacterWallet m_charWalletDds;
-        private IDDS_CharacterPosition m_charPosDds;
         private IDDS_Skill m_skillDds;
         private IDDS_Mission m_misDds;
         private IDDS_Item m_itemDds;
         private IDDS_CombatEfct m_combatEfctDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterPosition charPosDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
             m_netService = ns;
             m_userDds = userDds;
             m_charDds = charDds;
             m_charAttrDds = charAttrDds;
             m_charWalletDds = charWalletDds;
-            m_charPosDds = charPosDds;
             m_skillDds = skillDds;
             m_misDds = misDds;
             m_itemDds = itemDds;
@@ -122,7 +120,6 @@ namespace MirRemakeBackend.EnterGame {
             }
             m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 1, 0, 0, 0, 0, 0));
             m_charWalletDds.InsertCharacterWallet (new DDO_CharacterWallet (charId, 0, 0));
-            m_charPosDds.InsertCharacterPosition (new DDO_CharacterPosition (charId, new Vector2 (42, 24)));
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];
             for (int i = 0; i < skillIdList.Count; i++)

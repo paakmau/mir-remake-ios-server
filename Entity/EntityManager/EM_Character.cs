@@ -13,15 +13,13 @@ namespace MirRemakeBackend.Entity {
         private DEM_Character m_dem;
         private IDDS_Character m_charDds;
         private IDDS_CharacterAttribute m_charAttrDds;
-        private IDDS_CharacterPosition m_charPosDds;
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, int> m_netIdAndCharIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_charIdAndNetIdDict = new Dictionary<int, int> ();
-        public EM_Character (DEM_Character dem, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterPosition charPosDds) {
+        public EM_Character (DEM_Character dem, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds) {
             m_dem = dem;
             m_charDds = charDds;
             m_charAttrDds = charAttrDds;
-            m_charPosDds = charPosDds;
         }
         /// <summary>
         /// 从数据库读取角色信息  
@@ -35,10 +33,9 @@ namespace MirRemakeBackend.Entity {
             // 持久层获取
             DDO_Character charDdo;
             DDO_CharacterAttribute charAttrDdo;
-            DDO_CharacterPosition charPosDdo;
             if (!m_charDds.GetCharacterById (charId, out charDdo) ||
-                !m_charAttrDds.GetCharacterAttributeByCharacterId (charId, out charAttrDdo) ||
-                !m_charPosDds.GetCharacterPosition (charId, out charPosDdo)
+                !m_charAttrDds.GetCharacterAttributeByCharacterId (charId, out charAttrDdo)
+                // !m_charPosDds.GetCharacterPosition (charId, out charPosDdo)
             )
                 return null;
             newChar = s_entityPool.m_characterPool.GetInstance ();
@@ -50,7 +47,7 @@ namespace MirRemakeBackend.Entity {
             m_netIdAndCharIdDict[netId] = charId;
             m_charIdAndNetIdDict[charId] = netId;
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, charPosDdo);
+            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, new Vector2 (42, 24));
             return newChar;
         }
         /// <summary>
@@ -91,9 +88,6 @@ namespace MirRemakeBackend.Entity {
         }
         public void SaveCharacterAttribute (E_Character charObj) {
             m_charAttrDds.UpdateCharacterAttribute (charObj.GetAttrDdo ());
-        }
-        public void SaveCharacterPosition (E_Character charObj) {
-            m_charPosDds.UpdateCharacterPosition (charObj.GetPosDdo ());
         }
     }
 }

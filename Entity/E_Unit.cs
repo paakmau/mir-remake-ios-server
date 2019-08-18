@@ -212,7 +212,7 @@ namespace MirRemakeBackend.Entity {
         public override int m_PhysicsVulernability { get { return m_equipConcreteAttr.m_PhysicsVulernability + m_mainPointConcreteAttr.m_PhysicsVulernability + base.m_PhysicsVulernability; } }
         public override int m_MagicVulernability { get { return m_equipConcreteAttr.m_MagicVulernability + m_mainPointConcreteAttr.m_MagicVulernability + base.m_MagicVulernability; } }
         public override int m_DamageReduction { get { return m_equipConcreteAttr.m_DamageReduction + m_mainPointConcreteAttr.m_DamageReduction + base.m_DamageReduction; } }
-        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, DDO_CharacterPosition charPosDdo) {
+        public void Reset (int netId, DE_Character charDe, DE_Unit auDe, DE_CharacterData charDataDe, DDO_Character charDdo, DDO_CharacterAttribute charAttrDdo, Vector2 pos) {
             base.Reset (auDe);
             m_characterDe = charDe;
             m_characterDataDe = charDataDe;
@@ -225,7 +225,7 @@ namespace MirRemakeBackend.Entity {
             m_intelligence = charAttrDdo.m_intl;
             m_spirit = charAttrDdo.m_sprt;
             m_agility = charAttrDdo.m_agl;
-            m_position = charPosDdo.m_position;
+            m_position = pos;
         }
         /// <summary>
         /// 尝试使用经验升级, 返回提升的等级

@@ -9,22 +9,8 @@ namespace MirRemakeBackend.GameLogic {
     /// </summary>
     class GL_CharacterAttribute : GameLogicBase {
         public static GL_CharacterAttribute s_instance;
-        private const float c_syncPosTime = 5;
-        private float m_syncPosTimer = 0;
         public GL_CharacterAttribute (INetworkService netService) : base (netService) { }
-        public override void Tick (float dT) {
-            m_syncPosTimer += dT;
-            bool needSyncPos = false;
-            while (m_syncPosTimer >= c_syncPosTime) {
-                m_syncPosTimer -= c_syncPosTime;
-                needSyncPos = true;
-            }
-            if (needSyncPos) {
-                var charEn = EM_Character.s_instance.GetCharacterEnumerator ();
-                while (charEn.MoveNext ())
-                    EM_Character.s_instance.SaveCharacterPosition (charEn.Current.Value);
-            }
-        }
+        public override void Tick (float dT) { }
         public override void NetworkTick () { }
         public void CommandGainExperience (int netId, int exp) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);

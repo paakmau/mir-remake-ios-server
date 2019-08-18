@@ -77,7 +77,6 @@ namespace MirRemakeBackend {
             IDDS_Character charDds = ddsImpl;
             IDDS_CharacterAttribute charAttrDds = ddsImpl;
             IDDS_CharacterWallet charWalletDds = ddsImpl;
-            IDDS_CharacterPosition charPosDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
@@ -86,7 +85,7 @@ namespace MirRemakeBackend {
             // EntityManager
             EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
-            EM_Character.s_instance = new EM_Character (charDem, charDds, charAttrDds, charPosDds);
+            EM_Character.s_instance = new EM_Character (charDem, charDds, charAttrDds);
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
             EM_Mail.s_instance = new EM_Mail (mailDds);
             EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
@@ -102,7 +101,7 @@ namespace MirRemakeBackend {
             // EM init
             EntityManagerInitializer.Init (skillDem, monDem);
             // 角色创建器
-            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, charPosDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
+            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
         }
         static void InitGameLogic () {
             // GameLogic
