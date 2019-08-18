@@ -116,9 +116,9 @@ namespace MirRemakeBackend.DynamicData {
             string database = "legend";
             pool.ExecuteSql (database, cmd, ds);
             if (ds.Tables[0].Rows.Count == 0) {
-                throw new Exception ();
+                return -1;
             }
-            return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
+            return long.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
         public void UpdateEquipmentInfo (DDO_EquipmentInfo eq) {
             string cmd;
@@ -237,7 +237,7 @@ namespace MirRemakeBackend.DynamicData {
             string cmd = "insert into `character` values(null," + charDdo.m_playerId + ",\"" + charDdo.m_occupation.ToString () + "\",\"" + charDdo.m_name + "\");select last_insert_id();";
             string database = "legend";
             DataSet ds = new DataSet ();
-            try { pool.ExecuteSql (database, cmd, ds); } catch { return -1; }
+            try { pool.ExecuteSql (database, cmd, ds); } catch {return -1; }
             return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
         }
         public bool DeleteCharacterById (int charId) {

@@ -98,6 +98,7 @@ namespace MirRemakeBackend.DynamicData
             } catch (Exception e) {
                 Console.WriteLine(sql);
                 Console.WriteLine (e.StackTrace);
+                throw e;
             }
         }
         private void Execute(MySqlCommand cmd, DataSet ds = null)
