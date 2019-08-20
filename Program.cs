@@ -113,6 +113,7 @@ namespace MirRemakeBackend {
             GL_CharacterInit.s_instance = new GL_CharacterInit (s_networkService);
             GL_CharacterSight.s_instance = new GL_CharacterSight (s_networkService);
             GL_Chat.s_instance = new GL_Chat (s_networkService);
+            GL_Console.s_instance = new GL_Console (s_networkService);
             GL_Item.s_instance = new GL_Item (s_networkService);
             GL_Mail.s_instance = new GL_Mail (s_networkService);
             GL_Mall.s_instance = new GL_Mall (s_networkService);
@@ -132,6 +133,7 @@ namespace MirRemakeBackend {
                 // GL_CharacterInit.s_instance,
                 GL_CharacterSight.s_instance,
                 // GL_Chat.s_instance,
+                // GL_Console.s_instance,
                 GL_Item.s_instance,
                 // GL_Mail.s_instance,
                 GL_Mall.s_instance,
