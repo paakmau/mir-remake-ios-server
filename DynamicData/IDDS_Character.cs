@@ -10,7 +10,7 @@ namespace MirRemakeBackend.DynamicData {
         bool GetCharacterById (int characterId, out DDO_Character resCharDdo);
         DDO_Character[] GetCharacterByPlayerId (int playerId);
         int[] GetAllCharacterId ();
-        // int GetCharacterIdByName (string name);
+        int GetCharacterIdByName (string name);
     }
     interface IDDS_CharacterAttribute {
         bool InsertCharacterAttribute (DDO_CharacterAttribute charAttr);
