@@ -44,5 +44,19 @@ namespace MirRemakeBackend.Entity {
             m_dds.UpdateCharacterWallet (new DDO_CharacterWallet (charId, res.Item1, res.Item2));
             return res;
         }
+        public void CharacterUpdateVirtualCy (int charId, long dVirtualCy) {
+            DDO_CharacterWallet wallet;
+            bool suc = m_dds.GetCharacterWalletByCharacterId (charId, out wallet);
+            if (!suc) return;
+            wallet.m_virtualCy += dVirtualCy;
+            m_dds.UpdateCharacterWallet (wallet);
+        }
+        public void CharacterUpdateChargeCy (int charId, long dChargeCy) {
+            DDO_CharacterWallet wallet;
+            bool suc = m_dds.GetCharacterWalletByCharacterId (charId, out wallet);
+            if (!suc) return;
+            wallet.m_chargeCy += dChargeCy;
+            m_dds.UpdateCharacterWallet (wallet);
+        }
     }
 }

@@ -444,6 +444,25 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    class CC_ConsoleGainCyByName : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CONSOLE_GAIN_CY_BY_NAME; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string name = reader.GetString ();
+            CurrencyType cyType = (CurrencyType) reader.GetByte ();
+            long cy = reader.GetLong ();
+            GL_Wallet.s_instance.CommandGainCurrencyByName (name, cyType, cy);
+        }
+    }
+
+    class CC_TestGainCy : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
+        public void Execute (NetDataReader reader, int netId) {
+            CurrencyType cyType = (CurrencyType) reader.GetByte ();
+            long cy = reader.GetLong ();
+            GL_Wallet.s_instance.CommandGainCurrency (netId, cyType, cy);
+        }
+    }
+
     class CC_TestGainExp : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_EXP; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -458,15 +477,6 @@ namespace MirRemakeBackend.Network {
             short skId = reader.GetShort ();
             int masterly = reader.GetInt ();
             GL_Skill.s_instance.CommandGainMasterly (netId, skId, masterly);
-        }
-    }
-
-    class CC_TestGainCy : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
-        public void Execute (NetDataReader reader, int netId) {
-            CurrencyType cyType = (CurrencyType) reader.GetByte ();
-            long cy = reader.GetLong ();
-            GL_Wallet.s_instance.CommandGainCurrency (netId, cyType, cy);
         }
     }
 

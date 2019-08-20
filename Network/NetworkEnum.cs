@@ -129,6 +129,8 @@ namespace MirRemakeBackend.Network {
         APPLY_READ_ALL_MAIL,
         APPLY_RECEIVE_MAIL,
         APPLY_RECEIVE_ALL_MAIL,
+        // 控制台相关
+        CONSOLE_GAIN_CY_BY_NAME,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,

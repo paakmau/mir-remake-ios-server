@@ -14,6 +14,15 @@ namespace MirRemakeBackend.GameLogic {
             if (charId == -1) return;
             NotifyUpdateCurrency (netId, charId, type, dC);
         }
+        public void CommandGainCurrencyByName (string name, CurrencyType type, long dC) {
+            var charId = EM_Character.s_instance.GetCharIdByName (name);
+            if (charId == -1) return;
+            var netId = EM_Character.s_instance.GetNetIdByCharId (charId);
+            if (netId != -1)
+                NotifyUpdateCurrency (netId, charId, type, dC);
+            else
+                NotifyUpdateCurrency (charId, type, dC);
+        }
         public void NotifyInitCharacter (int netId, int charId) {
             var wallet = EM_Wallet.s_instance.InitCharacter (netId, charId);
             // client
@@ -28,6 +37,13 @@ namespace MirRemakeBackend.GameLogic {
                 NotifyUpdateChargeCurrency (netId, charId, dC);
             else
                 NotifyUpdateVirtualCurrency (netId, charId, dC);
+        }
+        public void NotifyUpdateCurrency (int charId, CurrencyType type, long dC) {
+            // 实例 与 数据
+            if (type == CurrencyType.CHARGE)
+                EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, dC);
+            else
+                EM_Wallet.s_instance.CharacterUpdateVirtualCy (charId, dC);
         }
         public void NotifyUpdateVirtualCurrency (int netId, int charId, long dC) {
             if (dC == 0) return;

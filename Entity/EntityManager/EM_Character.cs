@@ -66,6 +66,9 @@ namespace MirRemakeBackend.Entity {
         public int[] GetAllCharId () {
             return m_charDds.GetAllCharacterId ();
         }
+        public int GetCharIdByName (string name) {
+            return m_charDds.GetCharacterIdByName (name);
+        }
         public E_Character GetCharacterByNetworkId (int netId) {
             E_Character res = null;
             m_networkIdAndCharacterDict.TryGetValue (netId, out res);
