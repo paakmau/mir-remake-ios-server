@@ -1270,4 +1270,32 @@ namespace MirRemakeBackend.Network {
             writer.Put (m_mailId);
         }
     }
+
+    class SC_ConsoleSuccess : SingleToClientServerCommand {
+        public static SC_ConsoleSuccess s_instance = new SC_ConsoleSuccess ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.CONSOLE_SUCCESS; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        public static SC_ConsoleSuccess Instance (int netId) {
+            s_instance.ResetToClientNetId (netId);
+            return s_instance;
+        }
+        private SC_ConsoleSuccess () { }
+        public override void PutData (NetDataWriter writer) { }
+    }
+
+    class SC_ConsoleFail : SingleToClientServerCommand {
+        public static SC_ConsoleFail s_instance = new SC_ConsoleFail ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.CONSOLE_FAIL; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private string m_detail;
+        public static SC_ConsoleFail Instance (int netId, string detail) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_detail = detail;
+            return s_instance;
+        }
+        private SC_ConsoleFail () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_detail);
+        }
+    }
 }
