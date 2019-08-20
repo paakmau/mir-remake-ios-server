@@ -6,7 +6,7 @@ namespace MirRemakeBackend.GameLogic {
     /// 管理聊天
     /// </summary>
     class GL_Console : GameLogicBase {
-        public static GL_Chat s_instance;
+        public static GL_Console s_instance;
         public GL_Console (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
