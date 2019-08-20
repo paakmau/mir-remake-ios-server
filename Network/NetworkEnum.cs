@@ -67,7 +67,10 @@ namespace MirRemakeBackend.Network {
         // 邮箱
         APPLY_SELF_SHOW_MAIL_BOX,
         APPLY_SELF_READ_MAIL,
-        APPLY_SELF_RECEIVE_MAIL
+        APPLY_SELF_RECEIVE_MAIL,
+        // 控制台
+        CONSOLE_SUCCESS,
+        CONSOLE_FAIL
     }
     enum NetworkToServerDataType : byte {
         // 未进入游戏阶段
