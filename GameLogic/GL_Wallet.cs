@@ -14,15 +14,6 @@ namespace MirRemakeBackend.GameLogic {
             if (charId == -1) return;
             NotifyUpdateCurrency (netId, charId, type, dC);
         }
-        public void CommandGainCurrencyByName (string name, CurrencyType type, long dC) {
-            var charId = EM_Character.s_instance.GetCharIdByName (name);
-            if (charId == -1) return;
-            var netId = EM_Character.s_instance.GetNetIdByCharId (charId);
-            if (netId != -1)
-                NotifyUpdateCurrency (netId, charId, type, dC);
-            else
-                NotifyUpdateCurrency (charId, type, dC);
-        }
         public void NotifyInitCharacter (int netId, int charId) {
             var wallet = EM_Wallet.s_instance.InitCharacter (netId, charId);
             // client

@@ -1222,7 +1222,7 @@ namespace MirRemakeBackend.Network {
     }
 
     class SC_ApplySelfShowMailBox : SingleToClientServerCommand {
-        public static SC_ApplySelfShowMailBox s_instance = new SC_ApplySelfShowMailBox ();
+        private static SC_ApplySelfShowMailBox s_instance = new SC_ApplySelfShowMailBox ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SHOW_MAIL_BOX; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private IReadOnlyList<NO_Mail> m_mailList;
@@ -1240,7 +1240,7 @@ namespace MirRemakeBackend.Network {
     }
 
     class SC_ApplySelfReadMail : SingleToClientServerCommand {
-        public static SC_ApplySelfReadMail s_instance = new SC_ApplySelfReadMail ();
+        private static SC_ApplySelfReadMail s_instance = new SC_ApplySelfReadMail ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_READ_MAIL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_mailId;
@@ -1256,7 +1256,7 @@ namespace MirRemakeBackend.Network {
     }
 
     class SC_ApplySelfReceiveMail : SingleToClientServerCommand {
-        public static SC_ApplySelfReceiveMail s_instance = new SC_ApplySelfReceiveMail ();
+        private static SC_ApplySelfReceiveMail s_instance = new SC_ApplySelfReceiveMail ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_RECEIVE_MAIL; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         private int m_mailId;
@@ -1272,7 +1272,7 @@ namespace MirRemakeBackend.Network {
     }
 
     class SC_ConsoleSuccess : SingleToClientServerCommand {
-        public static SC_ConsoleSuccess s_instance = new SC_ConsoleSuccess ();
+        private static SC_ConsoleSuccess s_instance = new SC_ConsoleSuccess ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.CONSOLE_SUCCESS; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         public static SC_ConsoleSuccess Instance (int netId) {

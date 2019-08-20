@@ -450,7 +450,7 @@ namespace MirRemakeBackend.Network {
             string name = reader.GetString ();
             CurrencyType cyType = (CurrencyType) reader.GetByte ();
             long cy = reader.GetLong ();
-            GL_Wallet.s_instance.CommandGainCurrencyByName (name, cyType, cy);
+            GL_Console.s_instance.CommandGainCurrencyByName (netId, name, cyType, cy);
         }
     }
 
