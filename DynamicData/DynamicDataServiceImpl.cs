@@ -300,6 +300,16 @@ namespace MirRemakeBackend.DynamicData {
             return res;
                 
         }
+        public int GetCharacterIdByName (string name){
+            string cmd=String.Format("select `charid` from `character` where `name`=\"{0}\";",name);
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            if(ds.Tables[0].Rows.Count==0){
+                return -1;
+            }
+            return int.Parse(ds.Tables[0].Rows[0]["charid"].ToString());
+        }
         
         
         //WALLET
@@ -329,8 +339,7 @@ namespace MirRemakeBackend.DynamicData {
                 pool.ExecuteSql (database, cmd, ds);
                 w = new DDO_CharacterWallet (id, int.Parse (ds.Tables[0].Rows[0]["virtual"].ToString ()), int.Parse (ds.Tables[0].Rows[0]["charge"].ToString ()));
                 return true;
-            } catch (Exception e) {
-                Console.WriteLine (e.StackTrace);
+            } catch{
                 w = default (DDO_CharacterWallet);
                 return false;
             }
@@ -517,8 +526,7 @@ namespace MirRemakeBackend.DynamicData {
                 //Console.WriteLine(cmd);
                 pool.ExecuteSql (database, cmd, ds);
                 return int.Parse (ds.Tables[0].Rows[0]["last_insert_id()"].ToString ());
-            } catch (Exception e) {
-                Console.Write (e.StackTrace);
+            } catch{
                 return -1;
             }
         }
