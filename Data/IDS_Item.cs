@@ -34,7 +34,7 @@ namespace MirRemakeBackend.Data {
                     typeof (ItemQuality), s_equipmentDatas[i]["Quality"].ToString ());
                 item.m_maxNum = 1;
                 item.m_sellPrice = 450 * (int.Parse (s_equipmentDatas[i]["LevelInNeed"].ToString ())/10);
-                item.m_buyPrice = 25*item.m_sellPrice;
+                item.m_buyPrice = 35*item.m_sellPrice;
                 item.m_type = ItemType.EQUIPMENT;
                 equipment.m_itemId = short.Parse (s_equipmentDatas[i]["EquipmentID"].ToString ());
                 equipment.m_equipPosition = (EquipmentPosition) Enum.Parse (typeof (EquipmentPosition), s_equipmentDatas[i]["EquipmentPosition"].ToString ());
