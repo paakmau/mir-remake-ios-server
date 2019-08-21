@@ -39,35 +39,3523 @@
     "ClassId":1,
     "Price":[350,35000]
 },{
-    "ItemId":20204,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20000,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20218,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20001,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20424,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20002,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20438,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20003,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20644,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20004,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20658,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20005,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20864,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20006,
+	"ClassId":2,
+	"Price":[450,2250]
 },{
-    "ItemId":20878,
-    "ClassId":2,
-    "Price":[15000,250000]
+	"ItemId":20007,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20008,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20009,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20010,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20011,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20012,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20013,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20014,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20015,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20016,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20017,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20018,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20019,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20020,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20021,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20022,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20023,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20024,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20025,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20026,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20027,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20028,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20029,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20030,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20031,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20032,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20033,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20034,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20035,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20036,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20037,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20038,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20039,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20040,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20041,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20042,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20043,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20044,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20045,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20046,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20047,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20048,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20049,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20050,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20051,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20052,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20053,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20054,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20055,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20056,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20057,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20058,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20059,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20060,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20061,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20062,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20063,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20064,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20065,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20066,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20067,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20068,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20069,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20070,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20071,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20072,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20073,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20074,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20075,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20076,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20077,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20078,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20079,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20080,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20081,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20082,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20083,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20084,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20085,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20086,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20087,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20088,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20089,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20090,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20091,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20092,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20093,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20094,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20095,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20096,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20097,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20098,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20099,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20100,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20101,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20102,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20103,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20104,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20105,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20106,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20107,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20108,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20109,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20110,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20111,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20112,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20113,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20114,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20115,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20116,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20117,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20118,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20119,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20120,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20121,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20122,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20123,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20124,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20125,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20126,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20127,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20128,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20129,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20130,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20131,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20132,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20133,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20134,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20135,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20136,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20137,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20138,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20139,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20140,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20141,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20142,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20143,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20144,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20145,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20146,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20147,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20148,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20149,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20150,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20151,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20152,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20153,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20154,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20155,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20156,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20157,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20158,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20159,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20160,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20161,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20162,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20163,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20164,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20165,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20166,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20167,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20168,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20169,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20170,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20171,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20172,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20173,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20174,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20175,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20176,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20177,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20178,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20179,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20180,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20181,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20182,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20183,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20184,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20185,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20186,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20187,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20188,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20189,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20190,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20191,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20192,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20193,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20194,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20195,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20196,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20197,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20198,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20199,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20200,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20201,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20202,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20203,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20204,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20205,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20206,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20207,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20208,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20209,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20210,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20211,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20212,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20213,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20214,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20215,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20216,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20217,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20218,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20219,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20220,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20221,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20222,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20223,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20224,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20225,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20226,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20227,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20228,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20229,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20230,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20231,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20232,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20233,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20234,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20235,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20236,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20237,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20238,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20239,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20240,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20241,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20242,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20243,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20244,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20245,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20246,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20247,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20248,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20249,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20250,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20251,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20252,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20253,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20254,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20255,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20256,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20257,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20258,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20259,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20260,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20261,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20262,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20263,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20264,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20265,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20266,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20267,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20268,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20269,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20270,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20271,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20272,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20273,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20274,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20275,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20276,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20277,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20278,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20279,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20280,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20281,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20282,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20283,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20284,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20285,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20286,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20287,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20288,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20289,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20290,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20291,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20292,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20293,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20294,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20295,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20296,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20297,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20298,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20299,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20300,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20301,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20302,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20303,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20304,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20305,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20306,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20307,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20308,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20309,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20310,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20311,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20312,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20313,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20314,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20315,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20316,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20317,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20318,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20319,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20320,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20321,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20322,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20323,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20324,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20325,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20326,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20327,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20328,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20329,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20330,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20331,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20332,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20333,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20334,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20335,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20336,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20337,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20338,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20339,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20340,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20341,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20342,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20343,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20344,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20345,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20346,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20347,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20348,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20349,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20350,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20351,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20352,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20353,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20354,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20355,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20356,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20357,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20358,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20359,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20360,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20361,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20362,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20363,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20364,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20365,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20366,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20367,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20368,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20369,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20370,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20371,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20372,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20373,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20374,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20375,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20376,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20377,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20378,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20379,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20380,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20381,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20382,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20383,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20384,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20385,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20386,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20387,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20388,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20389,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20390,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20391,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20392,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20393,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20394,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20395,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20396,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20397,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20398,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20399,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20400,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20401,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20402,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20403,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20404,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20405,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20406,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20407,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20408,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20409,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20410,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20411,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20412,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20413,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20414,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20415,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20416,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20417,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20418,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20419,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20420,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20421,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20422,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20423,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20424,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20425,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20426,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20427,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20428,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20429,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20430,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20431,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20432,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20433,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20434,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20435,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20436,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20437,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20438,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20439,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20440,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20441,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20442,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20443,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20444,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20445,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20446,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20447,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20448,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20449,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20450,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20451,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20452,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20453,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20454,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20455,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20456,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20457,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20458,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20459,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20460,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20461,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20462,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20463,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20464,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20465,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20466,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20467,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20468,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20469,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20470,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20471,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20472,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20473,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20474,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20475,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20476,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20477,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20478,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20479,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20480,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20481,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20482,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20483,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20484,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20485,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20486,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20487,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20488,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20489,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20490,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20491,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20492,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20493,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20494,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20495,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20496,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20497,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20498,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20499,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20500,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20501,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20502,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20503,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20504,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20505,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20506,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20507,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20508,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20509,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20510,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20511,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20512,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20513,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20514,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20515,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20516,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20517,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20518,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20519,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20520,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20521,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20522,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20523,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20524,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20525,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20526,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20527,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20528,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20529,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20530,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20531,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20532,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20533,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20534,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20535,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20536,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20537,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20538,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20539,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20540,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20541,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20542,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20543,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20544,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20545,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20546,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20547,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20548,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20549,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20550,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20551,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20552,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20553,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20554,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20555,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20556,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20557,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20558,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20559,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20560,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20561,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20562,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20563,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20564,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20565,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20566,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20567,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20568,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20569,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20570,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20571,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20572,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20573,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20574,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20575,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20576,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20577,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20578,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20579,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20580,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20581,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20582,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20583,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20584,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20585,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20586,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20587,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20588,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20589,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20590,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20591,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20592,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20593,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20594,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20595,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20596,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20597,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20598,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20599,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20600,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20601,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20602,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20603,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20604,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20605,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20606,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20607,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20608,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20609,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20610,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20611,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20612,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20613,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20614,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20615,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20616,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20617,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20618,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20619,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20620,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20621,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20622,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20623,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20624,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20625,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20626,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20627,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20628,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20629,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20630,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20631,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20632,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20633,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20634,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20635,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20636,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20637,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20638,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20639,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20640,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20641,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20642,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20643,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20644,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20645,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20646,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20647,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20648,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20649,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20650,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20651,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20652,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20653,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20654,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20655,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20656,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20657,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20658,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20659,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20660,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20661,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20662,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20663,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20664,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20665,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20666,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20667,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20668,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20669,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20670,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20671,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20672,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20673,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20674,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20675,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20676,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20677,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20678,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20679,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20680,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20681,
+	"ClassId":2,
+	"Price":[450,2250]
+},{
+	"ItemId":20682,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20683,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20684,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20685,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20686,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20687,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20688,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20689,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20690,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20691,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20692,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20693,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20694,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20695,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20696,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20697,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20698,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20699,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20700,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20701,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20702,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20703,
+	"ClassId":2,
+	"Price":[900,4500]
+},{
+	"ItemId":20704,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20705,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20706,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20707,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20708,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20709,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20710,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20711,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20712,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20713,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20714,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20715,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20716,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20717,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20718,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20719,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20720,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20721,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20722,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20723,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20724,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20725,
+	"ClassId":2,
+	"Price":[1350,6750]
+},{
+	"ItemId":20726,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20727,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20728,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20729,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20730,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20731,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20732,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20733,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20734,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20735,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20736,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20737,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20738,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20739,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20740,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20741,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20742,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20743,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20744,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20745,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20746,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20747,
+	"ClassId":2,
+	"Price":[1800,9000]
+},{
+	"ItemId":20748,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20749,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20750,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20751,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20752,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20753,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20754,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20755,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20756,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20757,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20758,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20759,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20760,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20761,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20762,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20763,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20764,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20765,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20766,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20767,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20768,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20769,
+	"ClassId":2,
+	"Price":[2250,11250]
+},{
+	"ItemId":20770,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20771,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20772,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20773,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20774,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20775,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20776,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20777,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20778,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20779,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20780,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20781,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20782,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20783,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20784,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20785,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20786,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20787,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20788,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20789,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20790,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20791,
+	"ClassId":2,
+	"Price":[2700,13500]
+},{
+	"ItemId":20792,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20793,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20794,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20795,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20796,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20797,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20798,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20799,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20800,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20801,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20802,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20803,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20804,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20805,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20806,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20807,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20808,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20809,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20810,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20811,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20812,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20813,
+	"ClassId":2,
+	"Price":[3150,15750]
+},{
+	"ItemId":20814,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20815,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20816,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20817,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20818,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20819,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20820,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20821,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20822,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20823,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20824,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20825,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20826,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20827,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20828,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20829,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20830,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20831,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20832,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20833,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20834,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20835,
+	"ClassId":2,
+	"Price":[3600,18000]
+},{
+	"ItemId":20836,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20837,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20838,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20839,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20840,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20841,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20842,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20843,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20844,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20845,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20846,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20847,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20848,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20849,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20850,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20851,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20852,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20853,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20854,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20855,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20856,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20857,
+	"ClassId":2,
+	"Price":[4050,20250]
+},{
+	"ItemId":20858,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20859,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20860,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20861,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20862,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20863,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20864,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20865,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20866,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20867,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20868,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20869,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20870,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20871,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20872,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20873,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20874,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20875,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20876,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20877,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20878,
+	"ClassId":2,
+	"Price":[4500,22500]
+},{
+	"ItemId":20879,
+	"ClassId":2,
+	"Price":[4500,22500]
 }]
