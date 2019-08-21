@@ -134,6 +134,8 @@ namespace MirRemakeBackend.Network {
         APPLY_RECEIVE_ALL_MAIL,
         // 控制台相关
         CONSOLE_GAIN_CY_BY_NAME,
+        CONSOLE_SEAL_CHARACTER_BY_NAME,
+        CONSOLE_RELEASE_NOTICE,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,

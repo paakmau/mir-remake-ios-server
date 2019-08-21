@@ -454,6 +454,23 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    class CC_ConsoleSealCharacterByName : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CONSOLE_SEAL_CHARACTER_BY_NAME; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string name = reader.GetString ();
+            // TODO: 根据角色名封号
+        }
+    }
+
+    class CC_ConsoleReleaseNotice : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CONSOLE_RELEASE_NOTICE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string title = reader.GetString ();
+            string detail = reader.GetString ();
+            // TODO: 发布公告
+        }
+    }
+
     class CC_TestGainCy : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
         public void Execute (NetDataReader reader, int netId) {
