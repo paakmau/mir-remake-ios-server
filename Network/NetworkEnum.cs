@@ -68,6 +68,8 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_SHOW_MAIL_BOX,
         APPLY_SELF_READ_MAIL,
         APPLY_SELF_RECEIVE_MAIL,
+        // 公告
+        APPLY_SHOW_NOTICE,
         // 控制台
         CONSOLE_SUCCESS,
         CONSOLE_FAIL
@@ -132,6 +134,9 @@ namespace MirRemakeBackend.Network {
         APPLY_READ_ALL_MAIL,
         APPLY_RECEIVE_MAIL,
         APPLY_RECEIVE_ALL_MAIL,
+        // 公告相关
+        APPLY_SHOW_NOTICE,
+        APPLY_DELETE_NOTICE,
         // 控制台相关
         CONSOLE_GAIN_CY_BY_NAME,
         CONSOLE_SEAL_CHARACTER_BY_NAME,

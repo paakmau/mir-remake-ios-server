@@ -1271,6 +1271,26 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    /// <summary>
+    /// TODO: 发送所有的公告
+    /// </summary>
+    class SC_ApplyShowNotice : SingleToClientServerCommand {
+        private static SC_ApplyShowNotice s_instance = new SC_ApplyShowNotice ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SHOW_NOTICE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        IReadOnlyList<NO_Notice> m_notices;
+        public static SC_ApplyShowNotice Instance (int netId, IReadOnlyList<NO_Notice> notices) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_notices = notices;
+            return s_instance;
+        }
+        private SC_ApplyShowNotice () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((short)m_notices.Count);
+            for (int i = 0; i < m_notices.Count; i++) writer.Put (m_notices[i]);
+        }
+    }
+
     class SC_ConsoleSuccess : SingleToClientServerCommand {
         private static SC_ConsoleSuccess s_instance = new SC_ConsoleSuccess ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.CONSOLE_SUCCESS; } }

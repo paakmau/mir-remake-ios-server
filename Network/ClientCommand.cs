@@ -471,6 +471,21 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    class CC_ApplyShowNotice : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SHOW_NOTICE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            // TODO: 获取所有公告
+        } 
+    }
+
+    class CC_ApplyDeleteNotice : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DELETE_NOTICE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            short noticeId = reader.GetShort ();
+            // TODO: 删除公告
+        }
+    }
+
     class CC_TestGainCy : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.TEST_GAIN_CY; } }
         public void Execute (NetDataReader reader, int netId) {

@@ -299,6 +299,16 @@ namespace MirRemakeBackend.Network {
             m_isReceived = isReceived;
         }
     }
+    struct NO_Notice {
+        public short m_noticeId;
+        public string m_title;
+        public string m_detail;
+        public NO_Notice (short noticeId, string title, string detail) {
+            m_noticeId = noticeId;
+            m_title = title;
+            m_detail = detail;
+        }
+    }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.X);
@@ -664,6 +674,17 @@ namespace MirRemakeBackend.Network {
             bool isRead = reader.GetBool ();
             bool isReceived = reader.GetBool ();
             return new NO_Mail (mailId, senderCharId, senderName, recvCharId, sendTime, title, detail, itemIdAndNum, virtualCy, chargeCy, isRead, isReceived);
+        }
+        public static void Put (this NetDataWriter writer, NO_Notice notice) {
+            writer.Put (notice.m_noticeId);
+            writer.Put (notice.m_title);
+            writer.Put (notice.m_detail);
+        }
+        public static NO_Notice GetNotice (this NetDataReader reader) {
+            short noticeId = reader.GetShort ();
+            string title = reader.GetString ();
+            string detail = reader.GetString ();
+            return new NO_Notice (noticeId, title, detail);
         }
     }
 }
