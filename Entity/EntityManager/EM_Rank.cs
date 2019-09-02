@@ -7,7 +7,7 @@ namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 处理排行榜
     /// </summary>
-    class EM_Rank : EntityManagerBase {
+    class EM_Rank {
         public static EM_Rank s_instance;
         private IDDS_CombatEfct m_dds;
         public class CombatEffectiveItem : IComparable<CombatEffectiveItem> {

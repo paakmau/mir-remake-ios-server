@@ -9,7 +9,7 @@ namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引所有Character的可接, 不可接, 已接任务
     /// </summary>
-    class EM_Mission : EntityManagerBase {
+    class EM_Mission {
         private class MissionFactory {
             private interface IMissionTargetReseter {
                 MissionTargetType m_Type { get; }

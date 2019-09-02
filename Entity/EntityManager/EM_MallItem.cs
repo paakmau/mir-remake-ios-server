@@ -5,7 +5,7 @@ namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 处理商城物品
     /// </summary>
-    class EM_MallItem : EntityManagerBase {
+    class EM_MallItem {
         private class MallItemIdManager {
             private int m_groundItemIdCnt = 0;
             public int AssignGroundItemId () {

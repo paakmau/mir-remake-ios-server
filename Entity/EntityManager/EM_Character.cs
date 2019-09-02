@@ -1,18 +1,20 @@
-using System;
 using System.Collections.Generic;
 using System.Numerics;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引场景中所有的Character  
     /// </summary>
-    class EM_Character : EntityManagerBase {
+    class EM_Character {
         public static EM_Character s_instance;
         private DEM_Character m_dem;
         private IDDS_Character m_charDds;
         private IDDS_CharacterAttribute m_charAttrDds;
+        private const int c_characterPoolSize = 400;
+        public ObjectPool<E_Character> m_characterPool = new ObjectPool<E_Character> (c_characterPoolSize);
         private Dictionary<int, E_Character> m_networkIdAndCharacterDict = new Dictionary<int, E_Character> ();
         private Dictionary<int, int> m_netIdAndCharIdDict = new Dictionary<int, int> ();
         private Dictionary<int, int> m_charIdAndNetIdDict = new Dictionary<int, int> ();
@@ -38,7 +40,7 @@ namespace MirRemakeBackend.Entity {
                 // !m_charPosDds.GetCharacterPosition (charId, out charPosDdo)
             )
                 return null;
-            newChar = s_entityPool.m_characterPool.GetInstance ();
+            newChar = m_characterPool.GetInstance ();
             DE_Character charDe;
             DE_Unit unitDe;
             DE_CharacterData charDataDe;
@@ -61,7 +63,7 @@ namespace MirRemakeBackend.Entity {
             m_netIdAndCharIdDict.Remove (netId);
             m_charIdAndNetIdDict.Remove (charObj.m_characterId);
             m_networkIdAndCharacterDict.Remove (netId);
-            s_entityPool.m_characterPool.RecycleInstance (charObj);
+            m_characterPool.RecycleInstance (charObj);
         }
         public int[] GetAllCharId () {
             return m_charDds.GetAllCharacterId ();

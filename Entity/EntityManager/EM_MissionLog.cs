@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
-    class EM_MissionLog : EntityManagerBase {
+    class EM_MissionLog {
         class LogFactory {
             private const int c_poolSize = 5000;
             private Dictionary<MissionTargetType, ObjectPool> m_pool = new Dictionary<MissionTargetType, ObjectPool> ();

@@ -5,7 +5,7 @@ using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
-    class EM_Status : EntityManagerBase {
+    class EM_Status {
         private class StatusFactory {
             #region StatusInitializer
             private interface IStatusInitializer {
