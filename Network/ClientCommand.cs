@@ -467,7 +467,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             string title = reader.GetString ();
             string detail = reader.GetString ();
-            GL_Notice.s_instance.CommandReleaseNotice (title, detail);
+            GL_Console.s_instance.CommandReleaseNotice (netId, title, detail);
         }
     }
 
@@ -476,14 +476,14 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             GL_Notice.s_instance.CommandShowNotice (netId);
             // TODO: 获取所有公告
-        } 
+        }
     }
 
     class CC_ApplyDeleteNotice : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DELETE_NOTICE; } }
         public void Execute (NetDataReader reader, int netId) {
             int noticeId = reader.GetInt ();
-            GL_Notice.s_instance.CommandDeleteNotice (noticeId);
+            GL_Console.s_instance.CommandDeleteNotice (netId, noticeId);
         }
     }
 

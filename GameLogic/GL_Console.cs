@@ -23,5 +23,13 @@ namespace MirRemakeBackend.GameLogic {
                 GL_Wallet.s_instance.NotifyUpdateCurrency (charId, type, dC);
             m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (consoleNetId));
         }
+        public void CommandReleaseNotice (int netId, string title, string detail) {
+            GL_Notice.s_instance.NotifyReleaseNotice (title, detail);
+            m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (netId));
+        }
+        public void CommandDeleteNotice (int netId, int id) {
+            GL_Notice.s_instance.NotifyDeleteNotice (id);
+            m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (netId));
+        }
     }
 }

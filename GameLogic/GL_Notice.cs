@@ -10,10 +10,10 @@ namespace MirRemakeBackend.GameLogic {
             // TODO: 每隔24小时清理公告
         }
         public override void NetworkTick () { }
-        public void CommandReleaseNotice (string title, string detail) {
+        public void NotifyReleaseNotice (string title, string detail) {
             EM_Notice.s_instance.ReleaseNotice (title, detail);
         }
-        public void CommandDeleteNotice (int id) {
+        public void NotifyDeleteNotice (int id) {
             EM_Notice.s_instance.DeleteNotice (id);
         }
         public void CommandShowNotice (int netId) {
