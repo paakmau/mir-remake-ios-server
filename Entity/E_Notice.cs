@@ -1,5 +1,6 @@
 using System;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
     class E_Notice {
@@ -13,6 +14,9 @@ namespace MirRemakeBackend.Entity {
             m_time = ddo.m_time;
             m_title = ddo.m_title;
             m_detail = ddo.m_detail;
+        }
+        public NO_Notice GetNo () {
+            return new NO_Notice (m_id, m_time, m_title, m_detail);
         }
     }
 }
