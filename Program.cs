@@ -138,11 +138,12 @@ namespace MirRemakeBackend {
                 // GL_Chat.s_instance,
                 // GL_Console.s_instance,
                 GL_Item.s_instance,
-                // GL_Mail.s_instance,
+                GL_Mail.s_instance,
                 GL_Mall.s_instance,
                 GL_Mission.s_instance,
                 GL_MissionLog.s_instance,
                 GL_MonsterAction.s_instance,
+                GL_Notice.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,
                 // GL_Wallet.s_instance
