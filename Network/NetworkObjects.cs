@@ -300,11 +300,13 @@ namespace MirRemakeBackend.Network {
         }
     }
     struct NO_Notice {
-        public short m_noticeId;
+        public int m_noticeId;
+        public DateTime m_time;
         public string m_title;
         public string m_detail;
-        public NO_Notice (short noticeId, string title, string detail) {
+        public NO_Notice (int noticeId, DateTime time, string title, string detail) {
             m_noticeId = noticeId;
+            m_time = time;
             m_title = title;
             m_detail = detail;
         }
@@ -677,14 +679,16 @@ namespace MirRemakeBackend.Network {
         }
         public static void Put (this NetDataWriter writer, NO_Notice notice) {
             writer.Put (notice.m_noticeId);
+            writer.Put (notice.m_time);
             writer.Put (notice.m_title);
             writer.Put (notice.m_detail);
         }
         public static NO_Notice GetNotice (this NetDataReader reader) {
-            short noticeId = reader.GetShort ();
+            int noticeId = reader.GetInt ();
+            DateTime time = reader.GetDateTime ();
             string title = reader.GetString ();
             string detail = reader.GetString ();
-            return new NO_Notice (noticeId, title, detail);
+            return new NO_Notice (noticeId, time, title, detail);
         }
     }
 }

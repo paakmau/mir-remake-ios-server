@@ -1,5 +1,6 @@
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.Network;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.GameLogic {
     class GL_Notice : GameLogicBase {
@@ -14,6 +15,9 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void CommandDeleteNotice (int id) {
             EM_Notice.s_instance.DeleteNotice (id);
+        }
+        public void CommandShowNotice () {
+            var noticeList = EM_Notice.s_instance.GetAllNotice ();
         }
     }
 }

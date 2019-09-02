@@ -474,6 +474,7 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyShowNotice : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SHOW_NOTICE; } }
         public void Execute (NetDataReader reader, int netId) {
+            GL_Notice.s_instance.CommandShowNotice ();
             // TODO: 获取所有公告
         } 
     }
