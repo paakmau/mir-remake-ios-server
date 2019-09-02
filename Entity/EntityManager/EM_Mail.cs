@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
-    class EM_Mail : EntityManagerBase {
+    class EM_Mail {
         public static EM_Mail s_instance;
         private IDDS_Mail m_dds;
+        private const int c_mailPoolSize = 2000;
+        public ObjectPool<E_Mail> m_mailPool = new ObjectPool<E_Mail> (c_mailPoolSize);
         private Dictionary<int, List<E_Mail>> m_mailDict = new Dictionary<int, List<E_Mail>> ();
         public EM_Mail (IDDS_Mail dds) { m_dds = dds; }
         public void InitCharacter (int netId, int charId) {
@@ -13,7 +16,7 @@ namespace MirRemakeBackend.Entity {
             List<DDO_Mail> ddoList = m_dds.GetAllMailByReceiverCharacterId (charId);
             List<E_Mail> mailList = new List<E_Mail> (ddoList.Count);
             for (int i = 0; i < ddoList.Count; i++) {
-                var mail = s_entityPool.m_mailPool.GetInstance ();
+                var mail = m_mailPool.GetInstance ();
                 mail.Reset (ddoList[i]);
                 mailList.Add (mail);
             }
@@ -23,7 +26,7 @@ namespace MirRemakeBackend.Entity {
             List<E_Mail> mailList;
             if (!m_mailDict.TryGetValue (netId, out mailList)) return;
             for (int i = 0; i < mailList.Count; i++)
-                s_entityPool.m_mailPool.RecycleInstance (mailList[i]);
+                m_mailPool.RecycleInstance (mailList[i]);
             m_mailDict.Remove (netId);
         }
         public IReadOnlyList<E_Mail> GetAllMailByNetId (int netId) {
@@ -50,7 +53,7 @@ namespace MirRemakeBackend.Entity {
             m_dds.UpdateMailReceived (mail.m_id, mail.m_isReceived);
         }
         public void SendMail (int senderCharId, string senderName, int recvNetId, int recvCharId, string title, string detail, IReadOnlyList < (short, short) > itemIdAndNumList, long virtualCy, long chargeCy) {
-            E_Mail mail = s_entityPool.m_mailPool.GetInstance ();
+            E_Mail mail = m_mailPool.GetInstance ();
             mail.Reset (-1, senderCharId, senderName, recvCharId, DateTime.Now, title, detail, itemIdAndNumList, virtualCy, chargeCy, false, false);
             mail.m_id = m_dds.InsertMail (mail.GetDdo ());
 
@@ -58,7 +61,7 @@ namespace MirRemakeBackend.Entity {
             if (m_mailDict.TryGetValue (recvNetId, out recvMailBox)) {
                 recvMailBox.Add (mail);
             } else {
-                s_entityPool.m_mailPool.RecycleInstance (mail);
+                m_mailPool.RecycleInstance (mail);
             }
         }
     }

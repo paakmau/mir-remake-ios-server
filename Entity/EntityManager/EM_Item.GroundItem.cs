@@ -7,7 +7,7 @@ namespace MirRemakeBackend.Entity {
     /// 管理游戏场景中出现的所有道具
     /// 范围: 仓库, 背包, 地面
     /// </summary>
-    partial class EM_Item : EntityManagerBase {
+    partial class EM_Item {
         private class GroundItemIdManager {
             private long m_groundItemIdCnt = 0;
             public long AssignGroundItemId () {
@@ -29,12 +29,12 @@ namespace MirRemakeBackend.Entity {
                 if (m_groundItemList[i] == gndItem)
                     m_groundItemList.RemoveAt (i);
             // 回收gndItem
-            s_entityPool.m_groundItemPool.RecycleInstance (gndItem);
+            m_groundItemPool.RecycleInstance (gndItem);
             return res;
         }
         public void CharacterDropItemOntoGround (E_Item item, short num, int charId, E_Bag repo, short repoPos, Vector2 gndCenterPos) {
             if (num == 0) return;
-            E_GroundItem gndItem = s_entityPool.m_groundItemPool.GetInstance ();
+            E_GroundItem gndItem = m_groundItemPool.GetInstance ();
             long gndItemId = m_groundItemIdManager.AssignGroundItemId ();
             Vector2 gndPos = gndCenterPos + new Vector2 (MyRandom.NextFloat (0, 2) - 1, MyRandom.NextFloat (0, 2) - 1);
             if (num >= item.m_num) {
@@ -67,7 +67,7 @@ namespace MirRemakeBackend.Entity {
             var item = m_itemFactory.GetAndInitInstance (itemId, num);
             if (item == null)
                 return;
-            var gndItem = s_entityPool.m_groundItemPool.GetInstance ();
+            var gndItem = m_groundItemPool.GetInstance ();
             long groundItemId = m_groundItemIdManager.AssignGroundItemId ();
             gndItem.Reset (groundItemId, MyTimer.s_CurTime.Ticked (c_groundItemDisappearTime), item, charId, pos);
             m_groundItemList.Add (gndItem);
@@ -75,7 +75,7 @@ namespace MirRemakeBackend.Entity {
         public void RefreshGroundItemAutoDisappear () {
             for (int i = m_groundItemList.Count - 1; i >= 0; i--)
                 if (MyTimer.CheckTimeUp (m_groundItemList[i].m_disappearTime)) {
-                    s_entityPool.m_groundItemPool.RecycleInstance (m_groundItemList[i]);
+                    m_groundItemPool.RecycleInstance (m_groundItemList[i]);
                     m_itemFactory.RecycleItem (m_groundItemList[i].m_item);
                     m_groundItemList.RemoveAt (i);
                 }

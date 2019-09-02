@@ -5,7 +5,7 @@ namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 怪物不需要内存池因为每个怪物都需要Respawn且不会永久消失  
     /// </summary>
-    class EM_Monster : EntityManagerBase {
+    class EM_Monster {
         public static EM_Monster s_instance;
         private DEM_Monster m_dem;
         private Dictionary<int, E_Monster> m_networkIdAndMonsterDict = new Dictionary<int, E_Monster> ();

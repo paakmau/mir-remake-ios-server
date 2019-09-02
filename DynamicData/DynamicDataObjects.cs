@@ -203,5 +203,11 @@ namespace MirRemakeBackend.DynamicData {
         public DateTime m_time;
         public string m_title;
         public string m_detail;
+        public DDO_Notice (int id, DateTime time, string title, string detail) {
+            m_id = id;
+            m_time = time;
+            m_title = title;
+            m_detail = detail;
+        }
     }
 }

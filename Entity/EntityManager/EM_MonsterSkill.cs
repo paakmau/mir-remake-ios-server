@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using MirRemakeBackend.DataEntity;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引Monster的技能  
     /// </summary>
-    class EM_MonsterSkill : EntityManagerBase {
+    class EM_MonsterSkill {
         public static EM_MonsterSkill s_instance;
         // 每只怪物的技能
         private Dictionary<int, E_MonsterSkill[]> m_skillDict = new Dictionary<int, E_MonsterSkill[]> ();

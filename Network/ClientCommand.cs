@@ -467,7 +467,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             string title = reader.GetString ();
             string detail = reader.GetString ();
-            // TODO: 发布公告
+            GL_Notice.s_instance.CommandReleaseNotice (title, detail);
         }
     }
 

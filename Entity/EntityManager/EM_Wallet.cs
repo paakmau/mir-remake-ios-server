@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
-    class EM_Wallet : EntityManagerBase {
+    class EM_Wallet {
         public static EM_Wallet s_instance;
         private IDDS_CharacterWallet m_dds;
         private Dictionary < int, (long, long) > m_walletDict = new Dictionary < int, (long, long) > ();

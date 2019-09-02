@@ -10,11 +10,21 @@ namespace MirRemakeBackend.Entity {
     /// 管理游戏场景中出现的所有道具
     /// 范围: 仓库, 背包, 地面
     /// </summary>
-    partial class EM_Item : EntityManagerBase {
+    partial class EM_Item {
         public static EM_Item s_instance;
         private DEM_Item m_dem;
         private ItemFactory m_itemFactory;
         private ItemDynamicDataHelper m_ddh;
+        private const int c_repositoryPoolSize = 400;
+        private const int c_groundItemPoolSize = 2000;
+        private const int c_marketItemPoolSize = 2000;
+        private const int c_marketPoolSize = 200;
+        public ObjectPool<E_Bag> m_bagPool = new ObjectPool<E_Bag> (c_repositoryPoolSize);
+        public ObjectPool<E_StoreHouse> m_storeHousePool = new ObjectPool<E_StoreHouse> (c_repositoryPoolSize);
+        public ObjectPool<E_EquipmentRegion> m_equipmentRegionPool = new ObjectPool<E_EquipmentRegion> (c_repositoryPoolSize);
+        public ObjectPool<E_GroundItem> m_groundItemPool = new ObjectPool<E_GroundItem> (c_groundItemPoolSize);
+        public ObjectPool<E_MarketItem> m_marketItemPool = new ObjectPool<E_MarketItem> (c_marketItemPoolSize);
+        public ObjectPool<E_Market> m_marketPool = new ObjectPool<E_Market> (c_marketPoolSize);
         private Dictionary<int, E_Bag> m_bagDict = new Dictionary<int, E_Bag> ();
         private Dictionary<int, E_StoreHouse> m_storeHouseDict = new Dictionary<int, E_StoreHouse> ();
         private Dictionary<int, E_EquipmentRegion> m_equipmentRegionDict = new Dictionary<int, E_EquipmentRegion> ();
@@ -44,9 +54,9 @@ namespace MirRemakeBackend.Entity {
                 return;
             }
             // 初始化背包, 仓库, 装备区
-            bag = s_entityPool.m_bagPool.GetInstance ();
-            storeHouse = s_entityPool.m_storeHousePool.GetInstance ();
-            eqRegion = s_entityPool.m_equipmentRegionPool.GetInstance ();
+            bag = m_bagPool.GetInstance ();
+            storeHouse = m_storeHousePool.GetInstance ();
+            eqRegion = m_equipmentRegionPool.GetInstance ();
 
             E_Item[] itemInBag, itemInStoreHouse, itemEquiped;
             m_ddh.GetAndResetCharacterItemInstance (charId, out itemInBag, out itemInStoreHouse, out itemEquiped);
@@ -82,9 +92,9 @@ namespace MirRemakeBackend.Entity {
                 m_itemFactory.RecycleItem (storeHouse.m_itemList[i]);
             for (int i = 0; i < equiped.m_itemList.Count; i++)
                 m_itemFactory.RecycleItem (equiped.m_itemList[i]);
-            s_entityPool.m_bagPool.RecycleInstance (bag);
-            s_entityPool.m_storeHousePool.RecycleInstance (storeHouse);
-            s_entityPool.m_equipmentRegionPool.RecycleInstance (equiped);
+            m_bagPool.RecycleInstance (bag);
+            m_storeHousePool.RecycleInstance (storeHouse);
+            m_equipmentRegionPool.RecycleInstance (equiped);
 
             // 地面物品视野
             m_characterGroundItemSightDict.Remove (netId);

@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using MirRemakeBackend.DataEntity;
-using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 管理游戏场景中出现的所有道具
     /// 范围: 仓库, 背包, 地面
     /// </summary>
-    partial class EM_Item : EntityManagerBase {
+    partial class EM_Item {
         private Dictionary<int, E_Market> m_marketDict = new Dictionary<int, E_Market> ();
         public E_Market GetMarket (int netId) {
             E_Market res;
@@ -37,11 +33,11 @@ namespace MirRemakeBackend.Entity {
                 short bagPos;
                 var itemObj = bag.GetItemByRealId (item.Item1, out bagPos);
                 if (itemObj == null) continue;
-                var marketItem = s_entityPool.m_marketItemPool.GetInstance ();
+                var marketItem = m_marketItemPool.GetInstance ();
                 marketItem.Reset (itemObj, Math.Min (itemObj.m_num, item.Item2), item.Item3, item.Item4, bagPos);
                 marketItemList.Add (marketItem);
             }
-            var market = s_entityPool.m_marketPool.GetInstance ();
+            var market = m_marketPool.GetInstance ();
             market.Reset (marketItemList);
             m_marketDict[netId] = market;
             resMarket = market;
@@ -51,7 +47,7 @@ namespace MirRemakeBackend.Entity {
             if (!m_marketDict.TryGetValue (netId, out market))
                 return;
             for (int i = 0; i < market.m_itemList.Count; i++)
-                s_entityPool.m_marketItemPool.RecycleInstance (market.m_itemList[i]);
+                m_marketItemPool.RecycleInstance (market.m_itemList[i]);
             m_marketDict.Remove (netId);
         }
         public void CharacterBuyItemInMarket (int holderCharId, int buyerNetId, int buyerCharId, E_Market market, E_MarketItem marketItem, short num, short marketPos, E_Bag holderBag, E_Bag buyerBag, out E_Item resHolderItem, out List < (short, E_Item) > resBuyerItem, out E_Item resBuyerStoreItem, out short resBuyerStorePos) {

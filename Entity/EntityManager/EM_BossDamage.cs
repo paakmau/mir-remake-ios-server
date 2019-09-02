@@ -5,7 +5,7 @@ namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 处理阵营信息, 组队
     /// </summary>
-    class EM_BossDamage : EntityManagerBase {
+    class EM_BossDamage {
         public static EM_BossDamage s_instance;
         private const float c_bossDmgRefreshTime = 1800;
         /// <summary>

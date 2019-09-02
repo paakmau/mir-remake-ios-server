@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引Character的所学技能  
     /// </summary>
-    class EM_Skill : EntityManagerBase {
+    class EM_Skill {
         public static EM_Skill s_instance;
+        private const int c_skillPoolSize = 5000;
+        public ObjectPool<E_Skill> m_skillPool = new ObjectPool<E_Skill> (c_skillPoolSize);
         private DEM_Skill m_dem;
         private IDDS_Skill m_dds;
         private Dictionary<int, Dictionary<short, E_Skill>> m_characterSkillDict = new Dictionary<int, Dictionary<short, E_Skill>> ();
@@ -37,7 +40,7 @@ namespace MirRemakeBackend.Entity {
                 DE_SkillData dataDe;
                 if (!m_dem.GetSkillByIdAndLevel (ddoList[i].m_skillId, ddoList[i].m_skillLevel, out de, out dataDe))
                     continue;
-                E_Skill skillObj = s_entityPool.m_skillPool.GetInstance ();
+                E_Skill skillObj = m_skillPool.GetInstance ();
                 skillObj.Reset (de, dataDe, ddoList[i]);
                 res[i] = skillObj;
                 charSkillDict.Add (skillObj.m_SkillId, skillObj);
@@ -52,7 +55,7 @@ namespace MirRemakeBackend.Entity {
             m_characterSkillDict.Remove (netId);
             var en = skills.GetEnumerator ();
             while (en.MoveNext ())
-                s_entityPool.m_skillPool.RecycleInstance (en.Current.Value);
+                m_skillPool.RecycleInstance (en.Current.Value);
         }
         public E_Skill GetCharacterSkillByIdAndNetworkId (short skillId, int netId) {
             Dictionary<short, E_Skill> learnedSkill = null;

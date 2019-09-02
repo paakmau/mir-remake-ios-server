@@ -5,7 +5,7 @@ namespace MirRemakeBackend.Entity {
     /// 管理场景中Character的视野信息  
     /// 存放场景中所有能够显示的单位  
     /// </summary>
-    class EM_Sight : EntityManagerBase {
+    class EM_Sight {
         public static EM_Sight s_instance;
         private Dictionary<int, E_Unit> m_netIdAndUnitVisibleDict = new Dictionary<int, E_Unit> ();
         /// <summary>
