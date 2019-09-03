@@ -1272,7 +1272,7 @@ namespace MirRemakeBackend.Network {
     }
 
     /// <summary>
-    /// TODO: 发送所有的公告
+    /// 发送所有的公告
     /// </summary>
     class SC_ApplyShowNotice : SingleToClientServerCommand {
         private static SC_ApplyShowNotice s_instance = new SC_ApplyShowNotice ();
