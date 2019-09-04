@@ -43,16 +43,37 @@ namespace MirRemakeBackend.GameLogic {
                         var newProgs = checker.GetNewProgress (misId, misTars[j], curProgs, logObj);
                         // 任务进度更新
                         if (curProgs != newProgs) {
-                            // client
                             misTars[j].m_Progress = newProgs;
                             dirty = true;
+                            // client
                             m_networkService.SendServerCommand (SC_ApplySelfMissionProgress.Instance (netId, misId, (byte) j, newProgs));
                         }
                     }
                     if (dirty)
                         EM_Mission.s_instance.UpdateMission (charId, misObj);
                 }
-                // TODO: 称号任务的遍历
+                // 称号任务的遍历
+                var titleMisDict = EM_Mission.s_instance.GetCharAllTitleMisDict (netId);
+                var titleMisEn = titleMisDict.GetEnumerator ();
+                while (titleMisEn.MoveNext ()) {
+                    var misId = misEn.Current.Key;
+                    var misObj = misEn.Current.Value;
+                    var misTars = misObj.m_tarList;
+                    bool dirty = false;
+                    for (int j = 0; j < misTars.Count; j++) {
+                        if (misTars[j].m_Type != logObj.m_LogType) continue;
+                        var checker = m_progressCheckerDict[misTars[j].m_Type];
+                        var curProgs = misTars[j].m_Progress;
+                        var newProgs = checker.GetNewProgress (misId, misTars[j], curProgs, logObj);
+                        if (curProgs != newProgs) {
+                            misTars[j].m_Progress = newProgs;
+                            dirty = true;
+                            // TODO: client 称号新的接口
+                        }
+                    }
+                    if (dirty)
+                        EM_Mission.s_instance.UpdateTitleMission (charId, misObj);
+                }
             }
         }
         public override void NetworkTick () { }

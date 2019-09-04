@@ -244,6 +244,9 @@ namespace MirRemakeBackend.Entity {
             // 持久化
             m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTABLE));
         }
+        public void UpdateTitleMission (int charId, E_Mission mission) {
+            // TODO: title mission 的持久化
+        }
         public void UpdateMission (int charId, E_Mission mis) {
             m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
         }
