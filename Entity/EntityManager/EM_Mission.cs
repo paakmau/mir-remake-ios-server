@@ -89,6 +89,8 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, HashSet<short>> m_acceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         /// <summary>已解锁但不可接</summary>
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
+        /// <summary>称号任务</summary>
+        private Dictionary<int, Dictionary<short, E_Mission>> m_titleMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_fact = new MissionFactory (dem); m_dds = dds; }
         public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
@@ -126,6 +128,8 @@ namespace MirRemakeBackend.Entity {
                     unacceptableMissionSet.Add (ddoList[i].m_missionId);
             }
 
+            // TODO: 读取称号任务
+
             // 返回
             resAcceptedMisIdList = CollectionUtils.GetDictValueList (acceptedMissionDict);
             resAcceptableMisIdList = CollectionUtils.GetSetList (acceptableMissionSet);
@@ -144,7 +148,12 @@ namespace MirRemakeBackend.Entity {
         }
         public Dictionary<short, E_Mission> GetCharAllMisDict (int netId) {
             Dictionary<short, E_Mission> res;
-            m_acceptedMissionDict.TryGetValue(netId, out res);
+            m_acceptedMissionDict.TryGetValue (netId, out res);
+            return res;
+        }
+        public Dictionary<short, E_Mission> GetCharAllTitleMisDict (int netId) {
+            Dictionary<short, E_Mission> res;
+            m_titleMissionDict.TryGetValue (netId, out res);
             return res;
         }
         public Dictionary<short, E_Mission> GetAllAcceptedMission (int netId) {
