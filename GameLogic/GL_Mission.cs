@@ -54,6 +54,7 @@ namespace MirRemakeBackend.GameLogic {
                 }
                 // 称号任务的遍历
                 var titleMisDict = EM_Mission.s_instance.GetCharAllTitleMisDict (netId);
+                if (titleMisDict == null) continue;
                 var titleMisEn = titleMisDict.GetEnumerator ();
                 while (titleMisEn.MoveNext ()) {
                     var misId = misEn.Current.Key;
