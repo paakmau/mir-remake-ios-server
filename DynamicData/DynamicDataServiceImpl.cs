@@ -454,6 +454,51 @@ namespace MirRemakeBackend.DynamicData {
 
         }
 
+        public List<DDO_Mission> GetTitleMissionListByCharacterId (int charId){
+            string cmd;
+            DataSet ds = new DataSet ();
+            cmd = "select * from `title` where charid=" + charId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd, ds);
+            DataTable dt = ds.Tables[0];
+            List<DDO_Mission> missions = new List<DDO_Mission> ();
+            for (int i = 0; i < dt.Rows.Count; i++) {
+                DDO_Mission mission = new DDO_Mission ();
+                mission.m_missionId = short.Parse (dt.Rows[i]["titleid"].ToString ());
+                mission.m_characterId = short.Parse (dt.Rows[i]["charid"].ToString ());
+                mission.m_missionTargetProgressList = new List<int> ();
+                string[] targets = dt.Rows[i]["target"].ToString ().Split (' ');
+                mission.m_missionTargetProgressList = new List<int> ();
+                if (targets[0] != "") {
+                    for (int j = 0; j < targets.Length; j++) {
+                        mission.m_missionTargetProgressList.Add (int.Parse (targets[j]));
+                    }
+                }
+                mission.m_status = (MissionStatus) Enum.Parse (typeof (MissionStatus), dt.Rows[i]["status"].ToString ());
+                missions.Add (mission);
+            }
+            return missions;
+        }
+        public void InsertTitleMission (DDO_Mission ddo){
+            string target=ddo.m_missionTargetProgressList[0].ToString();
+            string cmd=String.Format("insert into `title` values({0},{1},\"{2}\",\"{3}\");",ddo.m_missionId,ddo.m_characterId,target,ddo.m_status.ToString());
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        public void UpdateTitleMission (DDO_Mission ddo){
+            string cmd;
+            string target=ddo.m_missionTargetProgressList[0].ToString();
+            string status = ddo.m_status.ToString ();
+            cmd = String.Format("update `title` set `target`=\"{0}\",`status`=\"{1}\" where charid={2} and titleid={3};",target,ddo.m_status.ToString(),ddo.m_characterId,ddo.m_missionId);
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
+        public void DeleteTitleMission (short missionId, int charId){
+            string cmd;
+            cmd = "delete from `title` where charid=" + charId + " and titleid=" + missionId + ";";
+            string database = "legend";
+            pool.ExecuteSql (database, cmd);
+        }
         //CHARACTER POSITION
         public bool UpdateCharacterPosition (DDO_CharacterPosition cp) {
             string cmd;
