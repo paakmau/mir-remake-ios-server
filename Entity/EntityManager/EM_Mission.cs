@@ -8,6 +8,7 @@ using MirRemakeBackend.Util;
 namespace MirRemakeBackend.Entity {
     /// <summary>
     /// 索引所有Character的可接, 不可接, 已接任务
+    /// 称号
     /// </summary>
     class EM_Mission {
         private class MissionFactory {
@@ -92,18 +93,21 @@ namespace MirRemakeBackend.Entity {
         /// <summary>称号任务</summary>
         private Dictionary<int, Dictionary<short, E_Mission>> m_titleMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_fact = new MissionFactory (dem); m_dds = dds; }
-        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList) {
+        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
+            Dictionary<short, E_Mission> oriTitleMisDict;
             // 若角色已经加载
-            if (m_acceptedMissionDict.TryGetValue (netId, out oriAcceptedMisDict) && m_acceptableMissionDict.TryGetValue (netId, out oriAcceptableMisSet) && m_unacceptableMissionDict.TryGetValue (netId, out oriUnacceptableMisSet)) {
+            if (m_acceptedMissionDict.TryGetValue (netId, out oriAcceptedMisDict) && m_acceptableMissionDict.TryGetValue (netId, out oriAcceptableMisSet) && m_unacceptableMissionDict.TryGetValue (netId, out oriUnacceptableMisSet) && m_titleMissionDict.TryGetValue (netId, out oriTitleMisDict)) {
                 resAcceptedMisIdList = CollectionUtils.GetDictValueList (oriAcceptedMisDict);
                 resAcceptableMisIdList = CollectionUtils.GetSetList (oriAcceptableMisSet);
                 resUnacceptableMisIdList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
+                resTitleMissionList = CollectionUtils.GetDictValueList (oriTitleMisDict);
                 return;
             }
 
+            // 读取普通任务ddo
             var ddoList = m_dds.GetMissionListByCharacterId (charId);
 
             // 读取已接任务
@@ -128,12 +132,20 @@ namespace MirRemakeBackend.Entity {
                     unacceptableMissionSet.Add (ddoList[i].m_missionId);
             }
 
-            // TODO: 读取称号任务
+            // 读取称号任务
+            var titleDdoList = m_dds.GetTitleMissionListByCharacterId (charId);
+            Dictionary<short, E_Mission> titleMisDict = new Dictionary<short, E_Mission> (titleDdoList.Count);
+            for (int i=0; i<titleDdoList.Count; i++) {
+                E_Mission mis = m_fact.GetInstance (titleDdoList[i].m_missionId, ddoList[i].m_missionTargetProgressList);
+                titleMisDict[titleDdoList[i].m_missionId] = mis;
+            }
+            m_titleMissionDict.Add (netId, titleMisDict);
 
             // 返回
             resAcceptedMisIdList = CollectionUtils.GetDictValueList (acceptedMissionDict);
             resAcceptableMisIdList = CollectionUtils.GetSetList (acceptableMissionSet);
             resUnacceptableMisIdList = CollectionUtils.GetSetList (unacceptableMissionSet);
+            resTitleMissionList = CollectionUtils.GetDictValueList (titleMisDict);
         }
         public void RemoveCharacter (int netId) {
             m_acceptableMissionDict.Remove (netId);
@@ -245,7 +257,7 @@ namespace MirRemakeBackend.Entity {
             m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTABLE));
         }
         public void UpdateTitleMission (int charId, E_Mission mission) {
-            // TODO: title mission 的持久化
+            m_dds.UpdateTitleMission (mission.GetDdo (charId, MissionStatus.ACCEPTED));
         }
         public void UpdateMission (int charId, E_Mission mis) {
             m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
