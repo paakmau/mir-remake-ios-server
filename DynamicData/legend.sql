@@ -77,6 +77,16 @@ create table `mission`(
 CREATE INDEX `missionid` ON `mission`(`missionid`);
 CREATE INDEX `charid` ON `mission`(`charid`);
 
+DROP TABLE IF EXISTS `title`;
+create table `title`(
+  `titleid` int NOT NULL,
+  `charid` int NOT NULL,
+  `target` VARCHAR(150) NOT NULL,
+  `status` VARCHAR(255) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `titleid` ON `title`(`titleid`);
+CREATE INDEX `charid` ON `title`(`charid`);
+
 DROP TABLE IF EXISTS `character_position`;
 CREATE TABLE `character_position` (
   `charid` int NOT NULL AUTO_INCREMENT,
