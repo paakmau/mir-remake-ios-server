@@ -556,6 +556,7 @@ namespace MirRemakeBackend.GameLogic {
             var gemList = eqObj.m_InlaidGemList;
             for (int i = 0; i < gemList.Count; i++) {
                 var gemDe = gemList[i];
+                if (gemDe == null) continue;
                 for (int j = 0; j < gemDe.m_attrList.Count; j++)
                     res.Add ((gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2));
             }
