@@ -49,7 +49,7 @@ namespace MirRemakeBackend.Entity {
             m_netIdAndCharIdDict[netId] = charId;
             m_charIdAndNetIdDict[charId] = netId;
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, new Vector2 (42, 24));
+            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, new Vector2 (165, 116/* 42, 24 */));
             return newChar;
         }
         /// <summary>
