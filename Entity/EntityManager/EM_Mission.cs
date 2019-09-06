@@ -92,6 +92,8 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         /// <summary>称号任务</summary>
         private Dictionary<int, Dictionary<short, E_Mission>> m_titleMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
+        /// <summary>佩戴的称号</summary>
+        private Dictionary<int, short> m_attachedTitleDict = new Dictionary<int, short> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_fact = new MissionFactory (dem); m_dds = dds; }
         public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
@@ -135,11 +137,13 @@ namespace MirRemakeBackend.Entity {
             // 读取称号任务
             var titleDdoList = m_dds.GetTitleMissionListByCharacterId (charId);
             Dictionary<short, E_Mission> titleMisDict = new Dictionary<short, E_Mission> (titleDdoList.Count);
-            for (int i=0; i<titleDdoList.Count; i++) {
+            for (int i = 0; i < titleDdoList.Count; i++) {
                 E_Mission mis = m_fact.GetInstance (titleDdoList[i].m_missionId, ddoList[i].m_missionTargetProgressList);
                 titleMisDict[titleDdoList[i].m_missionId] = mis;
             }
             m_titleMissionDict.Add (netId, titleMisDict);
+
+            // TODO: 读取角色已佩戴的称号
 
             // 返回
             resAcceptedMisIdList = CollectionUtils.GetDictValueList (acceptedMissionDict);
@@ -282,6 +286,18 @@ namespace MirRemakeBackend.Entity {
                 unaMisSet.Remove (changedList[i]);
                 acableMisSet.Add (changedList[i]);
             }
+        }
+        public bool AttachTitle (int netId, short misId) {
+            Dictionary<short, E_Mission> titleMisDict;
+            if (!m_titleMissionDict.TryGetValue (netId, out titleMisDict)) return false;
+            E_Mission titleMis;
+            if (!titleMisDict.TryGetValue (misId, out titleMis)) return false;
+            if (!titleMis.m_IsFinished) return false;
+            m_attachedTitleDict[netId] = misId;
+            return true;
+        }
+        public void DetachTitle (int netId) {
+            m_attachedTitleDict.Remove (netId);
         }
         private bool CanUnlock (DE_Mission de, OccupationType ocp) {
             if ((de.m_occupation & ocp) == 0)

@@ -32,25 +32,31 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public void NotifyBuyItemBagFullSendToMailBoxSendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 所购商品发送至邮箱"));
+            SendSystemMsg (netId, "背包已满，所购商品发送至邮箱");
         }
         public void NotifyBuyItemBagFullSendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 无法购买"));
+            SendSystemMsg (netId, "背包已满，无法购买");
         }
         public void NotifyBuyItemCyErrSendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "购买方式不正确, 无法购买"));
+            SendSystemMsg (netId, "购买方式不正确，无法购买");
         }
         public void NotifyBuyItemShortOfCySendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "货币不足, 无法购买"));
+            SendSystemMsg (netId, "货币不足，无法购买");
         }
         public void NotifyPickUpGroundItemBagFullSendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 无法拾取"));
+            SendSystemMsg (netId, "背包已满，无法拾取");
         }
         public void NotifyMissionRewardBagFullSendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 任务报酬发送至邮箱"));
+            SendSystemMsg (netId, "背包已满，任务报酬发送至邮箱");
         }
         public void NotifyReceiveMailBagFullSendMessage (int netId) {
-            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", "背包已满, 邮件领取失败"));
+            SendSystemMsg (netId, "背包已满，邮件领取失败");
+        }
+        public void NotifyAttachTitleFail (int netId) {
+            SendSystemMsg (netId, "称号佩戴失败");
+        }
+        private void SendSystemMsg (int netId, string msg) {
+            m_networkService.SendServerCommand (SC_ApplyAllReceiveMessage.Instance (netId, ChattingChanelType.SYSTEM, -1, "", msg));
         }
     }
 }

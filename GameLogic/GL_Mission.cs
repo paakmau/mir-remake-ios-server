@@ -21,7 +21,7 @@ namespace MirRemakeBackend.GameLogic {
             }
         }
         public override void Tick (float dT) {
-            // 根据之前产生的 logs 更新所有角色的任务进度
+            // 根据之前产生的 logs 更新所有角色的任务进度, 称号进度
             var logs = EM_MissionLog.s_instance.GetLogsSecondTick ();
             for (int i = 0; i < logs.Count; i++) {
                 var logObj = logs[i];
@@ -69,7 +69,8 @@ namespace MirRemakeBackend.GameLogic {
                         if (curProgs != newProgs) {
                             misTars[j].m_Progress = newProgs;
                             dirty = true;
-                            // TODO: client 称号新的接口
+                            // client 称号任务更新
+                            m_networkService.SendServerCommand (SC_ApplySelfTitleMissionProgress.Instance (netId, misId, (byte) j, newProgs));
                         }
                     }
                     if (dirty)
@@ -124,6 +125,13 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.CancelMission (netId, charObj.m_characterId, misObj);
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
+        public void CommandAttachTitle (int netId, short misId) {
+            if (EM_Mission.s_instance.AttachTitle (netId, misId))
+                m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
+            else
+                GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
+        }
+        public void CommandDetachTitle (int netId, short misId) { }
         public void NotifyInitCharacter (int netId, int charId) {
             // 实例化任务
             List<E_Mission> acceptedMis;
@@ -142,6 +150,10 @@ namespace MirRemakeBackend.GameLogic {
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Mission.s_instance.RemoveCharacter (netId);
+        }
+        public void NotifyCharacterLevelUp (int netId, short lv) {
+            EM_Mission.s_instance.RefreshUnlockedMission (netId, lv);
+            // TODO: 发送解锁
         }
     }
 }

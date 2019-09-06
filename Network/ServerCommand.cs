@@ -1244,16 +1244,12 @@ namespace MirRemakeBackend.Network {
         private static SC_ApplySelfDetachTitle s_instance = new SC_ApplySelfDetachTitle ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DETACH_TITLE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        private short m_missionId;
-        public static SC_ApplySelfDetachTitle Instance (int netId, short missionId) {
+        public static SC_ApplySelfDetachTitle Instance (int netId) {
             s_instance.ResetToClientNetId (netId);
-            s_instance.m_missionId = missionId;
             return s_instance;
         }
         private SC_ApplySelfDetachTitle () { }
-        public override void PutData (NetDataWriter writer) {
-            writer.Put (m_missionId);
-        }
+        public override void PutData (NetDataWriter writer) { }
     }
 
     class SC_ApplySelfShowMall : SingleToClientServerCommand {
@@ -1364,7 +1360,7 @@ namespace MirRemakeBackend.Network {
         }
         private SC_ApplyShowNotice () { }
         public override void PutData (NetDataWriter writer) {
-            writer.Put ((short)m_notices.Count);
+            writer.Put ((short) m_notices.Count);
             for (int i = 0; i < m_notices.Count; i++) writer.Put (m_notices[i]);
         }
     }
