@@ -125,7 +125,7 @@ namespace MirRemakeBackend.DynamicData {
             string gems;
             if (eq.m_inlaidGemIdList.Count != 0) {
                 gems = eq.m_inlaidGemIdList[0].ToString ();
-                for (int i = 0; i < eq.m_inlaidGemIdList.Count; i++) {
+                for (int i = 1; i < eq.m_inlaidGemIdList.Count; i++) {
                     gems = gems + " " + eq.m_inlaidGemIdList[i].ToString ();
                 }
             } else {
