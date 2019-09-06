@@ -153,7 +153,7 @@ namespace MirRemakeBackend.DynamicData {
                 gems = "";
             }
             string enchantAttr = GetString (eq.m_enchantAttr);
-            cmd = "insert into `equipment` values(null," + eq.m_characterId + "," + eq.m_strengthNum + ",\"" + gems + "\",\"" + enchantAttr + "\");";
+            cmd = "insert into `equipment` values("+eq.m_realId+"," + eq.m_characterId + "," + eq.m_strengthNum + ",\"" + gems + "\",\"" + enchantAttr + "\");";
             string database = "legend";
             pool.ExecuteSql (database, cmd);
         }
