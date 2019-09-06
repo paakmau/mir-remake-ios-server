@@ -160,29 +160,12 @@ namespace MirRemakeBackend {
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
             DynamicDataServiceImpl dma = new DynamicDataServiceImpl ();
-            DDO_Mission m=new DDO_Mission();
-            /*m.m_missionId=345;
-            m.m_characterId=4396;
-            m.m_missionTargetProgressList=new System.Collections.Generic.List<int>();
-            m.m_missionTargetProgressList.Add(6324);
-            m.m_status=MissionStatus.ACCEPTABLE;
-            dma.InsertTitleMission(m);
-            m.m_missionId=2134;
-            m.m_missionTargetProgressList=new System.Collections.Generic.List<int>();
-            m.m_missionTargetProgressList.Add(12306);
-            m.m_status=MissionStatus.ACCEPTED;
-            dma.InsertTitleMission(m);*/
-            m.m_missionId=600;
-            m.m_characterId=626;
-            m.m_missionTargetProgressList=new System.Collections.Generic.List<int>();
-            m.m_missionTargetProgressList.Add(1234);
-            m.m_status=MissionStatus.LOCKED;
-            //dma.InsertTitleMission(m);
-            System.Collections.Generic.List<DDO_Mission> ms=dma.GetTitleMissionListByCharacterId(4396);
-            m.m_status=MissionStatus.ACCEPTABLE;
-            m.m_missionTargetProgressList[0]=1;
-            dma.UpdateTitleMission(m);
-            dma.DeleteTitleMission(ms[0].m_missionId,ms[0].m_characterId);
+            DDO_EquipmentInfo eq=new DDO_EquipmentInfo();
+            System.Collections.Generic.List<DDO_EquipmentInfo> eqs=new System.Collections.Generic.List<DDO_EquipmentInfo>();
+            eqs=dma.GetAllEquipmentByCharacterId(1);
+            eq=eqs[0];
+            eq.m_strengthNum=123;
+            dma.UpdateEquipmentInfo(eq);
         }
     }
 }
