@@ -227,6 +227,7 @@ namespace MirRemakeBackend.GameLogic {
             // 强化
             eq.m_strengthenNum++;
             EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
+            // client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateEquipment.Instance (netId, realId, eq.GetEquipmentInfoNo ()));
         }
         public void CommandApplyEnchantEquipment (int netId, long eqRealId, long enchantmentRealId) {
@@ -288,7 +289,7 @@ namespace MirRemakeBackend.GameLogic {
 
             // client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, gemPos) }));
-            m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateEquipment.Instance (netId, eqRealId, eq.GetEquipmentInfoNo ()));
         }
         /// <summary> 装备打孔 </summary>
         public void CommandApplyMakeHoleInEquipment (int netId, long realId) {
