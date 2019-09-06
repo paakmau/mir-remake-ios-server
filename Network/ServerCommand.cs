@@ -1224,6 +1224,38 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    class SC_ApplySelfAttachTitle : SingleToClientServerCommand {
+        private static SC_ApplySelfAttachTitle s_instance = new SC_ApplySelfAttachTitle ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_ATTACH_TITLE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        public static SC_ApplySelfAttachTitle Instance (int netId, short missionId) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_missionId = missionId;
+            return s_instance;
+        }
+        private SC_ApplySelfAttachTitle () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
+        }
+    }
+
+    class SC_ApplySelfDetachTitle : SingleToClientServerCommand {
+        private static SC_ApplySelfDetachTitle s_instance = new SC_ApplySelfDetachTitle ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DETACH_TITLE; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        public static SC_ApplySelfDetachTitle Instance (int netId, short missionId) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_missionId = missionId;
+            return s_instance;
+        }
+        private SC_ApplySelfDetachTitle () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
+        }
+    }
+
     class SC_ApplySelfShowMall : SingleToClientServerCommand {
         private static SC_ApplySelfShowMall s_instance = new SC_ApplySelfShowMall ();
         public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_SHOW_MALL; } }
