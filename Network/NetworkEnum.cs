@@ -11,6 +11,7 @@ namespace MirRemakeBackend.Network {
         INIT_SELF_ATTRIBUTE,
         INIT_SELF_SKILL,
         INIT_SELF_MISSION,
+        INIT_SELF_TITLE_MISSION,
         INIT_SELF_ITEM,
         // 视野相关
         APPLY_OTHER_MONSTER_IN_SIGHT,
@@ -58,6 +59,7 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_MISSION_PROGRESS,
         APPLY_SELF_MISSION_UNLOCK,
         APPLY_SELF_MISSION_ACCEPTABLE,
+        APPLY_SELF_TITLE_MISSION_PROGRESS,
         // 技能相关
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
         // 商城

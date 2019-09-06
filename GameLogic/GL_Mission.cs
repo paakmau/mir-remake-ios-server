@@ -133,9 +133,12 @@ namespace MirRemakeBackend.GameLogic {
             List<NO_Mission> acceptedMisNo = new List<NO_Mission> (acceptedMis.Count);
             for (int i = 0; i < acceptedMis.Count; i++)
                 acceptedMisNo.Add (acceptedMis[i].GetNo ());
+            List<NO_Mission> titleMisNo = new List<NO_Mission> (titleMis.Count);
+            for (int i = 0; i < titleMis.Count; i++)
+                titleMisNo.Add (titleMis[i].GetNo ());
             // client
             m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMisNo, acceptableMis, unacceptableMis));
-            // TODO: 发送所有称号任务
+            m_networkService.SendServerCommand (SC_InitSelfTitleMission.Instance (netId, titleMisNo));
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Mission.s_instance.RemoveCharacter (netId);

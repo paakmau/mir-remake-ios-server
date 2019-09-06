@@ -220,6 +220,7 @@ namespace MirRemakeBackend.Network {
             }
         }
     }
+
     /// <summary>
     /// 初始化任务情况
     /// </summary>
@@ -253,6 +254,29 @@ namespace MirRemakeBackend.Network {
                 writer.Put (m_unacceptableMis[i]);
         }
     }
+
+    /// <summary>
+    /// 初始化称号任务情况
+    /// </summary>
+    class SC_InitSelfTitleMission : SingleToClientServerCommand {
+        private static readonly SC_InitSelfTitleMission s_instance = new SC_InitSelfTitleMission ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_TITLE_MISSION; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary> 称号任务列表 </summary>
+        IReadOnlyList<NO_Mission> m_titleMis;
+        public static SC_InitSelfTitleMission Instance (int netId, IReadOnlyList<NO_Mission> titleMis) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_titleMis = titleMis;
+            return s_instance;
+        }
+        private SC_InitSelfTitleMission () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte) m_titleMis.Count);
+            for (int i = 0; i < m_titleMis.Count; i++)
+                writer.Put (m_titleMis[i]);
+        }
+    }
+
     /// <summary>
     /// 初始化所持道具
     /// </summary>
@@ -1175,6 +1199,28 @@ namespace MirRemakeBackend.Network {
             writer.Put ((byte) m_acceptableMis.Count);
             for (int i = 0; i < m_acceptableMis.Count; i++)
                 writer.Put (m_acceptableMis[i]);
+        }
+    }
+
+    class SC_ApplySelfTitleMissionProgress : SingleToClientServerCommand {
+        private static SC_ApplySelfTitleMissionProgress s_instance = new SC_ApplySelfTitleMissionProgress ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_TITLE_MISSION_PROGRESS; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private short m_missionId;
+        private byte m_targetIndex;
+        private int m_progress;
+        public static SC_ApplySelfTitleMissionProgress Instance (int netId, short missionId, byte targetIdx, int progress) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_missionId = missionId;
+            s_instance.m_targetIndex = targetIdx;
+            s_instance.m_progress = progress;
+            return s_instance;
+        }
+        private SC_ApplySelfTitleMissionProgress () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_missionId);
+            writer.Put (m_targetIndex);
+            writer.Put (m_progress);
         }
     }
 
