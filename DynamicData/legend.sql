@@ -57,7 +57,7 @@ CREATE INDEX `charid` ON `item`(`charid`);
 
 DROP TABLE IF EXISTS `equipment`;
 CREATE table `equipment`(
-  `realid` int not null AUTO_INCREMENT,
+  `realid` int not null,
   `charid` int not null,
   `strength_num` int not null,
   `gem_list` VARCHAR(255) NOT NULL,
