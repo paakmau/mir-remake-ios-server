@@ -76,8 +76,10 @@ namespace MirRemakeBackend.Entity
             private class II_Equipment : IItemDealer {
                 public ItemType m_ItemType { get { return ItemType.EQUIPMENT; } }
                 public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    var realId = dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                    item.ResetRealId (realId);
                     dds.InsertEquipmentInfo (((E_EquipmentItem) item).GetEquipmentInfoDdo (charId));
-                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                    return realId;
                 }
                 public void Save (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
                     dds.UpdateItem (item.GetItemDdo (charId, ip, pos));
@@ -116,8 +118,10 @@ namespace MirRemakeBackend.Entity
             private class II_Enchantment : IItemDealer {
                 public ItemType m_ItemType { get { return ItemType.ENCHANTMENT; } }
                 public long Insert (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
+                    var realId = dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                    item.ResetRealId (realId);
                     dds.InsertEnchantmentInfo ((item as E_EnchantmentItem).GetEnchantmentDdoInfo (charId));
-                    return dds.InsertItem (item.GetItemDdo (charId, ip, pos));
+                    return realId;
                 }
                 public void Save (IDDS_Item dds, E_Item item, int charId, ItemPlace ip, short pos) {
                     dds.UpdateItem (item.GetItemDdo (charId, ip, pos));
