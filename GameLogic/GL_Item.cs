@@ -227,6 +227,7 @@ namespace MirRemakeBackend.GameLogic {
             // 强化
             eq.m_strengthenNum++;
             EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateEquipment.Instance (netId, realId, eq.GetEquipmentInfoNo ()));
         }
         public void CommandApplyEnchantEquipment (int netId, long eqRealId, long enchantmentRealId) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
@@ -253,7 +254,7 @@ namespace MirRemakeBackend.GameLogic {
 
             // client
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, encmPos) }));
-            m_netSenderDict[eq.m_Type].SendItemInfo (eq, netId, m_networkService);
+            m_networkService.SendServerCommand (SC_ApplySelfUpdateEquipment.Instance (netId, eqRealId, eq.GetEquipmentInfoNo ()));
         }
         /// <summary> 镶嵌宝石 </summary>
         public void CommandApplyInlayGemInEquipment (int netId, long eqRealId, long gemRealId) {
