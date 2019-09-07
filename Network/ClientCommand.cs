@@ -186,13 +186,13 @@ namespace MirRemakeBackend.Network {
     /// <summary>
     /// 卸除的装备
     /// </summary>
-    // class CC_ApplyTakeOffEquipmentItem : IClientCommand {
-    //     public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_TAKE_OFF_EQUIPMENT_ITEM; } }
-    //     public void Execute (NetDataReader reader, int netId) {
-    //         int itemRealId = reader.GetInt ();
-    //         GL_Item.s_instance.CommandApplyTakeOffEquipmentItem (netId, itemRealId);
-    //     }
-    // }
+    class CC_ApplyTakeOffEquipmentItem : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_TAKE_OFF_EQUIPMENT_ITEM; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int itemRealId = reader.GetInt ();
+            GL_Item.s_instance.CommandApplyTakeOffEquipmentItem (netId, itemRealId);
+        }
+    }
 
     /// <summary>
     /// 出售背包中的物品
