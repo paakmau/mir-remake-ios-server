@@ -77,9 +77,6 @@ namespace MirRemakeBackend.Entity
             public void RecycleItem (E_Item item) {
                 m_poolDict[item.m_Type].RecycleInstance (item);
             }
-            private E_Item GetInstance (ItemType type) {
-                return m_poolDict[type].GetInstanceObj () as E_Item;
-            }
             public E_EmptyItem GetEmptyItemInstance () {
                 return GetAndInitInstance (-1, 0) as E_EmptyItem;
             }
@@ -93,7 +90,7 @@ namespace MirRemakeBackend.Entity
                 var de = m_dem.GetItemById (itemId);
                 if (de == null) return null;
                 var initializer = m_itemInitializerDict[de.m_type];
-                var res = GetInstance (de.m_type);
+                var res = m_poolDict[de.m_type].GetInstanceObj () as E_Item;
                 initializer.Initialize (m_dem, res, de, num);
                 return res;
             }
