@@ -102,6 +102,8 @@ namespace MirRemakeBackend.Network {
         // 地面物品扔拾; 背包物品 使用, 交易等
         APPLY_PICK_UP_ITEM_ON_GROUND,
         APPLY_DROP_ITEM_ONTO_GROUND,
+        APPLY_SAVE_ITEM_INTO_STORE_HOUSE,
+        APPLY_TAKE_OUT_ITEM_FROM_STORE_HOUSE,
         APPLY_USE_CONSUMABLE_ITEM,
         APPLY_USE_EQUIPMENT_ITEM,
         APPLY_TAKE_OFF_EQUIPMENT_ITEM,

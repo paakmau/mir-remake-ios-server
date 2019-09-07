@@ -150,6 +150,7 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandPickUpGroundItem (netId, gndItemId);
         }
     }
+
     /// <summary>
     /// 丢弃物品
     /// </summary>
@@ -161,6 +162,31 @@ namespace MirRemakeBackend.Network {
             GL_Item.s_instance.CommandDropItemOntoGround (netId, realId, num);
         }
     }
+
+    /// <summary>
+    /// 在仓库中储存物品
+    /// </summary>
+    class CC_ApplySaveItemIntoStoreHouse : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_SAVE_ITEM_INTO_STORE_HOUSE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long realId = reader.GetLong ();
+            short num = reader.GetShort ();
+            // TODO: 存储装备
+        }
+    }
+
+    /// <summary>
+    /// 从仓库中取出物品
+    /// </summary>
+    class CC_ApplyTakeOutItemFromStoreHouse : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_TAKE_OUT_ITEM_FROM_STORE_HOUSE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            long realId = reader.GetLong ();
+            short num = reader.GetShort ();
+            // TODO: 取出装备
+        }
+    }
+
     /// <summary>
     /// 使用消耗品
     /// </summary>
