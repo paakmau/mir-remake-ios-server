@@ -35,6 +35,16 @@ namespace MirRemakeBackend.Entity {
                 return;
             m_itemList[pos] = item;
         }
+        public short GetEmptySlot (out E_EmptyItem resSlot) {
+            for (short i = 0; i < m_itemList.Count; i++) {
+                if (m_itemList[i].m_IsEmpty) {
+                    resSlot = m_itemList[i] as E_EmptyItem;
+                    return i;
+                }
+            }
+            resSlot = null;
+            return -1;
+        }
         /// <summary>
         /// 存储一个Item  
         /// 背包内的因为插入而被修改的物品 (pos, obj) 列表  

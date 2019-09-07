@@ -206,6 +206,25 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_networkService.SendServerCommand (SC_ApplyAllChangeEquipment.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, eq.m_ItemId));
         }
+        public void CommandApplyTakeOffEquipmentItem (int netId, long realId) {
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            E_EquipmentRegion eqRegion = EM_Item.s_instance.GetEquiped (netId);
+            E_Bag bag = EM_Item.s_instance.GetBag (netId);
+            if (charObj == null || eqRegion == null || bag == null) return;
+            // 得到装备
+            short posInEqRegion;
+            var eq = eqRegion.GetItemByRealId (realId, out posInEqRegion) as E_EquipmentItem;
+            if (eq == null) return;
+            // 寻找背包空插槽
+            E_EmptyItem bagSlot;
+            var bagPos = bag.GetEmptySlot (out bagSlot);
+            if (bagPos < 0 || bagSlot == null) return;
+            NotifyCharacterSwapItemPlace (netId, charObj.m_characterId, bag, bagPos, bagSlot, eqRegion, posInEqRegion, eq);
+            // 装备脱下改变Attr
+            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, -1));
+            // client TODO: 卸除装备接口
+            m_networkService.SendServerCommand (SC_ApplyAllChangeEquipment.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, eq.m_ItemId));
+        }
         public void CommandApplyBuildEquipment (int netId, (short, short) [] matArr) {
             // TODO: 打造装备
         }
