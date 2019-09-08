@@ -193,8 +193,8 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyUseConsumableItem : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_USE_CONSUMABLE_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
-            int itemRealId = reader.GetInt ();
-            GL_Item.s_instance.CommandApplyUseConsumableItem (netId, itemRealId);
+            long realId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyUseConsumableItem (netId, realId);
         }
     }
 
@@ -204,8 +204,8 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyUseEquipmentItem : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_USE_EQUIPMENT_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
-            int itemRealId = reader.GetInt ();
-            GL_Item.s_instance.CommandApplyUseEquipmentItem (netId, itemRealId);
+            long realId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyUseEquipmentItem (netId, realId);
         }
     }
 
@@ -215,8 +215,8 @@ namespace MirRemakeBackend.Network {
     class CC_ApplyTakeOffEquipmentItem : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_TAKE_OFF_EQUIPMENT_ITEM; } }
         public void Execute (NetDataReader reader, int netId) {
-            int itemRealId = reader.GetInt ();
-            GL_Item.s_instance.CommandApplyTakeOffEquipmentItem (netId, itemRealId);
+            long realId = reader.GetLong ();
+            GL_Item.s_instance.CommandApplyTakeOffEquipmentItem (netId, realId);
         }
     }
 
