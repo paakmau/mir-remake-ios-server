@@ -103,7 +103,7 @@ namespace MirRemakeBackend {
             // EM init
             EntityManagerInitializer.Init (skillDem, monDem);
             // 角色创建器
-            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, skillDds, misDds, itemDds, combatEfctDds, s_networkService);
+            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, skillDds, misDds, titleDds, itemDds, combatEfctDds, s_networkService);
         }
         static void InitGameLogic () {
             // GameLogic
