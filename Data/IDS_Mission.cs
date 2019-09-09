@@ -5,7 +5,10 @@ using LitJson;
 namespace MirRemakeBackend.Data {
     interface IDS_Mission {
         DO_Mission[] GetAllMission ();
-        ValueTuple<DO_MissionTargetKillMonsterData[], DO_MissionTargetGainItemData[], DO_MissionTargetLevelUpSkillData[]> GetAllMissionDatas ();
+        DO_Mission[] GetAllTitleMission ();
+        DO_MissionTargetKillMonsterData[] GetAllMissionTargetKillMonster ();
+        DO_MissionTargetGainItemData[] GetAllMissionTargetGainItem ();
+        DO_MissionTargetLevelUpSkillData[] GetAllMissionTargetLevelUpSkill ();
     }
     class DS_MissionImpl : IDS_Mission {
         private JsonData m_missionDatas;

@@ -15,12 +15,17 @@ namespace MirRemakeBackend.DataEntity {
             var doArr = ds.GetAllMission ();
             foreach (var mDo in doArr)
                 m_misDict.Add (mDo.m_id, new DE_Mission (mDo));
-            var misDataDos = ds.GetAllMissionDatas ();
-            foreach (var killMonDo in misDataDos.Item1)
+            var titleDoArr = ds.GetAllTitleMission ();
+            foreach (var tmDo in titleDoArr)
+                m_misDict.Add (tmDo.m_id, new DE_Mission (tmDo));
+            var misTarKillMon = ds.GetAllMissionTargetKillMonster ();
+            foreach (var killMonDo in misTarKillMon)
                 m_misTarKillMonDict.Add (killMonDo.m_id, new DE_MissionTargetKillMonster (killMonDo));
-            foreach (var gainItemDo in misDataDos.Item2)
+            var misTarGainItem = ds.GetAllMissionTargetGainItem ();
+            foreach (var gainItemDo in misTarGainItem)
                 m_misTarGainItemDict.Add (gainItemDo.m_id, new DE_MissionTargetGainItem (gainItemDo));
-            foreach (var levelUpSkillDo in misDataDos.Item3)
+            var misTarLvUpSkill = ds.GetAllMissionTargetLevelUpSkill ();
+            foreach (var levelUpSkillDo in misTarLvUpSkill)
                 m_misTarLevelUpSkillDict.Add (levelUpSkillDo.m_id, new DE_MissionTargetLevelUpSkill (levelUpSkillDo));
         }
         public DE_Mission GetMissionById (short missionId) {
