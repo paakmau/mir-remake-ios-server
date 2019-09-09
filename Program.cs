@@ -82,7 +82,7 @@ namespace MirRemakeBackend {
             IDDS_CombatEfct combatEfctDds = ddsImpl;
             IDDS_Mail mailDds = ddsImpl;
             IDDS_Notice noticeDds = ddsImpl;
-            IDDS_Title titleDds = null; // TODO: 
+            IDDS_Title titleDds = ddsImpl;
             // EntityManager
             EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
