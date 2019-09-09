@@ -96,7 +96,7 @@ namespace MirRemakeBackend.Entity {
         /// <summary>佩戴的称号</summary>
         private Dictionary<int, short> m_attachedTitleDict = new Dictionary<int, short> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission misDds, IDDS_Title titleDds) { m_dem = dem; m_fact = new MissionFactory (dem); m_misDds = misDds; m_titleDds = titleDds; }
-        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList) {
+        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList, out short resAttachedTitleMisId) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
@@ -107,6 +107,8 @@ namespace MirRemakeBackend.Entity {
                 resAcceptableMisIdList = CollectionUtils.GetSetList (oriAcceptableMisSet);
                 resUnacceptableMisIdList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
                 resTitleMissionList = CollectionUtils.GetDictValueList (oriTitleMisDict);
+                if (!m_attachedTitleDict.TryGetValue(netId, out resAttachedTitleMisId))
+                    resAttachedTitleMisId = -1;
                 return;
             }
 
@@ -154,6 +156,7 @@ namespace MirRemakeBackend.Entity {
             resAcceptableMisIdList = CollectionUtils.GetSetList (acceptableMissionSet);
             resUnacceptableMisIdList = CollectionUtils.GetSetList (unacceptableMissionSet);
             resTitleMissionList = CollectionUtils.GetDictValueList (titleMisDict);
+            resAttachedTitleMisId = attachedTitleMisId;
         }
         public void RemoveCharacter (int netId) {
             m_acceptableMissionDict.Remove (netId);

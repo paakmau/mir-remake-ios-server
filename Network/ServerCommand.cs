@@ -264,9 +264,11 @@ namespace MirRemakeBackend.Network {
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
         /// <summary> 称号任务列表 </summary>
         IReadOnlyList<NO_Mission> m_titleMis;
-        public static SC_InitSelfTitleMission Instance (int netId, IReadOnlyList<NO_Mission> titleMis) {
+        short m_attachedTitleMisId;
+        public static SC_InitSelfTitleMission Instance (int netId, IReadOnlyList<NO_Mission> titleMis, short attachedTitleMisId) {
             s_instance.ResetToClientNetId (netId);
             s_instance.m_titleMis = titleMis;
+            s_instance.m_attachedTitleMisId = attachedTitleMisId;
             return s_instance;
         }
         private SC_InitSelfTitleMission () { }
@@ -274,6 +276,7 @@ namespace MirRemakeBackend.Network {
             writer.Put ((byte) m_titleMis.Count);
             for (int i = 0; i < m_titleMis.Count; i++)
                 writer.Put (m_titleMis[i]);
+            writer.Put (m_attachedTitleMisId);
         }
     }
 
