@@ -131,7 +131,9 @@ namespace MirRemakeBackend.GameLogic {
             else
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
         }
-        public void CommandDetachTitle (int netId, short misId) { }
+        public void CommandDetachTitle (int netId, short misId) {
+            EM_Mission.s_instance.DetachTitle (netId);
+        }
         public void NotifyInitCharacter (int netId, int charId) {
             // 实例化任务
             List<E_Mission> acceptedMis;
