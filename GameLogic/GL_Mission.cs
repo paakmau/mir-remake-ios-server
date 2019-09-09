@@ -126,6 +126,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
         public void CommandAttachTitle (int netId, short misId) {
+            // TODO: 称号dds
             if (EM_Mission.s_instance.AttachTitle (netId, misId))
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
             else

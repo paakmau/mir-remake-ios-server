@@ -83,7 +83,8 @@ namespace MirRemakeBackend.Entity {
         public static EM_Mission s_instance;
         private MissionFactory m_fact;
         private DEM_Mission m_dem;
-        private IDDS_Mission m_dds;
+        private IDDS_Mission m_misDds;
+        private IDDS_Title m_titleDds;
         /// <summary>已接任务</summary>
         private Dictionary<int, Dictionary<short, E_Mission>> m_acceptedMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         /// <summary>可接任务</summary>
@@ -94,7 +95,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, Dictionary<short, E_Mission>> m_titleMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         /// <summary>佩戴的称号</summary>
         private Dictionary<int, short> m_attachedTitleDict = new Dictionary<int, short> ();
-        public EM_Mission (DEM_Mission dem, IDDS_Mission dds) { m_dem = dem; m_fact = new MissionFactory (dem); m_dds = dds; }
+        public EM_Mission (DEM_Mission dem, IDDS_Mission misDds, IDDS_Title titleDds) { m_dem = dem; m_fact = new MissionFactory (dem); m_misDds = misDds; m_titleDds = titleDds; }
         public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
@@ -110,7 +111,7 @@ namespace MirRemakeBackend.Entity {
             }
 
             // 读取普通任务ddo
-            var ddoList = m_dds.GetMissionListByCharacterId (charId);
+            var ddoList = m_misDds.GetMissionListByCharacterId (charId);
 
             // 读取已接任务
             Dictionary<short, E_Mission> acceptedMissionDict = new Dictionary<short, E_Mission> (ddoList.Count);
@@ -135,7 +136,7 @@ namespace MirRemakeBackend.Entity {
             }
 
             // 读取称号任务
-            var titleDdoList = m_dds.GetTitleMissionListByCharacterId (charId);
+            var titleDdoList = m_misDds.GetTitleMissionListByCharacterId (charId);
             Dictionary<short, E_Mission> titleMisDict = new Dictionary<short, E_Mission> (titleDdoList.Count);
             for (int i = 0; i < titleDdoList.Count; i++) {
                 E_Mission mis = m_fact.GetInstance (titleDdoList[i].m_missionId, ddoList[i].m_missionTargetProgressList);
@@ -143,7 +144,10 @@ namespace MirRemakeBackend.Entity {
             }
             m_titleMissionDict.Add (netId, titleMisDict);
 
-            // TODO: 读取角色已佩戴的称号
+            // 读取角色已佩戴的称号
+            var attachedTitleMisId = m_titleDds.GetAttachedTitle (charId);
+            if (attachedTitleMisId != -1)
+                m_attachedTitleDict[netId] = attachedTitleMisId;
 
             // 返回
             resAcceptedMisIdList = CollectionUtils.GetDictValueList (acceptedMissionDict);
@@ -201,7 +205,7 @@ namespace MirRemakeBackend.Entity {
             acceptableSet.Remove (misId);
             acceptedDict[misId] = mis;
             // 持久化
-            m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
+            m_misDds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
             return mis;
         }
         /// <summary>
@@ -239,11 +243,11 @@ namespace MirRemakeBackend.Entity {
                 }
             }
             // 持久化
-            m_dds.DeleteMission (mis.m_MissionId, charId);
+            m_misDds.DeleteMission (mis.m_MissionId, charId);
             for (int i = 0; i < resNewAcceptableMis.Count; i++)
-                m_dds.InsertMission (new DDO_Mission (resNewAcceptableMis[i], charId, MissionStatus.ACCEPTABLE, new List<int> ()));
+                m_misDds.InsertMission (new DDO_Mission (resNewAcceptableMis[i], charId, MissionStatus.ACCEPTABLE, new List<int> ()));
             for (int i = 0; i < resNewUnacceptableMis.Count; i++)
-                m_dds.InsertMission (new DDO_Mission (resNewUnacceptableMis[i], charId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
+                m_misDds.InsertMission (new DDO_Mission (resNewUnacceptableMis[i], charId, MissionStatus.UNLOCKED_BUT_UNACCEPTABLE, new List<int> ()));
         }
         public void CancelMission (int netId, int charId, E_Mission mis) {
             HashSet<short> acceptableSet = null;
@@ -258,13 +262,13 @@ namespace MirRemakeBackend.Entity {
             acceptableSet.Add (mis.m_MissionId);
 
             // 持久化
-            m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTABLE));
+            m_misDds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTABLE));
         }
         public void UpdateTitleMission (int charId, E_Mission mission) {
-            m_dds.UpdateTitleMission (mission.GetDdo (charId, MissionStatus.ACCEPTED));
+            m_misDds.UpdateTitleMission (mission.GetDdo (charId, MissionStatus.ACCEPTED));
         }
         public void UpdateMission (int charId, E_Mission mis) {
-            m_dds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
+            m_misDds.UpdateMission (mis.GetDdo (charId, MissionStatus.ACCEPTED));
         }
         /// <summary>
         /// 刷新已解锁任务中的可接任务
@@ -288,16 +292,22 @@ namespace MirRemakeBackend.Entity {
             }
         }
         public bool AttachTitle (int netId, short misId) {
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
+            if (charId == -1) return false;
             Dictionary<short, E_Mission> titleMisDict;
             if (!m_titleMissionDict.TryGetValue (netId, out titleMisDict)) return false;
             E_Mission titleMis;
             if (!titleMisDict.TryGetValue (misId, out titleMis)) return false;
             if (!titleMis.m_IsFinished) return false;
             m_attachedTitleDict[netId] = misId;
+            m_titleDds.UpdateAttachedTitle (charId, misId);
             return true;
         }
         public void DetachTitle (int netId) {
+            int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
+            if (charId == -1) return;
             m_attachedTitleDict.Remove (netId);
+            m_titleDds.UpdateAttachedTitle (charId, -1);
         }
         private bool CanUnlock (DE_Mission de, OccupationType ocp) {
             if ((de.m_occupation & ocp) == 0)

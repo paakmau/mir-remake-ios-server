@@ -82,6 +82,7 @@ namespace MirRemakeBackend {
             IDDS_CombatEfct combatEfctDds = ddsImpl;
             IDDS_Mail mailDds = ddsImpl;
             IDDS_Notice noticeDds = ddsImpl;
+            IDDS_Title titleDds = null; // TODO: 
             // EntityManager
             EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
@@ -89,7 +90,7 @@ namespace MirRemakeBackend {
             EM_Item.s_instance = new EM_Item (itemDem, itemDds);
             EM_Mail.s_instance = new EM_Mail (mailDds);
             EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
-            EM_Mission.s_instance = new EM_Mission (misDem, misDds);
+            EM_Mission.s_instance = new EM_Mission (misDem, misDds, titleDds);
             EM_Monster.s_instance = new EM_Monster (monDem);
             EM_MonsterSkill.s_instance = new EM_MonsterSkill ();
             EM_Notice.s_instance = new EM_Notice (noticeDds);
