@@ -397,6 +397,27 @@ namespace MirRemakeBackend.Network {
     }
 
     /// <summary>
+    /// 装配一个称号
+    /// </summary>
+    class CC_ApplyAttachTitle : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ATTACH_TITLE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            short misId = reader.GetShort ();
+            GL_Mission.s_instance.CommandApplyAttachTitle (netId, misId);
+        }
+    }
+
+    /// <summary>
+    /// 卸除当前称号
+    /// </summary>
+    class CC_ApplyDetachTitle : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ATTACH_TITLE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            GL_Mission.s_instance.CommandApplyDetachTitle (netId);
+        }
+    }
+
+    /// <summary>
     /// 获取商场 常规商品列表
     /// </summary>
     class CC_ApplyShowMallNormal : IClientCommand {

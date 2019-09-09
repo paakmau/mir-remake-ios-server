@@ -125,14 +125,14 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.CancelMission (netId, charObj.m_characterId, misObj);
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
-        public void CommandAttachTitle (int netId, short misId) {
+        public void CommandApplyAttachTitle (int netId, short misId) {
             // TODO: 称号dds
             if (EM_Mission.s_instance.AttachTitle (netId, misId))
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
             else
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
         }
-        public void CommandDetachTitle (int netId, short misId) {
+        public void CommandApplyDetachTitle (int netId) {
             EM_Mission.s_instance.DetachTitle (netId);
         }
         public void NotifyInitCharacter (int netId, int charId) {

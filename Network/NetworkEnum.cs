@@ -128,6 +128,9 @@ namespace MirRemakeBackend.Network {
         APPLY_DELIVER_MISSION,
         APPLY_CANCEL_MISSION,
         APPLY_TALK_TO_MISSION_NPC,
+        // 称号相关
+        APPLY_ATTACH_TITLE,
+        APPLY_DETACH_TITLE,
         // 获取商城信息
         APPLY_SHOW_MALL,
         APPLY_BUY_ITEM_IN_MALL,
