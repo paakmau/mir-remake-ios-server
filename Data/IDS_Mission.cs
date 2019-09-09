@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using LitJson;
 namespace MirRemakeBackend.Data {
@@ -9,6 +8,7 @@ namespace MirRemakeBackend.Data {
         DO_MissionTargetKillMonsterData[] GetAllMissionTargetKillMonster ();
         DO_MissionTargetGainItemData[] GetAllMissionTargetGainItem ();
         DO_MissionTargetLevelUpSkillData[] GetAllMissionTargetLevelUpSkill ();
+        DO_MissionTargetChargeAdequatelyData[] GetAllMissionTargetChargeAdequately ();
     }
     class DS_MissionImpl : IDS_Mission {
         private JsonData m_missionDatas;
