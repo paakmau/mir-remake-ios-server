@@ -171,3 +171,10 @@ create table `notice`(
   `detail` VARCHAR(2555),
   primary key(`noticeid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `attached_title`;
+create table `attached_title`(
+  `charid` int NOT NULL,
+  `titleid` int NOT NULL,
+  primary key(`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

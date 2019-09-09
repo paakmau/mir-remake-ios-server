@@ -131,6 +131,10 @@ namespace MirRemakeBackend.Data {
         public short m_targetSkillId;
         public short m_targetLevel;
     }
+    struct DO_MissionTargetChargeAdequatelyData{
+        public short m_id;
+        public long m_amount;
+    }
     struct DO_MallItemClass {
         public byte m_mallItemClassId;
         public string m_mallItemClassName;

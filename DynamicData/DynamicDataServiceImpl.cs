@@ -761,6 +761,35 @@ namespace MirRemakeBackend.DynamicData {
             string database="legend";
             pool.ExecuteSql(database,cmd);
         }
+
+
+        //TITLE
+        public bool InsertAttachedTitle (int charId, short misId){
+            string cmd=String.Format("insert into attached_title values({0},{1});",charId,misId);
+            string database="legend";
+            try{
+                pool.ExecuteSql(database,cmd);
+                return true;
+            }
+            catch{
+                return false;
+            }
+        }
+        public void UpdateAttachedTitle (int charId, short misId){
+            string cmd=String.Format("update attached_title set titleid={0} where charid={1};",misId,charId);
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        public short GetAttachedTitle (int charId){
+            string cmd=String.Format("select titleid from attached_title where charid={0};",charId);
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            try{
+                return short.Parse(ds.Tables[0].Rows[0]["titleid"].ToString());
+            }
+            catch{return -1;}
+        }
         
 
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {

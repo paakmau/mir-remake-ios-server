@@ -161,12 +161,7 @@ namespace MirRemakeBackend {
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
             DynamicDataServiceImpl dma = new DynamicDataServiceImpl ();
-            DDO_EquipmentInfo eq=new DDO_EquipmentInfo();
             System.Collections.Generic.List<DDO_EquipmentInfo> eqs=new System.Collections.Generic.List<DDO_EquipmentInfo>();
-            eqs=dma.GetAllEquipmentByCharacterId(1);
-            eq=eqs[0];
-            eq.m_strengthNum=123;
-            dma.UpdateEquipmentInfo(eq);
         }
     }
 }

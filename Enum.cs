@@ -145,7 +145,8 @@ namespace MirRemakeBackend {
         GAIN_ITEM,
         LEVEL_UP_SKILL,
         LEVEL_UP,
-        TALK_TO_NPC
+        TALK_TO_NPC,
+        CHARGE_ADEQUATELY
     }
     enum MissionStatus {
         LOCKED = 0,

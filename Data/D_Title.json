@@ -1,0 +1,26 @@
+[{
+    "TitleID":500,
+    "Occupation":"ALL",
+    "LevelInNeed":0,
+    "TitleTarget":[["CHARGE_ADEQUATELY",0]]
+},{
+    "TitleID":501,
+    "Occupation":"ALL",
+    "LevelInNeed":0,
+    "TitleTarget":[["CHARGE_ADEQUATELY",1]]
+},{
+    "TitleID":502,
+    "Occupation":"ALL",
+    "LevelInNeed":0,
+    "TitleTarget":[["CHARGE_ADEQUATELY",2]]
+},{
+    "TitleID":503,
+    "Occupation":"ALL",
+    "LevelInNeed":0,
+    "TitleTarget":[["CHARGE_ADEQUATELY",3]]
+},{
+    "TitleID":504,
+    "Occupation":"ALL",
+    "LevelInNeed":0,
+    "TitleTarget":[["CHARGE_ADEQUATELY",4]]
+}]

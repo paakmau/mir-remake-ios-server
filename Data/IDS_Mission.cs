@@ -19,6 +19,9 @@ namespace MirRemakeBackend.Data {
         private JsonData gainItemData;
         private DO_MissionTargetLevelUpSkillData[] m_levelUpSkill;
         private JsonData levelUpSkillData;
+        private DO_MissionTargetChargeAdequatelyData[] m_chargeAdequately;
+        private JsonData chargeAdequatelyData;
+        private JsonData m_titleDatas;
         public DO_Mission[] GetAllMission () {
             string jsonFile = File.ReadAllText ("Data/D_Mission.json");
             m_missionDatas = JsonMapper.ToObject (jsonFile);
@@ -115,5 +118,77 @@ namespace MirRemakeBackend.Data {
                 (m_killMonster, m_gainItem, m_levelUpSkill);
             return res;
         }
+        public DO_MissionTargetKillMonsterData[] GetAllMissionTargetKillMonster (){
+            string jsonFile = File.ReadAllText ("Data/D_MissionTarget.json");
+            m_allData = JsonMapper.ToObject (jsonFile);
+            killMonsterData = m_allData["KILL_MONSTER"];
+            m_killMonster = new DO_MissionTargetKillMonsterData[killMonsterData.Count];
+            for (int i = 0; i < killMonsterData.Count; i++) {
+                m_killMonster[i].m_id = short.Parse (killMonsterData[i]["ID"].ToString ());
+                m_killMonster[i].m_targetMonsterId = short.Parse (killMonsterData[i]["MonsterID"].ToString ());
+                m_killMonster[i].m_targetNum = short.Parse (killMonsterData[i]["Num"].ToString ());
+            }
+            return m_killMonster;
+        }
+        public DO_MissionTargetGainItemData[] GetAllMissionTargetGainItem (){
+            string jsonFile = File.ReadAllText ("Data/D_MissionTarget.json");
+            m_allData = JsonMapper.ToObject (jsonFile);
+            gainItemData = m_allData["GAIN_ITEM"];
+            m_gainItem = new DO_MissionTargetGainItemData[gainItemData.Count];
+            for (int i = 0; i < gainItemData.Count; i++) {
+                m_gainItem[i].m_id = short.Parse (gainItemData[i]["ID"].ToString ());
+                m_gainItem[i].m_targetItemId = short.Parse (gainItemData[i]["ItemID"].ToString ());
+                m_gainItem[i].m_targetNum = short.Parse (gainItemData[i]["Num"].ToString ());
+            }
+            return m_gainItem;
+        }
+        public DO_MissionTargetLevelUpSkillData[] GetAllMissionTargetLevelUpSkill (){
+            string jsonFile = File.ReadAllText ("Data/D_MissionTarget.json");
+            m_allData = JsonMapper.ToObject (jsonFile);
+            levelUpSkillData = m_allData["LEVEL_UP_SKILL"];
+            m_levelUpSkill = new DO_MissionTargetLevelUpSkillData[levelUpSkillData.Count];
+            for (int i = 0; i < levelUpSkillData.Count; i++) {
+                m_levelUpSkill[i].m_id = short.Parse (levelUpSkillData[i]["ID"].ToString ());
+                m_levelUpSkill[i].m_targetSkillId = short.Parse (levelUpSkillData[i]["SkillID"].ToString ());
+                m_levelUpSkill[i].m_targetLevel = short.Parse (levelUpSkillData[i]["Level"].ToString ());
+            }
+            return m_levelUpSkill;
+        }
+        public DO_MissionTargetChargeAdequatelyData[] GetAllMissionTargetChargeAdequately (){
+            string jsonFile = File.ReadAllText ("Data/D_MissionTarget.json");
+            m_allData = JsonMapper.ToObject (jsonFile);
+            chargeAdequatelyData= m_allData["CHARGE_ADEQUATELY"];
+            m_chargeAdequately = new DO_MissionTargetChargeAdequatelyData[chargeAdequatelyData.Count];
+            for (int i = 0; i < chargeAdequatelyData.Count; i++) {
+                m_chargeAdequately[i].m_id=short.Parse(chargeAdequatelyData[i]["ID"].ToString());
+                m_chargeAdequately[i].m_amount=long.Parse(chargeAdequatelyData[i]["Amount"].ToString());
+                }
+            return m_chargeAdequately;
+        }
+        public DO_Mission[] GetAllTitleMission(){
+            string jsonFile = File.ReadAllText ("Data/D_Title.json");
+            m_titleDatas = JsonMapper.ToObject (jsonFile);
+            int count=m_titleDatas.Count;
+            DO_Mission[] res=new DO_Mission[count];
+            for(int i=0;i<count;i++){
+                JsonData tempData=m_titleDatas[i];
+                res[i].m_id=short.Parse(tempData["TitleID"].ToString());
+                res[i].m_missionOccupation = (OccupationType) Enum.Parse (typeof (OccupationType), tempData["Occupation"].ToString ());
+                res[i].m_levelInNeed = short.Parse (tempData["LevelInNeed"].ToString ());
+                res[i].m_missionTargetArr=new ValueTuple<MissionTargetType,short>[tempData["TitleTarget"].Count];
+                res[i].m_acceptingNPCID=-1;
+                res[i].m_deliveringNPCID=-1;
+                res[i].m_bonusItemIdAndNumArr=new ValueTuple<short,short>[0];
+                res[i].m_fatherMissionIdArr=new short[0];
+                res[i].m_childrenMissionArr=new short[0];
+                for(int durex=0;durex<tempData["TitleTarget"].Count;durex++){
+                    res[i].m_missionTargetArr[durex].Item1=(MissionTargetType)Enum.Parse(typeof(MissionTargetType),tempData["TitleTarget"][durex][0].ToString());
+                    res[i].m_missionTargetArr[durex].Item2=short.Parse(tempData["TitleTarget"][durex][1].ToString());
+                }
+            }
+            return res;
+
+        }
+  
     }
 }

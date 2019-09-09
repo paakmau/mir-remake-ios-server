@@ -318,6 +318,24 @@
             "NPCID":24,
             "Conversation":["这位勇士，你需要补给品吗？"]
         }
+    ],
+    "CHARGE_ADEQUATELY":[
+        {
+            "ID":0,
+            "Amount":1
+        },{
+            "ID":1,
+            "Amount":5
+        },{
+            "ID":2,
+            "Amount":25
+        },{
+            "ID":3,
+            "Amount":100
+        },{
+            "ID":4,
+            "Amount":500
+        }
     ]
 
 }
