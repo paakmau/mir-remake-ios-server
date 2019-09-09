@@ -70,7 +70,8 @@ namespace MirRemakeBackend.Network {
         public string m_name;
         public short m_level;
         public bool m_isMarket;
-        public NO_SightCharacter (int netId, int charId, Vector2 pos, OccupationType ocp, string name, short lv, bool isMarket) {
+        public short m_attachedTitleMisId;
+        public NO_SightCharacter (int netId, int charId, Vector2 pos, OccupationType ocp, string name, short lv, bool isMarket, short attachedTitleMisId) {
             m_netId = netId;
             m_charId = charId;
             m_position = pos;
@@ -78,6 +79,7 @@ namespace MirRemakeBackend.Network {
             m_name = name;
             m_level = lv;
             m_isMarket = isMarket;
+            m_attachedTitleMisId = attachedTitleMisId;
         }
     }
     struct NO_AttributeCharacter {
@@ -392,6 +394,7 @@ namespace MirRemakeBackend.Network {
             writer.Put (charNo.m_name);
             writer.Put (charNo.m_level);
             writer.Put (charNo.m_isMarket);
+            writer.Put (charNo.m_attachedTitleMisId);
         }
         public static NO_SightCharacter GetSightCharacter (this NetDataReader reader) {
             int netId = reader.GetInt ();
@@ -401,7 +404,8 @@ namespace MirRemakeBackend.Network {
             string name = reader.GetString ();
             short lv = reader.GetShort ();
             bool isMarket = reader.GetBool ();
-            return new NO_SightCharacter (netId, charId, pos, ocp, name, lv, isMarket);
+            short attachedTitleMisId = reader.GetShort ();
+            return new NO_SightCharacter (netId, charId, pos, ocp, name, lv, isMarket, attachedTitleMisId);
         }
         public static void Put (this NetDataWriter writer, NO_AttributeCharacter attrChar) {
             writer.Put (attrChar.m_netId);

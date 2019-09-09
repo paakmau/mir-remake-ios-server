@@ -93,7 +93,7 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, HashSet<short>> m_unacceptableMissionDict = new Dictionary<int, HashSet<short>> ();
         /// <summary>称号任务</summary>
         private Dictionary<int, Dictionary<short, E_Mission>> m_titleMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
-        /// <summary>佩戴的称号</summary>
+        /// <summary>佩戴的称号, 若角色无佩戴, 该字典不会存储</summary>
         private Dictionary<int, short> m_attachedTitleDict = new Dictionary<int, short> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission misDds, IDDS_Title titleDds) { m_dem = dem; m_fact = new MissionFactory (dem); m_misDds = misDds; m_titleDds = titleDds; }
         public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList, out short resAttachedTitleMisId) {
@@ -190,6 +190,12 @@ namespace MirRemakeBackend.Entity {
                 return null;
             E_Mission res = null;
             acceptedDict.TryGetValue (misId, out res);
+            return res;
+        }
+        public short GetAttachedTitleMisId (int netId) {
+            short res;
+            if (!m_attachedTitleDict.TryGetValue (netId, out res))
+                res = -1;
             return res;
         }
         public E_Mission AcceptMission (int netId, int charId, short misId) {

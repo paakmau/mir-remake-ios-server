@@ -411,7 +411,7 @@ namespace MirRemakeBackend.Network {
     /// 卸除当前称号
     /// </summary>
     class CC_ApplyDetachTitle : IClientCommand {
-        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_ATTACH_TITLE; } }
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DETACH_TITLE; } }
         public void Execute (NetDataReader reader, int netId) {
             GL_Mission.s_instance.CommandApplyDetachTitle (netId);
         }
