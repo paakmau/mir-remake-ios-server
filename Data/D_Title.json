@@ -1,26 +1,31 @@
 [{
     "TitleID":500,
     "Occupation":"ALL",
+    "TitleName":"青铜赞助大使",
     "LevelInNeed":0,
     "TitleTarget":[["CHARGE_ADEQUATELY",0]]
 },{
     "TitleID":501,
     "Occupation":"ALL",
+    "TitleName":"白银赞助大使",
     "LevelInNeed":0,
     "TitleTarget":[["CHARGE_ADEQUATELY",1]]
 },{
     "TitleID":502,
     "Occupation":"ALL",
+    "TitleName":"黄金赞助大使",
     "LevelInNeed":0,
     "TitleTarget":[["CHARGE_ADEQUATELY",2]]
 },{
     "TitleID":503,
     "Occupation":"ALL",
+    "TitleName":"白金赞助大使",
     "LevelInNeed":0,
     "TitleTarget":[["CHARGE_ADEQUATELY",3]]
 },{
     "TitleID":504,
     "Occupation":"ALL",
+    "TitleName":"钻石赞助大使",
     "LevelInNeed":0,
     "TitleTarget":[["CHARGE_ADEQUATELY",4]]
 }]
