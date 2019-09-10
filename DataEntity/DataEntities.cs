@@ -255,6 +255,12 @@ namespace MirRemakeBackend.DataEntity {
             m_bonusItemIdAndNumList = new List<ValueTuple<short, short>> (mDo.m_bonusItemIdAndNumArr);
         }
     }
+    class DE_Title {
+        public readonly IReadOnlyList < (ActorUnitConcreteAttributeType, int) > m_attr;
+        public DE_Title ((ActorUnitConcreteAttributeType, int) [] attrArr) {
+            m_attr = new List < (ActorUnitConcreteAttributeType, int) > (attrArr);
+        }
+    }
     class DE_MissionTargetKillMonster {
         public readonly short m_id;
         public readonly short m_monsterId;

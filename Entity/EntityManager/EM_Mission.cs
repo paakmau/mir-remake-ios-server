@@ -313,16 +313,20 @@ namespace MirRemakeBackend.Entity {
             if (!titleMis.m_IsFinished) return false;
             m_attachedTitleDict[netId] = misId;
             m_titleDds.UpdateAttachedTitle (charId, misId);
-            // TODO: resAttr赋值
+            var titleDe = m_dem.GetTitleById (misId);
+            resAttr = titleDe.m_attr;
             return true;
         }
         public bool DetachTitle (int netId, out IReadOnlyList<(ActorUnitConcreteAttributeType, int)> resAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             resAttr = null;
             if (charId == -1) return false;
+            short misId;
+            if (!m_attachedTitleDict.TryGetValue (netId, out misId)) return false;
             m_attachedTitleDict.Remove (netId);
             m_titleDds.UpdateAttachedTitle (charId, -1);
-            // TODO: resAttr赋值
+            var titleDe = m_dem.GetTitleById (misId);
+            resAttr = titleDe.m_attr;
             return true;
         }
         private bool CanUnlock (DE_Mission de, OccupationType ocp) {
