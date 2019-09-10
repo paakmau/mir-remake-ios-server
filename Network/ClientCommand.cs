@@ -171,7 +171,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            // TODO: 存储装备
+            // TODO: 存储物品
         }
     }
 
@@ -183,7 +183,7 @@ namespace MirRemakeBackend.Network {
         public void Execute (NetDataReader reader, int netId) {
             long realId = reader.GetLong ();
             short num = reader.GetShort ();
-            // TODO: 取出装备
+            // TODO: 取出物品
         }
     }
 

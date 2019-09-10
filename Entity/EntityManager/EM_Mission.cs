@@ -282,7 +282,8 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 刷新已解锁任务中的可接任务
         /// </summary>
-        public void RefreshUnlockedMission (int netId, short lv) {
+        public void RefreshUnlockedMission (int netId, short lv, out IReadOnlyList<short> acceptableMissionList) {
+            acceptableMissionList = null;
             HashSet<short> unaMisSet;
             HashSet<short> acableMisSet;
             if (!m_unacceptableMissionDict.TryGetValue (netId, out unaMisSet) ||
@@ -299,9 +300,11 @@ namespace MirRemakeBackend.Entity {
                 unaMisSet.Remove (changedList[i]);
                 acableMisSet.Add (changedList[i]);
             }
+            acceptableMissionList = changedList;
         }
-        public bool AttachTitle (int netId, short misId) {
+        public bool AttachTitle (int netId, short misId, out IReadOnlyList<(ActorUnitConcreteAttributeType, int)> resAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
+            resAttr = null;
             if (charId == -1) return false;
             Dictionary<short, E_Mission> titleMisDict;
             if (!m_titleMissionDict.TryGetValue (netId, out titleMisDict)) return false;
@@ -310,13 +313,17 @@ namespace MirRemakeBackend.Entity {
             if (!titleMis.m_IsFinished) return false;
             m_attachedTitleDict[netId] = misId;
             m_titleDds.UpdateAttachedTitle (charId, misId);
+            // TODO: resAttr赋值
             return true;
         }
-        public void DetachTitle (int netId) {
+        public bool DetachTitle (int netId, out IReadOnlyList<(ActorUnitConcreteAttributeType, int)> resAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
-            if (charId == -1) return;
+            resAttr = null;
+            if (charId == -1) return false;
             m_attachedTitleDict.Remove (netId);
             m_titleDds.UpdateAttachedTitle (charId, -1);
+            // TODO: resAttr赋值
+            return true;
         }
         private bool CanUnlock (DE_Mission de, OccupationType ocp) {
             if ((de.m_occupation & ocp) == 0)

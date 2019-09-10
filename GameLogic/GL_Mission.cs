@@ -126,14 +126,22 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
         public void CommandApplyAttachTitle (int netId, short misId) {
-            // TODO: 称号dds
-            if (EM_Mission.s_instance.AttachTitle (netId, misId))
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
+            if (EM_Mission.s_instance.AttachTitle (netId, misId, out titleAttr)) {
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, titleAttr);
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
-            else
+            } else
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
         }
         public void CommandApplyDetachTitle (int netId) {
-            EM_Mission.s_instance.DetachTitle (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
+            if (EM_Mission.s_instance.DetachTitle (netId, out titleAttr)) {
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, titleAttr);
+            }
         }
         public void NotifyInitCharacter (int netId, int charId) {
             // 实例化任务
@@ -141,6 +149,7 @@ namespace MirRemakeBackend.GameLogic {
             List<short> acceptableMis, unacceptableMis;
             List<E_Mission> titleMis;
             short attachedTitleMisId;
+            
             EM_Mission.s_instance.InitCharacter (netId, charId, out acceptedMis, out acceptableMis, out unacceptableMis, out titleMis, out attachedTitleMisId);
             List<NO_Mission> acceptedMisNo = new List<NO_Mission> (acceptedMis.Count);
             for (int i = 0; i < acceptedMis.Count; i++)
@@ -148,6 +157,7 @@ namespace MirRemakeBackend.GameLogic {
             List<NO_Mission> titleMisNo = new List<NO_Mission> (titleMis.Count);
             for (int i = 0; i < titleMis.Count; i++)
                 titleMisNo.Add (titleMis[i].GetNo ());
+            // TODO: 称号初始属性
             // client
             m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMisNo, acceptableMis, unacceptableMis));
             m_networkService.SendServerCommand (SC_InitSelfTitleMission.Instance (netId, titleMisNo, attachedTitleMisId));
@@ -156,8 +166,9 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.RemoveCharacter (netId);
         }
         public void NotifyCharacterLevelUp (int netId, short lv) {
-            EM_Mission.s_instance.RefreshUnlockedMission (netId, lv);
-            // TODO: 发送解锁
+            IReadOnlyList<short> newAcptMisList;
+            EM_Mission.s_instance.RefreshUnlockedMission (netId, lv, out newAcptMisList);
+            m_networkService.SendServerCommand (SC_ApplySelfMissionAcceptable.Instance (netId, newAcptMisList));
         }
     }
 }
