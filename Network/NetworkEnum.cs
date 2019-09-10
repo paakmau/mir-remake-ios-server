@@ -152,6 +152,7 @@ namespace MirRemakeBackend.Network {
         CONSOLE_GAIN_CY_BY_NAME,
         CONSOLE_SEAL_CHARACTER_BY_NAME,
         CONSOLE_RELEASE_NOTICE,
+        CONSOLE_CHARGE_MONEY,
         // 测试相关
         TEST_GAIN_CY,
         TEST_GAIN_EXP,
