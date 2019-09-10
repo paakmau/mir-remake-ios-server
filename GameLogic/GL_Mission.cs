@@ -126,14 +126,22 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfCancelMission.Instance (netId, misId));
         }
         public void CommandApplyAttachTitle (int netId, short misId) {
-            // TODO: 称号dds
-            if (EM_Mission.s_instance.AttachTitle (netId, misId))
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
+            if (EM_Mission.s_instance.AttachTitle (netId, misId, out titleAttr)) {
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, titleAttr);
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
-            else
+            } else
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
         }
         public void CommandApplyDetachTitle (int netId) {
-            EM_Mission.s_instance.DetachTitle (netId);
+            E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
+            if (charObj == null) return;
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
+            if (EM_Mission.s_instance.DetachTitle (netId, out titleAttr)) {
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, titleAttr);
+            }
         }
         public void NotifyInitCharacter (int netId, int charId) {
             // 实例化任务

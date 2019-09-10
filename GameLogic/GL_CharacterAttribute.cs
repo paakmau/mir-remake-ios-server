@@ -71,7 +71,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
-        public void NotifyConcreteAttributeChange (E_Character charObj, List < (ActorUnitConcreteAttributeType, int) > attrList) {
+        public void NotifyConcreteAttributeChange (E_Character charObj, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > attrList) {
             for (int i = 0; i < attrList.Count; i++)
                 charObj.AddEquipConAttr (attrList[i].Item1, attrList[i].Item2);
         }
