@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
+    // TODO: 添加充值的 Log
     class EM_MissionLog {
         class LogFactory {
             private const int c_poolSize = 5000;
