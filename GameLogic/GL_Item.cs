@@ -468,6 +468,7 @@ namespace MirRemakeBackend.GameLogic {
             E_StoreHouse storeHouse;
             E_EquipmentRegion eqRegion;
             EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
+            // TODO: 装备的初始属性
             // client
             m_networkService.SendServerCommand (SC_InitSelfItem.Instance (netId, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
         }

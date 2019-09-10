@@ -282,7 +282,8 @@ namespace MirRemakeBackend.Entity {
         /// <summary>
         /// 刷新已解锁任务中的可接任务
         /// </summary>
-        public void RefreshUnlockedMission (int netId, short lv) {
+        public void RefreshUnlockedMission (int netId, short lv, out IReadOnlyList<short> acceptableMissionList) {
+            acceptableMissionList = null;
             HashSet<short> unaMisSet;
             HashSet<short> acableMisSet;
             if (!m_unacceptableMissionDict.TryGetValue (netId, out unaMisSet) ||
@@ -299,6 +300,7 @@ namespace MirRemakeBackend.Entity {
                 unaMisSet.Remove (changedList[i]);
                 acableMisSet.Add (changedList[i]);
             }
+            acceptableMissionList = changedList;
         }
         public bool AttachTitle (int netId, short misId, out IReadOnlyList<(ActorUnitConcreteAttributeType, int)> resAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
