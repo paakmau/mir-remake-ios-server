@@ -42,31 +42,38 @@ namespace MirRemakeBackend.Entity {
         public void InitCharacter (
             int netId,
             int charId,
-            out E_Bag bag,
-            out E_StoreHouse storeHouse,
-            out E_EquipmentRegion eqRegion
+            out E_Bag resBag,
+            out E_StoreHouse resStoreHouse,
+            out E_EquipmentRegion resEqRegion,
+            out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resEqAttr
         ) {
             // 若角色已经初始化
             if (m_bagDict.ContainsKey (netId)) {
-                bag = GetBag (netId);
-                storeHouse = GetStoreHouse (netId);
-                eqRegion = GetEquiped (netId);
+                resBag = GetBag (netId);
+                resStoreHouse = GetStoreHouse (netId);
+                resEqRegion = GetEquiped (netId);
+                // TODO: 处理装备的所有初始属性
+                (ActorUnitConcreteAttributeType, int) [] eqAttr;
+                for (int i = 0; i < resEqRegion.m_itemList.Count; i++);
+                resEqAttr = new (ActorUnitConcreteAttributeType, int) [0];
                 return;
             }
             // 初始化背包, 仓库, 装备区
-            bag = m_bagPool.GetInstance ();
-            storeHouse = m_storeHousePool.GetInstance ();
-            eqRegion = m_equipmentRegionPool.GetInstance ();
+            resBag = m_bagPool.GetInstance ();
+            resStoreHouse = m_storeHousePool.GetInstance ();
+            resEqRegion = m_equipmentRegionPool.GetInstance ();
 
             E_Item[] itemInBag, itemInStoreHouse, itemEquiped;
             m_ddh.GetAndResetCharacterItemInstance (charId, out itemInBag, out itemInStoreHouse, out itemEquiped);
-            bag.Reset (itemInBag);
-            storeHouse.Reset (itemInStoreHouse);
-            eqRegion.Reset (itemEquiped);
+            resBag.Reset (itemInBag);
+            resStoreHouse.Reset (itemInStoreHouse);
+            resEqRegion.Reset (itemEquiped);
+            // TODO: 获取装备区的属性
+            resEqAttr = new (ActorUnitConcreteAttributeType, int) [0];
             // 索引各区域
-            m_bagDict[netId] = bag as E_Bag;
-            m_storeHouseDict[netId] = storeHouse as E_StoreHouse;
-            m_equipmentRegionDict[netId] = eqRegion as E_EquipmentRegion;
+            m_bagDict[netId] = resBag as E_Bag;
+            m_storeHouseDict[netId] = resStoreHouse as E_StoreHouse;
+            m_equipmentRegionDict[netId] = resEqRegion as E_EquipmentRegion;
 
             // 地面物品视野
             m_characterGroundItemSightDict.TryAdd (netId, new List<E_GroundItem> ());

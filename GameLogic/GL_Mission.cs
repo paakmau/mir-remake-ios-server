@@ -130,7 +130,7 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
             if (EM_Mission.s_instance.AttachTitle (netId, misId, out titleAttr)) {
-                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, titleAttr);
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, titleAttr);
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
             } else
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
@@ -140,24 +140,27 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
             if (EM_Mission.s_instance.DetachTitle (netId, out titleAttr)) {
-                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, titleAttr);
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, titleAttr);
             }
         }
-        public void NotifyInitCharacter (int netId, int charId) {
+        public void NotifyInitCharacter (int netId, E_Character charObj) {
             // 实例化任务
             List<E_Mission> acceptedMis;
             List<short> acceptableMis, unacceptableMis;
             List<E_Mission> titleMis;
             short attachedTitleMisId;
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
 
-            EM_Mission.s_instance.InitCharacter (netId, charId, out acceptedMis, out acceptableMis, out unacceptableMis, out titleMis, out attachedTitleMisId);
+            EM_Mission.s_instance.InitCharacter (netId, charObj.m_characterId, out acceptedMis, out acceptableMis, out unacceptableMis, out titleMis, out attachedTitleMisId, out titleAttr);
             List<NO_Mission> acceptedMisNo = new List<NO_Mission> (acceptedMis.Count);
             for (int i = 0; i < acceptedMis.Count; i++)
                 acceptedMisNo.Add (acceptedMis[i].GetNo ());
             List<NO_Mission> titleMisNo = new List<NO_Mission> (titleMis.Count);
             for (int i = 0; i < titleMis.Count; i++)
                 titleMisNo.Add (titleMis[i].GetNo ());
-            // TODO: 称号初始属性
+            // Title初始属性
+            if (titleAttr != null)
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, titleAttr);
             // client
             m_networkService.SendServerCommand (SC_InitSelfMission.Instance (netId, acceptedMisNo, acceptableMis, unacceptableMis));
             m_networkService.SendServerCommand (SC_InitSelfTitleMission.Instance (netId, titleMisNo, attachedTitleMisId));

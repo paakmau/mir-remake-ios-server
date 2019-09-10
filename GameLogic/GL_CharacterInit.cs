@@ -20,11 +20,11 @@ namespace MirRemakeBackend.GameLogic {
             // Sight
             GL_CharacterSight.s_instance.NotifyInitCharacter (newChar);
             // 道具
-            GL_Item.s_instance.NotifyInitCharacter (netId, charId);
+            GL_Item.s_instance.NotifyInitCharacter (netId, newChar);
             // 技能
             GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
             // 任务
-            GL_Mission.s_instance.NotifyInitCharacter (netId, charId);
+            GL_Mission.s_instance.NotifyInitCharacter (netId, newChar);
             // 邮箱
             GL_Mail.s_instance.NotifyInitCharacter (netId, charId);
         }

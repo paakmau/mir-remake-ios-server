@@ -199,9 +199,9 @@ namespace MirRemakeBackend.GameLogic {
             short oriPos = eqRegion.GetEquipmentByEquipPosition (eq.m_EquipmentPosition, out oriItem);
             if (oriPos < 0 || oriItem == null) return;
             if (oriItem.m_Type == ItemType.EQUIPMENT)
-                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (oriItem as E_EquipmentItem, -1));
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, EquipmentToAttrList (oriItem as E_EquipmentItem));
             // 装备穿上Attr
-            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, 1));
+            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, EquipmentToAttrList (eq));
             NotifyCharacterSwapItemPlace (charObj.m_networkId, charObj.m_characterId, eqRegion, oriPos, oriItem, bag, posInBag, eq);
             // client
             m_networkService.SendServerCommand (SC_ApplyAllChangeEquipment.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, eq.m_ItemId));
@@ -221,8 +221,8 @@ namespace MirRemakeBackend.GameLogic {
             if (bagPos < 0 || bagSlot == null) return;
             NotifyCharacterSwapItemPlace (netId, charObj.m_characterId, bag, bagPos, bagSlot, eqRegion, posInEqRegion, eq);
             // 装备脱下改变Attr
-            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeChange (charObj, EquipmentToAttrList (eq, -1));
-            // client TODO: 卸除装备接口
+            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, EquipmentToAttrList (eq));
+            // client TODO: 所有角色的卸除装备接口
             m_networkService.SendServerCommand (SC_ApplyAllChangeEquipment.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, eq.m_ItemId));
         }
         public void CommandApplyBuildEquipment (int netId, (short, short) [] matArr) {
@@ -463,12 +463,14 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (holderNetId, new NO_Item[] { holderChangedItem.GetItemNo (holderBag.m_repositoryPlace, marketItem.m_bagPos) }));
 
         }
-        public void NotifyInitCharacter (int netId, int charId) {
+        public void NotifyInitCharacter (int netId, E_Character charObj) {
             E_Bag bag;
             E_StoreHouse storeHouse;
             E_EquipmentRegion eqRegion;
-            EM_Item.s_instance.InitCharacter (netId, charId, out bag, out storeHouse, out eqRegion);
-            // TODO: 装备的初始属性
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > eqAttr;
+            EM_Item.s_instance.InitCharacter (netId, charObj.m_characterId, out bag, out storeHouse, out eqRegion, out eqAttr);
+            // 装备的初始属性
+            GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, eqAttr);
             // client
             m_networkService.SendServerCommand (SC_InitSelfItem.Instance (netId, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
         }
@@ -562,23 +564,23 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Item.s_instance.CharacterDropItemOntoGround (bagItemList[i], (short) dropNum, charObj.m_characterId, charBag, (short) i, charObj.m_position);
             }
         }
-        private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj, int k) {
+        private List < (ActorUnitConcreteAttributeType, int) > EquipmentToAttrList (E_EquipmentItem eqObj) {
             List < (ActorUnitConcreteAttributeType, int) > res = new List < (ActorUnitConcreteAttributeType, int) > ();
             // 处理强化与基础属性
             var attrList = eqObj.m_RawAttrList;
             for (int i = 0; i < attrList.Count; i++)
-                res.Add ((attrList[i].Item1, k * eqObj.CalcStrengthenedAttr (attrList[i].Item2)));
+                res.Add ((attrList[i].Item1, eqObj.CalcStrengthenedAttr (attrList[i].Item2)));
             // 处理附魔
             var enchantAttr = eqObj.m_enchantAttrList;
             foreach (var attr in enchantAttr)
-                res.Add ((attr.Item1, k * attr.Item2));
+                res.Add ((attr.Item1, attr.Item2));
             // 处理镶嵌
             var gemList = eqObj.m_InlaidGemList;
             for (int i = 0; i < gemList.Count; i++) {
                 var gemDe = gemList[i];
                 if (gemDe == null) continue;
                 for (int j = 0; j < gemDe.m_attrList.Count; j++)
-                    res.Add ((gemDe.m_attrList[j].Item1, k * gemDe.m_attrList[j].Item2));
+                    res.Add ((gemDe.m_attrList[j].Item1, gemDe.m_attrList[j].Item2));
             }
             return res;
         }

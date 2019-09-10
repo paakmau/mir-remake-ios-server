@@ -71,9 +71,13 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfLevelAndExp.Instance (
                 charObj.m_networkId, charObj.m_Level, charObj.m_experience, charObj.m_TotalMainPoint));
         }
-        public void NotifyConcreteAttributeChange (E_Character charObj, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > attrList) {
+        public void NotifyConcreteAttributeAdd (E_Character charObj, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > attrList) {
             for (int i = 0; i < attrList.Count; i++)
                 charObj.AddEquipConAttr (attrList[i].Item1, attrList[i].Item2);
+        }
+        public void NotifyConcreteAttributeMinus (E_Character charObj, IReadOnlyList < (ActorUnitConcreteAttributeType, int) > attrList) {
+            for (int i = 0; i < attrList.Count; i++)
+                charObj.AddEquipConAttr (attrList[i].Item1, -attrList[i].Item2);
         }
         private void MainPointToConAttr (E_Character charObj) {
             charObj.SetMainPointConAttr (ActorUnitConcreteAttributeType.ATTACK, (int) (charObj.m_strength * 0.55));

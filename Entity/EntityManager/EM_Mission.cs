@@ -96,7 +96,7 @@ namespace MirRemakeBackend.Entity {
         /// <summary>佩戴的称号, 若角色无佩戴, 该字典不会存储</summary>
         private Dictionary<int, short> m_attachedTitleDict = new Dictionary<int, short> ();
         public EM_Mission (DEM_Mission dem, IDDS_Mission misDds, IDDS_Title titleDds) { m_dem = dem; m_fact = new MissionFactory (dem); m_misDds = misDds; m_titleDds = titleDds; }
-        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList, out short resAttachedTitleMisId) {
+        public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList, out short resAttachedTitleMisId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resTitleAttr) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;
             HashSet<short> oriUnacceptableMisSet;
@@ -107,8 +107,12 @@ namespace MirRemakeBackend.Entity {
                 resAcceptableMisIdList = CollectionUtils.GetSetList (oriAcceptableMisSet);
                 resUnacceptableMisIdList = CollectionUtils.GetSetList (oriUnacceptableMisSet);
                 resTitleMissionList = CollectionUtils.GetDictValueList (oriTitleMisDict);
-                if (!m_attachedTitleDict.TryGetValue(netId, out resAttachedTitleMisId))
+                if (!m_attachedTitleDict.TryGetValue (netId, out resAttachedTitleMisId))
                     resAttachedTitleMisId = -1;
+                var oriTitleDe = m_dem.GetTitleById (resAttachedTitleMisId);
+                if (oriTitleDe != null)
+                    resTitleAttr = oriTitleDe.m_attr;
+                else resTitleAttr = null;
                 return;
             }
 
@@ -148,8 +152,11 @@ namespace MirRemakeBackend.Entity {
 
             // 读取角色已佩戴的称号
             var attachedTitleMisId = m_titleDds.GetAttachedTitle (charId);
-            if (attachedTitleMisId != -1)
+            DE_Title titleDe = null;
+            if (attachedTitleMisId != -1) {
+                titleDe = m_dem.GetTitleById (attachedTitleMisId);
                 m_attachedTitleDict[netId] = attachedTitleMisId;
+            }
 
             // 返回
             resAcceptedMisIdList = CollectionUtils.GetDictValueList (acceptedMissionDict);
@@ -157,6 +164,7 @@ namespace MirRemakeBackend.Entity {
             resUnacceptableMisIdList = CollectionUtils.GetSetList (unacceptableMissionSet);
             resTitleMissionList = CollectionUtils.GetDictValueList (titleMisDict);
             resAttachedTitleMisId = attachedTitleMisId;
+            resTitleAttr = titleDe == null ? null : titleDe.m_attr;
         }
         public void RemoveCharacter (int netId) {
             m_acceptableMissionDict.Remove (netId);
@@ -302,7 +310,7 @@ namespace MirRemakeBackend.Entity {
             }
             acceptableMissionList = changedList;
         }
-        public bool AttachTitle (int netId, short misId, out IReadOnlyList<(ActorUnitConcreteAttributeType, int)> resAttr) {
+        public bool AttachTitle (int netId, short misId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             resAttr = null;
             if (charId == -1) return false;
@@ -317,7 +325,7 @@ namespace MirRemakeBackend.Entity {
             resAttr = titleDe.m_attr;
             return true;
         }
-        public bool DetachTitle (int netId, out IReadOnlyList<(ActorUnitConcreteAttributeType, int)> resAttr) {
+        public bool DetachTitle (int netId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             resAttr = null;
             if (charId == -1) return false;
