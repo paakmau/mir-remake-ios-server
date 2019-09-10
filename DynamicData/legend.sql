@@ -109,10 +109,10 @@ CREATE UNIQUE INDEX `user_name` ON `user`(`user_name`);
 
 DROP TABLE IF EXISTS `vip`;
 create table `vip`( 
-  `charid` int NOT NULL AUTO_INCREMENT,
+  `userid` int NOT NULL AUTO_INCREMENT,
   `vip_level` int NOT NULL,
   `charge_money` int NOT NULL,
-  primary key (`charid`)
+  primary key (`userid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `enchantment`;

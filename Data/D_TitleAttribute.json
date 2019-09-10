@@ -1,0 +1,16 @@
+[{
+    "TitleID":500,
+    "AttributeAttr":["MAX_HP 300","MAX_MP 300","ATTACK 50","MAGIC 50"]
+},{
+    "TitleID":501,
+    "AttributeAttr":["MAX_HP 1000","MAX_MP 1000","ATTACK 150","MAGIC 150"]
+},{
+    "TitleID":502,
+    "AttributeAttr":["MAX_HP 2500","MAX_MP 1500","ATTACK 350","MAGIC 350"]
+},{
+    "TitleID":503,
+    "AttributeAttr":["MAX_HP 6000","MAX_MP 6000","ATTACK 600","MAGIC 600"]
+},{
+    "TitleID":504,
+    "AttributeAttr":["MAX_HP 15000","MAX_MP 15000","ATTACK 1000","MAGIC 1000"]
+}]

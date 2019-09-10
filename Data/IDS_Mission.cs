@@ -192,7 +192,7 @@ namespace MirRemakeBackend.Data {
 
         }
         public ValueTuple<short,ValueTuple<ActorUnitConcreteAttributeType,int>[]>[] GetAllTitleIDAndAttributes(){
-            string jsonFile = File.ReadAllText ("Data/D_TitleAttributes.json");
+            string jsonFile = File.ReadAllText ("Data/D_TitleAttribute.json");
             JsonData s_titleAttributeDatas = JsonMapper.ToObject (jsonFile);
             ValueTuple<short,ValueTuple<ActorUnitConcreteAttributeType,int>[]>[] titleAttributes=new ValueTuple<short,ValueTuple<ActorUnitConcreteAttributeType,int>[]>[s_titleAttributeDatas.Count];
             for(int i=0;i<s_titleAttributeDatas.Count;i++){
