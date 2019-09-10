@@ -133,7 +133,7 @@ namespace MirRemakeBackend.Data {
     }
     struct DO_MissionTargetChargeAdequatelyData{
         public short m_id;
-        public long m_amount;
+        public int m_amount;
     }
     struct DO_MallItemClass {
         public byte m_mallItemClassId;
