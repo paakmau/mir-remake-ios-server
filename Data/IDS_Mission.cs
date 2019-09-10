@@ -163,7 +163,7 @@ namespace MirRemakeBackend.Data {
             m_chargeAdequately = new DO_MissionTargetChargeAdequatelyData[chargeAdequatelyData.Count];
             for (int i = 0; i < chargeAdequatelyData.Count; i++) {
                 m_chargeAdequately[i].m_id=short.Parse(chargeAdequatelyData[i]["ID"].ToString());
-                m_chargeAdequately[i].m_amount=long.Parse(chargeAdequatelyData[i]["Amount"].ToString());
+                m_chargeAdequately[i].m_amount=int.Parse(chargeAdequatelyData[i]["Amount"].ToString());
                 }
             return m_chargeAdequately;
         }
