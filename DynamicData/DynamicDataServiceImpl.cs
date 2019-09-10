@@ -596,7 +596,7 @@ namespace MirRemakeBackend.DynamicData {
                 card = default (DDO_CharacterVipCard);
                 return false;
             }
-            card = new DDO_CharacterVipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_level"].ToString ()), long.Parse (dt.Rows[0]["charge_money"].ToString ()));
+            card = new DDO_CharacterVipCard (int.Parse (dt.Rows[0]["userid"].ToString ()), int.Parse (dt.Rows[0]["vip_level"].ToString ()), int.Parse (dt.Rows[0]["charge_money"].ToString ()));
             return true;
         }
         public bool UpdateCharacterVipCard (DDO_CharacterVipCard vipCard) {
