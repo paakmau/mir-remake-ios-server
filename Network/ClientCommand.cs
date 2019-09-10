@@ -531,7 +531,7 @@ namespace MirRemakeBackend.Network {
         }
     }
 
-    class CC_Console : IClientCommand {
+    class CC_ConsoleChargeMoney : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CONSOLE_CHARGE_MONEY; } }
         public void Execute (NetDataReader reader, int netId) {
             int money = reader.GetInt ();

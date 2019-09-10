@@ -69,8 +69,8 @@ namespace MirRemakeBackend.DynamicData {
     struct DDO_CharacterVipCard {
         public int m_characterId;
         public int m_vipLevel;
-        public long m_chargeMoney;
-        public DDO_CharacterVipCard (int charId, int vipLevel, long chargeMoney) {
+        public int m_chargeMoney;
+        public DDO_CharacterVipCard (int charId, int vipLevel, int chargeMoney) {
             m_characterId = charId;
             m_vipLevel = vipLevel;
             m_chargeMoney = chargeMoney;

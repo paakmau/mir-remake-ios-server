@@ -182,7 +182,7 @@ namespace MirRemakeBackend.GameLogic {
                 ));
                 // log
                 if (target.m_UnitType == ActorUnitType.MONSTER && caster.m_UnitType == ActorUnitType.PLAYER)
-                    GL_MissionLog.s_instance.NotifyLog (MissionTargetType.KILL_MONSTER, caster.m_networkId, ((E_Monster) target).m_MonsterId);
+                    GL_MissionLog.s_instance.NotifyLogKillMonster (caster.m_networkId, ((E_Monster) target).m_MonsterId);
                 // 通知 CharacterAttr 与 钱
                 if (caster.m_UnitType == ActorUnitType.PLAYER) {
                     int expGain = 0;

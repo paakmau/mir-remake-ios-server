@@ -521,7 +521,7 @@ namespace MirRemakeBackend.GameLogic {
             }
 
             // 通知 log
-            GL_MissionLog.s_instance.NotifyLog (MissionTargetType.GAIN_ITEM, netId, itemId, realStoreNum);
+            GL_MissionLog.s_instance.NotifyLogGainItem (netId, itemId, realStoreNum);
         }
         public void NotifyMonsterDropLegacy (E_Monster monObj, E_Unit killer) {
             IReadOnlyList<short> monLegacyList = monObj.m_DropItemIdList;

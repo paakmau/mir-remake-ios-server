@@ -76,6 +76,7 @@ namespace MirRemakeBackend {
             IDDS_Character charDds = ddsImpl;
             IDDS_CharacterAttribute charAttrDds = ddsImpl;
             IDDS_CharacterWallet charWalletDds = ddsImpl;
+            IDDS_CharacterVipCard charVipCardDds = ddsImpl;
             IDDS_Item itemDds = ddsImpl;
             IDDS_Skill skillDds = ddsImpl;
             IDDS_Mission misDds = ddsImpl;
@@ -99,7 +100,7 @@ namespace MirRemakeBackend {
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
             EM_MissionLog.s_instance = new EM_MissionLog ();
-            EM_Wallet.s_instance = new EM_Wallet (charWalletDds);
+            EM_Wallet.s_instance = new EM_Wallet (charWalletDds, charVipCardDds);
             // EM init
             EntityManagerInitializer.Init (skillDem, monDem);
             // 角色创建器

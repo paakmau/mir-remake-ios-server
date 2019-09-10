@@ -32,7 +32,7 @@ namespace MirRemakeBackend.GameLogic {
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                     netId, skill.m_SkillId, skill.m_skillLevel, skill.m_masterly));
                 // log
-                GL_MissionLog.s_instance.NotifyLog (MissionTargetType.LEVEL_UP_SKILL, netId, skillId, skill.m_skillLevel);
+                GL_MissionLog.s_instance.NotifyLogLvUpSkill (netId, skillId, skill.m_skillLevel);
             }
         }
         public void CommandGainMasterly (int netId, short skillId, int masterly) {

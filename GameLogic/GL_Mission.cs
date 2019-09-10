@@ -82,7 +82,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyTalkToNpc (int netId, short misId, short misTarId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            GL_MissionLog.s_instance.NotifyLog (MissionTargetType.TALK_TO_NPC, netId, misId, misTarId);
+            GL_MissionLog.s_instance.NotifyLogTalkToNpc (netId, misId, misTarId);
         }
         public void CommandApplyAcceptMission (int netId, short misId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
@@ -149,7 +149,7 @@ namespace MirRemakeBackend.GameLogic {
             List<short> acceptableMis, unacceptableMis;
             List<E_Mission> titleMis;
             short attachedTitleMisId;
-            
+
             EM_Mission.s_instance.InitCharacter (netId, charId, out acceptedMis, out acceptableMis, out unacceptableMis, out titleMis, out attachedTitleMisId);
             List<NO_Mission> acceptedMisNo = new List<NO_Mission> (acceptedMis.Count);
             for (int i = 0; i < acceptedMis.Count; i++)
