@@ -118,11 +118,6 @@ namespace MirRemakeBackend.Entity {
             m_enchantAttrList.Clear ();
             m_inlaidGemIdList.Clear ();
             m_inlaidGemList.Clear ();
-            // TODO: 装备初始两个孔
-            m_inlaidGemIdList.Add (-1);
-            m_inlaidGemList.Add (null);
-            m_inlaidGemIdList.Add (-1);
-            m_inlaidGemList.Add (null);
         }
         public void ResetEquipmentData (byte strNum, (ActorUnitConcreteAttributeType, int) [] enchantAttr, List<short> inlaidGemIdList, List<DE_GemData> inlaidGemList) {
             m_strengthenNum = strNum;
