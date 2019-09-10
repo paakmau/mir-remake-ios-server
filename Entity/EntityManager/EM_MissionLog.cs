@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
-    // TODO: 添加充值的 Log
     class EM_MissionLog {
         class LogFactory {
             private const int c_poolSize = 5000;
@@ -13,6 +12,7 @@ namespace MirRemakeBackend.Entity {
                 m_pool.Add (MissionTargetType.LEVEL_UP, new ObjectPool<E_LevelUpLog> (5000));
                 m_pool.Add (MissionTargetType.LEVEL_UP_SKILL, new ObjectPool<E_LevelUpSkillLog> (5000));
                 m_pool.Add (MissionTargetType.TALK_TO_NPC, new ObjectPool<E_TalkToNpcLog> (5000));
+                m_pool.Add (MissionTargetType.CHARGE_ADEQUATELY, new ObjectPool<E_ChargeAdequatelyLog> (5000));
             }
             public E_MissionLog GetLogInstance (MissionTargetType type) {
                 return (E_MissionLog) m_pool[type].GetInstanceObj ();
@@ -39,6 +39,7 @@ namespace MirRemakeBackend.Entity {
             GetRawLogsCurTick ().Clear ();
         }
         public E_MissionLog CreateLog (MissionTargetType type, int netId, int parm1, int parm2, int parm3) {
+            // TODO: 有缘拆开写
             var log = m_logFactory.GetLogInstance (type);
             log.Reset (netId, parm1, parm2, parm3);
             return log;

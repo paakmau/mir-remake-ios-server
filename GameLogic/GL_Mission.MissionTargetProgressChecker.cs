@@ -37,6 +37,7 @@ namespace MirRemakeBackend.GameLogic {
                 return curProgs + log.m_deltaNum;
             }
         }
+
         private class MTPC_TalkToNpc : IMissionTargetProgressChecker {
             public MissionTargetType m_Type { get { return MissionTargetType.TALK_TO_NPC; } }
             public int GetNewProgress (int misId, IMissionTarget itarget, int curProgs, E_MissionLog logBase) {
@@ -47,6 +48,15 @@ namespace MirRemakeBackend.GameLogic {
                 if (target.m_tarId != log.m_misTarId)
                     return curProgs;
                 return 1;
+            }
+        }
+
+        private class MTPC_ChargeAdequately : IMissionTargetProgressChecker {
+            public MissionTargetType m_Type { get { return MissionTargetType.CHARGE_ADEQUATELY; } }
+            public int GetNewProgress (int misId, IMissionTarget itarget, int curProgs, E_MissionLog logBase) {
+                var target = itarget as E_MissionTargetChargeAdequately;
+                var log = logBase as E_ChargeAdequatelyLog;
+                return target.m_Progress + log.m_totalChargedMoney;
             }
         }
 

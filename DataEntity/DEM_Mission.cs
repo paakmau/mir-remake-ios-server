@@ -12,6 +12,7 @@ namespace MirRemakeBackend.DataEntity {
         private Dictionary<short, DE_MissionTargetKillMonster> m_misTarKillMonDict = new Dictionary<short, DE_MissionTargetKillMonster> ();
         private Dictionary<short, DE_MissionTargetGainItem> m_misTarGainItemDict = new Dictionary<short, DE_MissionTargetGainItem> ();
         private Dictionary<short, DE_MissionTargetLevelUpSkill> m_misTarLevelUpSkillDict = new Dictionary<short, DE_MissionTargetLevelUpSkill> ();
+        private Dictionary<short, DE_MissionTargetChargeAdequately> m_misTarChargeAdequatelyDict = new Dictionary<short, DE_MissionTargetChargeAdequately> ();
 
         public DEM_Mission (IDS_Mission ds) {
             var doArr = ds.GetAllMission ();
@@ -24,7 +25,7 @@ namespace MirRemakeBackend.DataEntity {
 
             var titleAttr = ds.GetAllTitleIDAndAttributes ();
             foreach (var ta in titleAttr)
-                m_titleDict.Add (ta.Item1, new DE_Title(ta.Item2));
+                m_titleDict.Add (ta.Item1, new DE_Title (ta.Item2));
 
             var misTarKillMon = ds.GetAllMissionTargetKillMonster ();
             foreach (var killMonDo in misTarKillMon)
@@ -37,6 +38,10 @@ namespace MirRemakeBackend.DataEntity {
             var misTarLvUpSkill = ds.GetAllMissionTargetLevelUpSkill ();
             foreach (var levelUpSkillDo in misTarLvUpSkill)
                 m_misTarLevelUpSkillDict.Add (levelUpSkillDo.m_id, new DE_MissionTargetLevelUpSkill (levelUpSkillDo));
+
+            var misTarChargeAdequately = ds.GetAllMissionTargetChargeAdequately ();
+            foreach (var chargeAdequatelyDo in misTarChargeAdequately)
+                m_misTarChargeAdequatelyDict.Add (chargeAdequatelyDo.m_id, new DE_MissionTargetChargeAdequately (chargeAdequatelyDo));
         }
         public DE_Mission GetMissionById (short missionId) {
             DE_Mission res;

@@ -4,11 +4,13 @@ using MirRemakeBackend.DynamicData;
 using MirRemakeBackend.Network;
 
 namespace MirRemakeBackend.Entity {
+
     interface IMissionTarget {
         MissionTargetType m_Type { get; }
         bool m_IsFinish { get; }
         int m_Progress { get; set; }
     }
+
     class E_MissionTargetTalkToNpc : IMissionTarget {
         public MissionTargetType m_Type { get { return MissionTargetType.TALK_TO_NPC; } }
         public bool m_IsFinish { get { return m_isTalk; } }
@@ -34,6 +36,7 @@ namespace MirRemakeBackend.Entity {
             m_num = num;
         }
     }
+
     class E_MissionTargetGainItem : IMissionTarget {
         public MissionTargetType m_Type { get { return MissionTargetType.GAIN_ITEM; } }
         public bool m_IsFinish { get { return m_num >= m_TargetNum; } }
@@ -47,6 +50,7 @@ namespace MirRemakeBackend.Entity {
             m_num = num;
         }
     }
+
     class E_MissionTargetLevelUpSkill : IMissionTarget {
         public MissionTargetType m_Type { get { return MissionTargetType.LEVEL_UP_SKILL; } }
         public bool m_IsFinish { get { return m_lv >= m_TargetLv; } }
@@ -60,6 +64,20 @@ namespace MirRemakeBackend.Entity {
             m_lv = lv;
         }
     }
+
+    class E_MissionTargetChargeAdequately : IMissionTarget {
+        public MissionTargetType m_Type { get { return MissionTargetType.CHARGE_ADEQUATELY; } }
+        public bool m_IsFinish { get { return m_chargedMoney >= m_TargetMoney; } }
+        public int m_Progress { get { return m_chargedMoney; } set { m_chargedMoney = value; } }
+        private DE_MissionTargetChargeAdequately m_de;
+        private int m_TargetMoney { get { return m_de.m_targetMoney; } }
+        private int m_chargedMoney;
+        public void Reset (DE_MissionTargetChargeAdequately de, int chargedMoney) {
+            m_de = de;
+            m_chargedMoney = chargedMoney;
+        }
+    }
+
     class E_Mission {
         private DE_Mission m_de;
         public List<IMissionTarget> m_tarList = new List<IMissionTarget> ();

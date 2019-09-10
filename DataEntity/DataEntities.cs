@@ -271,6 +271,7 @@ namespace MirRemakeBackend.DataEntity {
             m_targetNum = mtDo.m_targetNum;
         }
     }
+
     class DE_MissionTargetGainItem {
         public readonly short m_id;
         public readonly short m_itemId;
@@ -281,6 +282,7 @@ namespace MirRemakeBackend.DataEntity {
             m_targetNum = mtDo.m_targetNum;
         }
     }
+
     class DE_MissionTargetLevelUpSkill {
         public readonly short m_id;
         public readonly short m_skillId;
@@ -291,4 +293,14 @@ namespace MirRemakeBackend.DataEntity {
             m_targetLv = mtDo.m_targetLevel;
         }
     }
+
+    class DE_MissionTargetChargeAdequately {
+        public readonly short m_id;
+        public readonly int m_targetMoney;
+        public DE_MissionTargetChargeAdequately (DO_MissionTargetChargeAdequatelyData mtDo) {
+            m_id = mtDo.m_id;
+            m_targetMoney = mtDo.m_amount;
+        }
+    }
+
 }

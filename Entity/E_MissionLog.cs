@@ -5,6 +5,7 @@ namespace MirRemakeBackend.Entity {
         public void Reset (int netId) { m_netId = netId; }
         public abstract void Reset (int netId, int parm1, int parm2, int parm3);
     }
+
     class E_KillMonsterLog : E_MissionLog {
         public override MissionTargetType m_LogType { get { return MissionTargetType.KILL_MONSTER; } }
         public short m_monId;
@@ -13,6 +14,7 @@ namespace MirRemakeBackend.Entity {
             m_monId = (short) parm1;
         }
     }
+
     class E_LevelUpSkillLog : E_MissionLog {
         public override MissionTargetType m_LogType { get { return MissionTargetType.LEVEL_UP_SKILL; } }
         public short m_skillId;
@@ -23,6 +25,7 @@ namespace MirRemakeBackend.Entity {
             m_skillLv = (short) parm2;
         }
     }
+
     class E_LevelUpLog : E_MissionLog {
         public override MissionTargetType m_LogType { get { return MissionTargetType.LEVEL_UP; } }
         public short m_lv;
@@ -31,6 +34,7 @@ namespace MirRemakeBackend.Entity {
             m_lv = (short) parm1;
         }
     }
+
     class E_TalkToNpcLog : E_MissionLog {
         public override MissionTargetType m_LogType { get { return MissionTargetType.TALK_TO_NPC; } }
         public short m_misId;
@@ -41,6 +45,7 @@ namespace MirRemakeBackend.Entity {
             m_misTarId = (short) parm2;
         }
     }
+
     class E_GainItemLog : E_MissionLog {
         public override MissionTargetType m_LogType { get { return MissionTargetType.GAIN_ITEM; } }
         public short m_itemId;
@@ -49,6 +54,15 @@ namespace MirRemakeBackend.Entity {
             base.Reset (netId);
             m_itemId = (short) parm1;
             m_deltaNum = (short) parm2;
+        }
+    }
+
+    class E_ChargeAdequatelyLog : E_MissionLog {
+        public override MissionTargetType m_LogType { get { return MissionTargetType.GAIN_ITEM; } }
+        public int m_totalChargedMoney;
+        public override void Reset (int netId, int parm1, int parm2, int parm3) {
+            base.Reset (netId);
+            m_totalChargedMoney = parm1;
         }
     }
 }
