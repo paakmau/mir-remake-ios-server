@@ -142,6 +142,7 @@ namespace MirRemakeBackend.GameLogic {
             if (EM_Mission.s_instance.DetachTitle (netId, out titleAttr)) {
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, titleAttr);
             }
+            m_networkService.SendServerCommand (SC_ApplySelfDetachTitle.Instance (netId));
         }
         public void NotifyInitCharacter (int netId, E_Character charObj) {
             // 实例化任务
