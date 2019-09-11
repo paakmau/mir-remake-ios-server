@@ -31,8 +31,8 @@ namespace MirRemakeBackend.GameLogic {
             GL_Notice.s_instance.NotifyDeleteNotice (id);
             m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (netId));
         }
-        public void CommandChargeMoney (int netId, int money) {
-            var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
+        public void CommandChargeMoney (int netId, string charName, int money) {
+            var charId = EM_Character.s_instance.GetCharIdByName (charName);
             if (charId == -1) {
                 m_networkService.SendServerCommand (SC_ConsoleFail.Instance (netId, "未知错误"));
                 return;
