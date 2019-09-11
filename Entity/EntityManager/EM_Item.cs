@@ -44,18 +44,13 @@ namespace MirRemakeBackend.Entity {
             int charId,
             out E_Bag resBag,
             out E_StoreHouse resStoreHouse,
-            out E_EquipmentRegion resEqRegion,
-            out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resEqAttr
+            out E_EquipmentRegion resEqRegion
         ) {
             // 若角色已经初始化
             if (m_bagDict.ContainsKey (netId)) {
                 resBag = GetBag (netId);
                 resStoreHouse = GetStoreHouse (netId);
                 resEqRegion = GetEquiped (netId);
-                // TODO: 处理装备的所有初始属性
-                (ActorUnitConcreteAttributeType, int) [] eqAttr;
-                for (int i = 0; i < resEqRegion.m_itemList.Count; i++);
-                resEqAttr = new (ActorUnitConcreteAttributeType, int) [0];
                 return;
             }
             // 初始化背包, 仓库, 装备区
@@ -68,8 +63,7 @@ namespace MirRemakeBackend.Entity {
             resBag.Reset (itemInBag);
             resStoreHouse.Reset (itemInStoreHouse);
             resEqRegion.Reset (itemEquiped);
-            // TODO: 获取装备区的属性
-            resEqAttr = new (ActorUnitConcreteAttributeType, int) [0];
+
             // 索引各区域
             m_bagDict[netId] = resBag as E_Bag;
             m_storeHouseDict[netId] = resStoreHouse as E_StoreHouse;
