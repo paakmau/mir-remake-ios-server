@@ -22,6 +22,23 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRemoveCharacter (int netId) {
             EM_Wallet.s_instance.RemoveCharacter (netId);
         }
+        public void NotifyChargeMoney (int charId, int money) {
+            var netId = EM_Character.s_instance.GetNetIdByCharId (charId);
+            int totalChargedmoney;
+            // 更新 VipCard
+            if (netId != -1)
+                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (netId, charId, money);
+            else
+                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (charId, money);
+            // 更新 wallet
+            if (netId != -1)
+                NotifyUpdateChargeCurrency (netId, charId, money * 100L);
+            else
+                EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, money * 100L);
+            // 通知任务
+            // TODO: 若角色不在线, 可以考虑记录Log到数据库, 或临时读取 Mission
+            GL_MissionLog.s_instance.NotifyLogChargeAdequately (netId, totalChargedmoney);
+        }
         public void NotifyUpdateCurrency (int netId, int charId, CurrencyType type, long dC) {
             // 实例 与 数据
             if (type == CurrencyType.CHARGE)
@@ -35,19 +52,6 @@ namespace MirRemakeBackend.GameLogic {
                 EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, dC);
             else
                 EM_Wallet.s_instance.CharacterUpdateVirtualCy (charId, dC);
-        }
-        public void NotifyChargeMoney (int charId, int money) {
-            var netId = EM_Character.s_instance.GetNetIdByCharId (charId);
-            int totalChargedmoney;
-            if (netId != -1)
-                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (netId, charId, money);
-            else
-                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (charId, money);
-            GL_MissionLog.s_instance.NotifyLogChargeAdequately (netId, totalChargedmoney);
-            if (netId != -1)
-                NotifyUpdateChargeCurrency (netId, charId, money * 100L);
-            else
-                EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, money * 100L);
         }
         public void NotifyUpdateVirtualCurrency (int netId, int charId, long dC) {
             if (dC == 0) return;
