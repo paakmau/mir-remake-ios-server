@@ -197,7 +197,7 @@ namespace MirRemakeBackend.Data {
             ValueTuple<short,ValueTuple<ActorUnitConcreteAttributeType,int>[]>[] titleAttributes=new ValueTuple<short,ValueTuple<ActorUnitConcreteAttributeType,int>[]>[s_titleAttributeDatas.Count];
             for(int i=0;i<s_titleAttributeDatas.Count;i++){
                 titleAttributes[i].Item1=short.Parse(s_titleAttributeDatas[i]["TitleID"].ToString());
-                titleAttributes[i].Item2=new ValueTuple<ActorUnitConcreteAttributeType,int>[s_titleAttributeDatas[i].Count];
+                titleAttributes[i].Item2=new ValueTuple<ActorUnitConcreteAttributeType,int>[s_titleAttributeDatas[i]["AttributeAttr"].Count];
                 for(int j=0;j<s_titleAttributeDatas[i]["AttributeAttr"].Count;j++){
                     titleAttributes[i].Item2[j].Item1=(ActorUnitConcreteAttributeType)Enum.Parse(typeof(ActorUnitConcreteAttributeType),s_titleAttributeDatas[i]["AttributeAttr"][j].ToString().Split(' ')[0]);
                     titleAttributes[i].Item2[j].Item2=int.Parse(s_titleAttributeDatas[i]["AttributeAttr"][j].ToString().Split(' ')[1]);
