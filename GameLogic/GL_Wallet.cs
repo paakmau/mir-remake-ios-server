@@ -44,7 +44,10 @@ namespace MirRemakeBackend.GameLogic {
             else
                 totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (charId, money);
             GL_MissionLog.s_instance.NotifyLogChargeAdequately (netId, totalChargedmoney);
-            NotifyUpdateChargeCurrency (netId, charId, money * 100L);
+            if (netId != -1)
+                NotifyUpdateChargeCurrency (netId, charId, money * 100L);
+            else
+                EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, money * 100L);
         }
         public void NotifyUpdateVirtualCurrency (int netId, int charId, long dC) {
             if (dC == 0) return;
