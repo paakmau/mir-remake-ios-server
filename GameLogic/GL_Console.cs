@@ -31,14 +31,14 @@ namespace MirRemakeBackend.GameLogic {
             GL_Notice.s_instance.NotifyDeleteNotice (id);
             m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (netId));
         }
-        public void CommandChargeMoney (int netId, string charName, int money) {
+        public void CommandChargeMoney (int consoleNetId, string charName, int money) {
             var charId = EM_Character.s_instance.GetCharIdByName (charName);
             if (charId == -1) {
-                m_networkService.SendServerCommand (SC_ConsoleFail.Instance (netId, "未知错误"));
+                m_networkService.SendServerCommand (SC_ConsoleFail.Instance (consoleNetId, "角色名有误"));
                 return;
             }
-            GL_Wallet.s_instance.NotifyChargeMoney (netId, charId, money);
-            m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (netId));
+            GL_Wallet.s_instance.NotifyChargeMoney (charId, money);
+            m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (consoleNetId));
         }
     }
 }

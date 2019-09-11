@@ -39,15 +39,6 @@ namespace MirRemakeBackend.Entity {
             return res;
         }
 
-        public int UpdateTotalChargedMoney (int netId, int newChargedMoney) {
-            E_VipCard vipCard;
-            if (!m_vipCardDict.TryGetValue (netId, out vipCard))
-                return -1;
-            vipCard.m_chargeMoney += newChargedMoney;
-            m_vipCardDds.UpdateCharacterVipCard (vipCard.GetDdo ());
-            return vipCard.m_chargeMoney;
-        }
-
         public (long, long) CharacterUpdateVirtualCy (int netId, int charId, long dVirtualCy) {
             (long, long) res;
             if (!m_walletDict.TryGetValue (netId, out res))
@@ -80,6 +71,24 @@ namespace MirRemakeBackend.Entity {
             if (!suc) return;
             wallet.m_chargeCy += dChargeCy;
             m_walletDds.UpdateCharacterWallet (wallet);
+        }
+
+        public int UpdateTotalChargedMoney (int netId, int charId, int newChargedMoney) {
+            E_VipCard vipCard;
+            if (!m_vipCardDict.TryGetValue (netId, out vipCard))
+                return -1;
+            vipCard.m_chargeMoney += newChargedMoney;
+            m_vipCardDds.UpdateCharacterVipCard (vipCard.GetDdo ());
+            return vipCard.m_chargeMoney;
+        }
+
+        public int UpdateTotalChargedMoney (int charId, int newChargedMoney) {
+            DDO_CharacterVipCard vipCard;
+            if (!m_vipCardDds.GetCharacterVipCardByCharacterId (charId, out vipCard))
+                return -1;
+            vipCard.m_chargeMoney += newChargedMoney;
+            m_vipCardDds.UpdateCharacterVipCard (vipCard);
+            return vipCard.m_chargeMoney;
         }
     }
 }
