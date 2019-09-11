@@ -480,14 +480,30 @@ namespace MirRemakeBackend.DynamicData {
             return missions;
         }
         public void InsertTitleMission (DDO_Mission ddo){
-            string target=ddo.m_missionTargetProgressList[0].ToString();
+            string target;
+            if (ddo.m_missionTargetProgressList.Count == 0) {
+                target = "";
+            } else {
+                target = ddo.m_missionTargetProgressList[0].ToString ();
+                for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
+                    target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
+                }
+            }
             string cmd=String.Format("insert into `title` values({0},{1},\"{2}\",\"{3}\");",ddo.m_missionId,ddo.m_characterId,target,ddo.m_status.ToString());
             string database="legend";
             pool.ExecuteSql(database,cmd);
         }
         public void UpdateTitleMission (DDO_Mission ddo){
             string cmd;
-            string target=ddo.m_missionTargetProgressList[0].ToString();
+            string target;
+            if (ddo.m_missionTargetProgressList.Count == 0) {
+                target = "";
+            } else {
+                target = ddo.m_missionTargetProgressList[0].ToString ();
+                for (int i = 1; i < ddo.m_missionTargetProgressList.Count; i++) {
+                    target = target + " " + ddo.m_missionTargetProgressList[i].ToString ();
+                }
+            }
             string status = ddo.m_status.ToString ();
             cmd = String.Format("update `title` set `target`=\"{0}\",`status`=\"{1}\" where charid={2} and titleid={3};",target,ddo.m_status.ToString(),ddo.m_characterId,ddo.m_missionId);
             string database = "legend";
