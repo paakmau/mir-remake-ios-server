@@ -152,7 +152,7 @@ namespace MirRemakeBackend.Entity {
             var titleDdoList = m_misDds.GetTitleMissionListByCharacterId (charId);
             Dictionary<short, E_Mission> titleMisDict = new Dictionary<short, E_Mission> (titleDdoList.Count);
             for (int i = 0; i < titleDdoList.Count; i++) {
-                E_Mission mis = m_fact.GetInstance (titleDdoList[i].m_missionId, ddoList[i].m_missionTargetProgressList);
+                E_Mission mis = m_fact.GetInstance (titleDdoList[i].m_missionId, titleDdoList[i].m_missionTargetProgressList);
                 titleMisDict[titleDdoList[i].m_missionId] = mis;
             }
             m_titleMissionDict.Add (netId, titleMisDict);
