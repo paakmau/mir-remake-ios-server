@@ -54,7 +54,7 @@ namespace MirRemakeBackend.Entity {
             private const int c_misTarPoolSize = 400;
             private DEM_Mission m_dem;
             private ObjectPool<E_Mission> m_misPool = new ObjectPool<E_Mission> (c_missionPoolSize);
-            private Dictionary<MissionTargetType, ObjectPool> m_misTarPoolDict = new Dictionary<MissionTargetType, ObjectPool> () { { MissionTargetType.GAIN_ITEM, new ObjectPool<E_MissionTargetGainItem> (c_misTarPoolSize) }, { MissionTargetType.KILL_MONSTER, new ObjectPool<E_MissionTargetKillMonster> (c_misTarPoolSize) }, { MissionTargetType.LEVEL_UP_SKILL, new ObjectPool<E_MissionTargetLevelUpSkill> (c_misTarPoolSize) }, { MissionTargetType.TALK_TO_NPC, new ObjectPool<E_MissionTargetTalkToNpc> (c_misTarPoolSize) } };
+            private Dictionary<MissionTargetType, ObjectPool> m_misTarPoolDict = new Dictionary<MissionTargetType, ObjectPool> () { { MissionTargetType.GAIN_ITEM, new ObjectPool<E_MissionTargetGainItem> (c_misTarPoolSize) }, { MissionTargetType.KILL_MONSTER, new ObjectPool<E_MissionTargetKillMonster> (c_misTarPoolSize) }, { MissionTargetType.LEVEL_UP_SKILL, new ObjectPool<E_MissionTargetLevelUpSkill> (c_misTarPoolSize) }, { MissionTargetType.TALK_TO_NPC, new ObjectPool<E_MissionTargetTalkToNpc> (c_misTarPoolSize) }, { MissionTargetType.CHARGE_ADEQUATELY, new ObjectPool<E_MissionTargetChargeAdequately> (c_misTarPoolSize) } };
             private Dictionary<MissionTargetType, IMissionTargetReseter> m_misTarReseterDict = new Dictionary<MissionTargetType, IMissionTargetReseter> ();
             public MissionFactory (DEM_Mission dem) {
                 m_dem = dem;
