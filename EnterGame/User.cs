@@ -18,6 +18,7 @@ namespace MirRemakeBackend.EnterGame {
         private IDDS_Character m_charDds;
         private IDDS_CharacterAttribute m_charAttrDds;
         private IDDS_CharacterWallet m_charWalletDds;
+        private IDDS_CharacterVipCard m_charVipCardDds;
         private IDDS_Skill m_skillDds;
         private IDDS_Mission m_misDds;
         private IDDS_Title m_titleDds;
@@ -26,12 +27,13 @@ namespace MirRemakeBackend.EnterGame {
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
         private List<short> m_titleMisIdList = new List<short> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Title titleDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
+        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterVipCard charVipCardDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Title titleDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
             m_netService = ns;
             m_userDds = userDds;
             m_charDds = charDds;
             m_charAttrDds = charAttrDds;
             m_charWalletDds = charWalletDds;
+            m_charVipCardDds = charVipCardDds;
             m_skillDds = skillDds;
             m_misDds = misDds;
             m_titleDds = titleDds;
@@ -128,6 +130,8 @@ namespace MirRemakeBackend.EnterGame {
             }
             m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 1, 0, 0, 0, 0, 0));
             m_charWalletDds.InsertCharacterWallet (new DDO_CharacterWallet (charId, 0, 0));
+            m_charVipCardDds.InsertCharacterVipCard (new DDO_CharacterVipCard (charId, 0, 0));
+            
 
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];
