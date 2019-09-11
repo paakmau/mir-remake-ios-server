@@ -43,6 +43,13 @@ namespace MirRemakeBackend.Entity {
                     (resMt as E_MissionTargetLevelUpSkill).Reset (de, progress);
                 }
             }
+            private class MTR_ChargeAdequately : IMissionTargetReseter {
+                public MissionTargetType m_Type { get { return MissionTargetType.CHARGE_ADEQUATELY; } }
+                public void Reset (IMissionTarget resMt, short tarId, int progress, DEM_Mission dem) {
+                    var de = dem.GetMissionTargetChargeAdequately (tarId);
+                    (resMt as E_MissionTargetChargeAdequately).Reset (de, progress);
+                }
+            }
             private const int c_missionPoolSize = 400;
             private const int c_misTarPoolSize = 400;
             private DEM_Mission m_dem;

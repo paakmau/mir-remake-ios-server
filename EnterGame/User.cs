@@ -148,7 +148,7 @@ namespace MirRemakeBackend.EnterGame {
             m_titleDds.InsertAttachedTitle (charId, -1);
 
             // 背包, 仓库, equipment dds
-            short bagSize = 15;
+            short bagSize = 40;
             short storeHouseSize = 8;
             short eqSize = 10;
             for (short i = 0; i < bagSize; i++)

@@ -68,5 +68,10 @@ namespace MirRemakeBackend.DataEntity {
             m_misTarLevelUpSkillDict.TryGetValue (tarId, out res);
             return res;
         }
+        public DE_MissionTargetChargeAdequately GetMissionTargetChargeAdequately (short tarId) {
+            DE_MissionTargetChargeAdequately res;
+            m_misTarChargeAdequatelyDict.TryGetValue (tarId, out res);
+            return res;
+        }
     }
 }

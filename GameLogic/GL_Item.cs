@@ -469,10 +469,13 @@ namespace MirRemakeBackend.GameLogic {
             E_EquipmentRegion eqRegion;
             EM_Item.s_instance.InitCharacter (netId, charObj.m_characterId, out bag, out storeHouse, out eqRegion);
 
-            // TODO: 处理装备的所有初始属性
+            // 处理装备的所有初始属性
             List < (ActorUnitConcreteAttributeType, int) > eqAttrList = new List < (ActorUnitConcreteAttributeType, int) > ();
-            for (int i = 0; i < eqRegion.m_itemList.Count; i++)
-                eqAttrList.AddRange (EquipmentToAttrList (eqRegion.m_itemList[i] as E_EquipmentItem));
+            for (int i = 0; i < eqRegion.m_itemList.Count; i++) {
+                var eq = eqRegion.m_itemList[i] as E_EquipmentItem;
+                if (eq != null)
+                    eqAttrList.AddRange (EquipmentToAttrList (eq));
+            }
 
             // 装备的初始属性
             GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, eqAttrList);
