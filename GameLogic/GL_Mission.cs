@@ -107,7 +107,7 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfDeliverMission.Instance (netId, misId));
             m_networkService.SendServerCommand (SC_ApplySelfMissionUnlock.Instance (netId, acableMis, unaMis));
             // 钱
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charObj.m_characterId, misObj.m_BonusVirtualCurrency);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charObj.m_characterId, misObj.m_BonusVirtualCurrency);
             // 物品
             if (bag.CanPutItems (misObj.m_BonusItemIdAndNumList))
                 GL_Item.s_instance.NotifyCharacterGainItems (netId, charObj.m_characterId, bag, misObj.m_BonusItemIdAndNumList);

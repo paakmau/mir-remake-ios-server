@@ -12,7 +12,7 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandGainCurrency (int netId, CurrencyType type, long dC) {
             var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
             if (charId == -1) return;
-            NotifyUpdateCurrency (netId, charId, type, dC);
+            NotifyUpdateCurrencyOnline (netId, charId, type, dC);
         }
         public void NotifyInitCharacter (int netId, int charId) {
             var wallet = EM_Wallet.s_instance.InitCharacter (netId, charId);
@@ -27,42 +27,44 @@ namespace MirRemakeBackend.GameLogic {
             int totalChargedmoney;
             // 更新 VipCard
             if (netId != -1)
-                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (netId, charId, money);
+                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoneyOnline (netId, charId, money);
             else
-                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoney (charId, money);
+                totalChargedmoney = EM_Wallet.s_instance.UpdateTotalChargedMoneyOffline (charId, money);
             // 更新 wallet
             if (netId != -1)
-                NotifyUpdateChargeCurrency (netId, charId, money * 100L);
+                NotifyUpdateChargeCurrencyOnline (netId, charId, money * 100L);
             else
-                EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, money * 100L);
+                EM_Wallet.s_instance.CharacterUpdateChargeCyOffline (charId, money * 100L);
             // 通知任务
-            // TODO: 若角色不在线, 可以考虑记录Log到数据库, 或临时读取 Mission
-            GL_MissionLog.s_instance.NotifyLogChargeAdequately (netId, totalChargedmoney);
+            if (netId != -1)
+                GL_MissionLog.s_instance.NotifyLogChargeAdequatelyOnline (netId, totalChargedmoney);
+            else
+                GL_MissionLog.s_instance.NotifyLogChargeAdequatelyOffline (charId, totalChargedmoney);
         }
-        public void NotifyUpdateCurrency (int netId, int charId, CurrencyType type, long dC) {
+        public void NotifyUpdateCurrencyOnline (int netId, int charId, CurrencyType type, long dC) {
             // 实例 与 数据
             if (type == CurrencyType.CHARGE)
-                NotifyUpdateChargeCurrency (netId, charId, dC);
+                NotifyUpdateChargeCurrencyOnline (netId, charId, dC);
             else
-                NotifyUpdateVirtualCurrency (netId, charId, dC);
+                NotifyUpdateVirtualCurrencyOnline (netId, charId, dC);
         }
-        public void NotifyUpdateCurrency (int charId, CurrencyType type, long dC) {
+        public void NotifyUpdateCurrencyOffline (int charId, CurrencyType type, long dC) {
             // 实例 与 数据
             if (type == CurrencyType.CHARGE)
-                EM_Wallet.s_instance.CharacterUpdateChargeCy (charId, dC);
+                EM_Wallet.s_instance.CharacterUpdateChargeCyOffline (charId, dC);
             else
-                EM_Wallet.s_instance.CharacterUpdateVirtualCy (charId, dC);
+                EM_Wallet.s_instance.CharacterUpdateVirtualCyOffline (charId, dC);
         }
-        public void NotifyUpdateVirtualCurrency (int netId, int charId, long dC) {
+        public void NotifyUpdateVirtualCurrencyOnline (int netId, int charId, long dC) {
             if (dC == 0) return;
-            var wallet = EM_Wallet.s_instance.CharacterUpdateVirtualCy (netId, charId, dC);
+            var wallet = EM_Wallet.s_instance.CharacterUpdateVirtualCyOnline (netId, charId, dC);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
                 netId, wallet.Item1, wallet.Item2));
         }
-        public void NotifyUpdateChargeCurrency (int netId, int charId, long dC) {
+        public void NotifyUpdateChargeCurrencyOnline (int netId, int charId, long dC) {
             if (dC == 0) return;
-            var wallet = EM_Wallet.s_instance.CharacterUpdateChargeCy (netId, charId, dC);
+            var wallet = EM_Wallet.s_instance.CharacterUpdateChargeCyOnline (netId, charId, dC);
             // client
             m_networkService.SendServerCommand (SC_ApplySelfCurrency.Instance (
                 netId, wallet.Item1, wallet.Item2));

@@ -34,7 +34,7 @@ namespace MirRemakeBackend.GameLogic {
                 return;
             }
             // 扣钱
-            GL_Wallet.s_instance.NotifyUpdateCurrency (netId, charId, cyType, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateCurrencyOnline (netId, charId, cyType, -needCy);
             // 物品
             if (!bag.CanPutItem (itemObj.m_ItemId, num)) {
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendToMailBoxSendMessage (netId);

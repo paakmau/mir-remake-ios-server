@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Util;
+using MirRemakeBackend.DynamicData;
 
 namespace MirRemakeBackend.Entity {
     class EM_MissionLog {
@@ -22,6 +23,7 @@ namespace MirRemakeBackend.Entity {
             }
         }
         public static EM_MissionLog s_instance;
+        private IDDS_MissionLog m_dds;
         private LogFactory m_logFactory = new LogFactory ();
         private const int c_tickToSave = 2;
         private List<E_MissionLog>[] m_logs = new List<E_MissionLog>[c_tickToSave];
@@ -32,7 +34,8 @@ namespace MirRemakeBackend.Entity {
                 res -= c_tickToSave;
             return res;
         }
-        public EM_MissionLog () {
+        public EM_MissionLog (IDDS_MissionLog dds) {
+            m_dds = dds;
             for (int i = 0; i < m_logs.Length; i++)
                 m_logs[i] = new List<E_MissionLog> ();
         }
@@ -46,6 +49,9 @@ namespace MirRemakeBackend.Entity {
             var log = m_logFactory.GetLogInstance (type);
             log.Reset (netId, parm1, parm2, parm3);
             return log;
+        }
+        public void CreateLogOffline (MissionTargetType type, int charId, int parm1, int parm2 = 0, int parm3 = 0) {
+            m_dds.InsertMissionLog (new DDO_MissionLog (type, charId, parm1, parm2, parm3));
         }
     }
 }
