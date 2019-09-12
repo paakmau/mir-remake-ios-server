@@ -158,6 +158,7 @@ namespace MirRemakeBackend.DynamicData {
             m_masterly = masterly;
         }
     }
+
     struct DDO_Mission {
         public short m_missionId;
         public int m_characterId;
@@ -170,6 +171,22 @@ namespace MirRemakeBackend.DynamicData {
             m_missionTargetProgressList = misProgList;
         }
     }
+
+    struct DDO_MissionLog {
+        public MissionTargetType m_misTarType;
+        public int m_charId;
+        public int m_parm1;
+        public int m_parm2;
+        public int m_parm3;
+        public DDO_MissionLog (MissionTargetType type, int charId, int parm1, int parm2, int parm3) {
+            m_misTarType = type;
+            m_charId = charId;
+            m_parm1 = parm1;
+            m_parm2 = parm2;
+            m_parm3 = parm3;
+        }
+    }
+
     struct DDO_Mail {
         public int m_id;
         public int m_senderCharId;
@@ -178,12 +195,12 @@ namespace MirRemakeBackend.DynamicData {
         public DateTime m_sendTime;
         public string m_title;
         public string m_detail;
-        public (short, short)[] m_itemIdAndNumArr;
+        public (short, short) [] m_itemIdAndNumArr;
         public long m_virtualCy;
         public long m_chargeCy;
         public bool m_isRead;
         public bool m_isReceived;
-        public DDO_Mail (int id, int senderCharId, string senderName, int receiverCharId, DateTime sendTime, string title, string detail, (short, short)[] itemIdAndNum, long virtualCy, long chargeCy, bool isRead, bool isReceived) {
+        public DDO_Mail (int id, int senderCharId, string senderName, int receiverCharId, DateTime sendTime, string title, string detail, (short, short) [] itemIdAndNum, long virtualCy, long chargeCy, bool isRead, bool isReceived) {
             m_id = id;
             m_senderCharId = senderCharId;
             m_senderName = senderName;

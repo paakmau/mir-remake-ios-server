@@ -29,8 +29,12 @@ namespace MirRemakeBackend.GameLogic {
             CreateLog (MissionTargetType.TALK_TO_NPC, netId, misId, misTarId);
         }
 
-        public void NotifyLogChargeAdequately (int netId, int totalChargedmoney) {
+        public void NotifyLogChargeAdequatelyOnline (int netId, int totalChargedmoney) {
             CreateLog (MissionTargetType.CHARGE_ADEQUATELY, netId, totalChargedmoney);
+        }
+
+        public void NotifyLogChargeAdequatelyOffline (int charId, int totalChargedmoney) {
+            EM_MissionLog.s_instance
         }
 
         private void CreateLog (MissionTargetType type, int netId, int parm1 = 0, int parm2 = 0, int parm3 = 0) {

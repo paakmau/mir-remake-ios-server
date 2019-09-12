@@ -43,7 +43,6 @@ namespace MirRemakeBackend.Entity {
             GetRawLogsCurTick ().Clear ();
         }
         public E_MissionLog CreateLog (MissionTargetType type, int netId, int parm1, int parm2, int parm3) {
-            // TODO: 有缘拆开写
             var log = m_logFactory.GetLogInstance (type);
             log.Reset (netId, parm1, parm2, parm3);
             return log;
