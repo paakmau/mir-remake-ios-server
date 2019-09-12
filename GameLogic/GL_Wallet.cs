@@ -36,8 +36,10 @@ namespace MirRemakeBackend.GameLogic {
             else
                 EM_Wallet.s_instance.CharacterUpdateChargeCyOffline (charId, money * 100L);
             // 通知任务
-            // TODO: 若角色不在线, 可以考虑记录Log到数据库, 或临时读取 Mission
-            GL_MissionLog.s_instance.NotifyLogChargeAdequatelyOnline (netId, totalChargedmoney);
+            if (netId != -1)
+                GL_MissionLog.s_instance.NotifyLogChargeAdequatelyOnline (netId, totalChargedmoney);
+            else
+                GL_MissionLog.s_instance.NotifyLogChargeAdequatelyOffline (charId, totalChargedmoney);
         }
         public void NotifyUpdateCurrencyOnline (int netId, int charId, CurrencyType type, long dC) {
             // 实例 与 数据

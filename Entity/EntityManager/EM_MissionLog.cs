@@ -50,5 +50,8 @@ namespace MirRemakeBackend.Entity {
             log.Reset (netId, parm1, parm2, parm3);
             return log;
         }
+        public void CreateLogOffline (MissionTargetType type, int charId, int parm1, int parm2 = 0, int parm3 = 0) {
+            m_dds.InsertMissionLog (new DDO_MissionLog (type, charId, parm1, parm2, parm3));
+        }
     }
 }
