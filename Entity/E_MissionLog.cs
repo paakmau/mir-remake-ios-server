@@ -58,7 +58,7 @@ namespace MirRemakeBackend.Entity {
     }
 
     class E_ChargeAdequatelyLog : E_MissionLog {
-        public override MissionTargetType m_LogType { get { return MissionTargetType.GAIN_ITEM; } }
+        public override MissionTargetType m_LogType { get { return MissionTargetType.CHARGE_ADEQUATELY; } }
         public int m_totalChargedMoney;
         public override void Reset (int netId, int parm1, int parm2, int parm3) {
             base.Reset (netId);
