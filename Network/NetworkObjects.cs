@@ -489,14 +489,14 @@ namespace MirRemakeBackend.Network {
         public static void Put (this NetDataWriter writer, NO_MallClass mallClass) {
             writer.Put (mallClass.m_mallClassId);
             writer.Put (mallClass.m_mallName);
-            writer.Put ((byte) mallClass.m_mallItemList.Count);
+            writer.Put ((short) mallClass.m_mallItemList.Count);
             for (int i = 0; i < mallClass.m_mallItemList.Count; i++)
                 writer.Put (mallClass.m_mallItemList[i]);
         }
         public static NO_MallClass GetMallClass (this NetDataReader reader) {
             byte mallClassId = reader.GetByte ();
             string mallName = reader.GetString ();
-            byte mallItemCnt = reader.GetByte ();
+            short mallItemCnt = reader.GetShort ();
             List<NO_MallItem> itemList = new List<NO_MallItem> (mallItemCnt);
             for (int i = 0; i < mallItemCnt; i++)
                 itemList.Add (reader.GetMallItem ());
