@@ -13,10 +13,4 @@
 },{
     "TitleID":504,
     "AttributeAttr":["MAX_HP 15000","MAX_MP 15000","ATTACK 1000","MAGIC 1000"]
-},{
-    "TitleID":505,
-    "AttributeAttr":["MAX_HP 10"]
-},{
-    "TitleID":506,
-    "AttributeAttr":["ATTACK 15"]
 }]
