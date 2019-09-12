@@ -317,19 +317,23 @@ namespace MirRemakeBackend.Entity {
             }
             acceptableMissionList = changedList;
         }
-        public bool AttachTitle (int netId, short misId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resAttr) {
+        public bool AttachTitle (int netId, short misId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resAttachAttr, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resDetachAttr) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
-            resAttr = null;
+            resAttachAttr = null;
+            resDetachAttr = null;
             if (charId == -1) return false;
             Dictionary<short, E_Mission> titleMisDict;
             if (!m_titleMissionDict.TryGetValue (netId, out titleMisDict)) return false;
             E_Mission titleMis;
             if (!titleMisDict.TryGetValue (misId, out titleMis)) return false;
             if (!titleMis.m_IsFinished) return false;
+            short oriTitleMisId;
+            if (m_attachedTitleDict.TryGetValue (netId, out oriTitleMisId))
+                resDetachAttr = m_dem.GetTitleById (oriTitleMisId).m_attr;
             m_attachedTitleDict[netId] = misId;
             m_titleDds.UpdateAttachedTitle (charId, misId);
             var titleDe = m_dem.GetTitleById (misId);
-            resAttr = titleDe.m_attr;
+            resAttachAttr = titleDe.m_attr;
             return true;
         }
         public bool DetachTitle (int netId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resAttr) {

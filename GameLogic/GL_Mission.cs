@@ -128,8 +128,9 @@ namespace MirRemakeBackend.GameLogic {
         public void CommandApplyAttachTitle (int netId, short misId) {
             E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
-            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
-            if (EM_Mission.s_instance.AttachTitle (netId, misId, out titleAttr)) {
+            IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr, oriTitleAttr;
+            if (EM_Mission.s_instance.AttachTitle (netId, misId, out titleAttr, out oriTitleAttr)) {
+                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, oriTitleAttr);
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, titleAttr);
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
             } else
