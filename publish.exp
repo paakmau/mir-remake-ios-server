@@ -6,13 +6,12 @@ set host 39.100.41.101
 set sour bin/Release/netcoreapp2.2/centos-x64/publish/
 set dest /home/uftp/
 
+set timeout 600
+
 spawn dotnet publish -c Release -r centos-x64
-spawn cp Data ${sour}
+spawn cp -f Data/*.json ${sour}Data/
 spawn scp -r ${sour} ${user}@${host}:${dest}
-set timeout 30
 expect "${user}@${host}'s password:"
-set timeout 30
 send "${pass}\n"
-set timeout 30
 send "exit\n"
 expect eof
