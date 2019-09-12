@@ -57,8 +57,8 @@ namespace MirRemakeBackend.GameLogic {
                 if (titleMisDict == null) continue;
                 var titleMisEn = titleMisDict.GetEnumerator ();
                 while (titleMisEn.MoveNext ()) {
-                    var misId = misEn.Current.Key;
-                    var misObj = misEn.Current.Value;
+                    var misId = titleMisEn.Current.Key;
+                    var misObj = titleMisEn.Current.Value;
                     var misTars = misObj.m_tarList;
                     bool dirty = false;
                     for (int j = 0; j < misTars.Count; j++) {
