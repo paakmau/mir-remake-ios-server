@@ -25,6 +25,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Skill.s_instance.NotifyInitCharacter (netId, charId);
             // 任务
             GL_Mission.s_instance.NotifyInitCharacter (netId, newChar);
+            GL_MissionLog.s_instance.NotifyInitCharacter (netId, charId);
             // 邮箱
             GL_Mail.s_instance.NotifyInitCharacter (netId, charId);
         }

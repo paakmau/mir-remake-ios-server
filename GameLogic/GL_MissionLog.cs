@@ -13,6 +13,9 @@ namespace MirRemakeBackend.GameLogic {
         }
         public override void NetworkTick () { }
 
+        public void NotifyInitCharacter (int netId, int charId) {
+            EM_MissionLog.s_instance.InitCharacter (netId, charId);
+        }
         public void NotifyLogGainItem (int netId, short itemId, short realStoreNum) {
             CreateLog (MissionTargetType.GAIN_ITEM, netId, itemId, realStoreNum);
         }

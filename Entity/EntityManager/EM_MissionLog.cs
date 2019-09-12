@@ -39,6 +39,12 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < m_logs.Length; i++)
                 m_logs[i] = new List<E_MissionLog> ();
         }
+        public void InitCharacter (int netId, int charId) {
+            var misLogList = m_dds.GetMissionLogListByCharacterId (charId);
+            m_dds.DeleteMissionLogByCharacterId (charId);
+            for (int i=0; i<misLogList.Count; i++)
+                CreateLog (misLogList[i].m_misTarType, netId, misLogList[i].m_parm1, misLogList[i].m_parm2, misLogList[i].m_parm3);
+        }
         public List<E_MissionLog> GetRawLogsCurTick () { return m_logs[m_curTick]; }
         public IReadOnlyList<E_MissionLog> GetLogsSecondTick () { return m_logs[GetNextTick (m_curTick)]; }
         public void NextTick () {
