@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using MirRemakeBackend.Util;
 using MirRemakeBackend.DynamicData;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.Entity {
     class EM_MissionLog {
@@ -27,6 +27,7 @@ namespace MirRemakeBackend.Entity {
         private LogFactory m_logFactory = new LogFactory ();
         private const int c_tickToSave = 2;
         private List<E_MissionLog>[] m_logs = new List<E_MissionLog>[c_tickToSave];
+        private List<E_MissionLog> m_LogsCurTick { get { return m_logs[m_curTick]; } }
         private int m_curTick;
         private int GetNextTick (int tick) {
             int res = tick + 1;
@@ -42,19 +43,18 @@ namespace MirRemakeBackend.Entity {
         public void InitCharacter (int netId, int charId) {
             var misLogList = m_dds.GetMissionLogListByCharacterId (charId);
             m_dds.DeleteMissionLogByCharacterId (charId);
-            for (int i=0; i<misLogList.Count; i++)
+            for (int i = 0; i < misLogList.Count; i++)
                 CreateLog (misLogList[i].m_misTarType, netId, misLogList[i].m_parm1, misLogList[i].m_parm2, misLogList[i].m_parm3);
         }
-        public List<E_MissionLog> GetRawLogsCurTick () { return m_logs[m_curTick]; }
         public IReadOnlyList<E_MissionLog> GetLogsSecondTick () { return m_logs[GetNextTick (m_curTick)]; }
         public void NextTick () {
             m_curTick = GetNextTick (m_curTick);
-            GetRawLogsCurTick ().Clear ();
+            m_LogsCurTick.Clear ();
         }
-        public E_MissionLog CreateLog (MissionTargetType type, int netId, int parm1, int parm2, int parm3) {
+        public void CreateLog (MissionTargetType type, int netId, int parm1, int parm2, int parm3) {
             var log = m_logFactory.GetLogInstance (type);
             log.Reset (netId, parm1, parm2, parm3);
-            return log;
+            m_LogsCurTick.Add (log);
         }
         public void CreateLogOffline (MissionTargetType type, int charId, int parm1, int parm2 = 0, int parm3 = 0) {
             m_dds.InsertMissionLog (new DDO_MissionLog (type, charId, parm1, parm2, parm3));

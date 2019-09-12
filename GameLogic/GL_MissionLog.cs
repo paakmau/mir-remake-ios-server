@@ -41,8 +41,7 @@ namespace MirRemakeBackend.GameLogic {
         }
 
         private void CreateLog (MissionTargetType type, int netId, int parm1 = 0, int parm2 = 0, int parm3 = 0) {
-            var logs = EM_MissionLog.s_instance.GetRawLogsCurTick ();
-            logs.Add (EM_MissionLog.s_instance.CreateLog (type, netId, parm1, parm2, parm3));
+            EM_MissionLog.s_instance.CreateLog (type, netId, parm1, parm2, parm3);
         }
     }
 }
