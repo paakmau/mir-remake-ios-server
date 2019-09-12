@@ -133,7 +133,7 @@ namespace MirRemakeBackend.GameLogic {
                 if (oriTitleAttr != null)
                     GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, oriTitleAttr);
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, titleAttr);
-                m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
+                m_networkService.SendServerCommand (SC_ApplyAllAttachTitle.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, misId));
             } else
                 GL_Chat.s_instance.NotifyBuyItemBagFullSendMessage (netId);
         }
@@ -144,7 +144,7 @@ namespace MirRemakeBackend.GameLogic {
             EM_Mission.s_instance.DetachTitle (netId, out titleAttr);
             if (titleAttr != null)
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, titleAttr);
-            m_networkService.SendServerCommand (SC_ApplySelfDetachTitle.Instance (netId));
+            m_networkService.SendServerCommand (SC_ApplyAllDetachTitle.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId));
         }
         public void NotifyInitCharacter (int netId, E_Character charObj) {
             // 实例化任务

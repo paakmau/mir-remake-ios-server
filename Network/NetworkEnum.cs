@@ -61,8 +61,8 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_MISSION_ACCEPTABLE,
         // 称号
         APPLY_SELF_TITLE_MISSION_PROGRESS,
-        APPLY_SELF_ATTACH_TITLE,
-        APPLY_SELF_DETACH_TITLE,
+        APPLY_ALL_ATTACH_TITLE,
+        APPLY_ALL_DETACH_TITLE,
         // 技能相关
         APPLY_SELF_UPDATE_SKILL_LEVEL_AND_MASTERLY,
         // 商城

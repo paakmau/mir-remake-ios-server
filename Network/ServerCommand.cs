@@ -1227,32 +1227,39 @@ namespace MirRemakeBackend.Network {
         }
     }
 
-    class SC_ApplySelfAttachTitle : SingleToClientServerCommand {
-        private static SC_ApplySelfAttachTitle s_instance = new SC_ApplySelfAttachTitle ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_ATTACH_TITLE; } }
+    class SC_ApplyAllAttachTitle : ServerCommandBase {
+        private static SC_ApplyAllAttachTitle s_instance = new SC_ApplyAllAttachTitle ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_ATTACH_TITLE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        private int m_attachNetId;
         private short m_missionId;
-        public static SC_ApplySelfAttachTitle Instance (int netId, short missionId) {
-            s_instance.ResetToClientNetId (netId);
+        public static SC_ApplyAllAttachTitle Instance (List<int> toNetIdList, int attachNetId, short missionId) {
+            s_instance.m_toClientList = toNetIdList;
+            s_instance.m_attachNetId = attachNetId;
             s_instance.m_missionId = missionId;
             return s_instance;
         }
-        private SC_ApplySelfAttachTitle () { }
+        private SC_ApplyAllAttachTitle () { }
         public override void PutData (NetDataWriter writer) {
+            writer.Put (m_attachNetId);
             writer.Put (m_missionId);
         }
     }
 
-    class SC_ApplySelfDetachTitle : SingleToClientServerCommand {
-        private static SC_ApplySelfDetachTitle s_instance = new SC_ApplySelfDetachTitle ();
-        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_SELF_DETACH_TITLE; } }
+    class SC_ApplyAllDetachTitle : ServerCommandBase {
+        private static SC_ApplyAllDetachTitle s_instance = new SC_ApplyAllDetachTitle ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.APPLY_ALL_DETACH_TITLE; } }
         public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
-        public static SC_ApplySelfDetachTitle Instance (int netId) {
-            s_instance.ResetToClientNetId (netId);
+        private int m_detachNetId;
+        public static SC_ApplyAllDetachTitle Instance (List<int> toNetIdList, int detachNetId) {
+            s_instance.m_toClientList = toNetIdList;
+            s_instance.m_detachNetId = detachNetId;
             return s_instance;
         }
-        private SC_ApplySelfDetachTitle () { }
-        public override void PutData (NetDataWriter writer) { }
+        private SC_ApplyAllDetachTitle () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put (m_detachNetId);
+        }
     }
 
     class SC_ApplySelfShowMall : SingleToClientServerCommand {
