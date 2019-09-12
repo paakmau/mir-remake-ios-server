@@ -129,7 +129,7 @@ namespace MirRemakeBackend.GameLogic {
                 GL_Chat.s_instance.NotifyBuyItemShortOfCySendMessage (netId);
                 return;
             }
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, -needCy);
             NotifyCharacterGainItem (netId, charId, bag, itemId, num);
         }
         public void CommandApplySellItemInBag (int netId, long realId, short num) {
@@ -144,7 +144,7 @@ namespace MirRemakeBackend.GameLogic {
             NotifyCharacterLoseItem (netId, charId, item, num, pos, bag);
             // 拿钱
             var virCy = (int) (item.m_SellPrice * num);
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, virCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, virCy);
         }
         public void CommandTestGainItem (int netId, short itemId, short num) {
             var charId = EM_Character.s_instance.GetCharIdByNetId (netId);
@@ -242,7 +242,7 @@ namespace MirRemakeBackend.GameLogic {
             long needCy = (1L << eq.m_strengthenNum) * 80L;
             if (needCy > curCy) return;
             // 花钱
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, -needCy);
             // 强化
             eq.m_strengthenNum++;
             EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
@@ -263,7 +263,7 @@ namespace MirRemakeBackend.GameLogic {
             long needCy = (1L << (int) encm.m_Quality) * (1L << (eq.m_LevelInNeed >> 4)) * 3L;
             if (needCy > curCy) return;
             // 花钱
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, -needCy);
             // 失去附魔符
             var slot = EM_Item.s_instance.CharacterLoseWholeItem (encm, charId, bag, encmPos);
             // 附魔
@@ -299,7 +299,7 @@ namespace MirRemakeBackend.GameLogic {
                 }
             if (gemInlayPos == -1) return;
             // 花钱
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, -needCy);
             // 失去宝石
             var slot = EM_Item.s_instance.CharacterLoseWholeItem (gem, charId, bag, gemPos);
             // 镶嵌
@@ -323,7 +323,7 @@ namespace MirRemakeBackend.GameLogic {
             long needCy = (1L << eq.m_InlaidGemList.Count) * 100;
             if (needCy > curCy) return;
             // 花钱
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, -needCy);
             // 打孔
             eq.MakeHole ();
             EM_Item.s_instance.CharacterUpdateItem (eq, charId, ItemPlace.BAG, eqPos);
@@ -357,7 +357,7 @@ namespace MirRemakeBackend.GameLogic {
             var slot = EM_Item.s_instance.CharacterLoseWholeItem (eq, charId, bag, eqPos);
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (netId, new NO_Item[] { slot.GetItemNo (bag.m_repositoryPlace, eqPos) }));
             // 得到钱
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, gainCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, gainCy);
         }
         /// <summary> 装备熔炼, 获得附魔符 </summary>
         public void CommandApplySmeltEquipment (int netId, long realId) {
@@ -372,7 +372,7 @@ namespace MirRemakeBackend.GameLogic {
             long needCy = ((long) eq.m_Quality + 1L) * 10L;
             if (curCy < needCy) return;
             // 花钱
-            GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charId, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateChargeCurrencyOnline (netId, charId, -needCy);
             // 得到属性
             var attrList = new List < (ActorUnitConcreteAttributeType, int) > ();
             for (int i = 0; i < eq.m_RawAttrList.Count; i++)
@@ -438,9 +438,9 @@ namespace MirRemakeBackend.GameLogic {
             long charCy = cyType == CurrencyType.VIRTUAL ? buyerWallet.Item1 : buyerWallet.Item2;
             if (charCy < needCy) return;
             // 花钱
-            GL_Wallet.s_instance.NotifyUpdateCurrency (buyerNetId, buyerCharId, cyType, -needCy);
+            GL_Wallet.s_instance.NotifyUpdateCurrencyOnline (buyerNetId, buyerCharId, cyType, -needCy);
             // 收钱
-            GL_Wallet.s_instance.NotifyUpdateCurrency (holderNetId, holderCharId, cyType, needCy);
+            GL_Wallet.s_instance.NotifyUpdateCurrencyOnline (holderNetId, holderCharId, cyType, needCy);
             // 交易物品
             E_Item holderChangedItem;
             List < (short, E_Item) > buyerChangedItemList;

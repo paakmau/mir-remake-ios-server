@@ -18,9 +18,9 @@ namespace MirRemakeBackend.GameLogic {
             }
             var netId = EM_Character.s_instance.GetNetIdByCharId (charId);
             if (netId != -1)
-                GL_Wallet.s_instance.NotifyUpdateCurrency (netId, charId, type, dC);
+                GL_Wallet.s_instance.NotifyUpdateCurrencyOnline (netId, charId, type, dC);
             else
-                GL_Wallet.s_instance.NotifyUpdateCurrency (charId, type, dC);
+                GL_Wallet.s_instance.NotifyUpdateCurrencyOffline (charId, type, dC);
             m_networkService.SendServerCommand (SC_ConsoleSuccess.Instance (consoleNetId));
         }
         public void CommandReleaseNotice (int netId, string title, string detail) {

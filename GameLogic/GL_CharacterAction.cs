@@ -67,7 +67,7 @@ namespace MirRemakeBackend.GameLogic {
                 NotifyRespawnHome (charObj);
                 return;
             }
-            GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charObj.m_characterId, -188L);
+            GL_Wallet.s_instance.NotifyUpdateChargeCurrencyOnline (netId, charObj.m_characterId, -188L);
             charObj.Respawn (0.7f);
             m_networkService.SendServerCommand (SC_ApplyAllRespawn.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId, charObj.m_position, charObj.m_curHp, charObj.m_curMp));
         }

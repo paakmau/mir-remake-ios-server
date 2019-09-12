@@ -45,8 +45,8 @@ namespace MirRemakeBackend.GameLogic {
                 GL_Chat.s_instance.NotifyReceiveMailBagFullSendMessage (netId);
                 return;
             }
-            GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, mail.m_virtualCy);
-            GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charId, mail.m_chargeCy);
+            GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, mail.m_virtualCy);
+            GL_Wallet.s_instance.NotifyUpdateChargeCurrencyOnline (netId, charId, mail.m_chargeCy);
             GL_Item.s_instance.NotifyCharacterGainItems (netId, charId, bag, mail.m_itemIdAndNumList);
             EM_Mail.s_instance.CharacterReceiveMail (netId, mail);
             m_networkService.SendServerCommand (SC_ApplySelfReceiveMail.Instance (netId, mailId));
@@ -62,8 +62,8 @@ namespace MirRemakeBackend.GameLogic {
                     GL_Chat.s_instance.NotifyReceiveMailBagFullSendMessage (netId);
                     continue;
                 }
-                GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charId, mailList[i].m_virtualCy);
-                GL_Wallet.s_instance.NotifyUpdateChargeCurrency (netId, charId, mailList[i].m_chargeCy);
+                GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charId, mailList[i].m_virtualCy);
+                GL_Wallet.s_instance.NotifyUpdateChargeCurrencyOnline (netId, charId, mailList[i].m_chargeCy);
                 GL_Item.s_instance.NotifyCharacterGainItems (netId, charId, bag, mailList[i].m_itemIdAndNumList);
                 EM_Mail.s_instance.CharacterReceiveMail (netId, mailList[i]);
                 m_networkService.SendServerCommand (SC_ApplySelfReceiveMail.Instance (netId, mailList[i].m_id));

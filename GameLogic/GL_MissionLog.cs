@@ -34,7 +34,7 @@ namespace MirRemakeBackend.GameLogic {
         }
 
         public void NotifyLogChargeAdequatelyOffline (int charId, int totalChargedmoney) {
-            EM_MissionLog.s_instance
+            // EM_MissionLog.s_instance
         }
 
         private void CreateLog (MissionTargetType type, int netId, int parm1 = 0, int parm2 = 0, int parm3 = 0) {

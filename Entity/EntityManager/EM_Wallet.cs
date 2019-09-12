@@ -39,7 +39,7 @@ namespace MirRemakeBackend.Entity {
             return res;
         }
 
-        public (long, long) CharacterUpdateVirtualCy (int netId, int charId, long dVirtualCy) {
+        public (long, long) CharacterUpdateVirtualCyOnline (int netId, int charId, long dVirtualCy) {
             (long, long) res;
             if (!m_walletDict.TryGetValue (netId, out res))
                 return (-1, -1);
@@ -49,7 +49,7 @@ namespace MirRemakeBackend.Entity {
             return res;
         }
 
-        public (long, long) CharacterUpdateChargeCy (int netId, int charId, long dChargeCy) {
+        public (long, long) CharacterUpdateChargeCyOnline (int netId, int charId, long dChargeCy) {
             (long, long) res;
             if (!m_walletDict.TryGetValue (netId, out res))
                 return (-1, -1);
@@ -58,14 +58,14 @@ namespace MirRemakeBackend.Entity {
             m_walletDds.UpdateCharacterWallet (new DDO_CharacterWallet (charId, res.Item1, res.Item2));
             return res;
         }
-        public void CharacterUpdateVirtualCy (int charId, long dVirtualCy) {
+        public void CharacterUpdateVirtualCyOffline (int charId, long dVirtualCy) {
             DDO_CharacterWallet wallet;
             bool suc = m_walletDds.GetCharacterWalletByCharacterId (charId, out wallet);
             if (!suc) return;
             wallet.m_virtualCy += dVirtualCy;
             m_walletDds.UpdateCharacterWallet (wallet);
         }
-        public void CharacterUpdateChargeCy (int charId, long dChargeCy) {
+        public void CharacterUpdateChargeCyOffline (int charId, long dChargeCy) {
             DDO_CharacterWallet wallet;
             bool suc = m_walletDds.GetCharacterWalletByCharacterId (charId, out wallet);
             if (!suc) return;
@@ -73,7 +73,7 @@ namespace MirRemakeBackend.Entity {
             m_walletDds.UpdateCharacterWallet (wallet);
         }
 
-        public int UpdateTotalChargedMoney (int netId, int charId, int newChargedMoney) {
+        public int UpdateTotalChargedMoneyOnline (int netId, int charId, int newChargedMoney) {
             E_VipCard vipCard;
             if (!m_vipCardDict.TryGetValue (netId, out vipCard))
                 return -1;
@@ -82,7 +82,7 @@ namespace MirRemakeBackend.Entity {
             return vipCard.m_chargeMoney;
         }
 
-        public int UpdateTotalChargedMoney (int charId, int newChargedMoney) {
+        public int UpdateTotalChargedMoneyOffline (int charId, int newChargedMoney) {
             DDO_CharacterVipCard vipCard;
             if (!m_vipCardDds.GetCharacterVipCardByCharacterId (charId, out vipCard))
                 return -1;

@@ -197,7 +197,7 @@ namespace MirRemakeBackend.GameLogic {
                     cyGain += target.m_Attack / 20;
                     cyGain += target.m_Magic / 20;
                     if (cyGain > 0)
-                        GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (caster.m_networkId, (caster as E_Character).m_characterId, cyGain);
+                        GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (caster.m_networkId, (caster as E_Character).m_characterId, cyGain);
                 }
             }
         }

@@ -26,7 +26,7 @@ namespace MirRemakeBackend.GameLogic {
                 skill.Upgrade ();
             }
             if (oriLv != skill.m_skillLevel) {
-                GL_Wallet.s_instance.NotifyUpdateVirtualCurrency (netId, charObj.m_characterId, -costTotal);
+                GL_Wallet.s_instance.NotifyUpdateVirtualCurrencyOnline (netId, charObj.m_characterId, -costTotal);
                 // 持久化 与 client
                 EM_Skill.s_instance.CharacterUpdateSkill (charObj.m_characterId, skill);
                 m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
