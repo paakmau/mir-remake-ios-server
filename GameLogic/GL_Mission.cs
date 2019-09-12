@@ -130,7 +130,8 @@ namespace MirRemakeBackend.GameLogic {
             if (charObj == null) return;
             IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr, oriTitleAttr;
             if (EM_Mission.s_instance.AttachTitle (netId, misId, out titleAttr, out oriTitleAttr)) {
-                GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, oriTitleAttr);
+                if (oriTitleAttr != null)
+                    GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, oriTitleAttr);
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeAdd (charObj, titleAttr);
                 m_networkService.SendServerCommand (SC_ApplySelfAttachTitle.Instance (netId, misId));
             } else
@@ -140,9 +141,9 @@ namespace MirRemakeBackend.GameLogic {
             E_Character charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
             if (charObj == null) return;
             IReadOnlyList < (ActorUnitConcreteAttributeType, int) > titleAttr;
-            if (EM_Mission.s_instance.DetachTitle (netId, out titleAttr)) {
+            EM_Mission.s_instance.DetachTitle (netId, out titleAttr);
+            if (titleAttr != null)
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, titleAttr);
-            }
             m_networkService.SendServerCommand (SC_ApplySelfDetachTitle.Instance (netId));
         }
         public void NotifyInitCharacter (int netId, E_Character charObj) {
