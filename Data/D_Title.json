@@ -28,10 +28,4 @@
     "TitleName":"钻石赞助大使",
     "LevelInNeed":0,
     "TitleTarget":[["CHARGE_ADEQUATELY",4]]
-},{
-    "TitleID":505,
-    "Occupation":"ALL",
-    "TitleName":"儒雅随和",
-    "LevelInNeed":0,
-    "TitleTarget":[["KILL_MONSTER",0]]
 }]
