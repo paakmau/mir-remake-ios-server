@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute, IDDS_Mail,IDDS_Notice, IDDS_Title {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute, IDDS_Mail,IDDS_Notice, IDDS_Title,IDDS_MissionLog {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         public DynamicDataServiceImpl () {
@@ -807,6 +807,37 @@ namespace MirRemakeBackend.DynamicData {
             catch{return -1;}
         }
         
+        //MISSION LOG
+        public List<DDO_MissionLog> GetMissionLogListByCharacterId (int charId){
+            string cmd=String.Format("select * from `mission_log` where charid={0};",charId);
+            string database="legend";
+            DataSet ds=new DataSet();
+            pool.ExecuteSql(database,cmd,ds);
+            List<DDO_MissionLog> missionLogs=new List<DDO_MissionLog>();
+            DataRowCollection drc=ds.Tables[0].Rows;
+            for(int i=0;i<drc.Count;i++){
+                DDO_MissionLog ml=new DDO_MissionLog();
+                ml.m_charId=charId;
+                ml.m_misTarType=(MissionTargetType)Enum.Parse(typeof(MissionTargetType),drc[i]["target_type"].ToString());
+                ml.m_parm1=int.Parse(drc[i]["parameter1"].ToString());
+                ml.m_parm2=int.Parse(drc[i]["parameter2"].ToString());
+                ml.m_parm3=int.Parse(drc[i]["parameter3"].ToString());
+                missionLogs.Add(ml);
+            }
+            return missionLogs;
+        }
+        public void DeleteMissionLogByCharacterId (int charId){
+            string cmd=String.Format("delete from `mission_log` where charid={0};",charId);
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+        public void InsertMissionLog (DDO_MissionLog ddo){
+            string cmd=String.Format("insert into `mission_log` values({0},\"{1}\",{2},{3},{4});",
+                ddo.m_charId,ddo.m_misTarType.ToString(),ddo.m_parm1,ddo.m_parm2,ddo.m_parm3);
+            string database="legend";
+            pool.ExecuteSql(database,cmd);
+        }
+
 
         private ValueTuple<ActorUnitConcreteAttributeType, int>[] GetAttr (JsonData attr) {
             ValueTuple<ActorUnitConcreteAttributeType, int>[] res = new ValueTuple<ActorUnitConcreteAttributeType, int>[attr.Count];

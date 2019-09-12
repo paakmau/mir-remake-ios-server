@@ -178,3 +178,13 @@ create table `attached_title`(
   `titleid` int NOT NULL,
   primary key(`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `mission_log`;
+create table `mission_log`(
+  `charid` int NOT NULL,
+  `target_type` VARCHAR(45),
+  `parameter1` int NOT NULL,
+  `parameter2` int NOT NULL,
+  `parameter3` int NOT NULL,
+  key(`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
