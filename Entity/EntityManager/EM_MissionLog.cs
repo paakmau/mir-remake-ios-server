@@ -23,17 +23,21 @@ namespace MirRemakeBackend.Entity {
         }
         public static EM_MissionLog s_instance;
         private LogFactory m_logFactory = new LogFactory ();
-        private const int c_tickToSave = 4;
-        private List<E_MissionLog>[] m_logs = new List<E_MissionLog>[c_tickToSave] { new List<E_MissionLog> (), new List<E_MissionLog> (), new List<E_MissionLog> (), new List<E_MissionLog> () };
+        private const int c_tickToSave = 2;
+        private List<E_MissionLog>[] m_logs = new List<E_MissionLog>[c_tickToSave];
         private int m_curTick;
         private int GetNextTick (int tick) {
-            int res = m_curTick + 1;
+            int res = tick + 1;
             while (res >= c_tickToSave)
                 res -= c_tickToSave;
             return res;
         }
+        public EM_MissionLog () {
+            for (int i = 0; i < m_logs.Length; i++)
+                m_logs[i] = new List<E_MissionLog> ();
+        }
         public List<E_MissionLog> GetRawLogsCurTick () { return m_logs[m_curTick]; }
-        public IReadOnlyList<E_MissionLog> GetLogsSecondTick () { return m_logs[GetNextTick (GetNextTick (m_curTick))]; }
+        public IReadOnlyList<E_MissionLog> GetLogsSecondTick () { return m_logs[GetNextTick (m_curTick)]; }
         public void NextTick () {
             m_curTick = GetNextTick (m_curTick);
             GetRawLogsCurTick ().Clear ();
