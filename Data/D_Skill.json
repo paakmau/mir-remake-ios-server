@@ -1888,7 +1888,7 @@
 		"CastRange": 0,
 		"TargetNumber": 20,
 		"DamageRadian": 200,
-		"SecondParameter": 180,
+		"SecondParameter": 90,
 		"Effect": {
 			"EffectDeltaHP": [
 				-50,

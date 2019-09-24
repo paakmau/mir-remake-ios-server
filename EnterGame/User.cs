@@ -11,7 +11,7 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.EnterGame {
     class User {
         public static User s_instance;
-        private const string c_version = "1.23";
+        private const string c_version = "1.24";
         private const string c_downloadUrl = "https://cloud.189.cn/t/yemU3ejaqYBv";
         private INetworkService m_netService;
         private IDDS_User m_userDds;
