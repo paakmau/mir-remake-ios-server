@@ -3,7 +3,6 @@ using System.Threading;
 using MirRemakeBackend.Data;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.Entity;
 using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
@@ -104,8 +103,6 @@ namespace MirRemakeBackend {
             EM_Wallet.s_instance = new EM_Wallet (charWalletDds, charVipCardDds);
             // EM init
             EntityManagerInitializer.Init (skillDem, monDem);
-            // 角色创建器
-            User.s_instance = new User (new DS_SkillImpl (), new DS_MissionImpl (), userDds, charDds, charAttrDds, charWalletDds, charVipCardDds, skillDds, misDds, titleDds, itemDds, combatEfctDds, s_networkService);
         }
         static void InitGameLogic () {
             // GameLogic
@@ -127,6 +124,7 @@ namespace MirRemakeBackend {
             GL_Notice.s_instance = new GL_Notice (s_networkService);
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
+            GL_User.s_instance = new GL_User (s_networkService);
             GL_Wallet.s_instance = new GL_Wallet (s_networkService);
             // 放入数组中
             s_gameLogicArr = new GameLogicBase[] {
@@ -148,6 +146,7 @@ namespace MirRemakeBackend {
                 GL_Notice.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,
+                // GL_User.s_instance
                 // GL_Wallet.s_instance
             };
         }
@@ -163,21 +162,27 @@ namespace MirRemakeBackend {
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
             DynamicDataServiceImpl dma = new DynamicDataServiceImpl ();
-            DDO_MissionLog ml=new DDO_MissionLog();
-            ml.m_charId=123;
-            ml.m_misTarType=MissionTargetType.CHARGE_ADEQUATELY;
-            ml.m_parm1=1;ml.m_parm2=2;ml.m_parm3=3;
-            dma.InsertMissionLog(ml);
-            ml.m_misTarType=MissionTargetType.TALK_TO_NPC;
-            ml.m_parm1=13;ml.m_parm2=22;ml.m_parm3=55;
-            dma.InsertMissionLog(ml);
-            ml.m_charId=1234;
-            ml.m_misTarType=MissionTargetType.CHARGE_ADEQUATELY;
-            ml.m_parm1=1123;ml.m_parm2=2234;ml.m_parm3=3345;
-            dma.InsertMissionLog(ml);
-            System.Collections.Generic.List<DDO_MissionLog> sd=dma.GetMissionLogListByCharacterId(123);
-            dma.DeleteMissionLogByCharacterId(123);
-            sd=dma.GetMissionLogListByCharacterId(123);
+            DDO_MissionLog ml = new DDO_MissionLog ();
+            ml.m_charId = 123;
+            ml.m_misTarType = MissionTargetType.CHARGE_ADEQUATELY;
+            ml.m_parm1 = 1;
+            ml.m_parm2 = 2;
+            ml.m_parm3 = 3;
+            dma.InsertMissionLog (ml);
+            ml.m_misTarType = MissionTargetType.TALK_TO_NPC;
+            ml.m_parm1 = 13;
+            ml.m_parm2 = 22;
+            ml.m_parm3 = 55;
+            dma.InsertMissionLog (ml);
+            ml.m_charId = 1234;
+            ml.m_misTarType = MissionTargetType.CHARGE_ADEQUATELY;
+            ml.m_parm1 = 1123;
+            ml.m_parm2 = 2234;
+            ml.m_parm3 = 3345;
+            dma.InsertMissionLog (ml);
+            System.Collections.Generic.List<DDO_MissionLog> sd = dma.GetMissionLogListByCharacterId (123);
+            dma.DeleteMissionLogByCharacterId (123);
+            sd = dma.GetMissionLogListByCharacterId (123);
         }
     }
 }

@@ -22,10 +22,10 @@ namespace MirRemakeBackend.DynamicData {
         public int m_playerId;
         public OccupationType m_occupation;
         public string m_name;
-        public DDO_Character (int charId, int playerId, OccupationType oc, string name) {
+        public DDO_Character (int charId, int playerId, OccupationType ocp, string name) {
             m_characterId = charId;
             m_playerId = playerId;
-            m_occupation = oc;
+            m_occupation = ocp;
             m_name = name;
         }
     }

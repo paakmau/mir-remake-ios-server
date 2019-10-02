@@ -23,6 +23,12 @@ namespace MirRemakeBackend.Entity {
             m_charDds = charDds;
             m_charAttrDds = charAttrDds;
         }
+        public int CreateCharacter (int playerId, OccupationType ocp, string name) {
+            return m_charDds.InsertCharacter (new DDO_Character (-1, playerId, ocp, name));
+        }
+        public void CreateCharacterAttribute (int charId) {
+            m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 1, 0, 0, 0, 0, 0));
+        }
         /// <summary>
         /// 从数据库读取角色信息  
         /// 并在场景中索引新接入的角色  

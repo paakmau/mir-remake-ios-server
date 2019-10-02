@@ -1,44 +1,32 @@
 using System.Collections.Generic;
-using MirRemakeBackend.Data;
 using MirRemakeBackend.DynamicData;
-using MirRemakeBackend.GameLogic;
 using MirRemakeBackend.Network;
 
 /// <summary>
 /// 处理进入游戏之前的逻辑
 /// TODO: 重构 (有缘), 把创建角色逻辑放到 EM 层里
 /// </summary>
-namespace MirRemakeBackend.EnterGame {
-    class User {
-        public static User s_instance;
+namespace MirRemakeBackend.GameLogic {
+    class GL_User : GameLogicBase {
+        public static GL_User s_instance;
         private const string c_version = "1.24";
         private const string c_downloadUrl = "https://cloud.189.cn/t/yemU3ejaqYBv";
         private INetworkService m_netService;
-        private IDDS_User m_userDds;
-        private IDDS_Character m_charDds;
-        private IDDS_CharacterAttribute m_charAttrDds;
-        private IDDS_CharacterWallet m_charWalletDds;
-        private IDDS_CharacterVipCard m_charVipCardDds;
-        private IDDS_Skill m_skillDds;
-        private IDDS_Mission m_misDds;
-        private IDDS_Title m_titleDds;
-        private IDDS_Item m_itemDds;
-        private IDDS_CombatEfct m_combatEfctDds;
+        // private IDDS_User m_userDds;
+        // private IDDS_Character m_charDds;
+        // private IDDS_CharacterAttribute m_charAttrDds;
+        // private IDDS_CharacterWallet m_charWalletDds;
+        // private IDDS_CharacterVipCard m_charVipCardDds;
+        // private IDDS_Skill m_skillDds;
+        // private IDDS_Mission m_misDds;
+        // private IDDS_Title m_titleDds;
+        // private IDDS_Item m_itemDds;
+        // private IDDS_CombatEfct m_combatEfctDds;
         private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
         private List<short> m_titleMisIdList = new List<short> ();
-        public User (IDS_Skill skillDs, IDS_Mission misDs, IDDS_User userDds, IDDS_Character charDds, IDDS_CharacterAttribute charAttrDds, IDDS_CharacterWallet charWalletDds, IDDS_CharacterVipCard charVipCardDds, IDDS_Skill skillDds, IDDS_Mission misDds, IDDS_Title titleDds, IDDS_Item itemDds, IDDS_CombatEfct combatEfctDds, INetworkService ns) {
+        public GL_User (INetworkService ns) : base (ns) {
             m_netService = ns;
-            m_userDds = userDds;
-            m_charDds = charDds;
-            m_charAttrDds = charAttrDds;
-            m_charWalletDds = charWalletDds;
-            m_charVipCardDds = charVipCardDds;
-            m_skillDds = skillDds;
-            m_misDds = misDds;
-            m_titleDds = titleDds;
-            m_itemDds = itemDds;
-            m_combatEfctDds = combatEfctDds;
             // 初始技能加载
             OccupationType[] ocpArr = new OccupationType[] { OccupationType.MAGE, OccupationType.ROGUE, OccupationType.TAOIST, OccupationType.WARRIOR };
             foreach (var ocp in ocpArr) {
@@ -63,6 +51,8 @@ namespace MirRemakeBackend.EnterGame {
             foreach (var titleMis in allTitleMis)
                 m_titleMisIdList.Add (titleMis.m_id);
         }
+        public override void Tick (float dT) { }
+        public override void NetworkTick () { }
         public void CommandConnect (int netId) {
             m_netService.SendServerCommand (SC_InitSelfNetworkId.Instance (netId, c_version, c_downloadUrl));
         }
@@ -121,17 +111,7 @@ namespace MirRemakeBackend.EnterGame {
                 m_netService.SendServerCommand (SC_InitSelfModifyPassword.Instance (netId, false));
         }
         public void CommandCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
-
-            // 角色 dds
-            int charId = m_charDds.InsertCharacter (new DDO_Character (-1, playerId, ocp, name));
-            if (charId == -1) {
-                m_netService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, false, -1));
-                return;
-            }
-            m_charAttrDds.InsertCharacterAttribute (new DDO_CharacterAttribute (charId, 1, 0, 0, 0, 0, 0));
-            m_charWalletDds.InsertCharacterWallet (new DDO_CharacterWallet (charId, 0, 0));
-            m_charVipCardDds.InsertCharacterVipCard (new DDO_CharacterVipCard (charId, 0, 0));
-            
+            GL_CharacterInit.s_instance.NotifyCreateCharacter (netId, playerId, ocp, name);
 
             // 技能 dds
             var skillIdList = m_ocpSkillIdDict[ocp];

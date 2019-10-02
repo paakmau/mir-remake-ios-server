@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using LiteNetLib.Utils;
-using MirRemakeBackend.EnterGame;
 using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
@@ -8,6 +7,7 @@ namespace MirRemakeBackend.Network {
         NetworkToServerDataType m_DataType { get; }
         void Execute (NetDataReader reader, int netId);
     }
+
     class CC_InitRegister : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_REGISTER; } }
         public void Execute (NetDataReader reader, int netId) {
@@ -15,51 +15,57 @@ namespace MirRemakeBackend.Network {
             string pwd = reader.GetString ();
             string pwdProtectProblem = reader.GetString ();
             string pwdProtectAnswer = reader.GetString ();;
-            User.s_instance.CommandRegister (netId, username, pwd, pwdProtectProblem, pwdProtectAnswer);
+            GL_User.s_instance.CommandRegister (netId, username, pwd, pwdProtectProblem, pwdProtectAnswer);
         }
     }
+
     class CC_InitLogin : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_LOGIN; } }
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
             string pwd = reader.GetString ();
-            User.s_instance.CommandLogin (netId, username, pwd);
+            GL_User.s_instance.CommandLogin (netId, username, pwd);
         }
     }
+
     class CC_InitModifyPassword : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_MODIFY_PASSWORD; } }
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
             string oldPwd = reader.GetString ();
             string newPwd = reader.GetString ();
-            User.s_instance.CommandModifyPassword (netId, username, oldPwd, newPwd);
+            GL_User.s_instance.CommandModifyPassword (netId, username, oldPwd, newPwd);
         }
     }
+
     class CC_InitGetPasswordProtectionProblem : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_GET_PASSWORD_PROTECT_PROBLEM; } }
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
-            User.s_instance.CommandGetPwdProtectProblem (netId, username);
+            GL_User.s_instance.CommandGetPwdProtectProblem (netId, username);
         }
     }
+
     class CC_InitFindPassword : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_FIND_PASSWORD; } }
         public void Execute (NetDataReader reader, int netId) {
             string username = reader.GetString ();
             string pwdProtectAnswer = reader.GetString ();
             string newPwd = reader.GetString ();
-            User.s_instance.CommandFindPassword (netId, username, pwdProtectAnswer, newPwd);
+            GL_User.s_instance.CommandFindPassword (netId, username, pwdProtectAnswer, newPwd);
         }
     }
+
     class CC_InitCreateCharacter : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.INIT_CREATE_CHARACTER; } }
         public void Execute (NetDataReader reader, int netId) {
             int playerId = reader.GetInt ();
             OccupationType ocp = (OccupationType) reader.GetByte ();
             string name = reader.GetString ();
-            User.s_instance.CommandCreateCharacter (netId, playerId, ocp, name);
+            GL_User.s_instance.CommandCreateCharacter (netId, playerId, ocp, name);
         }
     }
+
     /// <summary>
     /// 初始传入CharacterId
     /// </summary>
@@ -70,6 +76,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterInit.s_instance.CommandInitCharacterId (netId, charId);
         }
     }
+
     /// <summary>
     /// 同步位置
     /// </summary>
@@ -80,6 +87,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterAction.s_instance.CommandSetPosition (netId, pos);
         }
     }
+
     /// <summary>
     /// 释放技能
     /// </summary>
@@ -96,6 +104,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterAction.s_instance.CommandApplyCastSkillBegin (netId, skillId, skillParm, hitTargetArr);
         }
     }
+
     /// <summary>
     /// 属性点分配
     /// </summary>
@@ -109,6 +118,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterAttribute.s_instance.CommandApplyDistributePoints (netId, strength, intelligence, agility, spirit);
         }
     }
+
     /// <summary>
     /// 属性点分配
     /// </summary>
@@ -119,6 +129,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterAttribute.s_instance.CommandRequireCharacterAttribute (netId, tarCharId);
         }
     }
+
     /// <summary>
     /// 打开战力排行榜时请求刷新操作
     /// </summary>
@@ -129,6 +140,7 @@ namespace MirRemakeBackend.Network {
             GL_CharacterCombatEfct.s_instance.CommandGetCombatEffectivenessRank (netId, ocp);
         }
     }
+
     /// <summary>
     /// 技能升级
     /// </summary>
@@ -140,6 +152,7 @@ namespace MirRemakeBackend.Network {
             GL_Skill.s_instance.CommandUpdateSkillLevel (netId, skillId, targetSkillLevel);
         }
     }
+
     /// <summary>
     /// 地面物品拾取
     /// </summary>

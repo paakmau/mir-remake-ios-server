@@ -12,6 +12,10 @@ namespace MirRemakeBackend.Entity {
         private Dictionary < int, (long, long) > m_walletDict = new Dictionary < int, (long, long) > ();
         private Dictionary<int, E_VipCard> m_vipCardDict = new Dictionary<int, E_VipCard> ();
         public EM_Wallet (IDDS_CharacterWallet walletDds, IDDS_CharacterVipCard vipCardDds) { m_walletDds = walletDds; m_vipCardDds = vipCardDds; }
+        public void CreateCharacter (int charId) {
+            m_walletDds.InsertCharacterWallet (new DDO_CharacterWallet (charId, 0, 0));
+            m_vipCardDds.InsertCharacterVipCard (new DDO_CharacterVipCard (charId, 0, 0));
+        }
         public (long, long) InitCharacter (int netId, int charId) {
             (long, long) res;
             E_VipCard vipCard;

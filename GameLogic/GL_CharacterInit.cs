@@ -42,5 +42,14 @@ namespace MirRemakeBackend.GameLogic {
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);
             GL_Mail.s_instance.NotifyRemoveCharacter (netId);
         }
+        public void NotifyCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
+            int charId = EM_Character.s_instance.CreateCharacter (playerId, ocp, name);
+            if (charId == -1) {
+                m_networkService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, false, -1));
+                return;
+            }
+            GL_CharacterAttribute.s_instance.NotifyCreateCharacter (charId);
+            GL_Wallet.s_instance.NotifyCreateCharacter (charId);
+        }
     }
 }

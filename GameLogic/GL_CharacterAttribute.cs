@@ -40,7 +40,10 @@ namespace MirRemakeBackend.GameLogic {
                 charObj.m_agility,
                 charObj.m_spirit));
         }
-        public E_Character NotifyInitCharacter (E_Character newChar) {
+        public void NotifyCreateCharacter (int charId) {
+            EM_Character.s_instance.CreateCharacterAttribute (charId);
+        }
+        public void NotifyInitCharacter (E_Character newChar) {
             MainPointToConAttr (newChar);
             // client
             m_networkService.SendServerCommand (SC_InitSelfAttribute.Instance (
@@ -55,7 +58,6 @@ namespace MirRemakeBackend.GameLogic {
                 newChar.m_spirit,
                 newChar.m_TotalMainPoint,
                 newChar.m_position));
-            return newChar;
         }
         public void NotifyRemoveCharacter (int netId) {
             EM_Character.s_instance.RemoveCharacter (netId);

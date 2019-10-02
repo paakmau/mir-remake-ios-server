@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using LiteNetLib;
 using LiteNetLib.Utils;
-using MirRemakeBackend.EnterGame;
+using MirRemakeBackend.GameLogic;
 
 namespace MirRemakeBackend.Network {
     interface INetworkService {
@@ -84,7 +84,7 @@ namespace MirRemakeBackend.Network {
             m_networkIdAndPeerIdDict[netId] = peer.Id;
             m_netIdAndPeerDict[netId] = peer;
             // 发送NetId
-            User.s_instance.CommandConnect (netId);
+            GL_User.s_instance.CommandConnect (netId);
             Console.WriteLine (peer.Id + "连接成功");
         }
         public void OnPeerDisconnected (NetPeer peer, DisconnectInfo disconnectInfo) {
@@ -93,7 +93,7 @@ namespace MirRemakeBackend.Network {
             m_peerIdAndNetworkIdDict.Remove (peer.Id);
             m_networkIdAndPeerIdDict.Remove (netId);
             // 掉线
-            User.s_instance.CommandDisconnect (netId);
+            GL_User.s_instance.CommandDisconnect (netId);
             NetworkIdManager.s_instance.RecycleNetworkId (netId);
             Console.WriteLine (peer.Id + "断开连接, 客户终端: " + peer.EndPoint + ", 断线原因: " + disconnectInfo.Reason);
         }
