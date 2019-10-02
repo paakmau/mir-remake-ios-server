@@ -15,7 +15,7 @@ namespace MirRemakeBackend {
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
             //TestStatic();
-            //TestDynamic();
+            TestDynamic();
             // if (Test() == 1) {
             //     Console.WriteLine("Modle Succeed");
 
@@ -163,21 +163,29 @@ namespace MirRemakeBackend {
             IDS_Status sst = new DS_StatusImpl ();
             IDS_Mall sma = new DS_MallImpl ();
             DynamicDataServiceImpl dma = new DynamicDataServiceImpl ();
-            DDO_MissionLog ml=new DDO_MissionLog();
-            ml.m_charId=123;
-            ml.m_misTarType=MissionTargetType.CHARGE_ADEQUATELY;
-            ml.m_parm1=1;ml.m_parm2=2;ml.m_parm3=3;
-            dma.InsertMissionLog(ml);
-            ml.m_misTarType=MissionTargetType.TALK_TO_NPC;
-            ml.m_parm1=13;ml.m_parm2=22;ml.m_parm3=55;
-            dma.InsertMissionLog(ml);
-            ml.m_charId=1234;
-            ml.m_misTarType=MissionTargetType.CHARGE_ADEQUATELY;
-            ml.m_parm1=1123;ml.m_parm2=2234;ml.m_parm3=3345;
-            dma.InsertMissionLog(ml);
-            System.Collections.Generic.List<DDO_MissionLog> sd=dma.GetMissionLogListByCharacterId(123);
-            dma.DeleteMissionLogByCharacterId(123);
-            sd=dma.GetMissionLogListByCharacterId(123);
+            DDO_Shortcut sc=new DDO_Shortcut();
+            /*sc.m_charId=123;
+            sc.m_position=1;
+            sc.m_type=ShortcutType.ITEM;
+            sc.m_data=123;
+            dma.InsertShortcut(sc);
+            sc.m_position=123;
+            sc.m_type=ShortcutType.SKILL;
+            sc.m_data=6324;
+            dma.InsertShortcut(sc);
+            sc.m_charId=1234;
+            sc.m_data=12345;
+            sc.m_position=49;
+            dma.InsertShortcut(sc);*/
+            System.Collections.Generic.List<DDO_Shortcut> res=new System.Collections.Generic.List<DDO_Shortcut>();
+            res=dma.GetShortcutsByCharId(123);
+            sc.m_charId=123;
+            sc.m_position=1;
+            sc.m_type=ShortcutType.EMPTY;
+            sc.m_data=1;
+            dma.UpdateShortcutByCharIdAndPosition(sc);
+            dma.DeleteShortcutByCharId(123);
+            dma.DeleteShortcutByCharId(1234);
         }
     }
 }
