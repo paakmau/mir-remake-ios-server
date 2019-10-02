@@ -215,6 +215,7 @@ namespace MirRemakeBackend.DynamicData {
             m_isReceived = isReceived;
         }
     }
+
     struct DDO_Notice {
         public int m_id;
         public DateTime m_time;
@@ -225,6 +226,20 @@ namespace MirRemakeBackend.DynamicData {
             m_time = time;
             m_title = title;
             m_detail = detail;
+        }
+    }
+
+    struct DDO_Shortcut {
+        public int m_charId;
+        /// <summary> 快捷键位置 </summary>
+        public byte m_position;
+        // TODO: 快捷键类型
+        /// <summary> 快捷键数据, 视类型不同而不同, 如物品RealId, 技能id </summary>
+        public long m_data;
+        public DDO_Shortcut (int charId, byte pos, long data) {
+            m_charId = charId;
+            m_position = pos;
+            m_data = data;
         }
     }
 }
