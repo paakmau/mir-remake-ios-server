@@ -188,3 +188,12 @@ create table `mission_log`(
   `parameter3` int NOT NULL,
   key(`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `shortcut`;
+create table `shortcut`(
+    `charid` int NOT NULL,
+    `position` int NOT NULL,
+    `type` VARCHAR(25),
+    `data` int DEFAULT NULL,
+    key(`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
