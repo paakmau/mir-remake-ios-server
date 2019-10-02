@@ -238,4 +238,9 @@ namespace MirRemakeBackend {
         PRIVATE,
         SYSTEM
     }
+    enum ShortcutType : byte {
+        SKILL,
+        ITEM,
+        EMPTY
+    }
 }
