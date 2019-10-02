@@ -236,5 +236,10 @@ namespace MirRemakeBackend.DynamicData {
         // TODO: 快捷键类型
         /// <summary> 快捷键数据, 视类型不同而不同, 如物品RealId, 技能id </summary>
         public long m_data;
+        public DDO_Shortcut (int charId, byte pos, long data) {
+            m_charId = charId;
+            m_position = pos;
+            m_data = data;
+        }
     }
 }
