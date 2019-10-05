@@ -45,6 +45,11 @@ namespace MirRemakeBackend.GameLogic {
             m_networkService.SendServerCommand (SC_ApplySelfUpdateSkillLevelAndMasterly.Instance (
                 netId, skObj.m_SkillId, skObj.m_skillLevel, skObj.m_masterly));
         }
+
+        public void NotifyCreateCharacter (int charId, OccupationType ocp) {
+            EM_Skill.s_instance.CreateCharacter (charId, ocp);
+        }
+
         public void NotifyInitCharacter (int netId, int charId) {
             E_Skill[] skillArr = EM_Skill.s_instance.InitCharacter (netId, charId);
             // client
@@ -53,9 +58,11 @@ namespace MirRemakeBackend.GameLogic {
                 skillIdAndLvAndMasterlyArr[i] = (skillArr[i].m_SkillId, skillArr[i].m_skillLevel, skillArr[i].m_masterly);
             m_networkService.SendServerCommand (SC_InitSelfSkill.Instance (netId, skillIdAndLvAndMasterlyArr));
         }
+
         public void NotifyRemoveCharacter (int netId) {
             EM_Skill.s_instance.RemoveCharacter (netId);
         }
+
         public void NotifyCastSkill (E_Character charObj, E_Skill skill, List<E_Unit> tarList) {
             // xjb masterly
             if(tarList.Count==1){

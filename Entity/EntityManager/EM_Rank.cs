@@ -39,11 +39,18 @@ namespace MirRemakeBackend.Entity {
             m_dds = dds;
             LoadAllCharacter ();
         }
+
         public void LoadAllCharacter () {
             var ddoArr = m_dds.GetAllMixCombatEfct ();
             foreach (var ddo in ddoArr)
                 UpdateCharCombatEfct (ddo.m_charId, ddo.m_combatEfct, ddo.m_ocp, ddo.m_name, ddo.m_level);
         }
+
+        public void CreateCharacter (int charId, OccupationType ocp, string name) {
+            // 战斗力排行 dds
+            m_dds.InsertMixCombatEfct (new DDO_CombatEfct (charId, 0, ocp, name, 1));
+        }
+
         public void RemoveCharacter (E_Character charObj) {
             int combatEfct;
             if (!m_charIdAndOriCombatEfctDict.TryGetValue (charObj.m_characterId, out combatEfct)) return;

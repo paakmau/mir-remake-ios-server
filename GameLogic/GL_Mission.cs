@@ -146,6 +146,11 @@ namespace MirRemakeBackend.GameLogic {
                 GL_CharacterAttribute.s_instance.NotifyConcreteAttributeMinus (charObj, titleAttr);
             m_networkService.SendServerCommand (SC_ApplyAllDetachTitle.Instance (EM_Sight.s_instance.GetInSightCharacterNetworkId (netId, true), netId));
         }
+
+        public void NotifyCreateCharacter (int charId, OccupationType ocp) {
+            EM_Mission.s_instance.CreateCharacter (charId, ocp);
+        }
+
         public void NotifyInitCharacter (int netId, E_Character charObj) {
             // 实例化任务
             List<E_Mission> acceptedMis;

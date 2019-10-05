@@ -55,7 +55,7 @@ namespace MirRemakeBackend.Entity {
             m_netIdAndCharIdDict[netId] = charId;
             m_charIdAndNetIdDict[charId] = netId;
             m_networkIdAndCharacterDict[netId] = newChar;
-            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, new Vector2 (165, 116/* 42, 24 */));
+            newChar.Reset (netId, charDe, unitDe, charDataDe, charDdo, charAttrDdo, new Vector2 (165, 116 /* 42, 24 */ ));
             return newChar;
         }
         /// <summary>
@@ -96,6 +96,15 @@ namespace MirRemakeBackend.Entity {
         }
         public Dictionary<int, E_Character>.Enumerator GetCharacterEnumerator () {
             return m_networkIdAndCharacterDict.GetEnumerator ();
+        }
+        public IReadOnlyList<DDO_Character> GetAllCharacterByPlayerId (int playerId) {
+            return m_charDds.GetCharacterByPlayerId (playerId);
+        }
+        public short GetLevelByCharacterId (int charId) {
+            DDO_CharacterAttribute ddo;
+            if (m_charAttrDds.GetCharacterAttributeByCharacterId (charId, out ddo))
+                return ddo.m_level;
+            return -1;
         }
         public void SaveCharacterAttribute (E_Character charObj) {
             m_charAttrDds.UpdateCharacterAttribute (charObj.GetAttrDdo ());

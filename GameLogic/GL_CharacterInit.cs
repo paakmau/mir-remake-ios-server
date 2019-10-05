@@ -50,6 +50,12 @@ namespace MirRemakeBackend.GameLogic {
             }
             GL_CharacterAttribute.s_instance.NotifyCreateCharacter (charId);
             GL_Wallet.s_instance.NotifyCreateCharacter (charId);
+            GL_Skill.s_instance.NotifyCreateCharacter (charId, ocp);
+            GL_Mission.s_instance.NotifyCreateCharacter (charId, ocp);
+            GL_Item.s_instance.NotifyCreateCharacter (charId);
+            GL_CharacterCombatEfct.s_instance.NotifyCreateCharacter (charId, ocp, name);
+
+            m_networkService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true, charId));
         }
     }
 }

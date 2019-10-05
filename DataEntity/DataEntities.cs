@@ -233,6 +233,7 @@ namespace MirRemakeBackend.DataEntity {
         public readonly short m_id;
         public readonly OccupationType m_occupation;
         public readonly short m_levelInNeed;
+        public readonly IReadOnlyList<short> m_fatherIdList;
         public readonly IReadOnlyList<short> m_childrenIdList;
         /// <summary>
         /// 一个任务有多个目标  
@@ -248,6 +249,7 @@ namespace MirRemakeBackend.DataEntity {
             m_id = mDo.m_id;
             m_occupation = mDo.m_missionOccupation;
             m_levelInNeed = mDo.m_levelInNeed;
+            m_fatherIdList = new List<short> (mDo.m_fatherMissionIdArr);
             m_childrenIdList = new List<short> (mDo.m_childrenMissionArr);
             m_targetList = new List<ValueTuple<MissionTargetType, short>> (mDo.m_missionTargetArr);
             m_bonusVirtualCurrency = mDo.m_bonusMoney;

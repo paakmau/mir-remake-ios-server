@@ -92,6 +92,7 @@ namespace MirRemakeBackend {
             EM_Mail.s_instance = new EM_Mail (mailDds);
             EM_MallItem.s_instance = new EM_MallItem (mallItemDem);
             EM_Mission.s_instance = new EM_Mission (misDem, misDds, titleDds);
+            EM_MissionLog.s_instance = new EM_MissionLog (misLogDds);
             EM_Monster.s_instance = new EM_Monster (monDem);
             EM_MonsterSkill.s_instance = new EM_MonsterSkill ();
             EM_Notice.s_instance = new EM_Notice (noticeDds);
@@ -99,7 +100,7 @@ namespace MirRemakeBackend {
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
-            EM_MissionLog.s_instance = new EM_MissionLog (misLogDds);
+            EM_User.s_instance = new EM_User (userDds);
             EM_Wallet.s_instance = new EM_Wallet (charWalletDds, charVipCardDds);
             // EM init
             EntityManagerInitializer.Init (skillDem, monDem);

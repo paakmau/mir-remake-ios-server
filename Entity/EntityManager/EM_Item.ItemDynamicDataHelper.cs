@@ -4,10 +4,8 @@ using System.Linq;
 using MirRemakeBackend.DataEntity;
 using MirRemakeBackend.DynamicData;
 
-namespace MirRemakeBackend.Entity
-{
-    partial class EM_Item
-    {
+namespace MirRemakeBackend.Entity {
+    partial class EM_Item {
         private class ItemDynamicDataHelper {
             #region ItemDealer
             private class ItemInfoDdoCollections {
@@ -158,6 +156,9 @@ namespace MirRemakeBackend.Entity
                     IItemDealer impl = type.GetConstructor (Type.EmptyTypes).Invoke (null) as IItemDealer;
                     m_dealerDict.Add (impl.m_ItemType, impl);
                 }
+            }
+            public void InsertSlot (int charId, ItemPlace ip, short pos) {
+                m_dds.InsertItem (new DDO_Item (-1, -1, charId, 0, ip, pos));
             }
             /// <summary>
             /// 返回realId  

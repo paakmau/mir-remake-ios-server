@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using MirRemakeBackend.Data;
+using MirRemakeBackend.Util;
 
 namespace MirRemakeBackend.DataEntity {
     /// <summary>
@@ -8,6 +9,7 @@ namespace MirRemakeBackend.DataEntity {
     /// </summary>
     class DEM_Mission {
         private Dictionary<short, DE_Mission> m_misDict = new Dictionary<short, DE_Mission> ();
+        private Dictionary<short, DE_Mission> m_titleMisDict = new Dictionary<short, DE_Mission> ();
         private Dictionary<short, DE_Title> m_titleDict = new Dictionary<short, DE_Title> ();
         private Dictionary<short, DE_MissionTargetKillMonster> m_misTarKillMonDict = new Dictionary<short, DE_MissionTargetKillMonster> ();
         private Dictionary<short, DE_MissionTargetGainItem> m_misTarGainItemDict = new Dictionary<short, DE_MissionTargetGainItem> ();
@@ -21,7 +23,7 @@ namespace MirRemakeBackend.DataEntity {
 
             var titleDoArr = ds.GetAllTitleMission ();
             foreach (var tmDo in titleDoArr)
-                m_misDict.Add (tmDo.m_id, new DE_Mission (tmDo));
+                m_titleMisDict.Add (tmDo.m_id, new DE_Mission (tmDo));
 
             var titleAttr = ds.GetAllTitleIDAndAttributes ();
             foreach (var ta in titleAttr)
@@ -43,31 +45,48 @@ namespace MirRemakeBackend.DataEntity {
             foreach (var chargeAdequatelyDo in misTarChargeAdequately)
                 m_misTarChargeAdequatelyDict.Add (chargeAdequatelyDo.m_id, new DE_MissionTargetChargeAdequately (chargeAdequatelyDo));
         }
+
+        public IReadOnlyList<DE_Mission> GetAllCommonMission () {
+            return CollectionUtils.GetDictValueList (m_misDict);
+        }
+
+        public IReadOnlyList<DE_Mission> GetAllTitleMission () {
+            return CollectionUtils.GetDictValueList (m_titleMisDict);
+        }
+
         public DE_Mission GetMissionById (short missionId) {
             DE_Mission res;
-            m_misDict.TryGetValue (missionId, out res);
-            return res;
+            if (m_misDict.TryGetValue (missionId, out res))
+                return res;
+            if (m_titleMisDict.TryGetValue (missionId, out res))
+                return res;
+            return null;
         }
+
         public DE_Title GetTitleById (short misId) {
             DE_Title res;
             m_titleDict.TryGetValue (misId, out res);
             return res;
         }
+
         public DE_MissionTargetKillMonster GetMissionTargetKillMonster (short tarId) {
             DE_MissionTargetKillMonster res;
             m_misTarKillMonDict.TryGetValue (tarId, out res);
             return res;
         }
+
         public DE_MissionTargetGainItem GetMissionTargetGainItem (short tarId) {
             DE_MissionTargetGainItem res;
             m_misTarGainItemDict.TryGetValue (tarId, out res);
             return res;
         }
+
         public DE_MissionTargetLevelUpSkill GetMissionTargetLevelUpSkill (short tarId) {
             DE_MissionTargetLevelUpSkill res;
             m_misTarLevelUpSkillDict.TryGetValue (tarId, out res);
             return res;
         }
+
         public DE_MissionTargetChargeAdequately GetMissionTargetChargeAdequately (short tarId) {
             DE_MissionTargetChargeAdequately res;
             m_misTarChargeAdequatelyDict.TryGetValue (tarId, out res);

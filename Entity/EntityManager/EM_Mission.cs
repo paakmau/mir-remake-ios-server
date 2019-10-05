@@ -102,7 +102,41 @@ namespace MirRemakeBackend.Entity {
         private Dictionary<int, Dictionary<short, E_Mission>> m_titleMissionDict = new Dictionary<int, Dictionary<short, E_Mission>> ();
         /// <summary>佩戴的称号, 若角色无佩戴, 该字典不会存储</summary>
         private Dictionary<int, short> m_attachedTitleDict = new Dictionary<int, short> ();
-        public EM_Mission (DEM_Mission dem, IDDS_Mission misDds, IDDS_Title titleDds) { m_dem = dem; m_fact = new MissionFactory (dem); m_misDds = misDds; m_titleDds = titleDds; }
+        private Dictionary<OccupationType, List<short>> m_ocpInitMisIdDict = new Dictionary<OccupationType, List<short>> ();
+        private List<short> m_titleMisIdList = new List<short> ();
+        public EM_Mission (DEM_Mission dem, IDDS_Mission misDds, IDDS_Title titleDds) {
+            m_dem = dem;
+            m_fact = new MissionFactory (dem);
+            m_misDds = misDds;
+            m_titleDds = titleDds;
+
+            // 初始任务加载
+            OccupationType[] ocpArr = new OccupationType[] { OccupationType.MAGE, OccupationType.ROGUE, OccupationType.TAOIST, OccupationType.WARRIOR };
+            var allMisDe = dem.GetAllCommonMission ();
+            foreach (var ocp in ocpArr)
+                m_ocpInitMisIdDict.Add (ocp, new List<short> ());
+            foreach (var mDe in allMisDe)
+                if (mDe.m_fatherIdList.Count == 0)
+                    foreach (var ocp in ocpArr)
+                        if ((ocp | mDe.m_occupation) != 0)
+                            m_ocpInitMisIdDict[ocp].Add (mDe.m_id);
+
+            var allTitleMis = dem.GetAllTitleMission ();
+            foreach (var titleMis in allTitleMis)
+                m_titleMisIdList.Add (titleMis.m_id);
+        }
+
+        public void CreateCharacter (int charId, OccupationType ocp) {
+            // 任务, 称号任务 dds
+            var misIdList = m_ocpInitMisIdDict[ocp];
+            for (int i = 0; i < misIdList.Count; i++)
+                m_misDds.InsertMission (new DDO_Mission (misIdList[i], charId, MissionStatus.ACCEPTABLE, new List<int> ()));
+            for (int i = 0; i < m_titleMisIdList.Count; i++)
+                m_misDds.InsertTitleMission (new DDO_Mission (m_titleMisIdList[i], charId, MissionStatus.ACCEPTED, new List<int> ()));
+            // 称号 dds
+            m_titleDds.InsertAttachedTitle (charId, -1);
+        }
+
         public void InitCharacter (int netId, int charId, out List<E_Mission> resAcceptedMisIdList, out List<short> resAcceptableMisIdList, out List<short> resUnacceptableMisIdList, out List<E_Mission> resTitleMissionList, out short resAttachedTitleMisId, out IReadOnlyList < (ActorUnitConcreteAttributeType, int) > resTitleAttr) {
             Dictionary<short, E_Mission> oriAcceptedMisDict;
             HashSet<short> oriAcceptableMisSet;

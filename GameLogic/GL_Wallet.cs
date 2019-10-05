@@ -15,7 +15,7 @@ namespace MirRemakeBackend.GameLogic {
             NotifyUpdateCurrencyOnline (netId, charId, type, dC);
         }
         public void NotifyCreateCharacter (int charId) {
-            EM_Wallet.s_instance.CreateCharacterWallet (charId);
+            EM_Wallet.s_instance.CreateCharacter (charId);
         }
         public void NotifyInitCharacter (int netId, int charId) {
             var wallet = EM_Wallet.s_instance.InitCharacter (netId, charId);

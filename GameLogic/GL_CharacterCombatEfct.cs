@@ -22,12 +22,19 @@ namespace MirRemakeBackend.GameLogic {
             var myCombatEfctAndRank = EM_Rank.s_instance.GetCombatEfctAndRank (ocp, charObj.m_characterId, charObj.m_Occupation);
             m_networkService.SendServerCommand (SC_ApplyShowFightCapacityRank.Instance (netId, topCombatEfctRnkList, myCombatEfctAndRank.Item1, (short) myCombatEfctAndRank.Item2));
         }
+
+        public void NotifyCreateCharacter (int charId, OccupationType ocp, string name) {
+            EM_Rank.s_instance.CreateCharacter (charId, ocp, name);
+        }
+
         public void NotifyInitCharacter (E_Character charObj) {
             NotifyCombatEffectivenessChange (charObj);
         }
+
         public void NotifyRemoveCharacter (E_Character charObj) {
             EM_Rank.s_instance.RemoveCharacter (charObj);
         }
+
         public void NotifyCombatEffectivenessChange (E_Character charObj) {
             EM_Rank.s_instance.UpdateCharCombatEfct (charObj.m_characterId, charObj.m_Occupation, charObj.m_name, charObj.m_Level, charObj.m_Attack, charObj.m_Magic, charObj.m_MaxHp, charObj.m_MaxMp, charObj.m_Defence, charObj.m_agility, charObj.m_CriticalRate, charObj.m_CriticalBonus, charObj.m_HitRate, charObj.m_DodgeRate);
         }

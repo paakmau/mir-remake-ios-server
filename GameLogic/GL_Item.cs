@@ -461,8 +461,12 @@ namespace MirRemakeBackend.GameLogic {
                 m_netSenderDict[buyerStoreItem.m_Type].SendItemInfo (buyerStoreItem, buyerNetId, m_networkService);
             }
             m_networkService.SendServerCommand (SC_ApplySelfUpdateItem.Instance (holderNetId, new NO_Item[] { holderChangedItem.GetItemNo (holderBag.m_repositoryPlace, marketItem.m_bagPos) }));
-
         }
+
+        public void NotifyCreateCharacter (int charId) {
+            EM_Item.s_instance.CreateCharacter (charId);
+        }
+
         public void NotifyInitCharacter (int netId, E_Character charObj) {
             E_Bag bag;
             E_StoreHouse storeHouse;
@@ -482,6 +486,7 @@ namespace MirRemakeBackend.GameLogic {
             // client
             m_networkService.SendServerCommand (SC_InitSelfItem.Instance (netId, bag.GetNo (), storeHouse.GetNo (), eqRegion.GetNo ()));
         }
+
         public void NotifyRemoveCharacter (int netId) {
             EM_Item.s_instance.RemoveCharacter (netId);
         }

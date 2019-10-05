@@ -38,6 +38,20 @@ namespace MirRemakeBackend.Entity {
             for (int i = 0; i < itemIdAndPosList.Count; i++)
                 m_renewableItemList.Add ((itemIdAndPosList[i].Item1, itemIdAndPosList[i].Item2, MyTimer.s_CurTime.Ticked (MyRandom.NextFloat (c_renewableItemRefreshTimeMin, c_renewableItemRefreshTimeMax))));
         }
+
+        public void CreateCharacter (int charId) {
+            // 背包, 仓库, equipment dds
+            short bagSize = 40;
+            short storeHouseSize = 8;
+            short eqSize = 10;
+            for (short i = 0; i < bagSize; i++)
+                m_ddh.InsertSlot (charId, ItemPlace.BAG, i);
+            for (short i = 0; i < storeHouseSize; i++)
+                m_ddh.InsertSlot (charId, ItemPlace.STORE_HOUSE, i);
+            for (short i = 0; i < eqSize; i++)
+                m_ddh.InsertSlot (charId, ItemPlace.EQUIPMENT_REGION, i);
+        }
+
         /// <summary>初始化新的角色的所有物品</summary>
         public void InitCharacter (
             int netId,
