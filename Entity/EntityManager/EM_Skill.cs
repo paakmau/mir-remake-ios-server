@@ -14,24 +14,13 @@ namespace MirRemakeBackend.Entity {
         private DEM_Skill m_dem;
         private IDDS_Skill m_dds;
         private Dictionary<int, Dictionary<short, E_Skill>> m_characterSkillDict = new Dictionary<int, Dictionary<short, E_Skill>> ();
-        private Dictionary<OccupationType, List<short>> m_ocpSkillIdDict = new Dictionary<OccupationType, List<short>> ();
         public EM_Skill (DEM_Skill dem, IDDS_Skill dds) {
             m_dem = dem;
             m_dds = dds;
-
-            // 初始技能加载
-            OccupationType[] ocpArr = new OccupationType[] { OccupationType.MAGE, OccupationType.ROGUE, OccupationType.TAOIST, OccupationType.WARRIOR };
-            foreach (var ocp in ocpArr) {
-                var ocpSkills = m_dem.GetSkillsByOccupation (ocp);
-                var skillIdList = new List<short> (ocpSkills.Count);
-                foreach (var ocpSkDe in ocpSkills)
-                    skillIdList.Add (ocpSkDe.m_skillId);
-                m_ocpSkillIdDict.Add (ocp, skillIdList);
-            }
         }
 
         public void CreateCharacter (int charId, OccupationType ocp) {
-            var skillIdList = m_ocpSkillIdDict[ocp];
+            var skillIdList = m_dem.GetSkillIdByOccupation(ocp);
             for (int i = 0; i < skillIdList.Count; i++)
                 m_dds.InsertSkill (new DDO_Skill (skillIdList[i], charId, 0, 0));
         }
