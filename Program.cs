@@ -14,7 +14,7 @@ namespace MirRemakeBackend {
         private static GameLogicBase[] s_gameLogicArr;
         static void Main (string[] args) {
             //TestStatic();
-            TestDynamic();
+            //TestDynamic();
             // if (Test() == 1) {
             //     Console.WriteLine("Modle Succeed");
 
