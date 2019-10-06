@@ -89,6 +89,16 @@ namespace MirRemakeBackend.Network {
     }
 
     /// <summary>
+    /// TODO: 更换快捷键
+    /// </summary>
+    class CC_ApplyChangeShortcut : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CHANGE_SHORTCUT; } }
+        public void Execute (NetDataReader reader, int netId) {
+            NO_Shortcut shortcut = reader.GetShortcut ();
+        }
+    }
+
+    /// <summary>
     /// 释放技能
     /// </summary>
     class CC_ApplyCastSkillBegin : IClientCommand {

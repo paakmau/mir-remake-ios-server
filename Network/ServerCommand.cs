@@ -313,6 +313,29 @@ namespace MirRemakeBackend.Network {
         }
     }
     /// <summary>
+    /// TODO: 初始化快捷键
+    /// </summary>
+    class SC_InitSelfShortcut : SingleToClientServerCommand {
+        private static SC_InitSelfShortcut s_instance = new SC_InitSelfShortcut ();
+        public override NetworkToClientDataType m_DataType { get { return NetworkToClientDataType.INIT_SELF_SHORTCUT; } }
+        public override DeliveryMethod m_DeliveryMethod { get { return DeliveryMethod.ReliableOrdered; } }
+        /// <summary>
+        /// 快捷键列表  
+        /// 根据快捷键类别, 传入对应数据
+        /// </summary>
+        private IReadOnlyList<NO_Shortcut> m_shortcutsList;
+        public static SC_InitSelfShortcut Instance (int netId, IReadOnlyList<NO_Shortcut> shortcutsList) {
+            s_instance.ResetToClientNetId (netId);
+            s_instance.m_shortcutsList = shortcutsList;
+            return s_instance;
+        }
+        private SC_InitSelfShortcut () { }
+        public override void PutData (NetDataWriter writer) {
+            writer.Put ((byte)m_shortcutsList.Count);
+            for (int i = 0; i < m_shortcutsList.Count; i++) writer.Put (m_shortcutsList[i]);
+        }
+    }
+    /// <summary>
     /// 新进入视野的怪物
     /// </summary>
     class SC_ApplyOtherMonsterInSight : SingleToClientServerCommand {

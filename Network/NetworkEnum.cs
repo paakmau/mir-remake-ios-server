@@ -13,6 +13,7 @@ namespace MirRemakeBackend.Network {
         INIT_SELF_MISSION,
         INIT_SELF_TITLE_MISSION,
         INIT_SELF_ITEM,
+        INIT_SELF_SHORTCUT,
         // 视野相关
         APPLY_OTHER_MONSTER_IN_SIGHT,
         APPLY_OTHER_CHARACTER_IN_SIGHT,
@@ -90,6 +91,8 @@ namespace MirRemakeBackend.Network {
         INIT_CHARACTER_ID,
         // 同步位置
         SET_POSITION,
+        // 快捷键
+        APPLY_CHANGE_SHORTCUT,
         // 技能释放
         APPLY_CAST_SKILL_BEGIN,
         // 分配属性点

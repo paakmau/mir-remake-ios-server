@@ -312,6 +312,31 @@ namespace MirRemakeBackend.Network {
             m_detail = detail;
         }
     }
+    struct NO_Shortcut {
+        public ShortcutType m_type;
+        public short m_skillId;
+        public long m_itemRealId;
+        public byte m_placement;
+        /// <summary>
+        /// objects传入数据:  
+        /// EMPTY: 无  
+        /// SKILL: short skillId  
+        /// ITEM: long realId
+        /// </summary>
+        public NO_Shortcut (ShortcutType type, byte placement, params object[] objects) {
+            m_type = type;
+            m_placement = placement;
+            m_skillId = -1;
+            m_itemRealId = -1;
+            if (type == ShortcutType.ITEM) {
+                try { m_itemRealId = (long)objects[0];
+                } catch (Exception e) { }
+            } else if (type == ShortcutType.SKILL) {
+                try { m_skillId = (short)objects[0]; 
+                } catch (Exception e) { }
+            }
+        }
+    }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.X);
@@ -692,6 +717,19 @@ namespace MirRemakeBackend.Network {
             string title = reader.GetString ();
             string detail = reader.GetString ();
             return new NO_Notice (noticeId, time, title, detail);
+        }
+        public static void Put (this NetDataWriter writer, NO_Shortcut shortcut) {
+            writer.Put ((byte)shortcut.m_type);
+            writer.Put (shortcut.m_placement);
+            if (shortcut.m_type == ShortcutType.ITEM) writer.Put (shortcut.m_itemRealId);
+            if (shortcut.m_type == ShortcutType.SKILL) writer.Put (shortcut.m_skillId);
+        }
+        public static NO_Shortcut GetShortcut (this NetDataReader reader) {
+            ShortcutType type = (ShortcutType)reader.GetByte ();
+            byte placement = reader.GetByte ();
+            if (type == ShortcutType.SKILL) return new NO_Shortcut (type, placement, reader.GetShort ());
+            if (type == ShortcutType.ITEM) return new NO_Shortcut (type, placement, reader.GetLong ());
+            return new NO_Shortcut (type, placement);
         }
     }
 }
