@@ -11,12 +11,16 @@ namespace MirRemakeBackend.Entity {
         public EM_Shortcut (IDDS_Shortcut dds) {
             m_dds = dds;
         }
-        public void InitCharacter (int charId, out IReadOnlyList<(byte, ShortcutType, long)> shortcuts) {
+        public void CreateCharacter (int charId) {
+            for (int i = 0; i < 10; i++)
+                m_dds.InsertShortcut (new DDO_Shortcut (charId, (byte) i, ShortcutType.EMPTY, -1));
+        }
+        public void InitCharacter (int charId, out IReadOnlyList < (byte, ShortcutType, long) > shortcuts) {
             shortcuts = null;
             var sList = m_dds.GetShortcutsByCharId (charId);
             if (sList == null) return;
-            var res = new List<(byte, ShortcutType, long)> (sList.Count);
-            for (int i=0; i<sList.Count; i++)
+            var res = new List < (byte, ShortcutType, long) > (sList.Count);
+            for (int i = 0; i < sList.Count; i++)
                 res.Add ((sList[i].m_position, sList[i].m_type, sList[i].m_data));
             shortcuts = res;
         }

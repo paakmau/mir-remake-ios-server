@@ -6,10 +6,13 @@ namespace MirRemakeBackend.GameLogic {
     /// 管理角色快捷键
     /// </summary>
     class GL_Shortcut : GameLogicBase {
-        public static GL_Wallet s_instance;
+        public static GL_Shortcut s_instance;
         public GL_Shortcut (INetworkService netService) : base (netService) { }
         public override void Tick (float dT) { }
         public override void NetworkTick () { }
+        public void NotifyCreateCharacter (int charId) {
+            EM_Shortcut.s_instance.CreateCharacter (charId);
+        }
         public void NotifyInitCharacter (int netId, int charId) {
             IReadOnlyList < (byte, ShortcutType, long) > shortcutList;
             EM_Shortcut.s_instance.InitCharacter (charId, out shortcutList);

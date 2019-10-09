@@ -28,6 +28,8 @@ namespace MirRemakeBackend.GameLogic {
             GL_MissionLog.s_instance.NotifyInitCharacter (netId, charId);
             // 邮箱
             GL_Mail.s_instance.NotifyInitCharacter (netId, charId);
+            // 快捷栏
+            GL_Shortcut.s_instance.NotifyInitCharacter (netId, charId);
         }
         public void CommandRemoveCharacter (int netId) {
             var charObj = EM_Character.s_instance.GetCharacterByNetworkId (netId);
@@ -41,6 +43,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Skill.s_instance.NotifyRemoveCharacter (netId);
             GL_Mission.s_instance.NotifyRemoveCharacter (netId);
             GL_Mail.s_instance.NotifyRemoveCharacter (netId);
+            GL_Shortcut.s_instance.NotifyRemoveCharacter (netId);
         }
         public void NotifyCreateCharacter (int netId, int playerId, OccupationType ocp, string name) {
             int charId = EM_Character.s_instance.CreateCharacter (playerId, ocp, name);
@@ -54,6 +57,7 @@ namespace MirRemakeBackend.GameLogic {
             GL_Mission.s_instance.NotifyCreateCharacter (charId, ocp);
             GL_Item.s_instance.NotifyCreateCharacter (charId);
             GL_CharacterCombatEfct.s_instance.NotifyCreateCharacter (charId, ocp, name);
+            GL_Shortcut.s_instance.NotifyCreateCharacter (charId);
 
             m_networkService.SendServerCommand (SC_InitSelfCreateCharacter.Instance (netId, true, charId));
         }

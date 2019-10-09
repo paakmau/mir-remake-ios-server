@@ -84,6 +84,7 @@ namespace MirRemakeBackend {
             IDDS_Mail mailDds = ddsImpl;
             IDDS_Notice noticeDds = ddsImpl;
             IDDS_Title titleDds = ddsImpl;
+            IDDS_Shortcut shortcutDds = ddsImpl;
             // EntityManager
             EM_BossDamage.s_instance = new EM_BossDamage ();
             EM_Camp.s_instance = new EM_Camp ();
@@ -97,6 +98,7 @@ namespace MirRemakeBackend {
             EM_MonsterSkill.s_instance = new EM_MonsterSkill ();
             EM_Notice.s_instance = new EM_Notice (noticeDds);
             EM_Rank.s_instance = new EM_Rank (combatEfctDds);
+            EM_Shortcut.s_instance = new EM_Shortcut (shortcutDds);
             EM_Sight.s_instance = new EM_Sight ();
             EM_Skill.s_instance = new EM_Skill (skillDem, skillDds);
             EM_Status.s_instance = new EM_Status (statusDem);
@@ -123,6 +125,7 @@ namespace MirRemakeBackend {
             GL_MissionLog.s_instance = new GL_MissionLog (s_networkService);
             GL_MonsterAction.s_instance = new GL_MonsterAction (s_networkService);
             GL_Notice.s_instance = new GL_Notice (s_networkService);
+            GL_Shortcut.s_instance = new GL_Shortcut (s_networkService);
             GL_Skill.s_instance = new GL_Skill (s_networkService);
             GL_UnitBattleAttribute.s_instance = new GL_UnitBattleAttribute (s_networkService);
             GL_User.s_instance = new GL_User (s_networkService);
@@ -145,6 +148,7 @@ namespace MirRemakeBackend {
                 GL_MissionLog.s_instance,
                 GL_MonsterAction.s_instance,
                 GL_Notice.s_instance,
+                // GL_Shortcut.s_instance,
                 GL_Skill.s_instance,
                 GL_UnitBattleAttribute.s_instance,
                 // GL_User.s_instance
