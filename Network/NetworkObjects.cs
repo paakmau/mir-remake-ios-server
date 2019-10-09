@@ -316,12 +316,6 @@ namespace MirRemakeBackend.Network {
         public ShortcutType m_type;
         public byte m_placement;
         public long m_data;
-        /// <summary>
-        /// objects传入数据:  
-        /// EMPTY: 无  
-        /// SKILL: short skillId  
-        /// ITEM: long realId
-        /// </summary>
         public NO_Shortcut (ShortcutType type, byte placement, long data) {
             m_type = type;
             m_placement = placement;
