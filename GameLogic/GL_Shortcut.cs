@@ -25,9 +25,9 @@ namespace MirRemakeBackend.GameLogic {
         public void NotifyRemoveCharacter (int netId) {
             EM_Wallet.s_instance.RemoveCharacter (netId);
         }
-        public void CommandUpdateShortcut (int netId, byte pos, ShortcutType type, long data) {
+        public void CommandUpdateShortcut (int netId, NO_Shortcut sc) {
             int charId = EM_Character.s_instance.GetCharIdByNetId (netId);
-            EM_Shortcut.s_instance.UpdateShortcut (charId, pos, type, data);
+            EM_Shortcut.s_instance.UpdateShortcut (charId, sc.m_placement, sc.m_type, sc.m_data);
         }
     }
 }
