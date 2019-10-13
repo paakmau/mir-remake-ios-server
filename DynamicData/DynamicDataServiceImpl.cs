@@ -854,7 +854,7 @@ namespace MirRemakeBackend.DynamicData {
                 sc.m_charId=int.Parse(drc[i]["charid"].ToString());
                 sc.m_position=byte.Parse(drc[i]["position"].ToString());
                 sc.m_type=(ShortcutType)Enum.Parse(typeof(ShortcutType),drc[i]["type"].ToString());
-                sc.m_charId=int.Parse(drc[i]["data"].ToString());
+                sc.m_data=int.Parse(drc[i]["data"].ToString());
                 res.Add(sc);
             }
             return res;
