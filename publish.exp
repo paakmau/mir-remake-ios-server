@@ -3,12 +3,12 @@
 set user hebo
 # set pass gfyTQL233
 set host 39.99.134.200
-set sour bin/Release/netcoreapp2.2/centos-x64/publish
+set sour bin/Release/netcoreapp2.2/linux-x64/publish
 set dest /home/${user}/publish
 
 set timeout 600
 
-spawn dotnet publish -c Release -r centos-x64
+spawn dotnet publish -c Release -r linux-x64
 spawn cp Data/*.json ${sour}/Data/
 spawn scp -r ${sour}/ ${user}@${host}:${dest}/
 # expect "${user}@${host}'s password:"
