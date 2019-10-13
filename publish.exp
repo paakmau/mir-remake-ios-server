@@ -1,7 +1,7 @@
 #!/usr/bin/expect
 
 set user hebo
-set pass gfyTQL233
+# set pass gfyTQL233
 set host 39.99.134.200
 set sour bin/Release/netcoreapp2.2/centos-x64/publish
 set dest /home/${user}/publish
@@ -9,9 +9,9 @@ set dest /home/${user}/publish
 set timeout 600
 
 spawn dotnet publish -c Release -r centos-x64
-spawn cp -f Data/*.json ${sour}Data/
-spawn scp -r ${sour} ${user}@${host}:${dest}
-expect "${user}@${host}'s password:"
-send "${pass}\n"
-send "exit\n"
+spawn cp Data/*.json ${sour}/Data/
+spawn scp -r ${sour}/ ${user}@${host}:${dest}/
+# expect "${user}@${host}'s password:"
+# send "${pass}\n"
+# send "exit\n"
 expect eof
