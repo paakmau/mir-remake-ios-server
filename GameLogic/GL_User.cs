@@ -10,7 +10,7 @@ namespace MirRemakeBackend.GameLogic {
     class GL_User : GameLogicBase {
         public static GL_User s_instance;
         private const string c_version = "2.05";
-        private const string c_downloadUrl = "https://cloud.189.cn/t/yemU3ejaqYBv";
+        private const string c_downloadUrl = "https://cloud.189.cn/t/YNrQVvB3iURf";
         private INetworkService m_netService;
 
         public GL_User (INetworkService ns) : base (ns) {
