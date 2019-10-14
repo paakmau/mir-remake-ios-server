@@ -4,7 +4,6 @@ using MirRemakeBackend.Network;
 
 /// <summary>
 /// 处理进入游戏之前的逻辑
-/// TODO: 重构 (有缘), 把创建角色逻辑放到 EM 层里
 /// </summary>
 namespace MirRemakeBackend.GameLogic {
     class GL_User : GameLogicBase {
