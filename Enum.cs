@@ -233,14 +233,23 @@ namespace MirRemakeBackend {
         /// </summary>
         ONE_PRESS_RECYCLE
     }
+
     enum ChattingChanelType : byte {
         WORLD,
         PRIVATE,
         SYSTEM
     }
+
     enum ShortcutType : byte {
         SKILL,
         ITEM,
         EMPTY
+    }
+
+    enum AllianceJob : byte {
+        PRESIDENT,
+        VICE_PRESIDENT,
+        ELITE,
+        ORDINARY_MEMBER
     }
 }
