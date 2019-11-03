@@ -152,7 +152,8 @@ namespace MirRemakeBackend {
         LOCKED = 0,
         UNLOCKED_BUT_UNACCEPTABLE = 1,
         ACCEPTABLE = 2,
-        ACCEPTED = 3
+        ACCEPTED = 3,
+        COMPLETED = 4
     }
     public enum EquipmentPosition : byte {
         HELMET, //头
