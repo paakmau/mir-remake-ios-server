@@ -4,7 +4,7 @@ using System.Data;
 using System.Net;
 using LitJson;
 namespace MirRemakeBackend.DynamicData {
-    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute, IDDS_Mail,IDDS_Notice, IDDS_Title,IDDS_MissionLog,IDDS_Shortcut {
+    class DynamicDataServiceImpl : IDDS_Item, IDDS_Skill, IDDS_Mission, IDDS_Character, IDDS_User, IDDS_CombatEfct, IDDS_CharacterVipCard, IDDS_CharacterPosition, IDDS_CharacterWallet, IDDS_CharacterAttribute, IDDS_Mail,IDDS_Notice, IDDS_Title,IDDS_MissionLog,IDDS_Shortcut,IDDS_Alliance {
         private SqlConfig sqlConfig;
         private SQLPool pool;
         private string database="legend";
@@ -871,6 +871,108 @@ namespace MirRemakeBackend.DynamicData {
             cmd=String.Format("delete from shortcut where charid={0}",charId);
             pool.ExecuteSql(database,cmd);
         }
+
+
+        //ALLIANCE
+
+        public int InsertAlliance (DDO_Alliance ddo){
+            cmd=String.Format("insert into alliance values(null,\"{0}\");select last_insert_id();",ddo.m_name);
+            DataSet ds=new DataSet();
+            try{
+                pool.ExecuteSql(database,cmd,ds);
+                DataRow dr=ds.Tables[0].Rows[0];
+                return int.Parse(dr["last_insert_id()"].ToString());
+            }catch{}
+            return -1;
+            
+        }
+        public void DeleteAllianceById (int id){
+            cmd=String.Format("delete from alliance where allianceid={0}",id);
+            pool.ExecuteSql(database,cmd);
+        }
+        public List<DDO_Alliance> GetAllAlliance (){
+            cmd=String.Format("select * from alliance;");
+            DataSet ds=new DataSet();
+            List<DDO_Alliance> res=new List<DDO_Alliance>();
+            pool.ExecuteSql(database,cmd,ds);
+            DataRowCollection drs=ds.Tables[0].Rows;
+            for(int i=0;i<drs.Count;i++){
+                DDO_Alliance a=new DDO_Alliance();
+                a.m_id=int.Parse(drs[i]["allianceid"].ToString());
+                a.m_name=drs[i]["name"].ToString();
+                res.Add(a);
+            }
+            return res;
+        }
+
+
+        //ALLIANCE APPLY
+        public List<DDO_AllianceApply> GetApplyByAllianceId (int allianceId){
+            cmd=String.Format("select * from alliance_apply where allianceid={0};",allianceId);
+            DataSet ds=new DataSet();
+            List<DDO_AllianceApply> res=new List<DDO_AllianceApply>();
+            pool.ExecuteSql(database,cmd,ds);
+            DataRowCollection drs=ds.Tables[0].Rows;
+            for(int i=0;i<drs.Count;i++){
+                DDO_AllianceApply aa=new DDO_AllianceApply();
+                aa.m_id=int.Parse(drs[i]["applyid"].ToString());
+                aa.m_charId=int.Parse(drs[i]["charid"].ToString());
+                aa.m_allianceId=allianceId;
+                res.Add(aa);
+            }
+            return res;
+        }
+        public bool DeleteApplyById (int id){
+            cmd=String.Format("delete from alliance_apply where applyid={0};",id);
+            try{
+                pool.ExecuteSql(database,cmd);
+                return true;
+            }catch{return false;}
+        }
+        public int InsertApply (DDO_AllianceApply ddo){
+            cmd=String.Format("insert into alliance_apply values(null,{0},{1});select last_insert_id();",ddo.m_charId,ddo.m_allianceId);
+            DataSet ds=new DataSet();
+            try{
+                pool.ExecuteSql(database,cmd,ds);
+                DataRow dr=ds.Tables[0].Rows[0];
+                return int.Parse(dr["last_insert_id()"].ToString());
+            }catch{}
+            return -1;
+        }
+
+        // ALLIANCE MEMBER
+        public List<DDO_AllianceMember> GetMemberByAllianceId (int allianceId){
+            cmd=String.Format("select * from alliance_member where allianceid={0};",allianceId);
+            DataSet ds=new DataSet();
+            List<DDO_AllianceMember> res=new List<DDO_AllianceMember>();
+            pool.ExecuteSql(database,cmd,ds);
+            DataRowCollection drs=ds.Tables[0].Rows;
+            for(int i=0;i<drs.Count;i++){
+                DDO_AllianceMember aa=new DDO_AllianceMember();
+                aa.m_charId=int.Parse(drs[i]["charid"].ToString());
+                aa.m_allianceId=allianceId;
+                aa.m_job=(AllianceJob)Enum.Parse(typeof(AllianceJob),drs[i]["alliance_job"].ToString());
+                res.Add(aa);
+            }
+            return res;
+        }
+        public bool DeleteMemberByCharId (int charId){
+            cmd=String.Format("delete from alliance_member where charid={0};",charId);
+            try{
+                pool.ExecuteSql(database,cmd);
+                return true;
+            }catch{return false;}
+        }
+        public void InsertMember (DDO_AllianceMember ddo){
+            cmd=String.Format("insert into alliance_member values({0},{1},\"{2}\");",ddo.m_charId,ddo.m_allianceId,ddo.m_job);
+            pool.ExecuteSql(database,cmd);
+        }
+        public void UpdateMember (DDO_AllianceMember ddo){
+            cmd=String.Format("update alliance_member set alliance_job=\"{0}\" where charid={1} and allianceid={2}",ddo.m_job,ddo.m_charId,ddo.m_allianceId);
+            pool.ExecuteSql(database,cmd);
+        }
+
+        
 
 
 

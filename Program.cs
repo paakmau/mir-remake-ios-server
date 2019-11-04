@@ -157,39 +157,23 @@ namespace MirRemakeBackend {
         }
 
         static void TestDynamic () {
-            IDS_Character sch = new DS_CharacterImpl ();
-            IDS_Item sit = new DS_ItemImpl ();
-            IDS_Mission smi = new DS_MissionImpl ();
-            IDS_Monster smo = new DS_MonsterImpl ();
-            IDS_MonsterMap smm = new DS_MonsterMapImpl ();
-            IDS_GroundItemMap sgi = new DS_GroundItemMapImpl ();
-            IDS_Skill ssk = new DS_SkillImpl ();
-            IDS_Status sst = new DS_StatusImpl ();
-            IDS_Mall sma = new DS_MallImpl ();
-            DynamicDataServiceImpl dma = new DynamicDataServiceImpl ();
-            DDO_Shortcut sc=new DDO_Shortcut();
-            /*sc.m_charId=123;
-            sc.m_position=1;
-            sc.m_type=ShortcutType.ITEM;
-            sc.m_data=123;
-            dma.InsertShortcut(sc);
-            sc.m_position=123;
-            sc.m_type=ShortcutType.SKILL;
-            sc.m_data=6324;
-            dma.InsertShortcut(sc);
-            sc.m_charId=1234;
-            sc.m_data=12345;
-            sc.m_position=49;
-            dma.InsertShortcut(sc);*/
-            System.Collections.Generic.List<DDO_Shortcut> res=new System.Collections.Generic.List<DDO_Shortcut>();
-            res=dma.GetShortcutsByCharId(123);
-            sc.m_charId=123;
-            sc.m_position=1;
-            sc.m_type=ShortcutType.EMPTY;
-            sc.m_data=1;
-            dma.UpdateShortcutByCharIdAndPosition(sc);
-            dma.DeleteShortcutByCharId(123);
-            dma.DeleteShortcutByCharId(1234);
+            IDDS_Alliance ia=new DynamicDataServiceImpl();
+            DDO_AllianceApply a=new DDO_AllianceApply();
+            a.m_allianceId=3;
+            a.m_charId=123;
+            Console.WriteLine(ia.InsertApply(a));
+            a.m_allianceId=5;
+            a.m_charId=1234;
+            Console.WriteLine(ia.InsertApply(a));
+            a.m_allianceId=4396;
+            a.m_charId=777;
+            Console.WriteLine(ia.InsertApply(a));
+            a.m_allianceId=3;
+            a.m_charId=996;
+            Console.WriteLine(ia.InsertApply(a));
+            List<DDO_AllianceApply> ls=ia.GetApplyByAllianceId(3);
+            ia.DeleteApplyById(2);
+            
         }
     }
 }

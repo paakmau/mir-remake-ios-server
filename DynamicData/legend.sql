@@ -209,8 +209,8 @@ create table `shortcut`(
 
 DROP TABLE IF EXISTS `alliance`;
 create table `alliance`(
-    `allianceid` int NOT NULL,
-    `string` VARCHAR(155),
+    `allianceid` int NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(155),
     key(`allianceid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -225,9 +225,9 @@ CREATE INDEX `allianceid` ON `alliance_member`(`allianceid`);
 
 DROP TABLE IF EXISTS `alliance_apply`;
 create table `alliance_apply`(
+    `applyid` int NOT NULL AUTO_INCREMENT,
     `charid` int NOT NULL,
     `allianceid` int NOT NULL,
-    `applyid` int NOT NULL AUTO_INCREMENT,
     primary key(`applyid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE INDEX `allianceid` ON `alliance_apply`(`allianceid`);
