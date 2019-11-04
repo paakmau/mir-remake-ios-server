@@ -5,6 +5,7 @@ namespace MirRemakeBackend.DynamicData {
         // 联盟
         public int InsertAlliance (DDO_Alliance ddo);
         public void DeleteAllianceById (int id);
+        public List<DDO_Alliance> GetAllAlliance ();
 
         // 联盟加入申请
         public List<DDO_AllianceApply> GetApplyByAllianceId (int allianceId);
