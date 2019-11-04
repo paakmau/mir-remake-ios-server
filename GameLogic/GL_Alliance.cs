@@ -4,7 +4,6 @@ using MirRemakeBackend.Network;
 namespace MirRemakeBackend.GameLogic {
     class GL_Alliance : GameLogicBase {
         public static GL_Alliance s_instance;
-        private Dictionary<int, > ;
         private Dictionary<int, AllianceJob> m_jobDict;
         public GL_Alliance (INetworkService ns) : base (ns) { }
         public override void Tick (float dT) { }
