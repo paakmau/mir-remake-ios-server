@@ -197,3 +197,39 @@ create table `shortcut`(
     `data` int DEFAULT NULL,
     key(`charid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `shortcut`;
+create table `shortcut`(
+    `charid` int NOT NULL,
+    `position` int NOT NULL,
+    `type` VARCHAR(25),
+    `data` int DEFAULT NULL,
+    key(`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `alliance`;
+create table `alliance`(
+    `allianceid` int NOT NULL,
+    `string` VARCHAR(155),
+    key(`allianceid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `alliance_member`;
+create table `alliance_member`(
+    `charid` int NOT NULL,
+    `allianceid` int NOT NULL,
+    `alliance_job` VARCHAR(25),
+    primary key(`charid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `allianceid` ON `alliance_member`(`allianceid`);
+
+DROP TABLE IF EXISTS `alliance_apply`;
+create table `alliance_apply`(
+    `charid` int NOT NULL,
+    `allianceid` int NOT NULL,
+    `applyid` int NOT NULL AUTO_INCREMENT,
+    primary key(`applyid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE INDEX `allianceid` ON `alliance_apply`(`allianceid`);
+CREATE INDEX `charid` ON `alliance_apply`(`charid`);
+
