@@ -254,4 +254,11 @@ namespace MirRemakeBackend.DynamicData {
         public int m_allianceId;
         public AllianceJob m_job;
     }
+
+    struct DDO_AllianceApply {
+        public int m_id;
+        public int m_allianceId;
+        public int m_charId;
+    }
 }
+
