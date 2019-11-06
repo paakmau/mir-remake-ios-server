@@ -151,6 +151,13 @@ namespace MirRemakeBackend.Network {
         // 公告相关
         APPLY_SHOW_NOTICE,
         APPLY_DELETE_NOTICE,
+        // 帮派相关
+        APPLY_CREATE_ALLIANCE,
+        APPLY_DISSOLVE_ALLIANCE,
+        APPLY_APPLY_TO_JOIN_ALLIANCE,
+        APPLY_REFUSE_TO_JOIN_ALLIANCE,
+        APPLY_APPROVE_TO_JOIN_ALLIANCE,
+        APPLY_CHANGE_ALLIANCE_JOB,
         // 控制台相关
         CONSOLE_GAIN_CY_BY_NAME,
         CONSOLE_SEAL_CHARACTER_BY_NAME,

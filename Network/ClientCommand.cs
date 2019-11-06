@@ -528,6 +528,55 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    class CC_ApplyCreateAlliance : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CREATE_ALLIANCE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            string name = reader.GetString ();
+            GL_Alliance.s_instance.CommandCreateAlliance (netId, name);
+        }
+    }
+
+    class CC_ApplyDissolveAlliance : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_DISSOLVE_ALLIANCE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int allianceId = reader.GetInt ();
+            GL_Alliance.s_instance.CommandDissolveAlliance (netId, allianceId);
+        }
+    }
+
+    class CC_ApplyApplyToJoinAlliance : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_APPLY_TO_JOIN_ALLIANCE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int allianceId = reader.GetInt ();
+            GL_Alliance.s_instance.CommandApplyToJoin (netId, allianceId);
+        }
+    }
+
+    class CC_ApplyRefuseToJoinAlliance : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_REFUSE_TO_JOIN_ALLIANCE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int applyId = reader.GetInt ();
+            GL_Alliance.s_instance.CommandRefuseToJoin (netId, applyId);
+        }
+    }
+
+    class CC_ApplyApproveToJoinAlliance : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_APPROVE_TO_JOIN_ALLIANCE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int applyId = reader.GetInt ();
+            GL_Alliance.s_instance.CommandApproveToJoin (netId, applyId);
+        }
+    }
+
+    class CC_ApplyChangeAllianceJob : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_CHANGE_ALLIANCE_JOB; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int tarCharId = reader.GetInt ();
+            AllianceJob job = (AllianceJob) reader.GetByte ();
+            GL_Alliance.s_instance.CommandChangeJob (netId, tarCharId, job);
+        }
+    }
+
     class CC_ConsoleGainCyByName : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.CONSOLE_GAIN_CY_BY_NAME; } }
         public void Execute (NetDataReader reader, int netId) {
