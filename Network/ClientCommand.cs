@@ -544,6 +544,15 @@ namespace MirRemakeBackend.Network {
         }
     }
 
+    class CC_ApplyTransferAlliance : IClientCommand {
+        public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_TRANSFER_ALLIANCE; } }
+        public void Execute (NetDataReader reader, int netId) {
+            int allianceId = reader.GetInt ();
+            int tarCharId = reader.GetInt ();
+            GL_Alliance.s_instance.CommandTransferAlliance (netId, allianceId, tarCharId);
+        }
+    }
+
     class CC_ApplyApplyToJoinAlliance : IClientCommand {
         public NetworkToServerDataType m_DataType { get { return NetworkToServerDataType.APPLY_APPLY_TO_JOIN_ALLIANCE; } }
         public void Execute (NetDataReader reader, int netId) {

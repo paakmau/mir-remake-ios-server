@@ -10,6 +10,7 @@ namespace MirRemakeBackend.GameLogic {
         public override void NetworkTick () { }
         public void CommandCreateAlliance (int netId, string name) { }
         public void CommandDissolveAlliance (int netId, int allianceId) { }
+        public void CommandTransferAlliance (int netId, int allianceId, int tarCharId) { }
         public void CommandApplyToJoin (int netId, int allianceId) { }
         public void CommandRefuseToJoin (int netId, int applyId) { }
         public void CommandApproveToJoin (int netId, int applyId) { }
