@@ -171,7 +171,7 @@ namespace MirRemakeBackend {
             a.m_allianceId=3;
             a.m_charId=996;
             Console.WriteLine(ia.InsertApply(a));
-            List<DDO_AllianceApply> ls=ia.GetApplyByAllianceId(3);
+            // List<DDO_AllianceApply> ls=ia.GetApplyByAllianceId(3);
             ia.DeleteApplyById(2);
             
         }
