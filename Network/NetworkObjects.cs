@@ -322,6 +322,58 @@ namespace MirRemakeBackend.Network {
             m_data = data;
         }
     }
+    struct NO_AllianceBriefDes {
+        public int m_allianceId;
+        public string m_name;
+
+        /// <summary>帮派最大人数</summary>
+        public int m_maxMember;
+
+        /// <summary>帮派当前人数</summary>
+        public int m_curMember;
+
+        /// <summary>帮主名</summary>
+        public string m_leaderName;
+        public NO_AllianceBriefDes (int allianceId, string name, int max, int cur, string leader) {
+            m_allianceId = allianceId;
+            m_name = name;
+            m_maxMember = max;
+            m_curMember = cur;
+            m_leaderName = leader;
+        }
+    }
+    struct NO_AllianceDes {
+        public int m_allianceId;
+        public string m_name;
+
+        /// <summary>帮派最大人数</summary>
+        public int m_maxMember;
+
+        /// <summary>帮派当前人数</summary>
+        public int m_curMember;
+
+        /// <summary>帮派当前在线人数</summary>
+        public int m_onlineMember;
+
+        /// <summary>帮主名</summary>
+        public string m_leaderName;
+
+        /// <summary>帮主等级</summary>
+        public short m_leaderLevel;
+
+        /// <summary>帮派简介</summary>
+        public string m_briefIntro;
+        public NO_AllianceDes (int allianceId, string name, int max, int cur, int online, string leader, short leaderLevel, string briefIntro) {
+            m_allianceId = allianceId;
+            m_name = name;
+            m_maxMember = max;
+            m_curMember = cur;
+            m_onlineMember = online;
+            m_leaderName = leader;
+            m_leaderLevel = leaderLevel;
+            m_briefIntro = briefIntro;
+        }
+    }
     static class NetworkObjectExtensions {
         public static void Put (this NetDataWriter writer, Vector2 value) {
             writer.Put (value.X);
@@ -713,6 +765,42 @@ namespace MirRemakeBackend.Network {
             byte placement = reader.GetByte ();
             long data = reader.GetLong ();
             return new NO_Shortcut (type, placement, data);
+        }
+        public static void Put (this NetDataWriter writer, NO_AllianceBriefDes a) {
+            writer.Put (a.m_allianceId);
+            writer.Put (a.m_curMember);
+            writer.Put (a.m_maxMember);
+            writer.Put (a.m_name);
+            writer.Put (a.m_leaderName);
+        }
+        public static NO_AllianceBriefDes GetAllianceBriefDes (this NetDataReader reader) {
+            int allianceId = reader.GetInt ();
+            int cur = reader.GetInt ();
+            int max = reader.GetInt ();
+            string name = reader.GetString ();
+            string leader = reader.GetString ();
+            return new NO_AllianceBriefDes (allianceId, name, max, cur, leader);
+        }
+        public static void Put (this NetDataWriter writer, NO_AllianceDes a) {
+            writer.Put (a.m_allianceId);
+            writer.Put (a.m_name);
+            writer.Put (a.m_maxMember);
+            writer.Put (a.m_curMember);
+            writer.Put (a.m_onlineMember);
+            writer.Put (a.m_leaderName);
+            writer.Put (a.m_leaderLevel);
+            writer.Put (a.m_briefIntro);
+        }
+        public static NO_AllianceDes GetAllianceDes (this NetDataReader reader) {
+            int allianceId = reader.GetInt ();
+            string name = reader.GetString ();
+            int max = reader.GetInt ();
+            int cur = reader.GetInt ();
+            int online = reader.GetInt ();
+            string leader = reader.GetString ();
+            short leaderLevel = reader.GetShort ();
+            string bi = reader.GetString ();
+            return new NO_AllianceDes (allianceId, name, max, cur, online, leader, leaderLevel, bi);
         }
     }
 }

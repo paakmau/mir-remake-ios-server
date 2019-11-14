@@ -76,6 +76,17 @@ namespace MirRemakeBackend.Network {
         APPLY_SELF_RECEIVE_MAIL,
         // 公告
         APPLY_SHOW_NOTICE,
+        // 帮派相关
+        /// <summary>TODO: 获取帮派列表, 非帮派排行榜</summary>
+        APPLY_GET_ALLIANCES_LIST,
+        /// <summary>TODO: 获取帮派描述</summary>
+        APPLY_GET_ALLIANCE_DESCRIPTION,
+        /// <summary>TODO: 查找帮派结果</summary>
+        APPLY_SEARCH_ALLIANCE_RESULT,
+        /// <summary>TODO: 创建帮派成功</summary>
+        APPLY_CREATE_ALLIANCE_SUCCESS,
+        /// <summary>TODO: 创建帮派失败</summary>
+        APPLY_CREATE_ALLIANCE_FAIL_CASE_NAME_USED,
         // 控制台
         CONSOLE_SUCCESS,
         CONSOLE_FAIL
@@ -159,7 +170,12 @@ namespace MirRemakeBackend.Network {
         APPLY_REFUSE_TO_JOIN_ALLIANCE,
         APPLY_APPROVE_TO_JOIN_ALLIANCE,
         APPLY_CHANGE_ALLIANCE_JOB,
-        APPLY_GET_ALLIANCES_LIST,// TODO: 请求获取帮派列表(非排行榜)
+        /// <summary>TODO: 获取帮派列表, 非帮派排行榜</summary>
+        APPLY_GET_ALLIANCES_LIST,
+        /// <summary>TODO: 获取帮派描述</summary>
+        APPLY_GET_ALLIANCE_DESCRIPTION,
+        /// <summary>TODO: 请求查找帮派</summary>
+        APPLY_SEARCH_ALLIANCE_BY_NAME,
         // 控制台相关
         CONSOLE_GAIN_CY_BY_NAME,
         CONSOLE_SEAL_CHARACTER_BY_NAME,
