@@ -159,6 +159,7 @@ namespace MirRemakeBackend.Network {
         APPLY_REFUSE_TO_JOIN_ALLIANCE,
         APPLY_APPROVE_TO_JOIN_ALLIANCE,
         APPLY_CHANGE_ALLIANCE_JOB,
+        APPLY_GET_ALLIANCE_LIST,// TODO: 请求获取帮派列表(非排行榜)
         // 控制台相关
         CONSOLE_GAIN_CY_BY_NAME,
         CONSOLE_SEAL_CHARACTER_BY_NAME,
