@@ -6,4 +6,4 @@ dest="~/"
 
 dotnet publish -c Release -r linux-x64
 cp Data/*.json $src/Data/
-scp -r $src $user@$host:$dest
+# scp -r $src $user@$host:$dest
